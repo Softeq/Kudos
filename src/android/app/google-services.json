@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "236308904782",
+    "firebase_url": "https://softeq-kudos.firebaseio.com",
+    "project_id": "softeq-kudos",
+    "storage_bucket": "softeq-kudos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236308904782:android:4529043857065b63c7fc1f",
+        "android_client_info": {
+          "package_name": "com.softeq.kudosapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236308904782-7jm8lrpach3ilnblbih2aaq08l3mbg02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softeq.kudosapp",
+            "certificate_hash": "06ac1f71f4dae23b5b9677bbc715acafac2000d4"
+          }
+        },
+        {
+          "client_id": "236308904782-0bud7hinueokgi11ttsbbsug2tq27h72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZqnDHziEM5hjdZwFGWzxxbYHXitv7ess"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236308904782-0bud7hinueokgi11ttsbbsug2tq27h72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "236308904782-jogkf683n2981f8e393qdphemb2f41hd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.softeq.kudosapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
