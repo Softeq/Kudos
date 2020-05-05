@@ -1,5 +1,5 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import '../models/user.dart';
+import 'package:kudosapp/models/user.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -25,9 +25,8 @@ class AuthService {
   void silentInit(callback) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       _account = account;
-      _currentUser = account == null
-          ? null
-          : User(account.displayName, account.email);
+      _currentUser =
+          account == null ? null : User(account.displayName, account.email);
       callback(_currentUser);
     });
     _googleSignIn.signInSilently();
