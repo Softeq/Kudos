@@ -11,7 +11,6 @@ class AuthService {
   User _currentUser;
 
   User get currentUser => _currentUser;
-  // Future<Map<String, String>> get authHeaders => _account.;
 
   void silentInit(callback) {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {

@@ -24,8 +24,6 @@ dependencies:
   # auth
   google_sign_in: ^4.4.4
   firebase_auth: ^0.16.0
-  # network
-  http: ^0.12.1
 
 dev_dependencies:
   flutter_test:
