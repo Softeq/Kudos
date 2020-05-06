@@ -32,6 +32,10 @@ class AuthService {
       if (googleUser == null) {
         throw new AuthError('User skip the authorization', null);
       }
+      if (!_validateEmail(googleUser.email)) {
+        _googleSignIn.disconnect();
+        throw new AuthError('Available for Softeq members only!', null);
+      }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -46,5 +50,15 @@ class AuthService {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  bool _validateEmail(String email) {
+    const List<String> allowedDomains = [
+      'softeq.com',
+      'softeq.by',
+      'zgames.com',
+    ];
+    var domainOfEmail = email.split('@').last;
+    return allowedDomains.contains(domainOfEmail);
   }
 }
