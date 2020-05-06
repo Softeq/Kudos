@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/services/localization_service.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/providers/auth.dart';
+import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Kudos'),
-        ),
-        body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              const Text("You are not currently signed in."),
-              RaisedButton(
-                child: const Text('SIGN IN'),
-                onPressed: auth.signIn,
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(LocalizationService.appName),
+      ),
+      body: ConstrainedBox(
+        constraints: BoxConstraints.expand(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Text('You are not currently signed in.'),  // TODO YP: UI not final
+            RaisedButton(
+              child: Text('SIGN IN'),
+              onPressed: authViewModel.signIn,
+            ),
+          ],
         ),
       ),
     );

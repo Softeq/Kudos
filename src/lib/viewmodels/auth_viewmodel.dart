@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/services/auth.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthViewModel with ChangeNotifier {
   final AuthService _auth = AuthService();
 
   User _currentUser;
 
-  AuthProvider() {
-    _auth.silentInit((user) async {
+  AuthViewModel() {
+    _auth.silentInit((user) {
       _currentUser = user;
       notifyListeners();
     });

@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/providers/auth.dart';
+import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            ListTile(
-              //leading: auth.avatarView,
-              title: Text(auth.currentUser.name ?? ''),
-              subtitle: Text(auth.currentUser.email ?? ''),
-              trailing: IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: auth.signOut,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(LocalizationService.appName),
+      ),
+      body: Column(
+        children: <Widget>[
+          ListTile(
+            //leading: auth.avatarView,
+            title: Text(authViewModel.currentUser.name ?? ''),
+            subtitle: Text(authViewModel.currentUser.email ?? ''),
+            trailing: IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: authViewModel.signOut,
             ),
-            const Text("Signed in successfully."),
-          ],
-        ),
+          ),
+          Text('Signed in successfully.'), // TODO YP: UI not final
+        ],
       ),
     );
   }
