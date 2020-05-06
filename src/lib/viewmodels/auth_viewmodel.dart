@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/services/auth.dart';
+import 'package:kudosapp/services/auth_service.dart';
 
 class AuthViewModel with ChangeNotifier {
   final AuthService _auth = AuthService();
