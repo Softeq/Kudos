@@ -1,9 +1,10 @@
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/services/auth_service.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AuthViewModel extends BaseViewModel {
-  final AuthService _authService = AuthService();
+  final BaseAuthService _authService = locator<BaseAuthService>();
 
   User _currentUser;
 
@@ -14,7 +15,7 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
-  User get currentUser => _currentUser ?? User("", "", "");
+  User get currentUser => _currentUser;
 
   bool get isAuth => _currentUser != null;
 

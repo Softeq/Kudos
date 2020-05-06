@@ -17,7 +17,7 @@ class KudosApp extends StatelessWidget {
         builder: (context, viewModel, child) => MaterialApp(
           title: locator<LocalizationService>().appName,
           theme: ThemeData(),
-          home: !viewModel.isAuth ? HomePage() : LoginPage(),
+          home: viewModel.isAuth ? HomePage() : LoginPage(),
         ),
       ),
     );
