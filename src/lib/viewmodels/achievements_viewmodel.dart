@@ -5,7 +5,7 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AchievementsViewModel extends BaseViewModel {
   final AchievementsService _achievementsService = locator<AchievementsService>();
-  final List<Achievement> achievements = List<Achievement>();
+  final List<Achievement> achievements = [];
 
   AchievementsViewModelState _achievementsViewModelState =
       AchievementsViewModelState.busy;
