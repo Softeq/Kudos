@@ -19,11 +19,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  google_sign_in: ^4.4.4
-
-  http: ^0.12.1
+  # core
   provider: ^4.0.5+1
+  # auth
+  google_sign_in: ^4.4.4
+  firebase_auth: ^0.16.0
 
 dev_dependencies:
   flutter_test:

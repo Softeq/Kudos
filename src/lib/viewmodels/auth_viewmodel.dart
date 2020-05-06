@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/services/auth.dart';
+import 'package:kudosapp/services/auth_service.dart';
 
 class AuthViewModel with ChangeNotifier {
-  final AuthService _auth = AuthService();
+  final AuthService _authService = AuthService();
 
   User _currentUser;
 
   AuthViewModel() {
-    _auth.silentInit((user) {
+    _authService.silentInit((user) {
       _currentUser = user;
       notifyListeners();
     });
@@ -18,14 +18,11 @@ class AuthViewModel with ChangeNotifier {
 
   bool get isAuth => _currentUser != null;
 
-  void signIn() async {
-    await _auth.signIn();
+  Future<void> signIn() async {
+    await _authService.signIn();
   }
 
-  void signOut() async {
-    await _auth.signOut();
-
-    _currentUser = null;
-    notifyListeners();
+  Future<void> signOut() async {
+    await _authService.signOut();
   }
 }
