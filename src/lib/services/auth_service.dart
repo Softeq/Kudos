@@ -1,43 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kudosapp/core/errors/auth_error.dart';
 import 'package:kudosapp/models/user.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-    ],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  GoogleSignInAccount _account;
+  FirebaseUser _firebaseUser;
   User _currentUser;
 
   User get currentUser => _currentUser;
-  Future<Map<String, String>> get authHeaders => _account.authHeaders;
-
-  // TODO YP: another way
-  GoogleUserCircleAvatar get avatarView {
-    return GoogleUserCircleAvatar(
-      identity: _account,
-    );
-  }
+  // Future<Map<String, String>> get authHeaders => _account.;
 
   void silentInit(callback) {
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      _account = account;
-      _currentUser =
-          account == null ? null : User(account.displayName, account.email);
+    _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
+      _firebaseUser = firebaseUser;
+      _currentUser = firebaseUser == null
+        ? null
+        : User(
+          firebaseUser.displayName,
+          firebaseUser.email,
+          firebaseUser.photoUrl,
+        );
       callback(_currentUser);
     });
-    _googleSignIn.signInSilently();
   }
 
   Future<void> signIn() async {
     try {
-      await _googleSignIn.signIn();
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw new AuthError('User skip the authorization', null);
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await _firebaseAuth.signInWithCredential(credential);
     } catch (error) {
-      print(error);
+      throw new AuthError('Error during sign-in', error);
     }
   }
 
-  Future<void> signOut() => _googleSignIn.disconnect();
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
 }
