@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -25,7 +25,6 @@ class HomePage extends StatelessWidget {
               onPressed: authViewModel.signOut,
             ),
           ),
-          Text('Signed in successfully.'), // TODO YP: UI not final
         ],
       ),
     );
