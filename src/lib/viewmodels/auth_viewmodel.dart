@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/services/auth_service.dart';
+import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
-class AuthViewModel with ChangeNotifier {
+class AuthViewModel extends BaseViewModel {
   final AuthService _authService = AuthService();
 
   User _currentUser;
@@ -14,7 +14,7 @@ class AuthViewModel with ChangeNotifier {
     });
   }
 
-  User get currentUser => _currentUser;
+  User get currentUser => _currentUser ?? User("", "", "");
 
   bool get isAuth => _currentUser != null;
 
