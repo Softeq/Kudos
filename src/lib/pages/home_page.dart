@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:kudosapp/pages/achievements_page.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -10,13 +12,13 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocalizationService.appName),
+        title: Text(locator<LocalizationService>().appName),
       ),
       body: Column(
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(authViewModel.currentUser.photoUrl),
+               backgroundImage: NetworkImage(authViewModel.currentUser.photoUrl),
             ),
             title: Text(authViewModel.currentUser.name ?? ''),
             subtitle: Text(authViewModel.currentUser.email ?? ''),
@@ -24,6 +26,12 @@ class HomePage extends StatelessWidget {
               icon: Icon(Icons.exit_to_app),
               onPressed: authViewModel.signOut,
             ),
+          ),
+          RaisedButton(
+            child: Text("navigate to badges_page"),
+            onPressed: () {
+              Navigator.of(context).push(AchievementsRoute());
+            },
           ),
         ],
       ),

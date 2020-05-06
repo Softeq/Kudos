@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/services/auth_service.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
-class AuthViewModel with ChangeNotifier {
-  final AuthService _authService = AuthService();
+class AuthViewModel extends BaseViewModel {
+  final BaseAuthService _authService = locator<BaseAuthService>();
 
   User _currentUser;
 

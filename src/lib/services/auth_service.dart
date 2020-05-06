@@ -2,16 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kudosapp/core/errors/auth_error.dart';
 import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 
-class AuthService {
+class AuthService extends BaseAuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   FirebaseUser _firebaseUser;
   User _currentUser;
 
+  @override
   User get currentUser => _currentUser;
 
+  @override
   void silentInit(callback) {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
       _firebaseUser = firebaseUser;
@@ -26,6 +29,7 @@ class AuthService {
     });
   }
 
+  @override
   Future<void> signIn() async {
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -48,6 +52,7 @@ class AuthService {
     }
   }
 
+  @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
