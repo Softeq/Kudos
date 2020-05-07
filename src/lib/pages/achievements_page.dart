@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/pages/achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
@@ -229,7 +230,15 @@ class _LineListItem extends _ListItem {
                     ),
                     height: radius * 2.0,
                     width: radius * 2.0,
-                    child: ImageLoader(achievement.imageUrl),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(AchievementRoute(achievement));
+                      },
+                      child: Hero(
+                        child: ImageLoader(achievement.imageUrl),
+                        tag: achievement.name,
+                      ),
+                    ),
                   ),
                 ),
               ),
