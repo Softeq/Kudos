@@ -17,6 +17,9 @@ class PeopleService {
       ))
       .where((User x) => x.email != authService.currentUser.email)
       .toList();
+
+    users.sort((a, b) => a.name.compareTo(b.name));
+
     return users;
   }
 }
