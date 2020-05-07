@@ -34,11 +34,18 @@ class PeoplePage extends StatelessWidget {
                 case ConnectionState.waiting:
                   return _buildLoading();
                 case ConnectionState.done:
-                  return _buildList(snapshot.data);
+                  if (snapshot.hasError) {
+                    return _buildError(snapshot.error);
+                  } else if (snapshot.hasData && snapshot.data.isNotEmpty) {
+                    return _buildList(snapshot.data);
+                  } else {
+                    return _buildEmpty();
+                  }
+                  break;
                 case ConnectionState.active:
                 case ConnectionState.none:
                 default:
-                  return Center(child: Text("None"));
+                  return _buildError("Unknown state");
               }
             },
           );
@@ -49,6 +56,23 @@ class PeoplePage extends StatelessWidget {
   Widget _buildLoading() {
     return Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildError(Object error) {
+    return Center(
+      child: Text(
+        "Error: $error", // TODO YP: temporary
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmpty() {
+    return Center(
+      child: Text("No data"), // TODO YP: temporary
     );
   }
 
