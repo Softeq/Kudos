@@ -15,12 +15,12 @@ class AchievementsViewModel extends BaseViewModel {
   Future<void> initialize() async {
     var result = await _achievementsService.getAchievements();
     achievements.addAll(result);
-    _achievementsViewModelState = AchievementsViewModelState.idle;
+    _achievementsViewModelState = AchievementsViewModelState.ready;
     notifyListeners();
   }
 }
 
 enum AchievementsViewModelState {
   busy,
-  idle,
+  ready,
 }
