@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:provider/provider.dart';
@@ -79,17 +80,22 @@ class PeoplePage extends StatelessWidget {
   Widget _buildList(List<User> users) {
     return ListView.builder(
       itemCount: users.length,
-      itemBuilder: (context, index) => _buildItem(users[index]),
+      itemBuilder: (context, index) => _buildItem(context, users[index]),
     );
   }
 
-  Widget _buildItem(User user) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.photoUrl),
+  Widget _buildItem(BuildContext context, User user) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(ProfileRoute(user));
+      },
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(user.photoUrl),
+        ),
+        title: Text(user.name),
+        subtitle: Text(user.email),
       ),
-      title: Text(user.name),
-      subtitle: Text(user.email),
     );
   }
 }

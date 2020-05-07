@@ -8,4 +8,5 @@ class LocalizationService {
   String get official => "Официальные";
   String get others => "Остальные";
   String get people => "Люди";
+  String get profile => "Профиль";
 }
