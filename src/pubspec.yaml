@@ -17,6 +17,10 @@ dependencies:
 
   cloud_firestore: ^0.13.5
 
+  flutter_svg: ^0.17.4
+
+  flutter_cache_manager: ^1.2.2
+
   # auth
   google_sign_in: ^4.4.4
 
