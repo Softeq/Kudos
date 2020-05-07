@@ -25,18 +25,29 @@ class AchievementPage extends StatelessWidget {
           appBar: AppBar(
             title: Text(viewModel.achievement.name),
           ),
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 200,
-                width: 200,
-                child: ImageLoader(viewModel.achievement.imageUrl),
-              ),
-            ],
-          ),
+          body: _buildBody(viewModel.achievement),
         );
       }
+    );
+  }
+
+  Widget _buildBody(Achievement achievement) {
+    return Column(
+      children: <Widget>[
+        Center(
+          child: SizedBox(
+            height: 200,
+            width: 200,
+            child: ImageLoader(achievement.imageUrl),
+          ),
+        ),
+        RaisedButton(
+          child: Text("Send"),
+          onPressed: () {
+            // TODO YP:
+          },
+        )
+      ],
     );
   }
 }
