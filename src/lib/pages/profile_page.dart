@@ -120,21 +120,19 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildList(List<Achievement> achievements) {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
+      child: GridView.builder(
+        padding: EdgeInsets.symmetric(
           horizontal: 20,
         ),
-        child: GridView.builder(
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 1,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: achievements.length,
-          itemBuilder: (context, index) => _buildListItem(context, achievements[index]),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 1,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 10,
         ),
+        itemCount: achievements.length,
+        itemBuilder: (context, index) => _buildListItem(context, achievements[index]),
       ),
     );
   }
