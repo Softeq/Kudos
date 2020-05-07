@@ -7,4 +7,5 @@ class LocalizationService {
   String get fromCris => "От Криса";
   String get official => "Официальные";
   String get others => "Остальные";
+  String get people => "Люди";
 }

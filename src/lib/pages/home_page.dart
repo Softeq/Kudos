@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
+import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
@@ -31,6 +32,12 @@ class HomePage extends StatelessWidget {
             child: Text("navigate to badges_page"),
             onPressed: () {
               Navigator.of(context).push(AchievementsRoute());
+            },
+          ),
+          RaisedButton(
+            child: Text("navigate to people_page"),
+            onPressed: () {
+              Navigator.of(context).push(PeopleRoute());
             },
           ),
         ],
