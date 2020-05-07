@@ -13,7 +13,7 @@ class PeopleService {
       .map<User>((x) => User(
         x.data["name"],
         x.data["email"],
-        'https://picsum.photos/50' // TODO YP: need real photos
+        'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
       ))
       .where((User x) => x.email != authService.currentUser.email)
       .toList();
