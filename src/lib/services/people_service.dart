@@ -8,7 +8,9 @@ class PeopleService {
   final BaseAuthService authService = locator<BaseAuthService>();
 
   Future<List<User>> getAllUsers() async {
-    final queryResult = await database.collection("users").getDocuments();
+
+    final query = database.collection("users").orderBy("name");
+    final queryResult = await query.getDocuments();
     final users = queryResult.documents
       .map<User>((x) => User(
         x.data["name"],
@@ -17,8 +19,6 @@ class PeopleService {
       ))
       .where((User x) => x.email != authService.currentUser.email)
       .toList();
-
-    users.sort((a, b) => a.name.compareTo(b.name));
 
     return users;
   }
