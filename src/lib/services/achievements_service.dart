@@ -18,6 +18,7 @@ class AchievementsService {
       (s) {
         var result = s.documents.map((x) {
           return Achievement(
+            id: x.documentID,
             tags: _toString(x.data["tag"]),
             name: x.data["name"],
             imageUrl: x.data["imageUrl"],
