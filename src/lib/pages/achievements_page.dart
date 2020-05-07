@@ -234,7 +234,10 @@ class _LineListItem extends _ListItem {
                       onTap: () {
                         Navigator.of(context).push(AchievementRoute(achievement));
                       },
-                      child: ImageLoader(achievement.imageUrl),
+                      child: Hero(
+                        child: ImageLoader(achievement.imageUrl),
+                        tag: achievement.name,
+                      ),
                     ),
                   ),
                 ),

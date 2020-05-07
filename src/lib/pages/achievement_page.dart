@@ -38,7 +38,10 @@ class AchievementPage extends StatelessWidget {
           child: SizedBox(
             height: 200,
             width: 200,
-            child: ImageLoader(achievement.imageUrl),
+            child: Hero(
+              child: ImageLoader(achievement.imageUrl),
+              tag: achievement.name,
+            ),
           ),
         ),
         RaisedButton(
