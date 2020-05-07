@@ -18,7 +18,7 @@ class PeopleService {
         email: x.data["email"],
         photoUrl: 'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
       ))
-      .where((User x) => x.email != authService.currentUser.email)
+      // .where((User x) => x.email != authService.currentUser.email)
       .toList();
 
     return users;
