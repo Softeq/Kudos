@@ -13,9 +13,10 @@ class PeopleService {
     final queryResult = await query.getDocuments();
     final users = queryResult.documents
       .map<User>((x) => User(
-        x.data["name"],
-        x.data["email"],
-        'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
+        id: x.documentID,
+        name: x.data["name"],
+        email: x.data["email"],
+        photoUrl: 'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
       ))
       .where((User x) => x.email != authService.currentUser.email)
       .toList();

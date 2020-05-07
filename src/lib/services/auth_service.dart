@@ -21,9 +21,10 @@ class AuthService extends BaseAuthService {
       _currentUser = firebaseUser == null
         ? null
         : User(
-          firebaseUser.displayName,
-          firebaseUser.email,
-          firebaseUser.photoUrl,
+          id: null,
+          name: firebaseUser.displayName,
+          email: firebaseUser.email,
+          photoUrl: firebaseUser.photoUrl,
         );
       callback(_currentUser);
     });
