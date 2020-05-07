@@ -80,4 +80,33 @@ class AchievementsService {
       return input.cast<String>().toList();
     }
   }
+
+  Future<void> addAchievement(String userId, String achievementId) async {
+    final collection = database
+      .collection("users")
+      .document(userId)
+      .collection("achievements");
+
+    await collection.add({
+      "id": achievementId,
+    });
+  }
+
+  Future<List<Achievement>> getUserAchievements(String userId) async {
+    final userAchievementsCollection = database
+      .collection("users")
+      .document(userId)
+      .collection("achievements");
+    final userQueryResult = await userAchievementsCollection.getDocuments();
+    final userAchievements = userQueryResult.documents.map((x) => x.data["id"]).toList();
+
+    // TODO YP: need better solution
+    final allAchievementsCollection = database.collection("achievements");
+    final allQueryResult = await allAchievementsCollection.getDocuments();
+    final allAchievements = _map(allQueryResult.documents);
+
+    allAchievements.removeWhere((x) => !userAchievements.contains(x.id));
+
+    return allAchievements;
+  }
 }
