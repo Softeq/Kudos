@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kudosapp/core/errors/auth_error.dart';
 import 'package:kudosapp/models/user.dart';
@@ -48,6 +49,8 @@ class AuthService extends BaseAuthService {
         idToken: googleAuth.idToken,
       );
       await _firebaseAuth.signInWithCredential(credential);
+    } on PlatformException catch(error) {
+      throw new AuthError(error.message, null);
     } catch (error) {
       throw new AuthError('Error during sign-in', error);
     }
