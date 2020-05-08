@@ -82,10 +82,7 @@ class AchievementsService {
   }
 
   Future<void> addAchievement(String userId, String achievementId) async {
-    final collection = database
-      .collection("users")
-      .document(userId)
-      .collection("achievements");
+    final collection = database.collection("users/$userId/achievements");
 
     await collection.add({
       "id": achievementId,
@@ -93,10 +90,7 @@ class AchievementsService {
   }
 
   Future<List<Achievement>> getUserAchievements(String userId) async {
-    final userAchievementsCollection = database
-      .collection("users")
-      .document(userId)
-      .collection("achievements");
+    final userAchievementsCollection = database.collection("users/$userId/achievements");
     final userQueryResult = await userAchievementsCollection.getDocuments();
     final userAchievements = userQueryResult.documents.map((x) => x.data["id"]).toList();
 
