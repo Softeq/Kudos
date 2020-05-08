@@ -8,15 +8,19 @@ class PeopleService {
   final BaseAuthService authService = locator<BaseAuthService>();
 
   Future<List<User>> getAllUsers() async {
-    final queryResult = await database.collection("users").getDocuments();
+
+    final query = database.collection("users").orderBy("name");
+    final queryResult = await query.getDocuments();
     final users = queryResult.documents
       .map<User>((x) => User(
-        x.data["name"],
-        x.data["email"],
-        'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
+        id: x.documentID,
+        name: x.data["name"],
+        email: x.data["email"],
+        photoUrl: 'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
       ))
-      .where((User x) => x.email != authService.currentUser.email)
+      // .where((User x) => x.email != authService.currentUser.email)
       .toList();
+
     return users;
   }
 }
