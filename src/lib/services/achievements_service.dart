@@ -41,7 +41,8 @@ class AchievementsService {
       throw ArgumentError.notNull("description");
     }
 
-    var firebaseStorage = await locator.getAsync<FirebaseStorage>();
+    //var firebaseStorage = await locator.getAsync<FirebaseStorage>();
+    var firebaseStorage = FirebaseStorage.instance;
     var storageReference =
         firebaseStorage.ref().child(_kudosFolder).child("${Uuid().v4()}.svg");
     var storageUploadTask = storageReference.putFile(file);

@@ -18,29 +18,29 @@ void setupLocator() async {
   // locator.registerLazySingleton<BaseAuthService>(() => AuthService());
   locator.registerLazySingleton<BaseAuthService>(() => MockAuthService());
 
-  locator.registerLazySingletonAsync<FirebaseApp>(() async {
-    var app = await FirebaseApp.configure(
-      name: "Kudos Android",
-      options: const FirebaseOptions(
-        googleAppID: "1:236308904782:android:4529043857065b63c7fc1f",
-        gcmSenderID: "236308904782",
-        apiKey: "AIzaSyBZqnDHziEM5hjdZwFGWzxxbYHXitv7ess",
-        projectID: "softeq-kudos",
-      ),
-    );
-    return app;
-  });
+  // locator.registerLazySingletonAsync<FirebaseApp>(() async {
+  //   var app = await FirebaseApp.configure(
+  //     name: "Kudos Android",
+  //     options: const FirebaseOptions(
+  //       googleAppID: "1:236308904782:android:4529043857065b63c7fc1f",
+  //       gcmSenderID: "236308904782",
+  //       apiKey: "AIzaSyBZqnDHziEM5hjdZwFGWzxxbYHXitv7ess",
+  //       projectID: "softeq-kudos",
+  //     ),
+  //   );
+  //   return app;
+  // });
 
-  locator.registerLazySingletonAsync<Firestore>(() async {
-    var app = await locator.getAsync<FirebaseApp>();
-    return Firestore(app: app);
-  });
+  // locator.registerLazySingletonAsync<Firestore>(() async {
+  //   var app = await locator.getAsync<FirebaseApp>();
+  //   return Firestore(app: app);
+  // });
 
-  locator.registerLazySingletonAsync<FirebaseStorage>(() async {
-    var app = await locator.getAsync<FirebaseApp>();
-    return FirebaseStorage(
-      app: app,
-      storageBucket: "gs://softeq-kudos.appspot.com",
-    );
-  });
+  // locator.registerLazySingletonAsync<FirebaseStorage>(() async {
+  //   var app = await locator.getAsync<FirebaseApp>();
+  //   return FirebaseStorage(
+  //     app: app,
+  //     storageBucket: "gs://softeq-kudos.appspot.com",
+  //   );
+  // });
 }
