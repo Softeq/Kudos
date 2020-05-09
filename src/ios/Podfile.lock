@@ -274,6 +274,9 @@ PODS:
   - Firebase/Firestore (6.24.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 1.13.0)
+  - Firebase/Storage (6.24.0):
+    - Firebase/CoreOnly
+    - FirebaseStorage (~> 3.6.1)
   - firebase_auth (0.0.1):
     - Firebase/Auth (~> 6.3)
     - Firebase/Core
@@ -284,6 +287,9 @@ PODS:
     - Firebase/Core
     - Flutter
   - firebase_core_web (0.1.0):
+    - Flutter
+  - firebase_storage (0.0.1):
+    - Firebase/Storage
     - Flutter
   - FirebaseAnalytics (6.5.0):
     - FirebaseCore (~> 6.7)
@@ -331,6 +337,10 @@ PODS:
     - GoogleUtilities/Environment (~> 6.6)
     - GoogleUtilities/UserDefaults (~> 6.6)
     - PromisesObjC (~> 1.2)
+  - FirebaseStorage (3.6.1):
+    - FirebaseAuthInterop (~> 1.1)
+    - FirebaseCore (~> 6.6)
+    - GTMSessionFetcher/Core (~> 1.1)
   - FLAnimatedImage (1.0.12)
   - Flutter (1.0.0)
   - flutter_plugin_android_lifecycle (0.0.1):
@@ -437,6 +447,7 @@ DEPENDENCIES:
   - firebase_auth_web (from `.symlinks/plugins/firebase_auth_web/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_core_web (from `.symlinks/plugins/firebase_core_web/ios`)
+  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
@@ -461,6 +472,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnosticsInterop
     - FirebaseFirestore
     - FirebaseInstallations
+    - FirebaseStorage
     - FLAnimatedImage
     - FMDB
     - GoogleAppMeasurement
@@ -493,6 +505,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_core_web:
     :path: ".symlinks/plugins/firebase_core_web/ios"
+  firebase_storage:
+    :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
   flutter_plugin_android_lifecycle:
@@ -522,6 +536,7 @@ SPEC CHECKSUMS:
   firebase_auth_web: 0955c07bcc06e84af76b9d4e32e6f31518f2d7de
   firebase_core: 0d8be0e0d14c4902953aeb5ac5d7316d1fe4b978
   firebase_core_web: d501d8b946b60c8af265428ce483b0fff5ad52d1
+  firebase_storage: 5e931af5cdef32331676c659bdd1ebcaba9dc78a
   FirebaseAnalytics: 7386fc2176e3f93ad8ef34b5b1f2b33a891e4962
   FirebaseAuth: 7047aec89c0b17ecd924a550c853f0c27ac6015e
   FirebaseAuthInterop: a0f37ae05833af156e72028f648d313f7e7592e9
@@ -530,6 +545,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnosticsInterop: 296e2c5f5314500a850ad0b83e9e7c10b011a850
   FirebaseFirestore: 35f8f67d7b25e4743c62ea6e46c38cafa8dc32b5
   FirebaseInstallations: 2119fb3e46b0a88bfdbf12562f855ee3252462fa
+  FirebaseStorage: f4f39ae834a7145963b913f54e2f24a9db1d8fac
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
