@@ -1,0 +1,1 @@
+class UploadFileError extends Error {}

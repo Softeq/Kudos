@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
+import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-               backgroundImage: NetworkImage(authViewModel.currentUser.photoUrl),
+              backgroundImage: NetworkImage(authViewModel.currentUser.photoUrl),
             ),
             title: Text(authViewModel.currentUser.name ?? ''),
             subtitle: Text(authViewModel.currentUser.email ?? ''),
@@ -38,6 +39,12 @@ class HomePage extends StatelessWidget {
             child: Text("navigate to people_page"),
             onPressed: () {
               Navigator.of(context).push(PeopleRoute());
+            },
+          ),
+          RaisedButton(
+            child: Text("navigate to create Achievement"),
+            onPressed: () {
+              Navigator.of(context).push(EditAchievementRoute(null));
             },
           ),
         ],

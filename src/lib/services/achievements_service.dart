@@ -1,22 +1,25 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/achievement_category.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
+import 'package:uuid/uuid.dart';
 
 class AchievementsService {
-  final LocalizationService _localizationService =
-      locator<LocalizationService>();
   final Firestore database = Firestore.instance;
+  final String _achievementsCollection = "achievements";
+  final String _kudosFolder = "kudos";
 
-  Future<List<Achievement>> getAchievements() {
+  Future<List<Achievement>> getAchievements() async {
     var completer = Completer<List<Achievement>>();
     StreamSubscription subscription;
-    subscription = database.collection("achievements").snapshots().listen(
+    subscription =
+        database.collection(_achievementsCollection).snapshots().listen(
       (s) {
-        var result = _map(s.documents);
+        var result =
+            s.documents.map((x) => Achievement.fromDocument(x)).toList();
         completer.complete(result);
         subscription?.cancel();
       },
@@ -25,59 +28,46 @@ class AchievementsService {
     return completer.future;
   }
 
-  List<Achievement> _map(List<DocumentSnapshot> queryResult) {
-    var result = queryResult.map((x) {
-      return Achievement(
-        id: x.documentID,
-        tags: _toString(x.data["tag"]),
-        name: x.data["name"],
-        imageUrl: x.data["imageUrl"],
-      );
-    }).toList();
+  Future<void> createOrUpdate(Achievement achievement, [File file]) async {
+    if ((achievement.id == null && file == null) ||
+        achievement.imageUrl == null && file == null) {
+      throw ArgumentError.notNull("file");
+    }
 
-    var categories = [
-      AchievementCategory(
-        id: "fromCris",
-        name: _localizationService.fromCris,
-        orderIndex: 1,
-      ),
-      AchievementCategory(
-        id: "official",
-        name: _localizationService.official,
-        orderIndex: 2,
-      ),
-      AchievementCategory(
-        id: "others",
-        name: _localizationService.others,
-        orderIndex: 3,
-      ),
-    ];
+    if (achievement.name == null || achievement.name == "") {
+      throw ArgumentError.notNull("name");
+    }
 
-    var categoriesMap = Map.fromEntries(
-      categories.map((x) => MapEntry<String, AchievementCategory>(x.id, x)),
-    );
+    if (achievement.description == null || achievement.description == "") {
+      throw ArgumentError.notNull("description");
+    }
 
-    result.forEach((x) {
-      var categoryKey = "others";
-      if (x.tags.isNotEmpty) {
-        if (x.tags.contains("fromCris")) {
-          categoryKey = "fromCris";
-        } else if (x.tags.contains("official")) {
-          categoryKey = "official";
-        }
+    var copyOfAchievement = achievement.copy();
+
+    if (file != null) {
+      var firebaseStorage = FirebaseStorage.instance;
+      var storageReference =
+          firebaseStorage.ref().child(_kudosFolder).child("${Uuid().v4()}.svg");
+      var storageUploadTask = storageReference.putFile(file);
+      var storageTaskSnapshot = await storageUploadTask.onComplete;
+
+      if (storageTaskSnapshot.error != null) {
+        throw UploadFileError();
       }
 
-      x.category = categoriesMap[categoryKey];
-    });
+      var imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      copyOfAchievement = copyOfAchievement.copy(imageUrl: imageUrl);
+    }
 
-    return result;
-  }
-
-  List<String> _toString(List<dynamic> input) {
-    if (input == null) {
-      return List<String>();
+    if (copyOfAchievement.id == null) {
+      await database
+          .collection(_achievementsCollection)
+          .add(copyOfAchievement.toMap());
     } else {
-      return input.cast<String>().toList();
+      await database
+          .collection(_achievementsCollection)
+          .document(copyOfAchievement.id)
+          .setData(copyOfAchievement.toMap());
     }
   }
 
@@ -90,14 +80,18 @@ class AchievementsService {
   }
 
   Future<List<Achievement>> getUserAchievements(String userId) async {
-    final userAchievementsCollection = database.collection("users/$userId/achievements");
+    final userAchievementsCollection =
+        database.collection("users/$userId/achievements");
     final userQueryResult = await userAchievementsCollection.getDocuments();
-    final userAchievements = userQueryResult.documents.map((x) => x.data["id"]).toList();
+    final userAchievements =
+        userQueryResult.documents.map((x) => x.data["id"]).toList();
 
     // TODO YP: need better solution
     final allAchievementsCollection = database.collection("achievements");
     final allQueryResult = await allAchievementsCollection.getDocuments();
-    final allAchievements = _map(allQueryResult.documents);
+    final allAchievements = allQueryResult.documents
+        .map((x) => Achievement.fromDocument(x))
+        .toList();
 
     allAchievements.removeWhere((x) => !userAchievements.contains(x.id));
 
