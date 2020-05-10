@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 class AchievementsService {
@@ -71,30 +72,60 @@ class AchievementsService {
     }
   }
 
-  Future<void> addAchievement(String userId, String achievementId) async {
-    final collection = database.collection("users/$userId/achievements");
+  Future<void> sendAchievement(
+      User sender,
+      User recipient,
+      Achievement achievement,
+      String comment,
+    ) async {
 
-    await collection.add({
-      "id": achievementId,
+    final timestamp = Timestamp.now();
+
+    final batch = database.batch();
+
+    // add an achievement to user's achievements
+
+    final userAchievementsReference =
+        database.collection("users/${recipient.id}/achievements");
+
+    batch.setData(userAchievementsReference.document(), {
+      "id": achievement.id,
+      "name": achievement.name,
+      "imageUrl": achievement.imageUrl,
+      "date": timestamp,
+      "comment": comment,
+      "sender_user": {
+        "id": sender.id,
+        "name": sender.name,
+        "imageUrl": sender.imageUrl,
+      },
     });
+
+    // add a user to achievements
+
+    final achievementHoldersReference =
+        database.collection("achievements/${achievement.id}/holders");
+
+    // TODO YP: can be made via Cloud Functions Triggers
+    batch.setData(achievementHoldersReference.document(), {
+      "id": recipient.id,
+      "name": recipient.name,
+      "imageUrl": recipient.imageUrl,
+      "date": timestamp,
+    });
+
+    await batch.commit();
   }
 
   Future<List<Achievement>> getUserAchievements(String userId) async {
     final userAchievementsCollection =
         database.collection("users/$userId/achievements");
-    final userQueryResult = await userAchievementsCollection.getDocuments();
+
+    final queryResult = await userAchievementsCollection.getDocuments();
+
     final userAchievements =
-        userQueryResult.documents.map((x) => x.data["id"]).toList();
+        queryResult.documents.map((x) => Achievement.fromDocument(x)).toList();
 
-    // TODO YP: need better solution
-    final allAchievementsCollection = database.collection("achievements");
-    final allQueryResult = await allAchievementsCollection.getDocuments();
-    final allAchievements = allQueryResult.documents
-        .map((x) => Achievement.fromDocument(x))
-        .toList();
-
-    allAchievements.removeWhere((x) => !userAchievements.contains(x.id));
-
-    return allAchievements;
+    return userAchievements;
   }
 }
