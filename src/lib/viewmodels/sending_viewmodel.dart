@@ -6,15 +6,16 @@ import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class SendingViewModel extends BaseViewModel {
-  final AchievementsService _achievementsService = locator<AchievementsService>();
+  final AchievementsService _achievementsService =
+      locator<AchievementsService>();
   final BaseAuthService _authService = locator<BaseAuthService>();
   final Achievement achievement;
 
   SendingViewModel(this.achievement);
 
   Future<void> sendTo(User recipient, String comment) async {
-
-    // TODO YP: add
-    return;
+    final sender = _authService.currentUser;
+    await _achievementsService.sendAchievement(
+        sender, recipient, achievement, comment);
   }
 }

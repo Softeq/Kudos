@@ -44,12 +44,16 @@ class SendingPage extends StatelessWidget {
 
   Future<void> _sendAchievementToUser(
       BuildContext context, SendingViewModel viewModel, User user) async {
-    var commentText = await _putCommentDialog(context);
+    try {
+      var commentText = await _putCommentDialog(context);
 
-    if (commentText != null) {
-      viewModel.sendTo(user, commentText);
+      if (commentText != null) {
+        await viewModel.sendTo(user, commentText);
 
-      _notifyAboutSuccess(context);
+        _notifyAboutSuccess(context);
+      }
+    } catch (error) {
+      _notifyAboutError(context, error);
     }
   }
 
@@ -112,6 +116,20 @@ class SendingPage extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.green,
+      duration: Duration(seconds: 4),
+    ));
+  }
+
+  void _notifyAboutError(BuildContext context, error) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(
+        locator<LocalizationService>().generalErrorMessage,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+      backgroundColor: Theme.of(context).errorColor,
       duration: Duration(seconds: 4),
     ));
   }
