@@ -91,7 +91,7 @@ class PeoplePage extends StatelessWidget {
       },
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.photoUrl),
+          backgroundImage: NetworkImage(user.imageUrl),
         ),
         title: Text(user.name),
         subtitle: Text(user.email),

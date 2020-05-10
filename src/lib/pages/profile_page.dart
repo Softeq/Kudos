@@ -49,7 +49,7 @@ class ProfilePage extends StatelessWidget {
             height: 80,
             width: 80,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(user.photoUrl),
+              backgroundImage: NetworkImage(user.imageUrl),
             ),
           ),
           SizedBox(

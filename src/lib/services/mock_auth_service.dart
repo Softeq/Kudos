@@ -7,7 +7,7 @@ class MockAuthService extends BaseAuthService {
     id: "test_id",
     name: "Test Name",
     email: "test.name@softeq.com",
-    photoUrl: "https://via.placeholder.com/150",
+    imageUrl: "https://via.placeholder.com/150",
   );
 
   @override

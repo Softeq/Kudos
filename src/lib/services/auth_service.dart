@@ -25,7 +25,7 @@ class AuthService extends BaseAuthService {
           id: null,
           name: firebaseUser.displayName,
           email: firebaseUser.email,
-          photoUrl: firebaseUser.photoUrl,
+          imageUrl: firebaseUser.photoUrl,
         );
       callback(_currentUser);
     });
