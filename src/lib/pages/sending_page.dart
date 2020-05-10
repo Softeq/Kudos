@@ -14,7 +14,9 @@ class SendingRoute extends MaterialPageRoute {
           builder: (context) {
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(create: (context) => PeopleViewModel()),
+                ChangeNotifierProvider(create: (context) => PeopleViewModel(
+                  excludeCurrentUser: true,
+                )),
                 ChangeNotifierProvider(
                     create: (context) => SendingViewModel(achievement)),
               ],
