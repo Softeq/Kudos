@@ -27,7 +27,7 @@ class PeoplePage extends StatelessWidget {
       ),
       body: PeopleList((user) {
         Navigator.of(context).push(ProfileRoute(user));
-      }),
+      }, Icon(Icons.navigate_next)),
     );
   }
 }

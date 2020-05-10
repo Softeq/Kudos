@@ -5,8 +5,9 @@ import 'package:kudosapp/viewmodels/people_viewmodel.dart';
 
 class PeopleList extends StatelessWidget {
   final Function(User user) itemSelector;
+  final Widget itemTrailing;
 
-  const PeopleList(this.itemSelector);
+  const PeopleList(this.itemSelector, this.itemTrailing);
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +78,7 @@ class PeopleList extends StatelessWidget {
         ),
         title: Text(user.name),
         subtitle: Text(user.email),
+        trailing: itemTrailing,
       ),
     );
   }
