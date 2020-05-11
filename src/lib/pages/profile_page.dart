@@ -10,14 +10,14 @@ import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 
 class ProfileRoute extends MaterialPageRoute {
   ProfileRoute(User user)
-    : super(
-        builder: (context) {
-          return ChangeNotifierProvider<ProfileViewModel>(
-            create: (context) => ProfileViewModel(user),
-            child: ProfilePage(),
-          );
-        },
-      );
+      : super(
+          builder: (context) {
+            return ChangeNotifierProvider<ProfileViewModel>(
+              create: (context) => ProfileViewModel(user),
+              child: ProfilePage(),
+            );
+          },
+        );
 }
 
 class ProfilePage extends StatelessWidget {
@@ -132,18 +132,20 @@ class ProfilePage extends StatelessWidget {
           mainAxisSpacing: 10,
         ),
         itemCount: achievements.length,
-        itemBuilder: (context, index) => _buildListItem(context, achievements[index]),
+        itemBuilder: (context, index) =>
+            _buildListItem(context, achievements[index]),
       ),
     );
   }
 
   Widget _buildListItem(BuildContext context, Achievement achievement) {
     return InkWell(
-      child: ImageLoader(achievement.imageUrl),
+      child: ImageLoader(
+        url: achievement.imageUrl,
+      ),
       onTap: () {
         Navigator.of(context).push(AchievementRoute(achievement));
       },
     );
   }
-
 }

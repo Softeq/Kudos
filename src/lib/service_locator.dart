@@ -11,8 +11,8 @@ GetIt locator = GetIt.instance;
 void setupLocator() {
   locator.registerFactory(() => PeopleService());
   locator.registerFactory(() => AchievementsService());
+  
   locator.registerLazySingleton(() => LocalizationService());
-
   locator.registerLazySingleton<BaseAuthService>(() => AuthService());
   // locator.registerLazySingleton<BaseAuthService>(() => MockAuthService());
 }

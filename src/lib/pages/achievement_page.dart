@@ -39,7 +39,9 @@ class AchievementPage extends StatelessWidget {
             height: 200,
             width: 200,
             child: Hero(
-              child: ImageLoader(viewModel.achievement.imageUrl),
+              child: ImageLoader(
+                url: viewModel.achievement.imageUrl,
+              ),
               tag: viewModel.achievement.name,
             ),
           ),
@@ -53,7 +55,8 @@ class AchievementPage extends StatelessWidget {
         RaisedButton(
           child: Text("Edit"),
           onPressed: () {
-            Navigator.of(context).push(EditAchievementRoute(viewModel.achievement));
+            Navigator.of(context)
+                .push(EditAchievementRoute(viewModel.achievement));
           },
         ),
       ],

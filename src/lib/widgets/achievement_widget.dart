@@ -146,12 +146,12 @@ class _AchievementImageWidget extends StatelessWidget {
       child = Center(
         child: CircularProgressIndicator(),
       );
-    } else if (file != null) {
+    } else if (imageUrl != null || file != null) {
       color = Color.fromARGB(255, 53, 38, 111);
-      child = SvgPicture.file(file);
-    } else if (imageUrl != null) {
-      color = Color.fromARGB(255, 53, 38, 111);
-      child = ImageLoader(imageUrl);
+      child = ImageLoader(
+        url: imageUrl,
+        file: file,
+      );
     }
 
     return ClipOval(
