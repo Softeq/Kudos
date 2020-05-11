@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
+import 'package:kudosapp/pages/sending_page.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 import 'package:kudosapp/widgets/button.dart';
@@ -11,7 +12,7 @@ class AchievementDetailsRoute extends MaterialPageRoute {
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
-              create: (context) { 
+              create: (context) {
                 return AchievementDetailsViewModel()
                   ..initialize(achievement);
               },
@@ -46,7 +47,7 @@ class AchievementPage extends StatelessWidget {
             AchievementWidget([viewModel.achievementViewModel], null),
             SizedBox(height: 24),
             Button("Send achievement", () {
-              // TODO PS: Add sending achievement code here
+              Navigator.of(context).push(SendingRoute(viewModel.achievementViewModel.model));
             }),
             SizedBox(height: 24),
             PopularityWidget(viewModel.statisticsValue),

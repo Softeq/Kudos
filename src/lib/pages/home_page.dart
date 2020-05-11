@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(authViewModel.currentUser.photoUrl),
+              backgroundImage: NetworkImage(authViewModel.currentUser.imageUrl),
             ),
             title: Text(authViewModel.currentUser.name ?? ''),
             subtitle: Text(authViewModel.currentUser.email ?? ''),
