@@ -8,19 +8,26 @@ class PeopleService {
   final BaseAuthService authService = locator<BaseAuthService>();
 
   Future<List<User>> getAllUsers() async {
-
     final query = database.collection("users").orderBy("name");
     final queryResult = await query.getDocuments();
     final users = queryResult.documents
-      .map<User>((x) => User(
-        id: x.documentID,
-        name: x.data["name"],
-        email: x.data["email"],
-        photoUrl: 'https://picsum.photos/50?random=${x.hashCode}' // TODO YP: need real photos
-      ))
-      // .where((User x) => x.email != authService.currentUser.email)
-      .toList();
-
+        .map<User>((x) => User.fromDocument(x))
+        .toList();
     return users;
+  }
+
+  Future<List<User>> getAllowedUsers() async {
+    final query = database.collection("users").orderBy("name");
+    final queryResult = await query.getDocuments();
+    final users = queryResult.documents
+        .map<User>((x) => User.fromDocument(x))
+        .where((User x) => x.email != authService.currentUser.email)
+        .toList();
+    return users;
+  }
+
+  Future<void> tryRegisterUser(User user) async {
+    final query = database.collection("users").document(user.id);
+    await query.setData(user.toMapForRegistration());
   }
 }

@@ -21,12 +21,7 @@ class AuthService extends BaseAuthService {
       _firebaseUser = firebaseUser;
       _currentUser = firebaseUser == null
         ? null
-        : User(
-          id: null,
-          name: firebaseUser.displayName,
-          email: firebaseUser.email,
-          photoUrl: firebaseUser.photoUrl,
-        );
+        : User.fromFirebase(firebaseUser);
       callback(_currentUser);
     });
   }
@@ -40,7 +35,7 @@ class AuthService extends BaseAuthService {
       }
       if (!_validateEmail(googleUser.email)) {
         _googleSignIn.disconnect();
-        throw new AuthError('Available for Softeq members only!', null);
+        throw new AuthError('Available only for @softeq.com members!', null);
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -62,12 +57,6 @@ class AuthService extends BaseAuthService {
   }
 
   bool _validateEmail(String email) {
-    const List<String> allowedDomains = [
-      'softeq.com',
-      'softeq.by',
-      'zgames.com',
-    ];
-    var domainOfEmail = email.split('@').last;
-    return allowedDomains.contains(domainOfEmail);
+    return email.endsWith("@softeq.com");
   }
 }
