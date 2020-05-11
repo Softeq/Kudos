@@ -5,6 +5,7 @@ import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
+import 'package:kudosapp/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,21 +30,18 @@ class HomePage extends StatelessWidget {
               onPressed: authViewModel.signOut,
             ),
           ),
-          RaisedButton(
-            child: Text("navigate to badges_page"),
-            onPressed: () {
+          SizedBox(height: 24),
+          Button("List of Achievements", () {
               Navigator.of(context).push(AchievementsRoute());
             },
           ),
-          RaisedButton(
-            child: Text("navigate to people_page"),
-            onPressed: () {
+          SizedBox(height: 24),
+          Button("List of Users", () {
               Navigator.of(context).push(PeopleRoute());
             },
           ),
-          RaisedButton(
-            child: Text("navigate to create Achievement"),
-            onPressed: () {
+          SizedBox(height: 24),
+          Button("Create Achievement", () {
               Navigator.of(context).push(EditAchievementRoute(null));
             },
           ),

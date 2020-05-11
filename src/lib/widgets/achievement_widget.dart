@@ -2,14 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kudosapp/pages/achievement_page.dart';
+import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 
 class AchievementWidget extends StatelessWidget {
   final List<AchievementItemViewModel> achievements;
+  final Function(AchievementItemViewModel) onAchievementClicked;
 
-  AchievementWidget(this.achievements);
+  AchievementWidget(this.achievements, this.onAchievementClicked);
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +103,7 @@ class AchievementWidget extends StatelessWidget {
                   elevation: 2,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(AchievementRoute(achievement.model));
+                      onAchievementClicked(achievement);
                     },
                     child: Hero(
                       child: _AchievementImageWidget(

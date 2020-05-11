@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/pages/achievement_page.dart';
+import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user.dart';
@@ -141,7 +141,7 @@ class ProfilePage extends StatelessWidget {
     return InkWell(
       child: ImageLoader(achievement.imageUrl),
       onTap: () {
-        Navigator.of(context).push(AchievementRoute(achievement));
+        Navigator.of(context).push(AchievementDetailsRoute(achievement));
       },
     );
   }
