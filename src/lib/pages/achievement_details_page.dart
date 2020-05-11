@@ -15,13 +15,13 @@ class AchievementDetailsRoute extends MaterialPageRoute {
                 return AchievementDetailsViewModel()
                   ..initialize(achievement);
               },
-              child: AchievementPage(),
+              child: AchievementDetailsPage(),
             );
           },
         );
 }
 
-class AchievementPage extends StatelessWidget {
+class AchievementDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AchievementDetailsViewModel>(builder: (context, viewModel, child) {
@@ -33,33 +33,33 @@ class AchievementPage extends StatelessWidget {
           child: Icon(Icons.edit),
           onPressed: () => Navigator.of(context).push(EditAchievementRoute(viewModel.achievementViewModel.model))
         ),
-        body: buildBody(viewModel, context),
+        body: _buildBody(viewModel, context),
       );
     });
   }
 
-  Widget buildBody(AchievementDetailsViewModel viewModel, BuildContext context) {
+  Widget _buildBody(AchievementDetailsViewModel viewModel, BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(24),
         child: Column(
           children: <Widget>[
-            AchievementWidget([viewModel.achievementViewModel], null),
+            AchievementWidget([viewModel.achievementViewModel]),
             SizedBox(height: 24),
             Button("Send achievement", () {
               // TODO PS: Add sending achievement code here
             }),
             SizedBox(height: 24),
-            PopularityWidget(viewModel.statisticsValue),
-            AchievementPeopleWidget()
+            _PopularityWidget(viewModel.statisticsValue),
+            _AchievementPeopleWidget()
           ],
         ));
   }
 }
 
-class PopularityWidget extends StatelessWidget {
-  final double popularityPercent;
+class _PopularityWidget extends StatelessWidget {
+  final double _popularityPercent;
 
-  PopularityWidget(this.popularityPercent);
+  _PopularityWidget(this._popularityPercent);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class PopularityWidget extends StatelessWidget {
                 height: 16,
                 width: 144,
                 child: LinearProgressIndicator(
-                  value: popularityPercent, // percent filled
+                  value: _popularityPercent, // percent filled
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                   backgroundColor: Colors.lightBlueAccent,
                 ),
@@ -91,8 +91,8 @@ class PopularityWidget extends StatelessWidget {
   }
 }
 
-class AchievementPeopleWidget extends StatelessWidget {
-  AchievementPeopleWidget();
+class _AchievementPeopleWidget extends StatelessWidget {
+  _AchievementPeopleWidget();
 
   @override
   Widget build(BuildContext context) {
