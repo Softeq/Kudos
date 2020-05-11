@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
+import 'package:kudosapp/pages/sending_page.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +26,12 @@ class AchievementPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(viewModel.achievement.name),
         ),
-        body: _buildBody(viewModel.achievement, context),
+        body: _buildBody(viewModel, context),
       );
     });
   }
 
-  Widget _buildBody(Achievement achievement, BuildContext context) {
+  Widget _buildBody(AchievementViewModel viewModel, BuildContext context) {
     return Column(
       children: <Widget>[
         Center(
@@ -38,21 +39,21 @@ class AchievementPage extends StatelessWidget {
             height: 200,
             width: 200,
             child: Hero(
-              child: ImageLoader(achievement.imageUrl),
-              tag: achievement.name,
+              child: ImageLoader(viewModel.achievement.imageUrl),
+              tag: viewModel.achievement.name,
             ),
           ),
         ),
         RaisedButton(
           child: Text("Send"),
           onPressed: () {
-            // TODO YP:
+            Navigator.of(context).push(SendingRoute(viewModel.achievement));
           },
         ),
         RaisedButton(
           child: Text("Edit"),
           onPressed: () {
-            Navigator.of(context).push(EditAchievementRoute(achievement));
+            Navigator.of(context).push(EditAchievementRoute(viewModel.achievement));
           },
         ),
       ],

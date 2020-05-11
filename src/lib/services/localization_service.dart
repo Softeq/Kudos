@@ -23,4 +23,7 @@ class LocalizationService {
   String get descriptionIsNullErrorMessage => "Добавьте описание";
   String get nameIsNullErrorMessage => "Введите название";
   String get generalErrorMessage => "Что-то пошло не так...";
+  String get send => "Отправить";
+  String get writeAComment => "Ваш комментарий";
+  String get sentSuccessfully => "Награда успешно отправлена!";
 }
