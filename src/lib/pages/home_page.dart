@@ -25,9 +25,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-
     _tabs.add(_TabItem(
+      icon: Icons.category,
       title: locator<LocalizationService>().allAchievements,
       body: ChangeNotifierProvider<AchievementsViewModel>(
         create: (context) => AchievementsViewModel()..initialize(),
@@ -36,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     ));
 
     _tabs.add(_TabItem(
+      icon: Icons.people,
       title: locator<LocalizationService>().people,
       body: ChangeNotifierProvider<PeopleViewModel>(
         create: (context) => PeopleViewModel(),
@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
 
     _tabs.add(
       _TabItem(
+        icon: Icons.person,
         title: locator<LocalizationService>().profile,
         body: ChangeNotifierProxyProvider<AuthViewModel, MyProfileViewModel>(
           create: (context) => null,
@@ -86,29 +87,23 @@ class _HomePageState extends State<HomePage> {
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white60,
       backgroundColor: Theme.of(context).primaryColor,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.category),
-          title: Text(_tabs[0].title),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people),
-          title: Text(_tabs[1].title),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          title: Text(_tabs[2].title),
-        ),
-      ],
+      items: _tabs
+          .map((tab) => BottomNavigationBarItem(
+                icon: Icon(tab.icon),
+                title: Text(tab.title),
+              ))
+          .toList(),
     );
   }
 }
 
 class _TabItem {
+  final IconData icon;
   final String title;
   final Object body;
 
   _TabItem({
+    @required this.icon,
     @required this.title,
     @required this.body,
   });
