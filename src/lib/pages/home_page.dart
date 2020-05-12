@@ -34,17 +34,23 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24),
-          Button("List of Achievements", () {
+          Button(
+            "List of Achievements",
+            () {
               Navigator.of(context).push(AchievementsRoute());
             },
           ),
           SizedBox(height: 24),
-          Button("List of Users", () {
+          Button(
+            "List of Users",
+            () {
               Navigator.of(context).push(PeopleRoute());
             },
           ),
           SizedBox(height: 24),
-          Button("Create Achievement", () {
+          Button(
+            "Create Achievement",
+            () {
               Navigator.of(context).push(EditAchievementRoute(null));
             },
           ),
