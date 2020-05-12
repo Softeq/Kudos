@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
@@ -33,7 +35,9 @@ class AchievementsPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case AchievementsViewModelState.ready:
-              return _KudosListWidget.from(viewModel.achievements);
+              return _KudosListWidget.from(viewModel.achievements, (achievementItem) {
+                Navigator.of(context).push(AchievementDetailsRoute(achievementItem.model));
+              });
             default:
               throw UnimplementedError();
           }
@@ -46,7 +50,8 @@ class AchievementsPage extends StatelessWidget {
 class _KudosListWidget extends StatelessWidget {
   final List<Widget> _items;
 
-  factory _KudosListWidget.from(List<AchievementItemViewModel> input) {
+  factory _KudosListWidget.from(List<AchievementItemViewModel> input, 
+  Function(AchievementItemViewModel) onAchievementClicked) {
     var sortedList = input.toList();
     sortedList
         .sort((x, y) => x.category.orderIndex.compareTo(y.category.orderIndex));
@@ -55,7 +60,7 @@ class _KudosListWidget extends StatelessWidget {
     var items = List<Widget>();
     var achievements = List<AchievementItemViewModel>();
     var addFunction = (List<Widget> x, List<AchievementItemViewModel> y) {
-      x.add(AchievementWidget(y.toList()));
+      x.add(AchievementWidget(y.toList(), onAchievementClicked));
       y.clear();
     };
 
