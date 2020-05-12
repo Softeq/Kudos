@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
 class ImageLoader extends StatelessWidget {
@@ -23,15 +24,21 @@ class ImageLoader extends StatelessWidget {
           if (viewModel.file == null) {
             return Container();
           } else {
-            if (viewModel.file.path.contains(".svg")) {
-              return SvgPicture.file(viewModel.file);
-            } else {
-              return Image.file(viewModel.file);
-            }
+            return _buildImage(viewModel.file);
           }
         },
       ),
     );
+  }
+
+  Widget _buildImage(File imageFile) {
+    var fileExtension = path.extension(imageFile.path);
+    switch (fileExtension) {
+      case ".svg":
+        return SvgPicture.file(imageFile);
+      default:
+        return Image.file(imageFile);
+    }
   }
 }
 
@@ -44,7 +51,7 @@ class _ImageLoaderViewModel extends BaseViewModel {
     _file = file;
     if (_file == null && url != null) {
       _file = await DefaultCacheManager().getSingleFile(url);
-      notifyListeners();
     }
+    notifyListeners();
   }
 }

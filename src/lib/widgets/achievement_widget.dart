@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 

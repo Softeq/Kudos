@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
+import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 class AchievementsService {
@@ -47,9 +47,10 @@ class AchievementsService {
     var copyOfAchievement = achievement.copy();
 
     if (file != null) {
+      var fileExtension = path.extension(file.path);
       var firebaseStorage = FirebaseStorage.instance;
       var storageReference =
-          firebaseStorage.ref().child(_kudosFolder).child("${Uuid().v4()}.svg");
+          firebaseStorage.ref().child(_kudosFolder).child("${Uuid().v4()}$fileExtension");
       var storageUploadTask = storageReference.putFile(file);
       var storageTaskSnapshot = await storageUploadTask.onComplete;
 
