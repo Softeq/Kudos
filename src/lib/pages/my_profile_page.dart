@@ -9,18 +9,18 @@ class MyProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MyProfileViewModel>(
       builder: (context, viewModel, child) {
-        final currentUser = viewModel.auth.currentUser;
+        final user = viewModel.profile.user;
 
         return Column(
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(
-                  currentUser.imageUrl,
+                  user.imageUrl,
                 ),
               ),
-              title: Text(currentUser.name ?? ''),
-              subtitle: Text(currentUser.email ?? ''),
+              title: Text(user.name ?? ''),
+              subtitle: Text(user.email ?? ''),
               trailing: IconButton(
                 icon: Icon(Icons.exit_to_app),
                 onPressed: viewModel.auth.signOut,
