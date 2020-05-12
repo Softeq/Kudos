@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
@@ -21,7 +22,9 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(authViewModel.currentUser.imageUrl),
+              backgroundImage: CachedNetworkImageProvider(
+                authViewModel.currentUser.imageUrl,
+              ),
             ),
             title: Text(authViewModel.currentUser.name ?? ''),
             subtitle: Text(authViewModel.currentUser.email ?? ''),

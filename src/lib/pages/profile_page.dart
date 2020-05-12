@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
@@ -49,7 +50,7 @@ class ProfilePage extends StatelessWidget {
             height: 80,
             width: 80,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(user.imageUrl),
+              backgroundImage: CachedNetworkImageProvider(user.imageUrl),
             ),
           ),
           SizedBox(

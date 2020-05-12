@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user.dart';
@@ -74,7 +75,7 @@ class PeopleList extends StatelessWidget {
       },
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.imageUrl),
+          backgroundImage: CachedNetworkImageProvider(user.imageUrl),
         ),
         title: Text(user.name),
         subtitle: Text(user.email),
