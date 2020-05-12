@@ -25,8 +25,10 @@ class User {
   }
 
   factory User.fromFirebase(FirebaseUser x) {
+    final uid = x.email.split("@").first;
+
     return User._(
-      id: x.uid,
+      id: uid,
       name: x.displayName,
       email: x.email,
       imageUrl: x.photoUrl,
