@@ -27,6 +27,8 @@ dependencies:
 
   uuid: ^2.0.4
 
+  path: ^1.6.4
+
   # auth
   google_sign_in: ^4.4.4
 

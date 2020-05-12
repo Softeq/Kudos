@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 
@@ -145,12 +144,12 @@ class _AchievementImageWidget extends StatelessWidget {
       child = Center(
         child: CircularProgressIndicator(),
       );
-    } else if (file != null) {
+    } else if (imageUrl != null || file != null) {
       color = Color.fromARGB(255, 53, 38, 111);
-      child = SvgPicture.file(file);
-    } else if (imageUrl != null) {
-      color = Color.fromARGB(255, 53, 38, 111);
-      child = ImageLoader(imageUrl);
+      child = ImageLoader(
+        url: imageUrl,
+        file: file,
+      );
     }
 
     return ClipOval(

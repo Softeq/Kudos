@@ -40,7 +40,7 @@ class EditAchievementViewModel extends BaseViewModel {
 
     var file = await FilePicker.getFile(
       type: FileType.custom,
-      allowedExtensions: ["svg"],
+      allowedExtensions: ["svg, gif"],
     );
     if (file != null) {
       achievementViewModel.file = file;
