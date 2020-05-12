@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
@@ -24,9 +22,6 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(locator<LocalizationService>().allAchievements),
-      ),
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
           switch (viewModel.state) {
@@ -35,12 +30,22 @@ class AchievementsPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case AchievementsViewModelState.ready:
-              return _KudosListWidget.from(viewModel.achievements, (achievementItem) {
-                Navigator.of(context).push(AchievementDetailsRoute(achievementItem.model));
-              });
+              return _KudosListWidget.from(
+                viewModel.achievements,
+                (achievementItem) {
+                  Navigator.of(context)
+                      .push(AchievementDetailsRoute(achievementItem.model));
+                },
+              );
             default:
               throw UnimplementedError();
           }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(EditAchievementRoute(null));
         },
       ),
     );
@@ -50,8 +55,10 @@ class AchievementsPage extends StatelessWidget {
 class _KudosListWidget extends StatelessWidget {
   final List<Widget> _items;
 
-  factory _KudosListWidget.from(List<AchievementItemViewModel> input, 
-  Function(AchievementItemViewModel) onAchievementClicked) {
+  factory _KudosListWidget.from(
+    List<AchievementItemViewModel> input,
+    Function(AchievementItemViewModel) onAchievementClicked,
+  ) {
     var sortedList = input.toList();
     sortedList
         .sort((x, y) => x.category.orderIndex.compareTo(y.category.orderIndex));
