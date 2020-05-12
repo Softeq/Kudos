@@ -29,6 +29,8 @@ dependencies:
 
   path: ^1.6.4
 
+  cached_network_image: ^2.2.0+1
+
   # auth
   google_sign_in: ^4.4.4
 
