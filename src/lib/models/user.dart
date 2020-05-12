@@ -33,12 +33,12 @@ class User {
     );
   }
 
-  factory User.mock() {
+  factory User.mock({int index = 0}) {
     return User._(
-      id: "test_id",
-      name: "Test Name",
+      id: "test_id #{$index}",
+      name: "Test Name #$index",
       email: "test.name@softeq.com",
-      imageUrl: "https://via.placeholder.com/150",
+      imageUrl: "https://picsum.photos/200?random=$index",
     );
   }
 

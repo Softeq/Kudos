@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
@@ -21,7 +22,9 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(authViewModel.currentUser.imageUrl),
+              backgroundImage: CachedNetworkImageProvider(
+                authViewModel.currentUser.imageUrl,
+              ),
             ),
             title: Text(authViewModel.currentUser.name ?? ''),
             subtitle: Text(authViewModel.currentUser.email ?? ''),
@@ -31,17 +34,23 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24),
-          Button("List of Achievements", () {
+          Button(
+            "List of Achievements",
+            () {
               Navigator.of(context).push(AchievementsRoute());
             },
           ),
           SizedBox(height: 24),
-          Button("List of Users", () {
+          Button(
+            "List of Users",
+            () {
               Navigator.of(context).push(PeopleRoute());
             },
           ),
           SizedBox(height: 24),
-          Button("Create Achievement", () {
+          Button(
+            "Create Achievement",
+            () {
               Navigator.of(context).push(EditAchievementRoute(null));
             },
           ),
