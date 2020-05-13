@@ -5,7 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/achievement_user.dart';
+import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/models/achievement_to_send.dart';
+import 'package:kudosapp/models/related_achievement.dart';
+import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -50,8 +53,10 @@ class AchievementsService {
     if (file != null) {
       var fileExtension = path.extension(file.path);
       var firebaseStorage = FirebaseStorage.instance;
-      var storageReference =
-          firebaseStorage.ref().child(_kudosFolder).child("${Uuid().v4()}$fileExtension");
+      var storageReference = firebaseStorage
+          .ref()
+          .child(_kudosFolder)
+          .child("${Uuid().v4()}$fileExtension");
       var storageUploadTask = storageReference.putFile(file);
       var storageTaskSnapshot = await storageUploadTask.onComplete;
 
@@ -75,58 +80,79 @@ class AchievementsService {
     }
   }
 
-  Future<void> sendAchievement(UserAchievement userAchievement) async {
-
+  Future<void> sendAchievement(AchievementToSend sendAchievement) async {
     final timestamp = Timestamp.now();
 
     final batch = database.batch();
 
     // add an achievement to user's achievements
 
-    final userAchievementsReference =
-        database.collection("users/${userAchievement.recipient.id}/achievements");
+    final userAchievementsReference = database
+        .collection("users/${sendAchievement.recipient.id}/achievements");
 
-    var map = userAchievement.toMap();
-    map.putIfAbsent("date", () => timestamp);
+    final userAchievementMap = UserAchievement(
+      sender: RelatedUser.fromUser(sendAchievement.sender),
+      achievement:
+          RelatedAchievement.fromAchievement(sendAchievement.achievement),
+      comment: sendAchievement.comment,
+      date: timestamp,
+    ).toMap();
 
-    batch.setData(userAchievementsReference.document(), map);
+    batch.setData(userAchievementsReference.document(), userAchievementMap);
 
     // add a user to achievements
 
     // TODO YP: can be made via Cloud Functions Triggers
 
-    final achievementHoldersReference =
-        database.collection("achievements/${userAchievement.achievement.id}/holders");
+    final achievementHoldersReference = database
+        .collection("achievements/${sendAchievement.achievement.id}/holders");
 
-    batch.setData(achievementHoldersReference.document(), {
-      "date": timestamp,
-      "recipient": userAchievement.recipient.toMapForUserAchievement(),
-    });
+    final holderMap = AchievementHolder(
+      date: timestamp,
+      recipient: RelatedUser.fromUser(sendAchievement.recipient),
+    ).toMap();
+
+    batch.setData(achievementHoldersReference.document(), holderMap);
 
     await batch.commit();
   }
 
-  Future<List<Achievement>> getUserAchievements(String userId) async {
+  Future<List<UserAchievement>> getUserAchievements(String userId) async {
     final userAchievementsCollection =
         database.collection("users/$userId/achievements");
 
     final queryResult = await userAchievementsCollection.getDocuments();
 
-    final userAchievements =
-        queryResult.documents.map((x) => Achievement.fromDocument(x)).toList();
+    final userAchievements = queryResult.documents
+        .map((x) => UserAchievement.fromDocument(x))
+        .toList();
 
     return userAchievements;
   }
 
-  Future<List<AchievementUser>> getAchievementUsers(String achivementId) async {
-    final achievementHoldersCollection =  
+  Future<List<AchievementHolder>> getAchievementHolders(
+    String achivementId,
+  ) async {
+    final achievementHoldersCollection =
         database.collection("achievements/$achivementId/holders");
 
     final queryResult = await achievementHoldersCollection.getDocuments();
 
-    final achievementUsers =
-        queryResult.documents.map((x) => AchievementUser.fromDocument(x)).toList();
+    final achievementHolders = queryResult.documents
+        .map((x) => AchievementHolder.fromDocument(x))
+        .toList();
 
-    return achievementUsers;
+    return achievementHolders;
+  }
+
+  Future<Achievement> getAchievement(String achivementId) async {
+    final achievementReference =
+        database.collection("achievements").document(achivementId);
+
+    final queryResult = await achievementReference.get();
+
+    final achievement = Achievement.fromDocument(queryResult);
+
+    return achievement;
   }
 }

@@ -24,14 +24,6 @@ class User {
     );
   }
 
-  factory User.fromMap(Map<String,dynamic> data){
-    return User._(
-      id: data["id"],
-      name: data["name"],
-      imageUrl: data["imageUrl"],
-    );
-  }
-
   factory User.fromFirebase(FirebaseUser x) {
     final uid = x.email.split("@").first;
 
@@ -50,22 +42,6 @@ class User {
       email: "test.name@softeq.com",
       imageUrl: "https://picsum.photos/200?random=$index",
     );
-  }
-
-  Map<String, dynamic> toMapForRegistration() {
-    return {
-      "name": name,
-      "email": email,
-      "imageUrl": imageUrl,
-    };
-  }
-
-  Map<String, dynamic> toMapForUserAchievement() {
-    return {
-      "id": id,
-      "name": name,
-      "imageUrl": imageUrl,
-    };
   }
 
   Map<String, dynamic> toMap() {

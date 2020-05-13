@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/models/user_registration.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
@@ -27,7 +28,8 @@ class PeopleService {
 
   Future<void> tryRegisterUser(User user) async {
     final query = database.collection("users").document(user.id);
-    await query.setData(user.toMapForRegistration());
+    final userRegistrationMap = UserRegistration.fromUser(user).toMap();
+    await query.setData(userRegistrationMap);
   }
 
   Future<List<User>> find(String request) async {
