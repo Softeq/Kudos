@@ -24,21 +24,15 @@ class AchievementsPage extends StatelessWidget {
     return Scaffold(
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
-          switch (viewModel.state) {
-            case AchievementsViewModelState.busy:
+          if (viewModel.isBusy) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            case AchievementsViewModelState.ready:
-              return _KudosListWidget.from(
-                viewModel.achievements,
-                (achievementItem) {
-                  Navigator.of(context)
-                      .push(AchievementDetailsRoute(achievementItem.model));
-                },
-              );
-            default:
-              throw UnimplementedError();
+          }
+          else {
+              return _KudosListWidget.from(viewModel.achievements, (achievementItem) {
+                Navigator.of(context).push(AchievementDetailsRoute(achievementItem.model));
+              });
           }
         },
       ),
