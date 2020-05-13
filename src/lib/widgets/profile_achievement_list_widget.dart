@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/user_achievement.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
 
@@ -11,7 +13,7 @@ class ProfileAchievementsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Achievement>>(
+    return FutureBuilder<List<UserAchievement>>(
       future: viewModel.achievements,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -60,7 +62,7 @@ class ProfileAchievementsList extends StatelessWidget {
     );
   }
 
-  Widget _buildList(List<Achievement> achievements) {
+  Widget _buildList(List<UserAchievement> achievements) {
     return Expanded(
       child: GridView.builder(
         padding: EdgeInsets.symmetric(
@@ -80,13 +82,18 @@ class ProfileAchievementsList extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Achievement achievement) {
+  Widget _buildListItem(BuildContext context, UserAchievement userAchievement) {
     return InkWell(
       child: ImageLoader(
-        url: achievement.imageUrl,
+        url: userAchievement.achievement.imageUrl,
       ),
-      onTap: () {
+      onTap: () async {
+
+        // TODO YP: refactor
+        final achievementService = locator<AchievementsService>();
+        final achievement = await achievementService.getAchievement(userAchievement.achievement.id);
         Navigator.of(context).push(AchievementDetailsRoute(achievement));
+
       },
     );
   }

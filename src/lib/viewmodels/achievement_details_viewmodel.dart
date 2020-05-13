@@ -33,8 +33,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> loadStatistics() async {
-    // Number of users with this badge divided by the total number of users 
-    var achivementUsers = await _achievementsService.getAchievementUsers(achievementViewModel.model.id);
+    // Number of users with this badge divided by the total number of users
+    var achivementUsers = await _achievementsService.getAchievementHolders(achievementViewModel.model.id);
     var allUsers = await _peopleService.getAllUsers();
     _statisticsValue = allUsers.length == 0 ? 0 : achivementUsers.length / allUsers.length;
     isBusy = false;
