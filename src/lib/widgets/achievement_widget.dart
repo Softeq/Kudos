@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
-import 'package:kudosapp/widgets/image_loader.dart';
+import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
 class AchievementWidget extends StatelessWidget {
   final List<AchievementItemViewModel> achievements;
@@ -103,7 +101,7 @@ class AchievementWidget extends StatelessWidget {
                       onAchievementClicked(achievement);
                     },
                     child: Hero(
-                      child: _AchievementImageWidget(
+                      child: AchievementImageWidget(
                         file: achievement.file,
                         imageUrl: achievement.imageUrl,
                         radius: radius,
@@ -117,47 +115,6 @@ class AchievementWidget extends StatelessWidget {
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _AchievementImageWidget extends StatelessWidget {
-  final File file;
-  final String imageUrl;
-  final double radius;
-  final bool isBusy;
-
-  _AchievementImageWidget({
-    this.file,
-    this.imageUrl,
-    this.radius,
-    this.isBusy,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget child = Container();
-    Color color = Colors.white;
-
-    if (isBusy) {
-      child = Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (imageUrl != null || file != null) {
-      color = Color.fromARGB(255, 53, 38, 111);
-      child = ImageLoader(
-        url: imageUrl,
-        file: file,
-      );
-    }
-
-    return ClipOval(
-      child: Container(
-        color: color,
-        child: child,
-        height: radius * 2.0,
-        width: radius * 2.0,
       ),
     );
   }

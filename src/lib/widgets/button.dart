@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// TODO PS: Change it to Style instead of Widget
 class Button extends StatelessWidget {
 
   final String title;
@@ -21,12 +20,12 @@ class Button extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w600)
         ),
-        textColor: Colors.white,
-        color: Colors.blue,
+        textColor: Theme.of(context).textTheme.bodyText1.color,
+        color: Theme.of(context).primaryColor,
         onPressed: onPressed,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
-            side: BorderSide(color: Colors.lightBlue)
+            side: BorderSide(color: Theme.of(context).primaryColorLight)
         ),
       ),
       decoration: BoxDecoration(

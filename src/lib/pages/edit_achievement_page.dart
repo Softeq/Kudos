@@ -38,6 +38,7 @@ class EditAchievementPage extends StatelessWidget {
         title: Text(_title),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.save),
         onPressed: () => _onSavePressed(context),
       ),

@@ -11,7 +11,7 @@ class User {
   User._({
     @required this.id,
     @required this.name,
-    @required this.email,
+    this.email,
     @required this.imageUrl,
   });
 
@@ -21,6 +21,14 @@ class User {
       name: x.data["name"],
       email: x.data["email"],
       imageUrl: x.data["imageUrl"],
+    );
+  }
+
+  factory User.fromMap(Map<String,dynamic> data){
+    return User._(
+      id: data["id"],
+      name: data["name"],
+      imageUrl: data["imageUrl"],
     );
   }
 
