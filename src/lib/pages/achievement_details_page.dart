@@ -59,6 +59,7 @@ class AchievementDetailsPage extends StatelessWidget {
         Align(
           alignment: Alignment.bottomLeft,
           child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
               heroTag: null,
               child: Icon(Icons.send),
               onPressed: () => Navigator.of(context)
@@ -67,6 +68,7 @@ class AchievementDetailsPage extends StatelessWidget {
         Align(
           alignment: Alignment.bottomRight,
           child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
               heroTag: null,
               child: Icon(Icons.edit),
               onPressed: () => Navigator.of(context).push(
@@ -119,8 +121,10 @@ class _PopularityWidget extends StatelessWidget {
                 width: 144,
                 child: LinearProgressIndicator(
                   value: _popularityPercent, // percent filled
-                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor),
+                  backgroundColor:
+                      Theme.of(context).primaryColorLight,
                 ),
               ),
             )
