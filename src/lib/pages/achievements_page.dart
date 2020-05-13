@@ -39,8 +39,11 @@ class AchievementsPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).push(EditAchievementRoute(null));
+        onPressed: () async {
+          Navigator.of(context).push(EditAchievementRoute());
+          // TODO VPY: test people selector
+          // var result = await Navigator.of(context).push(UserPickerRoute(multipleSelection: false));
+          // result = await Navigator.of(context).push(UserPickerRoute(multipleSelection: true));
         },
       ),
     );
