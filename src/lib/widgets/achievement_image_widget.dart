@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kudosapp/widgets/image_loader.dart';
@@ -28,6 +29,10 @@ class AchievementImageWidget extends StatelessWidget {
       );
     } else if (imageUrl != null || file != null) {
       color = Color.fromARGB(255, 53, 38, 111);
+      // child = Image(
+      //           image: CachedNetworkImageProvider(
+      //             imageUrl,
+      //           ));
       child = ImageLoader(
         url: imageUrl,
         file: file,

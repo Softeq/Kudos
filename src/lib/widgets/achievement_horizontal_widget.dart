@@ -4,10 +4,10 @@ import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
 
 import 'achievement_image_widget.dart';
 
-class AchievementWidgetHorizontal extends StatelessWidget {
+class AchievementHorizontalWidget extends StatelessWidget {
   final AchievementItemViewModel _achievementItem;
 
-  const AchievementWidgetHorizontal(this._achievementItem);
+  const AchievementHorizontalWidget(this._achievementItem);
 
   @override
   Widget build(BuildContext context) {

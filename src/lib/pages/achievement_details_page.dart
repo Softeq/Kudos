@@ -3,7 +3,7 @@ import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/sending_page.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_widget_horizontal.dart';
+import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
@@ -81,7 +81,7 @@ class AchievementDetailsPage extends StatelessWidget {
             margin: EdgeInsets.all(8.0),
             height: 140,
             child:
-                AchievementWidgetHorizontal((viewModel.achievementViewModel))),
+                AchievementHorizontalWidget((viewModel.achievementViewModel))),
         SizedBox(height: 24),
         _PopularityWidget(viewModel.statisticsValue),
         _AchievementPeopleWidget()

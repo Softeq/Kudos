@@ -18,12 +18,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
   AchievementItemViewModel get achievementViewModel => _achievementViewModel;
 
   double get statisticsValue => _statisticsValue;
-  set statisticsValue(double value) {
-    if (_statisticsValue != value) {
-      _statisticsValue = value;
-      notifyListeners();
-    }
-  }
 
   AchievementDetailsViewModel() {
     isBusy = true;
@@ -42,7 +36,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     // Number of users with this badge divided by the total number of users 
     var achivementUsers = await _achievementsService.getAchievementUsers(achievementViewModel.model.id);
     var allUsers = await _peopleService.getAllUsers();
-    statisticsValue = allUsers.length == 0 ? 0 : achivementUsers.length / allUsers.length;
+    _statisticsValue = allUsers.length == 0 ? 0 : achivementUsers.length / allUsers.length;
     isBusy = false;
   }
 
