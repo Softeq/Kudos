@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/achievement_user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -115,5 +116,17 @@ class AchievementsService {
         queryResult.documents.map((x) => Achievement.fromDocument(x)).toList();
 
     return userAchievements;
+  }
+
+  Future<List<AchievementUser>> getAchievementUsers(String achivementId) async {
+    final achievementHoldersCollection =  
+        database.collection("achievements/$achivementId/holders");
+
+    final queryResult = await achievementHoldersCollection.getDocuments();
+
+    final achievementUsers =
+        queryResult.documents.map((x) => AchievementUser.fromDocument(x)).toList();
+
+    return achievementUsers;
   }
 }
