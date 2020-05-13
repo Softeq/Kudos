@@ -3,8 +3,7 @@ import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/sending_page.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_widget.dart';
-import 'package:kudosapp/widgets/button.dart';
+import 'package:kudosapp/widgets/achievement_widget_horizontal.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
@@ -13,8 +12,7 @@ class AchievementDetailsRoute extends MaterialPageRoute {
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel()
-                  ..initialize(achievement);
+                return AchievementDetailsViewModel()..initialize(achievement);
               },
               child: AchievementDetailsPage(),
             );
@@ -25,35 +23,70 @@ class AchievementDetailsRoute extends MaterialPageRoute {
 class AchievementDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AchievementDetailsViewModel>(builder: (context, viewModel, child) {
+    return Consumer<AchievementDetailsViewModel>(
+        builder: (context, viewModel, child) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(viewModel.achievementViewModel.title),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.edit),
-          onPressed: () => Navigator.of(context).push(EditAchievementRoute(viewModel.achievementViewModel.model))
-        ),
-        body: _buildBody(viewModel, context),
-      );
+          appBar: AppBar(
+            title: Text(viewModel.achievementViewModel.title),
+          ),
+          body: _buildBodyWithFloatingButtons(viewModel, context));
     });
   }
 
-  Widget _buildBody(AchievementDetailsViewModel viewModel, BuildContext context) {
+  Widget _buildBodyWithFloatingButtons(
+      AchievementDetailsViewModel viewModel, BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(24),
-        child: Column(
+        padding: EdgeInsets.all(20),
+        child: Stack(
           children: <Widget>[
-            AchievementWidget([viewModel.achievementViewModel]),
-            SizedBox(height: 24),
-            Button("Send achievement", () {
-              Navigator.of(context).push(SendingRoute(viewModel.achievementViewModel.model));
-            }),
-            SizedBox(height: 24),
-            _PopularityWidget(viewModel.statisticsValue),
-            _AchievementPeopleWidget()
+            Align(
+                alignment: Alignment.topCenter,
+                child: _buildBody(viewModel, context)),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: _floatingButtons(viewModel, context)),
           ],
         ));
+  }
+
+  Widget _floatingButtons(
+      AchievementDetailsViewModel viewModel, BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: FloatingActionButton(
+              heroTag: null,
+              child: Icon(Icons.send),
+              onPressed: () => Navigator.of(context)
+                  .push(SendingRoute(viewModel.achievementViewModel.model))),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton(
+              heroTag: null,
+              child: Icon(Icons.edit),
+              onPressed: () => Navigator.of(context).push(
+                  EditAchievementRoute(viewModel.achievementViewModel.model))),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBody(
+      AchievementDetailsViewModel viewModel, BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+            margin: EdgeInsets.all(8.0),
+            height: 140,
+            child:
+                AchievementWidgetHorizontal((viewModel.achievementViewModel))),
+        SizedBox(height: 24),
+        _PopularityWidget(viewModel.statisticsValue),
+        _AchievementPeopleWidget()
+      ],
+    );
   }
 }
 
@@ -97,6 +130,6 @@ class _AchievementPeopleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(); //PeopleList(null, Icon(Icons.navigate_next));
   }
 }
