@@ -34,12 +34,10 @@ class AchievementHorizontalWidget extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: Text(
-                          _achievementItem.description,
-                          maxLines: 5,
-                          overflow: TextOverflow.fade,
-                          textAlign: TextAlign.center
-                        ),
+                        child: Text(_achievementItem.description,
+                            maxLines: 5,
+                            overflow: TextOverflow.fade,
+                            textAlign: TextAlign.center),
                       ),
                     ),
                   ),
@@ -49,7 +47,6 @@ class AchievementHorizontalWidget extends StatelessWidget {
             Material(
               borderRadius: BorderRadius.circular(imageRadius),
               elevation: 2,
-              color: Colors.blue,
               child: Hero(
                   child: AchievementImageWidget(
                     imageUrl: _achievementItem.imageUrl,
