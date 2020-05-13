@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/sending_page.dart';
+import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../service_locator.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(Achievement achievement)
@@ -97,13 +100,14 @@ class _PopularityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var localizationService = locator<LocalizationService>();
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         height: 36,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text("Popularity",
+            Text(localizationService.achivementStatisticsTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
@@ -115,8 +119,8 @@ class _PopularityWidget extends StatelessWidget {
                 width: 144,
                 child: LinearProgressIndicator(
                   value: _popularityPercent, // percent filled
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                  backgroundColor: Colors.lightBlueAccent,
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
                 ),
               ),
             )
