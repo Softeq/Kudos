@@ -31,6 +31,10 @@ dependencies:
 
   cached_network_image: ^2.2.0+1
 
+  semaphore: ^0.1.4
+
+  rxdart: ^0.24.0
+
   # auth
   google_sign_in: ^4.4.4
 

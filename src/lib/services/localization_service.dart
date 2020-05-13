@@ -27,4 +27,6 @@ class LocalizationService {
   String get writeAComment => "Ваш комментарий";
   String get sentSuccessfully => "Награда успешно отправлена!";
   String get achivementStatisticsTitle => "Статистика";
+  String get addPeople => "Добавить людей";
+  String get addedPeople => "Добавленные люди";
 }

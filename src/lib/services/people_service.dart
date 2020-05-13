@@ -10,9 +10,8 @@ class PeopleService {
   Future<List<User>> getAllUsers() async {
     final query = database.collection("users").orderBy("name");
     final queryResult = await query.getDocuments();
-    final users = queryResult.documents
-        .map<User>((x) => User.fromDocument(x))
-        .toList();
+    final users =
+        queryResult.documents.map<User>((x) => User.fromDocument(x)).toList();
     return users;
   }
 
@@ -29,5 +28,17 @@ class PeopleService {
   Future<void> tryRegisterUser(User user) async {
     final query = database.collection("users").document(user.id);
     await query.setData(user.toMapForRegistration());
+  }
+
+  Future<List<User>> find(String request) async {
+    final query = database.collection("users").orderBy("name");
+    final queryResult = await query.getDocuments();
+    final users = queryResult.documents
+        .map<User>((x) => User.fromDocument(x))
+        .where((User x) =>
+            x.email != authService.currentUser.email &&
+            x.name.toLowerCase().contains(request.toLowerCase()))
+        .toList();
+    return users;
   }
 }
