@@ -13,17 +13,16 @@ class AchievementsViewModel extends BaseViewModel {
       locator<LocalizationService>();
   final List<AchievementItemViewModel> achievements = List<AchievementItemViewModel>();
 
-  AchievementsViewModelState _achievementsViewModelState =
-      AchievementsViewModelState.busy;
-
-  AchievementsViewModelState get state => _achievementsViewModelState;
+  AchievementsViewModel() {
+    isBusy = true;
+  }
 
   Future<void> initialize() async {
     var result = await _achievementsService.getAchievements();
     var map = _getCategoriesMap();
     var viewModels = result.map((x) => _map(x, map)).toList();
     achievements.addAll(viewModels);
-    _achievementsViewModelState = AchievementsViewModelState.ready;
+    isBusy = false;
     notifyListeners();
   }
 
@@ -77,9 +76,4 @@ class AchievementsViewModel extends BaseViewModel {
       category: category,
     );
   }
-}
-
-enum AchievementsViewModelState {
-  busy,
-  ready,
 }
