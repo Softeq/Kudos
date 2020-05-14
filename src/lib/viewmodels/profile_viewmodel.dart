@@ -27,20 +27,17 @@ class ProfileViewModel extends BaseViewModel {
   List<UserAchievementCollection> _merge(
     List<UserAchievement> userAchievements,
   ) {
-    Map<String, UserAchievementCollection> _map = {};
+    final Map<String, UserAchievementCollection> _map = {};
 
     for (final x in userAchievements) {
       final id = x.achievement.id;
       if (_map.containsKey(id)) {
-        final y = _map[id];
-        _map[id] = UserAchievementCollection(y.userAchievement, y.count + 1);
+        _map[id] = _map[id].increaseCount();
       } else {
-        _map[id] = UserAchievementCollection(x, 1);
+        _map[id] = UserAchievementCollection.single(x);
       }
     }
 
-    final group = _map.values.toList();
-
-    return group;
+    return _map.values.toList();
   }
 }
