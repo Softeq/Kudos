@@ -1,7 +1,6 @@
 import 'package:kudosapp/models/user.dart';
 
 abstract class BaseAuthService {
-
   User get currentUser;
 
   void silentInit(callback);
@@ -9,5 +8,4 @@ abstract class BaseAuthService {
   Future<void> signIn();
 
   Future<void> signOut();
-
 }

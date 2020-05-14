@@ -26,10 +26,15 @@ class UserPickerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void initialize() {
+  Future<void> initialize(List<String> userIds) async {
     _queueHandler = QueueHandler<List<User>, String>(_findPeople);
     _streamSubscription =
         _queueHandler.responseStream.listen(_updateSearchResults);
+    if (userIds != null && userIds.isNotEmpty) {
+      var users = await _peopleService.getUsersByIds(userIds);
+      _selectedUsers.addAll(users);
+      _setState(UserPickerViewModelState.selectedUsers);
+    }
   }
 
   void addToQueue(String x) {

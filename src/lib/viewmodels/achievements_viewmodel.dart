@@ -18,9 +18,11 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   Future<void> initialize() async {
+    isBusy = true;
     var result = await _achievementsService.getAchievements();
     var map = _getCategoriesMap();
     var viewModels = result.map((x) => _map(x, map)).toList();
+    achievements.clear();
     achievements.addAll(viewModels);
     isBusy = false;
     notifyListeners();

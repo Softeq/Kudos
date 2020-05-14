@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_category.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AchievementItemViewModel extends BaseViewModel {
@@ -23,8 +21,7 @@ class AchievementItemViewModel extends BaseViewModel {
   }) : assert(achievement != null) {
     _achievement = achievement;
     _title = achievement.name;
-    _description =
-        achievement.description ?? locator<LocalizationService>().testLongText;
+    _description = achievement.description;
     _imageUrl = achievement.imageUrl;
   }
 
