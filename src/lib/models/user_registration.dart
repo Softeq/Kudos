@@ -17,7 +17,7 @@ class UserRegistration {
     return UserRegistration._(
       name: x.name,
       email: x.email,
-      imageUrl: x.imageUrl,
+      imageUrl: _getOriginalImageUrl(x.imageUrl),
     );
   }
 
@@ -27,5 +27,10 @@ class UserRegistration {
       "email": email,
       "imageUrl": imageUrl,
     };
+  }
+
+  static String _getOriginalImageUrl(String imageUrl) {
+    // remove default image size parameter
+    return imageUrl.replaceAll("=s96-c", "");
   }
 }
