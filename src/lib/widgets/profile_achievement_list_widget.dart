@@ -65,8 +65,10 @@ class ProfileAchievementsList extends StatelessWidget {
   Widget _buildList(List<UserAchievementCollection> achievementCollections) {
     return Expanded(
       child: GridView.builder(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
+        padding: EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
         ),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -90,7 +92,7 @@ class ProfileAchievementsList extends StatelessWidget {
   ) {
     final relatedAchievement =
         achievementCollection.userAchievement.achievement;
-    return InkWell(
+    return GestureDetector(
       child: Stack(
         children: <Widget>[
           ImageLoader(
