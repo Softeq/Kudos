@@ -13,7 +13,7 @@ class LocalizationService {
   String get ok => "OK";
   String get cancel => "Отмена";
   String get achievementName => "Название";
-  String get achievementDescription => "Описание";
+  String get description => "Описание";
   String get editName => "Сделай название уникальным";
   String get editDescription => "Сделай описание значимым";
   String get editImage => "Сделай изображение узнаваемым";
@@ -29,4 +29,14 @@ class LocalizationService {
   String get achivementStatisticsTitle => "Статистика";
   String get addPeople => "Добавить людей";
   String get addedPeople => "Добавленные люди";
+  String get createTeam => "Создание команды";
+  String get editTeam => "Редактирование команды";
+  String get name => "Имя";
+  String get optionalDescription => "Описание (опционально)";
+  String get requiredField => "Обязательное поле";
+  String get team => "Команда";
+  String get owner => "Владелец";
+  String get members => "Состав";
+  String get addMembers => "Добавить участников";
+  String get save => "Сохранить";
 }

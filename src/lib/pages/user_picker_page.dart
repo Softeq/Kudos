@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
 import 'package:provider/provider.dart';
 
-class UserPickerRoute extends MaterialPageRoute {
-  UserPickerRoute({bool multipleSelection = false})
+class UserPickerRoute extends MaterialPageRoute<List<User>> {
+  UserPickerRoute({bool allowMultipleSelection = false, List<String> userIds})
       : super(
           builder: (context) {
             return ChangeNotifierProvider<UserPickerViewModel>(
               create: (context) {
-                return UserPickerViewModel()..initialize();
+                return UserPickerViewModel()..initialize(userIds);
               },
-              child: _UserPickerPage(multipleSelection),
+              child: _UserPickerPage(allowMultipleSelection),
             );
           },
           fullscreenDialog: true,

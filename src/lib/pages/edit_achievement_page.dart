@@ -170,7 +170,7 @@ class EditAchievementPage extends StatelessWidget {
                               return Dialog(
                                 child: _TextInputWidget(
                                   title: locator<LocalizationService>()
-                                      .achievementDescription,
+                                      .description,
                                   initialValue: viewModel
                                       .achievementViewModel.description,
                                 ),
@@ -431,7 +431,7 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
               children: <Widget>[
                 Text(
                   widget.title,
-                  style: Theme.of(context).textTheme.subtitle,
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
                 SizedBox(height: 16.0),
                 Expanded(

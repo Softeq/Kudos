@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
@@ -25,14 +26,15 @@ class AchievementsPage extends StatelessWidget {
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-          }
-          else {
-              return _KudosListWidget.from(viewModel.achievements, (achievementItem) {
-                Navigator.of(context).push(AchievementDetailsRoute(achievementItem.model));
-              });
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return _KudosListWidget.from(viewModel.achievements,
+                (achievementItem) {
+              Navigator.of(context)
+                  .push(AchievementDetailsRoute(achievementItem.model));
+            });
           }
         },
       ),
@@ -40,10 +42,10 @@ class AchievementsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
         onPressed: () async {
-          Navigator.of(context).push(EditAchievementRoute());
-          // TODO VPY: test people selector
-          // var result = await Navigator.of(context).push(UserPickerRoute(multipleSelection: false));
-          // result = await Navigator.of(context).push(UserPickerRoute(multipleSelection: true));
+          await Navigator.of(context).push(EditAchievementRoute());
+          //TODO VPY: tmp
+          var viewModel = Provider.of<AchievementsViewModel>(context, listen: false);
+          viewModel.initialize();
         },
       ),
     );
@@ -121,7 +123,7 @@ class _GroupListItem extends StatelessWidget {
       ),
       child: Text(
         name,
-        style: Theme.of(context).textTheme.title,
+        style: Theme.of(context).textTheme.headline6,
         textAlign: TextAlign.center,
       ),
     );
