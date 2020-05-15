@@ -4,12 +4,11 @@ import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/sending_page.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../service_locator.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(Achievement achievement)
@@ -31,53 +30,33 @@ class AchievementDetailsPage extends StatelessWidget {
     return Consumer<AchievementDetailsViewModel>(
         builder: (context, viewModel, child) {
       return Scaffold(
-          appBar: AppBar(
-            title: Text(viewModel.achievementViewModel.title),
-          ),
-          body: _buildBodyWithFloatingButtons(viewModel, context));
-    });
-  }
-
-  Widget _buildBodyWithFloatingButtons(
-      AchievementDetailsViewModel viewModel, BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(20),
-        child: Stack(
-          children: <Widget>[
-            Align(
-                alignment: Alignment.topCenter,
-                child: _buildBody(viewModel, context)),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: _floatingButtons(viewModel, context)),
+        appBar: AppBar(
+          title: Text(viewModel.achievementViewModel.title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.of(context).push(EditAchievementRoute(
+                  achievement: viewModel.achievementViewModel.achievement,
+                ));
+              },
+            ),
           ],
-        ));
-  }
-
-  Widget _floatingButtons(
-      AchievementDetailsViewModel viewModel, BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: FloatingActionButton(
-              backgroundColor: Theme.of(context).primaryColor,
-              heroTag: null,
-              child: Icon(Icons.send),
-              onPressed: () => Navigator.of(context)
-                  .push(SendingRoute(viewModel.achievementViewModel.model))),
         ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-              backgroundColor: Theme.of(context).primaryColor,
-              heroTag: null,
-              child: Icon(Icons.edit),
-              onPressed: () => Navigator.of(context).push(
-                  EditAchievementRoute(viewModel.achievementViewModel.model))),
+        body: Padding(
+          padding: EdgeInsets.all(20),
+          child: _buildBody(viewModel, context),
         ),
-      ],
-    );
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          heroTag: null,
+          child: Icon(Icons.send),
+          onPressed: () => Navigator.of(context).push(
+            SendingRoute(viewModel.achievementViewModel.achievement),
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildBody(

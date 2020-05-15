@@ -1,34 +1,27 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/messages/achievement_updated_message.dart';
+import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
-import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class EditAchievementViewModel extends BaseViewModel {
-  AchievementItemViewModel _achievementViewModel;
-  bool _isBusy = false;
+  final AchievementViewModel achievementViewModel;
+  final Team _team;
+  final _achievementsService = locator<AchievementsService>();
+  final _eventBus = locator<EventBus>();
 
-  AchievementItemViewModel get achievementViewModel => _achievementViewModel;
-
-  bool get isBusy => _isBusy;
-
-  set isBusy(bool value) {
-    _isBusy = value;
-    notifyListeners();
-  }
-
-  void initialize(Achievement achievement) {
-    _achievementViewModel = AchievementItemViewModel(
-      achievement: achievement,
-      category: null,
-    );
-    notifyListeners();
-  }
+  EditAchievementViewModel(Achievement achievement, Team team)
+      : assert(achievement != null),
+        achievementViewModel = AchievementViewModel(achievement),
+        _team = team;
 
   @override
   void dispose() {
-    _achievementViewModel.dispose();
+    achievementViewModel.dispose();
     super.dispose();
   }
 
@@ -42,21 +35,20 @@ class EditAchievementViewModel extends BaseViewModel {
       type: FileType.custom,
       allowedExtensions: ["svg, gif"],
     );
+
+    achievementViewModel.isFileLoading = false;
+
     if (file != null) {
       achievementViewModel.file = file;
-    } else {
-      achievementViewModel.isFileLoading = false;
     }
   }
 
-  Future<void> save() {
-    var achievementsService = locator<AchievementsService>();
-    var achievement = achievementViewModel.model.copy(
-      description: achievementViewModel.description,
-      imageUrl: achievementViewModel.imageUrl,
-      name: achievementViewModel.title,
+  Future<void> save() async {
+    var result = await _achievementsService.createOrUpdate(
+      achievement: achievementViewModel.getModifiedAchievement(),
+      file: achievementViewModel.file,
+      team: _team,
     );
-
-    return achievementsService.createOrUpdate(achievement, achievementViewModel.file);
+    _eventBus.fire(AchievementUpdatedMessage(result));
   }
 }

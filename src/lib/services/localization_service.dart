@@ -38,6 +38,5 @@ class LocalizationService {
   String get team => "Команда";
   String get owner => "Владелец";
   String get members => "Состав";
-  String get addMembers => "Добавить участников";
   String get save => "Сохранить";
 }
