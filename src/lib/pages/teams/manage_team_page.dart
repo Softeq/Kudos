@@ -141,7 +141,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         SizedBox(height: 6.0),
         Padding(
           padding: EdgeInsets.only(left: 20.0),
-          child: Text(viewModel.owners.map((x) => x.name).join(",")),
+          child: Text(viewModel.owners),
         ),
         SizedBox(height: 24.0),
         Padding(

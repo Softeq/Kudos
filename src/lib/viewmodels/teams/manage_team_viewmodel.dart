@@ -29,7 +29,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
   String get description => _initialTeam.description;
 
-  List<TeamMember> get owners => _initialTeam.owners;
+  String get owners => _initialTeam.owners.map((x) => x.name).join(",");
 
   bool get isInitialized => _initialTeam != null;
 
