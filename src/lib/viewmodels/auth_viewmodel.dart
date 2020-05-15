@@ -9,17 +9,24 @@ class AuthViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
 
   User _currentUser;
+  AuthViewModelState _authState = AuthViewModelState.unknown;
 
   AuthViewModel() {
     _authService.silentInit((user) {
       _currentUser = user;
-      notifyListeners();
+      authState = _currentUser == null
+          ? AuthViewModelState.loggedOut
+          : AuthViewModelState.loggedIn;
     });
   }
 
   User get currentUser => _currentUser;
 
-  bool get isAuth => _currentUser != null;
+  AuthViewModelState get authState => _authState;
+  set authState(AuthViewModelState state) {
+    _authState = state;
+    notifyListeners();
+  }
 
   Future<void> signIn() async {
     await _authService.signIn();
@@ -29,4 +36,10 @@ class AuthViewModel extends BaseViewModel {
   Future<void> signOut() async {
     await _authService.signOut();
   }
+}
+
+enum AuthViewModelState {
+  unknown,
+  loggedIn,
+  loggedOut,
 }

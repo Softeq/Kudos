@@ -9,20 +9,17 @@ class AuthService extends BaseAuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  FirebaseUser _firebaseUser;
   User _currentUser;
 
   @override
   User get currentUser => _currentUser;
 
   @override
-  void silentInit(callback) {
+  void silentInit(Function(User) userChangedHandler) {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
-      _firebaseUser = firebaseUser;
-      _currentUser = firebaseUser == null
-        ? null
-        : User.fromFirebase(firebaseUser);
-      callback(_currentUser);
+      _currentUser =
+          firebaseUser == null ? null : User.fromFirebase(firebaseUser);
+      userChangedHandler(_currentUser);
     });
   }
 
@@ -38,13 +35,14 @@ class AuthService extends BaseAuthService {
         throw new AuthError('Available only for @softeq.com members!', null);
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       await _firebaseAuth.signInWithCredential(credential);
-    } on PlatformException catch(error) {
+    } on PlatformException catch (error) {
       throw new AuthError(error.message, null);
     } catch (error) {
       throw new AuthError('Error during sign-in', error);
