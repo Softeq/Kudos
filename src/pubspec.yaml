@@ -40,6 +40,8 @@ dependencies:
 
   firebase_auth: ^0.16.0
 
+  equatable: ^1.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

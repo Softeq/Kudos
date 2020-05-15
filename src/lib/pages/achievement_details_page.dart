@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/sending_page.dart';
 import 'package:kudosapp/services/localization_service.dart';
@@ -83,15 +85,40 @@ class AchievementDetailsPage extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-            margin: EdgeInsets.all(8.0),
             height: 140,
             child:
                 AchievementHorizontalWidget((viewModel.achievementViewModel))),
         SizedBox(height: 24),
         _PopularityWidget(viewModel.statisticsValue),
-        _AchievementPeopleWidget()
+        SizedBox(height: 24),
+        _AchievementHoldersWidget(viewModel.achievementHolders)
       ],
     );
+  }
+}
+
+class _PopularityTitleWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var localizationService = locator<LocalizationService>();
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(localizationService.achivementStatisticsTitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.normal)),
+          SizedBox(width: 8),
+          Tooltip(
+            message: localizationService.achivementStatisticsTooltip,
+            child: Icon(
+              Icons.info,
+              size: 20,
+              color: Colors.grey,
+            ),
+          )
+        ]);
   }
 }
 
@@ -102,18 +129,12 @@ class _PopularityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
         height: 36,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(localizationService.achivementStatisticsTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.normal)),
+            _PopularityTitleWidget(),
             ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: Container(
@@ -123,8 +144,7 @@ class _PopularityWidget extends StatelessWidget {
                   value: _popularityPercent, // percent filled
                   valueColor: AlwaysStoppedAnimation<Color>(
                       Theme.of(context).primaryColor),
-                  backgroundColor:
-                      Theme.of(context).primaryColorLight,
+                  backgroundColor: Theme.of(context).primaryColorLight,
                 ),
               ),
             )
@@ -133,11 +153,34 @@ class _PopularityWidget extends StatelessWidget {
   }
 }
 
-class _AchievementPeopleWidget extends StatelessWidget {
-  _AchievementPeopleWidget();
+class _AchievementHoldersWidget extends StatelessWidget {
+  final List<AchievementHolder> _achievementHolders;
+
+  _AchievementHoldersWidget(this._achievementHolders);
 
   @override
   Widget build(BuildContext context) {
-    return Container(); //PeopleList(null, Icon(Icons.navigate_next));
+    return Expanded(
+        child: GridView.count(
+            children: _buildListItems(context, _achievementHolders),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            primary: true,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 6,
+            physics: ClampingScrollPhysics()));
+  }
+
+  List<Widget> _buildListItems(
+      BuildContext context, List<AchievementHolder> achievementHolders) {
+    return achievementHolders == null
+        ? new List<Widget>()
+        : achievementHolders
+            .map((u) => CircleAvatar(
+                  backgroundImage:
+                      CachedNetworkImageProvider(u.recipient.imageUrl),
+                ))
+            .toList();
   }
 }
