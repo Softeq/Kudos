@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/related_user.dart';
 
-class AchievementHolder {
+class AchievementHolder extends Equatable {
   final Timestamp date;
   final RelatedUser recipient;
 
@@ -24,4 +25,7 @@ class AchievementHolder {
       "recipient": recipient.toMap(),
     };
   }
+
+  @override
+  List<Object> get props => [recipient?.id];
 }

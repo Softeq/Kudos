@@ -140,6 +140,7 @@ class AchievementsService {
 
     final achievementHolders = queryResult.documents
         .map((x) => AchievementHolder.fromDocument(x))
+        .toSet()
         .toList();
 
     return achievementHolders;
