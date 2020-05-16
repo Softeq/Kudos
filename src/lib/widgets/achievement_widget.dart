@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
 class AchievementWidget extends StatelessWidget {
-  final List<AchievementItemViewModel> achievements;
-  final Function(AchievementItemViewModel) onAchievementClicked;
+  final List<AchievementViewModel> achievements;
+  final Function(AchievementViewModel) onAchievementClicked;
 
   AchievementWidget(this.achievements, [this.onAchievementClicked]);
 
@@ -44,7 +44,7 @@ class AchievementWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(AchievementItemViewModel achievement) {
+  Widget _buildItem(AchievementViewModel achievement) {
     var borderRadius = 8.0;
     var contentPadding = 8.0;
     return AspectRatio(

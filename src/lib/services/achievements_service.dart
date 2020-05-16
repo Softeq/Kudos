@@ -3,38 +3,43 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/related_achievement.dart';
 import 'package:kudosapp/models/related_user.dart';
+import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/models/team_reference.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 class AchievementsService {
-  final Firestore database = Firestore.instance;
+  final Firestore _database = Firestore.instance;
   final String _achievementsCollection = "achievements";
   final String _kudosFolder = "kudos";
 
   Future<List<Achievement>> getAchievements() async {
-    var completer = Completer<List<Achievement>>();
-    StreamSubscription subscription;
-    subscription =
-        database.collection(_achievementsCollection).snapshots().listen(
-      (s) {
-        var result =
-            s.documents.map((x) => Achievement.fromDocument(x)).toList();
-        completer.complete(result);
-        subscription?.cancel();
-      },
-    );
+    var snapshot = await _database
+        .collection(_achievementsCollection)
+        .where("user_id", isNull: true)
+        .getDocuments();
+    var result = snapshot.documents.map((x) {
+      return Achievement.fromDocument(x);
+    }).toList();
 
-    return completer.future;
+    return result;
   }
 
-  Future<void> createOrUpdate(Achievement achievement, [File file]) async {
+  Future<Achievement> createOrUpdate({
+    @required Achievement achievement,
+    Team team,
+    User user,
+    File file,
+  }) async {
     if ((achievement.id == null && file == null) ||
         achievement.imageUrl == null && file == null) {
       throw ArgumentError.notNull("file");
@@ -49,6 +54,20 @@ class AchievementsService {
     }
 
     var copyOfAchievement = achievement.copy();
+
+    if (team != null) {
+      copyOfAchievement = copyOfAchievement.copy(
+        teamId: team.id,
+        teamReference: TeamReference(
+          name: team.name,
+          id: team.id,
+        ),
+      );
+    }
+
+    if (copyOfAchievement.teamId == null && copyOfAchievement.userId == null) {
+      throw ArgumentError("team or user should be set");
+    }
 
     if (file != null) {
       var fileExtension = path.extension(file.path);
@@ -69,25 +88,30 @@ class AchievementsService {
     }
 
     if (copyOfAchievement.id == null) {
-      await database
+      var docRef = await _database
           .collection(_achievementsCollection)
           .add(copyOfAchievement.toMap());
+
+      var document = await docRef.get();
+      return Achievement.fromDocument(document);
     } else {
-      await database
+      await _database
           .collection(_achievementsCollection)
           .document(copyOfAchievement.id)
           .setData(copyOfAchievement.toMap());
     }
+
+    return copyOfAchievement;
   }
 
   Future<void> sendAchievement(AchievementToSend sendAchievement) async {
     final timestamp = Timestamp.now();
 
-    final batch = database.batch();
+    final batch = _database.batch();
 
     // add an achievement to user's achievements
 
-    final userAchievementsReference = database
+    final userAchievementsReference = _database
         .collection("users/${sendAchievement.recipient.id}/achievements");
 
     final userAchievementMap = UserAchievement(
@@ -104,7 +128,7 @@ class AchievementsService {
 
     // TODO YP: can be made via Cloud Functions Triggers
 
-    final achievementHoldersReference = database
+    final achievementHoldersReference = _database
         .collection("achievements/${sendAchievement.achievement.id}/holders");
 
     final holderMap = AchievementHolder(
@@ -119,7 +143,7 @@ class AchievementsService {
 
   Future<List<UserAchievement>> getUserAchievements(String userId) async {
     final userAchievementsCollection =
-        database.collection("users/$userId/achievements");
+        _database.collection("users/$userId/achievements");
 
     final queryResult = await userAchievementsCollection.getDocuments();
 
@@ -130,11 +154,11 @@ class AchievementsService {
     return userAchievements;
   }
 
+  //TODO VPY: fix misprint
   Future<List<AchievementHolder>> getAchievementHolders(
-    String achivementId,
-  ) async {
+      String achivementId) async {
     final achievementHoldersCollection =
-        database.collection("achievements/$achivementId/holders");
+        _database.collection("achievements/$achivementId/holders");
 
     final queryResult = await achievementHoldersCollection.getDocuments();
 
@@ -148,12 +172,21 @@ class AchievementsService {
 
   Future<Achievement> getAchievement(String achivementId) async {
     final achievementReference =
-        database.collection("achievements").document(achivementId);
+        _database.collection("achievements").document(achivementId);
 
     final queryResult = await achievementReference.get();
 
     final achievement = Achievement.fromDocument(queryResult);
 
     return achievement;
+  }
+
+  Future<List<Achievement>> getTeamAchievements(String teamId) async {
+    var qs = await _database
+        .collection(_achievementsCollection)
+        .where("team_id", isEqualTo: teamId)
+        .getDocuments();
+    var result = qs.documents.map((x) => Achievement.fromDocument(x)).toList();
+    return result;
   }
 }

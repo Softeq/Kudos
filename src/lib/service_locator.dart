@@ -1,3 +1,4 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/auth_service.dart';
@@ -15,4 +16,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => LocalizationService());
   locator.registerLazySingleton<BaseAuthService>(() => AuthService());
   locator.registerLazySingleton<TeamsService>(() => TeamsService());
+  locator.registerLazySingleton<EventBus>(() => EventBus());
 }

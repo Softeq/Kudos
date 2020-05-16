@@ -1,35 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 import 'package:provider/provider.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
-  EditAchievementRoute([Achievement achievement])
-      : super(
+  EditAchievementRoute({
+    Achievement achievement,
+    Team team,
+  }) : super(
           builder: (context) {
             var localizationService = locator<LocalizationService>();
             return ChangeNotifierProvider<EditAchievementViewModel>(
               create: (context) {
-                return EditAchievementViewModel()
-                  ..initialize(achievement ?? Achievement.empty());
+                return EditAchievementViewModel(
+                  achievement ?? Achievement.empty(),
+                  team,
+                );
               },
-              child: EditAchievementPage(achievement == null
-                  ? localizationService.create
-                  : localizationService.edit),
+              child: _EditAchievementPage(
+                achievement == null
+                    ? localizationService.create
+                    : localizationService.edit,
+              ),
             );
           },
+          fullscreenDialog: true,
         );
 }
 
-class EditAchievementPage extends StatelessWidget {
+class _EditAchievementPage extends StatelessWidget {
   final String _title;
 
-  EditAchievementPage(this._title);
+  _EditAchievementPage(this._title);
 
   @override
   Widget build(BuildContext context) {
@@ -51,164 +59,162 @@ class EditAchievementPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                var canvasWidth = constraints.maxWidth;
-                var canvasHeight = constraints.maxHeight;
-
-                var widgetWidth = (constraints.maxWidth - 60.0) / 2.0;
-                var widgetHeight = widgetWidth * 100.0 / 54.0;
-
-                var freeX = canvasWidth - widgetWidth;
-                var freeY = canvasHeight - widgetHeight;
-
-                var nameAnchor = Offset(
-                  canvasWidth * 0.75,
-                  freeY * 0.25,
-                );
-
-                var descriptionAnchor = Offset(
-                  canvasWidth * 0.25,
-                  freeY * 0.35,
-                );
-
-                var imageAnchor = Offset(
-                  canvasWidth * 0.25,
-                  canvasHeight - freeY * 0.25,
-                );
-
-                var horizontalOffset = freeX * 0.125;
-                var halfHorizontalOffset = horizontalOffset / 2.0;
-
-                var buttonWidth = canvasWidth * 0.5 - horizontalOffset;
-                var buttonHeight = freeY * 0.25;
-
-                var localizationService = locator<LocalizationService>();
-
-                return Stack(
-                  children: <Widget>[
-                    Center(
-                      child: ChangeNotifierProvider<
-                          AchievementItemViewModel>.value(
-                        value: viewModel.achievementViewModel,
-                        child: Consumer<AchievementItemViewModel>(
-                          builder: (context, viewModel, child) {
-                            return AchievementWidget(
-                              [viewModel]
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: CustomPaint(
-                        painter: _OverlayPainter(
-                          canvasHeight: canvasHeight,
-                          canvasWidth: canvasWidth,
-                          widgetHeight: widgetHeight,
-                          widgetWidth: widgetWidth,
-                          nameAnchor: nameAnchor,
-                          descriptionAnchor: descriptionAnchor,
-                          imageAnchor: imageAnchor,
-                          horizontalOffset: horizontalOffset,
-                          color: Colors.grey[300],
-                        ),
-                      ),
-                    ),
-                    Positioned.fromRect(
-                      rect: Rect.fromCenter(
-                        center: Offset(
-                          nameAnchor.dx + halfHorizontalOffset,
-                          nameAnchor.dy,
-                        ),
-                        height: buttonHeight,
-                        width: buttonWidth,
-                      ),
-                      child: FlatButton(
-                        child: Text(
-                          localizationService.editName,
-                          textAlign: TextAlign.center,
-                        ),
-                        onPressed: () async {
-                          var result = await showDialog<String>(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: _TextInputWidget(
-                                  title: locator<LocalizationService>()
-                                      .achievementName,
-                                  initialValue:
-                                      viewModel.achievementViewModel.title,
-                                ),
-                              );
-                            },
-                          );
-                          if (result != null) {
-                            viewModel.achievementViewModel.title = result;
-                          }
-                        },
-                      ),
-                    ),
-                    Positioned.fromRect(
-                      rect: Rect.fromCenter(
-                        center: Offset(
-                          descriptionAnchor.dx - halfHorizontalOffset,
-                          descriptionAnchor.dy,
-                        ),
-                        height: buttonHeight,
-                        width: buttonWidth,
-                      ),
-                      child: FlatButton(
-                        child: Text(
-                          localizationService.editDescription,
-                          textAlign: TextAlign.center,
-                        ),
-                        onPressed: () async {
-                          var result = await showDialog<String>(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: _TextInputWidget(
-                                  title: locator<LocalizationService>()
-                                      .description,
-                                  initialValue: viewModel
-                                      .achievementViewModel.description,
-                                ),
-                              );
-                            },
-                          );
-                          if (result != null) {
-                            viewModel.achievementViewModel.description = result;
-                          }
-                        },
-                      ),
-                    ),
-                    Positioned.fromRect(
-                      rect: Rect.fromCenter(
-                        center: Offset(
-                          imageAnchor.dx - halfHorizontalOffset,
-                          imageAnchor.dy,
-                        ),
-                        height: buttonHeight,
-                        width: buttonWidth,
-                      ),
-                      child: FlatButton(
-                        child: Text(
-                          localizationService.editImage,
-                          textAlign: TextAlign.center,
-                        ),
-                        onPressed: () {
-                          viewModel.pickFile();
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
+            return _buildNormalLayout(viewModel);
           }
         },
       ),
+    );
+  }
+
+  static Widget _buildNormalLayout(EditAchievementViewModel viewModel) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var canvasWidth = constraints.maxWidth;
+        var canvasHeight = constraints.maxHeight;
+
+        var widgetWidth = (constraints.maxWidth - 60.0) / 2.0;
+        var widgetHeight = widgetWidth * 100.0 / 54.0;
+
+        var freeX = canvasWidth - widgetWidth;
+        var freeY = canvasHeight - widgetHeight;
+
+        var nameAnchor = Offset(
+          canvasWidth * 0.75,
+          freeY * 0.25,
+        );
+
+        var descriptionAnchor = Offset(
+          canvasWidth * 0.25,
+          freeY * 0.35,
+        );
+
+        var imageAnchor = Offset(
+          canvasWidth * 0.25,
+          canvasHeight - freeY * 0.25,
+        );
+
+        var horizontalOffset = freeX * 0.125;
+        var halfHorizontalOffset = horizontalOffset / 2.0;
+
+        var buttonWidth = canvasWidth * 0.5 - horizontalOffset;
+        var buttonHeight = freeY * 0.25;
+
+        var localizationService = locator<LocalizationService>();
+
+        return Stack(
+          children: <Widget>[
+            Center(
+              child: ChangeNotifierProvider<AchievementViewModel>.value(
+                value: viewModel.achievementViewModel,
+                child: Consumer<AchievementViewModel>(
+                  builder: (context, viewModel, child) {
+                    return AchievementWidget([viewModel]);
+                  },
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _OverlayPainter(
+                  canvasHeight: canvasHeight,
+                  canvasWidth: canvasWidth,
+                  widgetHeight: widgetHeight,
+                  widgetWidth: widgetWidth,
+                  nameAnchor: nameAnchor,
+                  descriptionAnchor: descriptionAnchor,
+                  imageAnchor: imageAnchor,
+                  horizontalOffset: horizontalOffset,
+                  color: Colors.grey[300],
+                ),
+              ),
+            ),
+            Positioned.fromRect(
+              rect: Rect.fromCenter(
+                center: Offset(
+                  nameAnchor.dx + halfHorizontalOffset,
+                  nameAnchor.dy,
+                ),
+                height: buttonHeight,
+                width: buttonWidth,
+              ),
+              child: FlatButton(
+                child: Text(
+                  localizationService.editName,
+                  textAlign: TextAlign.center,
+                ),
+                onPressed: () async {
+                  var result = await showDialog<String>(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: _TextInputWidget(
+                          title: locator<LocalizationService>().achievementName,
+                          initialValue: viewModel.achievementViewModel.title,
+                        ),
+                      );
+                    },
+                  );
+                  if (result != null) {
+                    viewModel.achievementViewModel.title = result;
+                  }
+                },
+              ),
+            ),
+            Positioned.fromRect(
+              rect: Rect.fromCenter(
+                center: Offset(
+                  descriptionAnchor.dx - halfHorizontalOffset,
+                  descriptionAnchor.dy,
+                ),
+                height: buttonHeight,
+                width: buttonWidth,
+              ),
+              child: FlatButton(
+                child: Text(
+                  localizationService.editDescription,
+                  textAlign: TextAlign.center,
+                ),
+                onPressed: () async {
+                  var result = await showDialog<String>(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: _TextInputWidget(
+                          title: locator<LocalizationService>().description,
+                          initialValue:
+                              viewModel.achievementViewModel.description,
+                        ),
+                      );
+                    },
+                  );
+                  if (result != null) {
+                    viewModel.achievementViewModel.description = result;
+                  }
+                },
+              ),
+            ),
+            Positioned.fromRect(
+              rect: Rect.fromCenter(
+                center: Offset(
+                  imageAnchor.dx - halfHorizontalOffset,
+                  imageAnchor.dy,
+                ),
+                height: buttonHeight,
+                width: buttonWidth,
+              ),
+              child: FlatButton(
+                child: Text(
+                  localizationService.editImage,
+                  textAlign: TextAlign.center,
+                ),
+                onPressed: () {
+                  viewModel.pickFile();
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -219,7 +225,6 @@ class EditAchievementPage extends StatelessWidget {
     );
 
     String errorMessage;
-
     try {
       viewModel.isBusy = true;
       await viewModel.save();

@@ -1,23 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
-import 'package:kudosapp/pages/edit_achievement_page.dart';
-import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 import 'package:provider/provider.dart';
-
-class AchievementsRoute extends MaterialPageRoute {
-  AchievementsRoute()
-      : super(
-          builder: (context) {
-            return ChangeNotifierProvider<AchievementsViewModel>(
-              create: (context) => AchievementsViewModel()..initialize(),
-              child: AchievementsPage(),
-            );
-          },
-        );
-}
 
 class AchievementsPage extends StatelessWidget {
   @override
@@ -30,22 +16,11 @@ class AchievementsPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            return _KudosListWidget.from(viewModel.achievements,
-                (achievementItem) {
+            return _KudosListWidget.from(viewModel.achievements, (x) {
               Navigator.of(context)
-                  .push(AchievementDetailsRoute(achievementItem.model));
+                  .push(AchievementDetailsRoute(x.achievement));
             });
           }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.of(context).push(EditAchievementRoute());
-          //TODO VPY: tmp
-          var viewModel = Provider.of<AchievementsViewModel>(context, listen: false);
-          viewModel.initialize();
         },
       ),
     );
@@ -56,17 +31,16 @@ class _KudosListWidget extends StatelessWidget {
   final List<Widget> _items;
 
   factory _KudosListWidget.from(
-    List<AchievementItemViewModel> input,
-    Function(AchievementItemViewModel) onAchievementClicked,
+    List<AchievementViewModel> input,
+    Function(AchievementViewModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
-    sortedList
-        .sort((x, y) => x.category.orderIndex.compareTo(y.category.orderIndex));
+    sortedList.sort((x, y) => x.group.compareTo(y.group));
 
     String groupName;
     var items = List<Widget>();
-    var achievements = List<AchievementItemViewModel>();
-    var addFunction = (List<Widget> x, List<AchievementItemViewModel> y) {
+    var achievements = List<AchievementViewModel>();
+    var addFunction = (List<Widget> x, List<AchievementViewModel> y) {
       x.add(AchievementWidget(y.toList(), onAchievementClicked));
       y.clear();
     };
@@ -74,12 +48,12 @@ class _KudosListWidget extends StatelessWidget {
     for (var i = 0; i < sortedList.length; i++) {
       var item = sortedList[i];
 
-      if (groupName != item.category.name) {
+      if (groupName != item.group) {
         if (achievements.isNotEmpty) {
           addFunction(items, achievements);
         }
 
-        groupName = item.category.name;
+        groupName = item.group;
         items.add(_GroupListItem(groupName));
       }
 

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/viewmodels/achievement_item_viewmodel.dart';
-
-import 'achievement_image_widget.dart';
+import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
 class AchievementHorizontalWidget extends StatelessWidget {
-  final AchievementItemViewModel _achievementItem;
+  final AchievementViewModel _achievementViewModel;
 
-  const AchievementHorizontalWidget(this._achievementItem);
+  const AchievementHorizontalWidget(this._achievementViewModel);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: Text(_achievementItem.description,
+                        child: Text(_achievementViewModel.description,
                             maxLines: 5,
                             overflow: TextOverflow.fade,
                             textAlign: TextAlign.center),
@@ -49,10 +48,10 @@ class AchievementHorizontalWidget extends StatelessWidget {
               elevation: 2,
               child: Hero(
                   child: AchievementImageWidget(
-                    imageUrl: _achievementItem.imageUrl,
+                    imageUrl: _achievementViewModel.imageUrl,
                     radius: imageRadius,
                   ),
-                  tag: _achievementItem.title),
+                  tag: _achievementViewModel.title),
             ),
           ],
         );

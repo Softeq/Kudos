@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kudosapp/models/team_reference.dart';
 
 @immutable
 class Achievement {
@@ -7,39 +8,41 @@ class Achievement {
   final String name;
   final String description;
   final String imageUrl;
-  final List<String> tags;
+  final String teamId;
+  final TeamReference teamReference;
+  final String userId;
 
   Achievement._({
     @required this.id,
     @required this.name,
     @required this.description,
     @required this.imageUrl,
-    @required this.tags,
+    @required this.teamId,
+    @required this.teamReference,
+    @required this.userId,
   });
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
-    var tagData = x.data["tag"];
-    List<String> tags;
-    if (tagData != null) {
-      tags = tagData.cast<String>().toList();
-    }
-
     return Achievement._(
-      description: x.data["description"],
-      tags: tags ?? List<String>(),
-      name: x.data["name"],
-      imageUrl: x.data["imageUrl"],
       id: x.documentID,
+      name: x.data["name"],
+      description: x.data["description"],
+      imageUrl: x.data["image_url"],
+      teamId: x.data["team_id"],
+      teamReference: TeamReference.fromMap(x.data["team"]),
+      userId: x.data["user_id"],
     );
   }
 
   factory Achievement.empty() {
     return Achievement._(
       description: null,
-      tags: null,
       name: null,
       imageUrl: null,
       id: null,
+      teamReference: null,
+      teamId: null,
+      userId: null,
     );
   }
 
@@ -47,13 +50,17 @@ class Achievement {
     String name,
     String description,
     String imageUrl,
+    String teamId,
+    TeamReference teamReference,
   }) {
     return Achievement._(
       id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
-      tags: tags ?? this.tags,
+      teamId: teamId ?? this.teamId,
+      teamReference: teamReference ?? this.teamReference,
+      userId: userId ?? this.userId,
     );
   }
 
@@ -61,8 +68,10 @@ class Achievement {
     return {
       "name": name,
       "description": description,
-      "imageUrl": imageUrl,
-      "tags": tags,
+      "image_url": imageUrl,
+      "team_id": teamId,
+      "team": teamReference.toMap(),
+      "user_id": userId,
     };
   }
 }
