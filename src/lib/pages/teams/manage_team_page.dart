@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
@@ -51,7 +52,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                 return _buildTitle(viewModel);
               } else {
                 var lineData = viewModel.getData(index);
-                return AchievementWidget(lineData, onAchievementTapped);
+                return AchievementWidget(lineData, _achievementTapped);
               }
             },
             itemCount: viewModel.itemsCount,
@@ -59,20 +60,10 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var viewModel =
-              Provider.of<ManageTeamViewModel>(context, listen: false);
-          Navigator.of(context).push(EditAchievementRoute(
-            team: viewModel.modifiedTeam,
-          ));
-        },
+        onPressed: _createAchievementTapped,
         child: Icon(Icons.add),
       ),
     );
-  }
-
-  void onAchievementTapped(AchievementViewModel x) async {
-    Navigator.of(context).push(AchievementDetailsRoute(x.achievement));
   }
 
   Widget _buildTitle(
@@ -81,16 +72,25 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     var localizationService = locator<LocalizationService>();
     var textTheme = Theme.of(context).textTheme;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 4.0,
+              top: 4.0,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 20.0),
+          padding: EdgeInsets.only(left: 20.0, top: 8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -112,18 +112,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: IconButton(
-                  onPressed: () async {
-                    var team = viewModel.modifiedTeam;
-                    var editedTeam =
-                        await Navigator.of(context).push(EditTeamRoute(team));
-                    if (editedTeam != null) {
-                      var resultTeam = team.copy(
-                        name: editedTeam.name,
-                        description: editedTeam.description,
-                      );
-                      viewModel.initialize(resultTeam);
-                    }
-                  },
+                  onPressed: _editTeamTapped,
                   icon: Icon(Icons.edit),
                 ),
               ),
@@ -131,66 +120,65 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           ),
         ),
         SizedBox(height: 24.0),
-        Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Text(
-            localizationService.owner,
-            style: textTheme.caption,
+        GestureDetector(
+          onTap: _adminsTapped,
+          child: Container(
+            color: Colors.transparent,
+            padding: EdgeInsets.only(left: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  localizationService.admins,
+                  style: textTheme.caption,
+                ),
+                SizedBox(height: 6.0),
+                ChangeNotifierProvider<ListNotifier<TeamMember>>.value(
+                  value: viewModel.admins,
+                  child: Consumer<ListNotifier<TeamMember>>(
+                    builder: (context, items, child) {
+                      return Text(viewModel.owners);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 6.0),
-        Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Text(viewModel.owners),
         ),
         SizedBox(height: 24.0),
-        Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Text(
-            localizationService.members,
-            style: textTheme.caption,
-          ),
-        ),
-        SizedBox(height: 6.0),
-        ChangeNotifierProvider<ListNotifier<TeamMemberViewModel>>.value(
-          value: viewModel.members,
-          child: Consumer<ListNotifier<TeamMemberViewModel>>(
-            builder: (context, teamMembers, child) {
-              var addUsersAction = () async {
-                var users = await Navigator.of(context).push(
-                  UserPickerRoute(
-                    allowMultipleSelection: true,
-                    userIds:
-                        teamMembers.items.map((x) => x.teamMember.id).toList(),
-                  ),
-                );
-                viewModel.replaceMembers(users);
-              };
-
-              if (teamMembers.items.isEmpty) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 20.0),
-                  child: GestureDetector(
-                    child: Text(localizationService.addPeople),
-                    onTap: addUsersAction,
-                  ),
-                );
-              }
-
-              var memberWidgets =
-                  teamMembers.items.map((x) => _buildMember(x)).toList();
-
-              return Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: GestureDetector(
-                  child: Wrap(
-                    spacing: 8.0,
-                    children: memberWidgets,
-                  ),
-                  onTap: addUsersAction,
+        GestureDetector(
+          onTap: _membersTapped,
+          child: Container(
+            color: Colors.transparent,
+            padding: EdgeInsets.only(left: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  localizationService.members,
+                  style: textTheme.caption,
                 ),
-              );
-            },
+                SizedBox(height: 6.0),
+                ChangeNotifierProvider<ListNotifier<TeamMemberViewModel>>.value(
+                  value: viewModel.members,
+                  child: Consumer<ListNotifier<TeamMemberViewModel>>(
+                    builder: (context, teamMembers, child) {
+                      if (teamMembers.items.isEmpty) {
+                        return Text(localizationService.addPeople);
+                      } else {
+                        var memberWidgets = teamMembers.items
+                            .map((x) => _buildMember(x))
+                            .toList();
+                        return Wrap(
+                          spacing: 8.0,
+                          children: memberWidgets,
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: 32.0),
@@ -225,5 +213,51 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         teamMemberViewModel.teamMember.name,
       ),
     );
+  }
+
+  void _createAchievementTapped() {
+    var viewModel = _getViewModel();
+    Navigator.of(context).push(EditAchievementRoute(
+      team: viewModel.modifiedTeam,
+    ));
+  }
+
+  void _achievementTapped(AchievementViewModel x) {
+    Navigator.of(context).push(AchievementDetailsRoute(x.achievement));
+  }
+
+  Future<void> _editTeamTapped() async {
+    var viewModel = _getViewModel();
+    var team =
+        await Navigator.of(context).push(EditTeamRoute(viewModel.modifiedTeam));
+    if (team != null) {
+      viewModel.initialize(team);
+    }
+  }
+
+  Future<void> _membersTapped() async {
+    var viewModel = _getViewModel();
+    var users = await Navigator.of(context).push(
+      UserPickerRoute(
+        allowMultipleSelection: true,
+        userIds: viewModel.members.items.map((x) => x.teamMember.id).toList(),
+      ),
+    );
+    viewModel.replaceMembers(users);
+  }
+
+  Future<void> _adminsTapped() async {
+    var viewModel = _getViewModel();
+    var users = await Navigator.of(context).push(
+      UserPickerRoute(
+        allowMultipleSelection: true,
+        userIds: viewModel.admins.items.map((x) => x.id).toList(),
+      ),
+    );
+    viewModel.replaceAdmins(users);
+  }
+
+  ManageTeamViewModel _getViewModel() {
+    return Provider.of<ManageTeamViewModel>(context, listen: false);
   }
 }

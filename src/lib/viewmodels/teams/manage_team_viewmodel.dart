@@ -16,11 +16,14 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
   final members = ListNotifier<TeamMemberViewModel>();
-  final _achievementsService = locator<AchievementsService>();
+  final admins = ListNotifier<TeamMember>();
   final _achievements = List<AchievementViewModel>();
-  final _random = Random();
+
+  final _achievementsService = locator<AchievementsService>();
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
+  final _random = Random();
+  
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
       _onAchievementUpdatedSubscription;
@@ -29,13 +32,15 @@ class ManageTeamViewModel extends BaseViewModel {
 
   String get description => _initialTeam.description;
 
-  String get owners => _initialTeam.owners.map((x) => x.name).join(",");
+  String get owners => admins.items.map((x) => x.name).join(", ");
 
   bool get isInitialized => _initialTeam != null;
 
   Team get modifiedTeam {
     return _initialTeam.copy(
-        members: members.items.map((x) => x.teamMember).toList());
+      members: members.items.map((x) => x.teamMember).toList(),
+      owners: admins.items,
+    );
   }
 
   int get itemsCount => (_achievements.length / 2.0).round() + 1;
@@ -43,6 +48,7 @@ class ManageTeamViewModel extends BaseViewModel {
   @override
   void dispose() {
     members.dispose();
+    admins.dispose();
     _achievements.forEach((x) {
       x.dispose();
     });
@@ -53,6 +59,7 @@ class ManageTeamViewModel extends BaseViewModel {
   void initialize(Team team) {
     _initialTeam = team;
     members.replace(team.members.map(_createTeamMemberViewModel));
+    admins.replace(team.owners);
     notifyListeners();
     _refreshAchievement();
 
@@ -66,13 +73,27 @@ class ManageTeamViewModel extends BaseViewModel {
       return;
     }
 
-    var teamMembers = users.map(
-      (x) {
-        return _createTeamMemberViewModel(TeamMember.fromUser(x));
-      },
+    var teamMembers = users.map((x) => TeamMember.fromUser(x)).toList();
+    members.replace(teamMembers.map(_createTeamMemberViewModel));
+
+    _teamsService.updateTeamMembers(
+      _initialTeam.id,
+      teamMembers,
     );
-    members.replace(teamMembers);
-    _saveMembers();
+  }
+
+  void replaceAdmins(Iterable<User> users) {
+    if (users == null || users.isEmpty) {
+      return;
+    }
+
+    var teamMembers = users.map((x) => TeamMember.fromUser(x)).toList();
+    admins.replace(teamMembers);
+
+    _teamsService.updateAdmins(
+      _initialTeam.id,
+      teamMembers,
+    );
   }
 
   List<AchievementViewModel> getData(int index) {
@@ -109,13 +130,6 @@ class ManageTeamViewModel extends BaseViewModel {
     _achievements.clear();
     _achievements.addAll(result.map((x) => AchievementViewModel(x)));
     notifyListeners();
-  }
-
-  Future<void> _saveMembers() {
-    return _teamsService.updateTeamMembers(
-      _initialTeam.id,
-      members.items.map((x) => x.teamMember).toList(),
-    );
   }
 
   TeamMemberViewModel _createTeamMemberViewModel(TeamMember teamMember) {

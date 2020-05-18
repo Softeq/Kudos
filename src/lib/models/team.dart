@@ -35,13 +35,14 @@ class Team {
   Team copy({
     String name,
     String description,
+    List<TeamMember> owners,
     List<TeamMember> members,
   }) {
     return Team._(
       id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      owners: this.owners,
+      owners: owners ?? this.owners,
       members: members ?? this.members,
     );
   }
