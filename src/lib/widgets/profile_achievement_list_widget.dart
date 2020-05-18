@@ -4,7 +4,7 @@ import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
-import 'package:kudosapp/widgets/image_loader.dart';
+import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
 class ProfileAchievementsList extends StatelessWidget {
   final ProfileViewModel viewModel;
@@ -16,32 +16,30 @@ class ProfileAchievementsList extends StatelessWidget {
     return FutureBuilder<List<UserAchievementCollection>>(
       future: viewModel.achievements,
       builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return _buildLoading();
-          case ConnectionState.done:
-            if (snapshot.hasError) {
-              return _buildError(snapshot.error);
-            } else if (snapshot.hasData && snapshot.data.isNotEmpty) {
-              return _buildList(snapshot.data);
-            } else {
-              return _buildEmpty();
-            }
-            break;
-          case ConnectionState.active:
-          case ConnectionState.none:
-          default:
-            return _buildError("Unknown state");
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
+          return _buildList(snapshot.data);
         }
+        return SliverFillRemaining(
+          hasScrollBody: false,
+          child: _buildChild(snapshot),
+        );
       },
     );
   }
 
+  _buildChild(AsyncSnapshot<List<UserAchievementCollection>> snapshot) {
+    if (snapshot.hasData) {
+      return _buildEmpty();
+    }
+    if (snapshot.hasError) {
+      return _buildError(snapshot.error);
+    }
+    return _buildLoading();
+  }
+
   Widget _buildLoading() {
-    return Expanded(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -63,24 +61,20 @@ class ProfileAchievementsList extends StatelessWidget {
   }
 
   Widget _buildList(List<UserAchievementCollection> achievementCollections) {
-    return Expanded(
-      child: GridView.builder(
-        padding: EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-        ),
-        shrinkWrap: true,
+    return SliverPadding(
+      padding: EdgeInsets.all(16),
+      sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 1,
           crossAxisSpacing: 20,
           mainAxisSpacing: 10,
         ),
-        itemCount: achievementCollections.length,
-        itemBuilder: (context, index) => _buildListItem(
-          context,
-          achievementCollections[index],
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => _buildListItem(
+            context,
+            achievementCollections[index],
+          ),
+          childCount: achievementCollections.length,
         ),
       ),
     );
@@ -92,49 +86,69 @@ class ProfileAchievementsList extends StatelessWidget {
   ) {
     final relatedAchievement =
         achievementCollection.userAchievement.achievement;
-    return GestureDetector(
-      child: Stack(
-        children: <Widget>[
-          ImageLoader(
-            url: relatedAchievement.imageUrl,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var radius = constraints.maxWidth / 2.0;
+
+        return GestureDetector(
+          child: Stack(
+            children: <Widget>[
+              Hero(
+                child: AchievementImageWidget(
+                  imageUrl: relatedAchievement.imageUrl,
+                  radius: radius,
+                ),
+                tag: relatedAchievement.name,
+              ),
+              if (achievementCollection.count > 1)
+                _buildCountBadge(achievementCollection, constraints.maxWidth)
+            ],
           ),
-          if (achievementCollection.count > 1)
-            _buildCountBadge(achievementCollection)
-        ],
-      ),
-      onTap: () async {
-        // TODO YP: refactor
-        final achievementService = locator<AchievementsService>();
-        final achievement =
-            await achievementService.getAchievement(relatedAchievement.id);
-        Navigator.of(context).push(AchievementDetailsRoute(achievement));
+          onTap: () async {
+            // TODO YP: refactor
+            final achievementService = locator<AchievementsService>();
+            final achievement =
+                await achievementService.getAchievement(relatedAchievement.id);
+            Navigator.of(context).push(AchievementDetailsRoute(achievement));
+          },
+        );
       },
     );
   }
 
-  Widget _buildCountBadge(UserAchievementCollection achievementCollection) {
+  Widget _buildCountBadge(
+    UserAchievementCollection achievementCollection,
+    double parentWidth,
+  ) {
+    final count = achievementCollection.count;
+    final scale = parentWidth / 4;
+
     return Positioned(
       bottom: 4,
       right: 4,
       child: Container(
+        height: scale,
         padding: EdgeInsets.symmetric(
           vertical: 4,
           horizontal: 6,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(scale),
           color: Colors.amber[900],
           border: Border.all(
             width: 3.0,
             color: Colors.white,
           ),
         ),
-        child: Text(
-          "x${achievementCollection.count}",
-          style: TextStyle(
-            color: Colors.white,
+        child: FittedBox(
+          child: Text(
+            "x$count",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
+          fit: BoxFit.fitWidth,
         ),
       ),
     );
