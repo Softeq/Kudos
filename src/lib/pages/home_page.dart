@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     _tabs.add(
       _TabItem(
         icon: Icons.group_add,
-        title: "Команды",
+        title: locator<LocalizationService>().teams,
         body: ChangeNotifierProvider<TeamsViewModel>(
           create: (context) => TeamsViewModel(),
           child: TeamsPage(),
@@ -86,9 +86,6 @@ class _HomePageState extends State<HomePage> {
     final activeTab = _tabs[_selectedTabIndex];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(activeTab.title),
-      ),
       body: activeTab.body,
       bottomNavigationBar: _buildNavigationBar(),
     );

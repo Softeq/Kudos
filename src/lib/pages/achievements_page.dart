@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
@@ -9,6 +11,9 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(locator<LocalizationService>().allAchievements),
+      ),
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
