@@ -86,9 +86,6 @@ class _HomePageState extends State<HomePage> {
     final activeTab = _tabs[_selectedTabIndex];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(activeTab.title),
-      ),
       body: activeTab.body,
       bottomNavigationBar: _buildNavigationBar(),
     );

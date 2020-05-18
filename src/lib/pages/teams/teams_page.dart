@@ -11,6 +11,9 @@ class TeamsPage extends StatelessWidget {
     return Consumer<TeamsViewModel>(
       builder: (context, viewModel, child) {
         return Scaffold(
+          appBar: AppBar(
+            title: Text("Команды"),
+          ),
           body: Column(
             children: <Widget>[
               FlatButton(
