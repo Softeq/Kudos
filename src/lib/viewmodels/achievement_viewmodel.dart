@@ -4,13 +4,15 @@ import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AchievementViewModel extends BaseViewModel {
-  String group;
+  String _teamName;
   Achievement _initialAchievement;
 
   String _title;
   String _description;
   File _file;
   bool _isFileLoading = false;
+  String _teamId;
+  String _userId;
 
   AchievementViewModel(Achievement achievement) {
     initialize(achievement);
@@ -48,6 +50,10 @@ class AchievementViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  String get teamId => _teamId;
+  String get userId => _userId;
+  String get teamName => _teamName;
+
   Achievement getModifiedAchievement() {
     return _initialAchievement.copy(
       name: title,
@@ -65,9 +71,11 @@ class AchievementViewModel extends BaseViewModel {
     _description = achievement.description;
     _isFileLoading = false;
     _file = null;
+    _teamId = achievement.teamId;
+    _userId = achievement.userId;
 
     if (achievement.teamReference != null) {
-      group = achievement.teamReference.name;
+      _teamName = achievement.teamReference.name;
     }
   }
 }

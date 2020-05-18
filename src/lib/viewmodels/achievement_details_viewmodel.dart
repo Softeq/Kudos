@@ -19,6 +19,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   List<AchievementHolder> _achievementHolders;
   AchievementViewModel _achievementViewModel;
   double _statisticsValue = 0;
+  String _ownerName = "";
 
   AchievementDetailsViewModel() {
     isBusy = true;
@@ -30,12 +31,28 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   double get statisticsValue => _statisticsValue;
 
+  String get ownerName => _ownerName;
+
   Future<void> initialize(Achievement achievement) async {
     _achievementViewModel = AchievementViewModel(achievement);
     _subscription?.cancel();
     _subscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
     await loadStatistics();
+    await loadOwnerName();
+    isBusy = false;
+  }
+
+  Future<void> loadOwnerName() async {
+    if (_achievementViewModel.teamId != null)
+    {
+      _ownerName = _achievementViewModel.teamName;
+    }
+    else
+    {
+      var owners = await _peopleService.getUsersByIds([_achievementViewModel.userId]);
+      _ownerName = owners.first.name;
+    }
   }
 
   Future<void> loadStatistics() async {
@@ -45,7 +62,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
     var allUsers = await _peopleService.getAllUsers();
     _statisticsValue =
         allUsers.length == 0 ? 0 : _achievementHolders.length / allUsers.length;
-    isBusy = false;
   }
 
   @override

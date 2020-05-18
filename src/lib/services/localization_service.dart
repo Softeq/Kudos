@@ -28,6 +28,9 @@ class LocalizationService {
   String get sentSuccessfully => "Награда успешно отправлена!";
   String get achivementStatisticsTitle => "Статистика";
   String get achivementStatisticsTooltip => "Как много людей уже получили эту награду";
+  String get achivementHoldersTitle => "Обладатели";
+  String get achivementHoldersEmptyPlaceholder => "Никто ещё не получал эту награду";
+  String get achivementOwnerTitle => "Владелец";
   String get addPeople => "Добавить людей";
   String get addedPeople => "Добавленные люди";
   String get createTeam => "Создание команды";

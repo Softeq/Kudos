@@ -40,9 +40,9 @@ class _KudosListWidget extends StatelessWidget {
     Function(AchievementViewModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
-    sortedList.sort((x, y) => x.group.compareTo(y.group));
+    sortedList.sort((x, y) => x.teamName.compareTo(y.teamName));
 
-    String groupName;
+    String teamName;
     var items = List<Widget>();
     var achievements = List<AchievementViewModel>();
     var addFunction = (List<Widget> x, List<AchievementViewModel> y) {
@@ -53,13 +53,13 @@ class _KudosListWidget extends StatelessWidget {
     for (var i = 0; i < sortedList.length; i++) {
       var item = sortedList[i];
 
-      if (groupName != item.group) {
+      if (teamName != item.teamName) {
         if (achievements.isNotEmpty) {
           addFunction(items, achievements);
         }
 
-        groupName = item.group;
-        items.add(_GroupListItem(groupName));
+        teamName = item.teamName;
+        items.add(_GroupListItem(teamName));
       }
 
       achievements.add(item);
