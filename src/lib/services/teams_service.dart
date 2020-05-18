@@ -68,28 +68,40 @@ class TeamsService {
   }
 
   Future<void> updateTeamMembers(String id, List<TeamMember> newMembers) async {
-    var membersRef = _database
+    return _updateUsers(id, _membersCollection, newMembers);
+  }
+
+  Future<void> updateAdmins(String id, List<TeamMember> newMembers) {
+    return _updateUsers(id, _ownersCollection, newMembers);
+  }
+
+  Future<void> _updateUsers(
+    String id,
+    String collectionName,
+    List<TeamMember> newUsers,
+  ) async {
+    var collectionRef = _database
         .collection(_teamsCollection)
         .document(id)
-        .collection(_membersCollection);
-    var membersSnap = await membersRef.getDocuments();
-    var oldMembers = membersSnap.documents;
+        .collection(collectionName);
+    var querySnapshot = await collectionRef.getDocuments();
+    var oldUsers = querySnapshot.documents;
 
-    var oldIds = oldMembers.map((x) => x.documentID).toList();
-    var newIds = newMembers.map((x) => x.id).toList();
+    var oldIds = oldUsers.map((x) => x.documentID).toList();
+    var newIds = newUsers.map((x) => x.id).toList();
     var idsToDelete = oldIds.where((x) => !newIds.contains(x)).toList();
 
     var batch = _database.batch();
 
     //delete
     idsToDelete.forEach((x) {
-      batch.delete(membersRef.document(x));
+      batch.delete(collectionRef.document(x));
     });
 
     //insert
-    newMembers.forEach((x) {
+    newUsers.forEach((x) {
       if (!oldIds.contains(x.id)) {
-        batch.setData(membersRef.document(x.id), x.toMap());
+        batch.setData(collectionRef.document(x.id), x.toMap());
       }
     });
 
