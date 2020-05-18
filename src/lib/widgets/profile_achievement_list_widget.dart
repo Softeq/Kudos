@@ -20,11 +20,9 @@ class ProfileAchievementsList extends StatelessWidget {
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
           return _buildList(snapshot.data);
         }
-        return SliverToBoxAdapter(
-          child: Container(
-            height: 100.0,
-            child: _buildChild(snapshot),
-          ),
+        return SliverFillRemaining(
+          hasScrollBody: false,
+          child: _buildChild(snapshot),
         );
       },
     );
