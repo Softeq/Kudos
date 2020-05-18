@@ -24,7 +24,7 @@ class PeopleViewModel extends BaseViewModel {
   }
 
   Stream<List<User>> get people => _filterByNameSubject.stream
-      .debounceTime(Duration(milliseconds: 300))
+      .debounceTime(Duration(milliseconds: 100))
       .distinct()
       .transform(StreamTransformer<String, List<User>>.fromHandlers(
         handleData: _filter,
