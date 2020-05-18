@@ -22,11 +22,11 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
-          return NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          return CustomScrollView(
+            slivers: [
               _buildHeader(viewModel.user),
+              ProfileAchievementsList(viewModel),
             ],
-            body: ProfileAchievementsList(viewModel),
           );
         },
       ),

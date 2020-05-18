@@ -16,32 +16,32 @@ class ProfileAchievementsList extends StatelessWidget {
     return FutureBuilder<List<UserAchievementCollection>>(
       future: viewModel.achievements,
       builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return _buildLoading();
-          case ConnectionState.done:
-            if (snapshot.hasError) {
-              return _buildError(snapshot.error);
-            } else if (snapshot.hasData && snapshot.data.isNotEmpty) {
-              return _buildList(snapshot.data);
-            } else {
-              return _buildEmpty();
-            }
-            break;
-          case ConnectionState.active:
-          case ConnectionState.none:
-          default:
-            return _buildError("Unknown state");
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
+          return _buildList(snapshot.data);
         }
+        return SliverToBoxAdapter(
+          child: Container(
+            height: 100.0,
+            child: _buildChild(snapshot),
+          ),
+        );
       },
     );
   }
 
+  _buildChild(AsyncSnapshot<List<UserAchievementCollection>> snapshot) {
+    if (snapshot.hasData) {
+      return _buildEmpty();
+    }
+    if (snapshot.hasError) {
+      return _buildError(snapshot.error);
+    }
+    return _buildLoading();
+  }
+
   Widget _buildLoading() {
-    return Expanded(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -63,24 +63,20 @@ class ProfileAchievementsList extends StatelessWidget {
   }
 
   Widget _buildList(List<UserAchievementCollection> achievementCollections) {
-    return Expanded(
-      child: GridView.builder(
-        padding: EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-        ),
-        shrinkWrap: true,
+    return SliverPadding(
+      padding: EdgeInsets.all(16),
+      sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 1,
           crossAxisSpacing: 20,
           mainAxisSpacing: 10,
         ),
-        itemCount: achievementCollections.length,
-        itemBuilder: (context, index) => _buildListItem(
-          context,
-          achievementCollections[index],
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => _buildListItem(
+            context,
+            achievementCollections[index],
+          ),
+          childCount: achievementCollections.length,
         ),
       ),
     );
