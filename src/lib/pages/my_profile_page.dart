@@ -17,19 +17,21 @@ class MyProfilePage extends StatelessWidget {
           appBar: AppBar(
             title: Text(locator<LocalizationService>().profile),
           ),
-          body: Column(
-            children: <Widget>[
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                    user.imageUrl,
+          body: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(
+                      user.imageUrl,
+                    ),
                   ),
-                ),
-                title: Text(user.name ?? ''),
-                subtitle: Text(user.email ?? ''),
-                trailing: IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  onPressed: viewModel.auth.signOut,
+                  title: Text(user.name ?? ''),
+                  subtitle: Text(user.email ?? ''),
+                  trailing: IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: viewModel.auth.signOut,
+                  ),
                 ),
               ),
               ProfileAchievementsList(viewModel.profile),
