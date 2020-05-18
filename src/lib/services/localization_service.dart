@@ -27,7 +27,7 @@ class LocalizationService {
   String get writeAComment => "Ваш комментарий";
   String get sentSuccessfully => "Награда успешно отправлена!";
   String get achivementStatisticsTitle => "Статистика";
-    String get achivementStatisticsTooltip => "Как много людей уже получили эту награду";
+  String get achivementStatisticsTooltip => "Как много людей уже получили эту награду";
   String get addPeople => "Добавить людей";
   String get addedPeople => "Добавленные люди";
   String get createTeam => "Создание команды";
@@ -37,6 +37,8 @@ class LocalizationService {
   String get requiredField => "Обязательное поле";
   String get team => "Команда";
   String get admins => "Администраторы";
+  String get teams => "Команды";
+  String get owner => "Владелец";
   String get members => "Состав";
   String get save => "Сохранить";
 }
