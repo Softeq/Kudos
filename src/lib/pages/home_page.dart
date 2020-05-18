@@ -11,7 +11,6 @@ import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
-import 'package:kudosapp/viewmodels/people_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -39,10 +38,7 @@ class _HomePageState extends State<HomePage> {
     _tabs.add(_TabItem(
       icon: Icons.people,
       title: locator<LocalizationService>().people,
-      body: ChangeNotifierProvider<PeopleViewModel>(
-        create: (context) => PeopleViewModel(),
-        child: PeoplePage(),
-      ),
+      body: PeoplePage(),
     ));
 
     _tabs.add(

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/viewmodels/people_viewmodel.dart';
+import 'package:kudosapp/viewmodels/search_input_viewmodel.dart';
 import 'package:kudosapp/widgets/people_list_widget.dart';
+import 'package:kudosapp/widgets/search_input_widget.dart';
 
 class PeoplePage extends StatelessWidget {
   @override
@@ -11,11 +15,29 @@ class PeoplePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(locator<LocalizationService>().people),
       ),
-      body: PeopleList(
-        (user) {
-          Navigator.of(context).push(ProfileRoute(user));
-        },
-        Icon(Icons.navigate_next),
+      body: ChangeNotifierProvider<SearchInputViewModel>(
+        create: (context) => SearchInputViewModel(),
+        child: Column(
+          children: <Widget>[
+            SearchInputWidget(
+              hintText: "Введите имя", // TODO YP: localize
+            ),
+            ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
+              create: (context) => PeopleViewModel(),
+              update: (context, searchViewModel, peopleViewModel) {
+                return peopleViewModel..filterByName(searchViewModel.query);
+              },
+              child: Expanded(
+                child: PeopleList(
+                  (user) {
+                    Navigator.of(context).push(ProfileRoute(user));
+                  },
+                  Icon(Icons.navigate_next),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

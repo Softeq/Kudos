@@ -8,6 +8,8 @@ class PeopleViewModel extends BaseViewModel {
   final List<User> _people = [];
   final bool excludeCurrentUser;
 
+  String searchQuery = "";
+
   PeopleViewModel({this.excludeCurrentUser});
 
   Future<List<User>> get people async {
@@ -21,6 +23,18 @@ class PeopleViewModel extends BaseViewModel {
       _people.addAll(people);
     }
 
+    if (searchQuery.isNotEmpty) {
+      return _people
+          .where((user) =>
+              user.name.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return [..._people];
+  }
+
+  void filterByName(String query) {
+    searchQuery = query;
+    notifyListeners();
   }
 }
