@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/teams/teams_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +14,7 @@ class TeamsPage extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Команды"),
+            title: Text(locator<LocalizationService>().teams),
           ),
           body: Column(
             children: <Widget>[

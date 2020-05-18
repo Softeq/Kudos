@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     _tabs.add(
       _TabItem(
         icon: Icons.group_add,
-        title: "Команды",
+        title: locator<LocalizationService>().teams,
         body: ChangeNotifierProvider<TeamsViewModel>(
           create: (context) => TeamsViewModel(),
           child: TeamsPage(),

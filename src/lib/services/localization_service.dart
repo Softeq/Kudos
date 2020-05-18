@@ -36,6 +36,7 @@ class LocalizationService {
   String get optionalDescription => "Описание (опционально)";
   String get requiredField => "Обязательное поле";
   String get team => "Команда";
+  String get teams => "Команды";
   String get owner => "Владелец";
   String get members => "Состав";
   String get save => "Сохранить";
