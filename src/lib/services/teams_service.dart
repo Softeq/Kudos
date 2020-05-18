@@ -75,6 +75,14 @@ class TeamsService {
     return _updateUsers(id, _ownersCollection, newMembers);
   }
 
+  Future<List<Team>> getUserTeams(String userId) async {
+    var snapshot = await _database
+        .collection(_teamsCollection)
+        .where("members", arrayContains: userId)
+        .getDocuments();
+    return snapshot.documents.map((x) => Team.fromDocument(x, null, null)).toList();
+  }
+
   Future<void> _updateUsers(
     String id,
     String collectionName,
@@ -104,6 +112,13 @@ class TeamsService {
         batch.setData(collectionRef.document(x.id), x.toMap());
       }
     });
+
+    await _database.collection(_teamsCollection).document(id).setData(
+      {
+        collectionName: newUsers.map((x) => x.id).toList(),
+      },
+      merge: true,
+    );
 
     await batch.commit();
   }

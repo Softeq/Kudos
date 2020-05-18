@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/pages/teams/user_teams_widget.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 
 class MyProfilePage extends StatelessWidget {
   @override
@@ -18,6 +19,7 @@ class MyProfilePage extends StatelessWidget {
             title: Text(locator<LocalizationService>().profile),
           ),
           body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
@@ -31,6 +33,10 @@ class MyProfilePage extends StatelessWidget {
                   icon: Icon(Icons.exit_to_app),
                   onPressed: viewModel.auth.signOut,
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: UserTeamsWidget(user.id),
               ),
               ProfileAchievementsList(viewModel.profile),
             ],
