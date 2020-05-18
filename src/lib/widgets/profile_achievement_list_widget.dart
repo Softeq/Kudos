@@ -5,7 +5,6 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
-import 'package:kudosapp/widgets/image_loader.dart';
 
 class ProfileAchievementsList extends StatelessWidget {
   final ProfileViewModel viewModel;
