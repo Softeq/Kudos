@@ -1,18 +1,45 @@
+import 'dart:async';
+
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:rxdart/rxdart.dart';
 
 class PeopleViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
   final List<User> _people = [];
   final bool excludeCurrentUser;
 
-  String searchQuery = "";
+  PublishSubject<String> _searchQuery;
 
-  PeopleViewModel({this.excludeCurrentUser});
+  PeopleViewModel({this.excludeCurrentUser}) {
+    _searchQuery = PublishSubject<String>();
+  }
 
-  Future<List<User>> get people async {
+  @override
+  void dispose() {
+    _searchQuery.close();
+    super.dispose();
+  }
+
+  Stream<List<User>> get peopleList => _searchQuery.stream
+      .debounceTime(Duration(milliseconds: 300))
+      .distinct()
+      .transform(StreamTransformer<String, List<User>>.fromHandlers(
+        handleData: _search,
+      ));
+
+  Future<void> initialize() async {
+    await _loadPeopleList();
+    filterByName("");
+  }
+
+  void filterByName(String query) {
+    _searchQuery.sink.add(query);
+  }
+
+  Future<void> _loadPeopleList() async {
     if (_people.isEmpty) {
       List<User> people = [];
       if (excludeCurrentUser == null) {
@@ -22,19 +49,19 @@ class PeopleViewModel extends BaseViewModel {
       }
       _people.addAll(people);
     }
-
-    if (searchQuery.isNotEmpty) {
-      return _people
-          .where((user) =>
-              user.name.toLowerCase().contains(searchQuery.toLowerCase()))
-          .toList();
-    }
-
-    return [..._people];
   }
 
-  void filterByName(String query) {
-    searchQuery = query;
-    notifyListeners();
+  void _search(query, sink) async {
+    if (query.isEmpty) {
+      sink.add(_people);
+    }
+
+    final results =
+        _people.where((user) => _filterByName(user, query)).toList();
+    sink.add(results);
+  }
+
+  bool _filterByName(User user, String query) {
+    return user.name.toLowerCase().contains(query.toLowerCase());
   }
 }

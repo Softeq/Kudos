@@ -13,26 +13,16 @@ class PeopleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PeopleViewModel>(builder: (context, viewModel, child) {
-      return FutureBuilder<List<User>>(
-        future: viewModel.people,
+      return StreamBuilder<List<User>>(
+        stream: viewModel.peopleList,
         builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return _buildLoading();
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return _buildError(snapshot.error);
-              } else if (snapshot.hasData && snapshot.data.isNotEmpty) {
-                return _buildList(snapshot.data);
-              } else {
-                return _buildEmpty();
-              }
-              break;
-            case ConnectionState.active:
-            case ConnectionState.none:
-            default:
-              return _buildError("Unknown state");
+          if (snapshot.hasData) {
+            return _buildList(snapshot.data);
           }
+          if (snapshot.hasError) {
+            return _buildError(snapshot.error);
+          }
+          return _buildLoading();
         },
       );
     });
@@ -52,12 +42,6 @@ class PeopleList extends StatelessWidget {
           color: Colors.red,
         ),
       ),
-    );
-  }
-
-  Widget _buildEmpty() {
-    return Center(
-      child: Text("No data"), // TODO YP: temporary
     );
   }
 

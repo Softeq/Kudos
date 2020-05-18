@@ -23,7 +23,7 @@ class PeoplePage extends StatelessWidget {
               hintText: "Введите имя", // TODO YP: localize
             ),
             ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
-              create: (context) => PeopleViewModel(),
+              create: (context) => PeopleViewModel()..initialize(),
               update: (context, searchViewModel, peopleViewModel) {
                 return peopleViewModel..filterByName(searchViewModel.query);
               },
