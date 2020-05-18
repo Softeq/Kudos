@@ -11,23 +11,23 @@ class PeopleViewModel extends BaseViewModel {
   final List<User> _people = [];
   final bool excludeCurrentUser;
 
-  PublishSubject<String> _searchQuery;
+  PublishSubject<String> _filterByNameSubject;
 
   PeopleViewModel({this.excludeCurrentUser}) {
-    _searchQuery = PublishSubject<String>();
+    _filterByNameSubject = PublishSubject<String>();
   }
 
   @override
   void dispose() {
-    _searchQuery.close();
+    _filterByNameSubject.close();
     super.dispose();
   }
 
-  Stream<List<User>> get peopleList => _searchQuery.stream
+  Stream<List<User>> get people => _filterByNameSubject.stream
       .debounceTime(Duration(milliseconds: 300))
       .distinct()
       .transform(StreamTransformer<String, List<User>>.fromHandlers(
-        handleData: _search,
+        handleData: _filter,
       ));
 
   Future<void> initialize() async {
@@ -36,7 +36,7 @@ class PeopleViewModel extends BaseViewModel {
   }
 
   void filterByName(String query) {
-    _searchQuery.sink.add(query);
+    _filterByNameSubject.sink.add(query);
   }
 
   Future<void> _loadPeopleList() async {
@@ -51,17 +51,18 @@ class PeopleViewModel extends BaseViewModel {
     }
   }
 
-  void _search(query, sink) async {
+  void _filter(query, sink) async {
     if (query.isEmpty) {
       sink.add(_people);
+    } else {
+      sink.add(_filterByName(_people, query));
     }
-
-    final results =
-        _people.where((user) => _filterByName(user, query)).toList();
-    sink.add(results);
   }
 
-  bool _filterByName(User user, String query) {
-    return user.name.toLowerCase().contains(query.toLowerCase());
+  List<User> _filterByName(List<User> people, String query) {
+    final filteredPeople = people.where((user) {
+      return user.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    return filteredPeople;
   }
 }

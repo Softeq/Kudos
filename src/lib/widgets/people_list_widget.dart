@@ -14,9 +14,12 @@ class PeopleList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PeopleViewModel>(builder: (context, viewModel, child) {
       return StreamBuilder<List<User>>(
-        stream: viewModel.peopleList,
+        stream: viewModel.people,
         builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
           if (snapshot.hasData) {
+            if (snapshot.data.isEmpty) {
+              return _buildEmpty();
+            }
             return _buildList(snapshot.data);
           }
           if (snapshot.hasError) {
@@ -42,6 +45,12 @@ class PeopleList extends StatelessWidget {
           color: Colors.red,
         ),
       ),
+    );
+  }
+
+  Widget _buildEmpty() {
+    return Center(
+      child: Text("No data"), // TODO YP: temporary
     );
   }
 
