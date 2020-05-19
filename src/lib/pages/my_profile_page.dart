@@ -5,6 +5,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
+import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {
@@ -40,6 +41,9 @@ class MyProfilePage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: UserTeamsWidget(user.id),
                 ),
+              ),
+              SliverSectionHeaderWidget(
+                title: locator<LocalizationService>().allAchievements,
               ),
               ProfileAchievementsList(viewModel.profile),
             ],
