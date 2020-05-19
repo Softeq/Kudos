@@ -1,13 +1,12 @@
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class MyProfileViewModel extends BaseViewModel {
-  final AuthViewModel _auth;
+  final BaseAuthService _authService = locator<BaseAuthService>();
 
-  MyProfileViewModel(this._auth);
+  User get user => _authService.currentUser;
 
-  User get user => _auth.currentUser;
-
-  Future<void> signOut() => _auth.signOut();
+  Future<void> signOut() => _authService.signOut();
 }

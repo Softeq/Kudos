@@ -45,11 +45,8 @@ class _HomePageState extends State<HomePage> {
       _TabItem(
         icon: Icons.person,
         title: locator<LocalizationService>().profile,
-        body: ChangeNotifierProxyProvider<AuthViewModel, MyProfileViewModel>(
-          create: (context) => null,
-          update: (context, authViewModel, _) {
-            return MyProfileViewModel(authViewModel);
-          },
+        body: ChangeNotifierProvider<MyProfileViewModel>(
+          create: (context) => MyProfileViewModel(),
           child: MyProfilePage(),
         ),
       ),
