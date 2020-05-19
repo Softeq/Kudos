@@ -45,7 +45,11 @@ class AchievementDetailsPage extends StatelessWidget {
         ),
         body: Padding(
           padding: EdgeInsets.all(20),
-          child: _buildBody(viewModel, context),
+          child: viewModel.isBusy
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : _buildBody(viewModel, context),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
@@ -70,34 +74,11 @@ class AchievementDetailsPage extends StatelessWidget {
         SizedBox(height: 24),
         _PopularityWidget(viewModel.statisticsValue),
         SizedBox(height: 24),
-        _AchievementHoldersWidget(viewModel.achievementHolders)
+        _AchievementHoldersWidget(viewModel.achievementHolders),
+        SizedBox(height: 24),
+        _AchievementOwnerWidget(viewModel.ownerName)
       ],
     );
-  }
-}
-
-class _PopularityTitleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(localizationService.achivementStatisticsTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontWeight: FontWeight.normal)),
-          SizedBox(width: 8),
-          Tooltip(
-            message: localizationService.achivementStatisticsTooltip,
-            child: Icon(
-              Icons.info,
-              size: 20,
-              color: Colors.grey,
-            ),
-          )
-        ]);
   }
 }
 
@@ -108,27 +89,85 @@ class _PopularityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 36,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            _PopularityTitleWidget(),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Container(
-                height: 16,
-                width: 144,
-                child: LinearProgressIndicator(
-                  value: _popularityPercent, // percent filled
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor),
-                  backgroundColor: Theme.of(context).primaryColorLight,
+    var localizationService = locator<LocalizationService>();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        _SectionTitleWidget(localizationService.achivementStatisticsTitle,
+            localizationService.achivementStatisticsTooltip),
+        SizedBox(height: 12),
+        Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    height: 16,
+                    width: 144,
+                    child: LinearProgressIndicator(
+                      value: _popularityPercent, // percent filled
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                      backgroundColor: Theme.of(context).primaryColorLight,
+                    ),
+                  ),
+                )))
+      ],
+    );
+  }
+}
+
+class _SectionTitleWidget extends StatelessWidget {
+  final String _title;
+  final String _tooltipTitle;
+
+  _SectionTitleWidget(this._title, [this._tooltipTitle]);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            _title,
+            style: Theme.of(context).textTheme.caption,
+          ),
+          SizedBox(width: 8),
+          Visibility(
+              visible: _tooltipTitle?.isNotEmpty ?? false,
+              child: Tooltip(
+                message: _tooltipTitle ?? "not visible",
+                child: Icon(
+                  Icons.info,
+                  size: 20,
+                  color: Colors.grey,
                 ),
-              ),
-            )
-          ],
-        ));
+              ))
+        ]);
+  }
+}
+
+class _AchievementOwnerWidget extends StatelessWidget {
+  final String _ownerName;
+
+  _AchievementOwnerWidget(this._ownerName);
+
+  @override
+  Widget build(BuildContext context) {
+    var localizationService = locator<LocalizationService>();
+    return Column(children: <Widget>[
+      _SectionTitleWidget(localizationService.achivementOwnerTitle),
+      SizedBox(height: 12),
+      Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Text(
+                _ownerName,
+                style: Theme.of(context).textTheme.headline6,
+              )))
+    ]);
   }
 }
 
@@ -139,16 +178,36 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: GridView.count(
-            children: _buildListItems(context, _achievementHolders),
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            primary: true,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: 6,
-            physics: ClampingScrollPhysics()));
+    var localizationService = locator<LocalizationService>();
+    Widget content;
+
+    if (_achievementHolders == null || _achievementHolders.length == 0) {
+      content = Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Text(
+                localizationService.achivementHoldersEmptyPlaceholder,
+                style: Theme.of(context).textTheme.headline6,
+              )));
+    } else {
+      content = Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: GridView.count(
+              children: _buildListItems(context, _achievementHolders),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              primary: true,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 7,
+              physics: ClampingScrollPhysics()));
+    }
+    return Column(children: <Widget>[
+      _SectionTitleWidget(localizationService.achivementHoldersTitle),
+      SizedBox(height: 12),
+      content
+    ]);
   }
 
   List<Widget> _buildListItems(
@@ -156,10 +215,11 @@ class _AchievementHoldersWidget extends StatelessWidget {
     return achievementHolders == null
         ? new List<Widget>()
         : achievementHolders
-            .map((u) => CircleAvatar(
-                  backgroundImage:
-                      CachedNetworkImageProvider(u.recipient.imageUrl),
-                ))
+            .map((u) => Tooltip(
+                message: u.recipient.name,
+                child: CircleAvatar(
+                    backgroundImage:
+                        CachedNetworkImageProvider(u.recipient.imageUrl))))
             .toList();
   }
 }
