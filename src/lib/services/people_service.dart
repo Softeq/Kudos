@@ -57,6 +57,15 @@ class PeopleService {
     var users = qs.documents.map<User>((x) => User.fromDocument(x)).toList();
     return users;
   }
+
+  Future<User> getUserById(String userId) async {
+    var query = _database.collection(_usersCollection).document(userId);
+    var queryResult = await query.get();
+    if (queryResult.data == null) {
+      throw("User not found");
+    }
+    return User.fromDocument(queryResult);
+  }
 }
 
 class _UserFilter {

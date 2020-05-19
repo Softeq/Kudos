@@ -30,7 +30,7 @@ class PeoplePage extends StatelessWidget {
               child: Expanded(
                 child: PeopleList(
                   (user) {
-                    Navigator.of(context).push(ProfileRoute(user));
+                    Navigator.of(context).push(ProfileRoute(user.id));
                   },
                   Icon(Icons.navigate_next),
                 ),

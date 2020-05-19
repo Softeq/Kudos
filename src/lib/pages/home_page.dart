@@ -48,10 +48,7 @@ class _HomePageState extends State<HomePage> {
         body: ChangeNotifierProxyProvider<AuthViewModel, MyProfileViewModel>(
           create: (context) => null,
           update: (context, authViewModel, _) {
-            return MyProfileViewModel(
-              authViewModel,
-              ProfileViewModel(authViewModel.currentUser),
-            );
+            return MyProfileViewModel(authViewModel);
           },
           child: MyProfilePage(),
         ),
