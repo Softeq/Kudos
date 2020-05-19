@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/teams/user_teams_widget.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
@@ -17,24 +15,38 @@ class MyProfilePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(locator<LocalizationService>().profile),
+            leading: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(
+                  user.imageUrl,
+                ),
+              ),
+            ),
+            centerTitle: true,
+            title: Column(
+              children: <Widget>[
+                Text(user.name),
+                Text(
+                  user.email,
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: viewModel.auth.signOut,
+              ),
+            ],
           ),
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                      user.imageUrl,
-                    ),
-                  ),
-                  title: Text(user.name ?? ''),
-                  subtitle: Text(user.email ?? ''),
-                  trailing: IconButton(
-                    icon: Icon(Icons.exit_to_app),
-                    onPressed: viewModel.auth.signOut,
-                  ),
-                ),
+                child: SizedBox(height: 20),
               ),
               SliverToBoxAdapter(
                 child: Padding(
