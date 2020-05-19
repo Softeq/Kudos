@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/teams/user_teams_widget.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
