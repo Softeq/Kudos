@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
@@ -14,6 +17,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _achievementsService = locator<AchievementsService>();
   final _peopleService = locator<PeopleService>();
   final _eventBus = locator<EventBus>();
+  final _authService = locator<BaseAuthService>();
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
   List<AchievementHolder> _achievementHolders;
@@ -62,6 +66,17 @@ class AchievementDetailsViewModel extends BaseViewModel {
     var allUsers = await _peopleService.getAllUsers();
     _statisticsValue =
         allUsers.length == 0 ? 0 : _achievementHolders.length / allUsers.length;
+  }
+
+  Future<void> sendTo(User recipient, String comment) async {
+    final achievementToSend = AchievementToSend(
+      sender: _authService.currentUser,
+      recipient: recipient,
+      achievement: achievementViewModel.achievement,
+      comment: comment,
+    );
+
+    await _achievementsService.sendAchievement(achievementToSend);
   }
 
   @override
