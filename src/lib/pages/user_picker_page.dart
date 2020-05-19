@@ -7,14 +7,22 @@ import 'package:kudosapp/widgets/list_of_people_widget.dart';
 import 'package:provider/provider.dart';
 
 class UserPickerRoute extends MaterialPageRoute<List<User>> {
-  UserPickerRoute({bool allowMultipleSelection = false, List<String> userIds})
-      : super(
+  UserPickerRoute({
+    @required bool allowMultipleSelection,
+    @required bool allowCurrentUser,
+    List<String> selectedUserIds,
+    WidgetBuilder trailingBuilder,
+  }) : super(
           builder: (context) {
             return ChangeNotifierProvider<UserPickerViewModel>(
               create: (context) {
-                return UserPickerViewModel()..initialize(userIds);
+                return UserPickerViewModel()
+                  ..initialize(
+                    selectedUserIds,
+                    allowCurrentUser,
+                  );
               },
-              child: _UserPickerPage(allowMultipleSelection),
+              child: _UserPickerPage(allowMultipleSelection, trailingBuilder),
             );
           },
           fullscreenDialog: true,
@@ -22,9 +30,10 @@ class UserPickerRoute extends MaterialPageRoute<List<User>> {
 }
 
 class _UserPickerPage extends StatefulWidget {
-  final _allowMultipleSelection;
+  final bool _allowMultipleSelection;
+  final WidgetBuilder _trailingBuilder;
 
-  _UserPickerPage(this._allowMultipleSelection);
+  _UserPickerPage(this._allowMultipleSelection, this._trailingBuilder);
 
   @override
   State<StatefulWidget> createState() {
@@ -59,7 +68,9 @@ class _UserPickerPageState extends State<_UserPickerPage> {
         title: TextField(
           autofocus: true,
           controller: _textEditingController,
-          decoration: InputDecoration(hintText: _localizationService.addPeople),
+          decoration: InputDecoration.collapsed(
+            hintText: _localizationService.addPeople,
+          ),
           onChanged: (x) {
             var viewModel = Provider.of<UserPickerViewModel>(
               context,
@@ -89,6 +100,9 @@ class _UserPickerPageState extends State<_UserPickerPage> {
                   }
                 },
                 users: viewModel.users,
+                trailingWidget: widget._trailingBuilder == null
+                    ? null
+                    : widget._trailingBuilder(context),
               );
             case UserPickerViewModelState.selectedUsers:
               return Column(
@@ -109,7 +123,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
                       trailingWidget: Icon(Icons.clear),
                       users: viewModel.selectedUsers,
                       trailingSelector: (x) {
-                        viewModel.unselect(x);
+                        viewModel.unSelect(x);
                       },
                     ),
                   ),

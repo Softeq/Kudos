@@ -11,6 +11,8 @@ class UserPickerViewModel extends BaseViewModel {
   final _users = List<User>();
   final _selectedUsers = List<User>();
 
+  bool _allowCurrentUser;
+
   QueueHandler<List<User>, String> _queueHandler;
   StreamSubscription<List<User>> _streamSubscription;
   UserPickerViewModelState _state = UserPickerViewModelState.initialState;
@@ -26,12 +28,16 @@ class UserPickerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> initialize(List<String> userIds) async {
+  Future<void> initialize(
+    List<String> selectedUserIds,
+    bool allowCurrentUser,
+  ) async {
+    _allowCurrentUser = allowCurrentUser;
     _queueHandler = QueueHandler<List<User>, String>(_findPeople);
     _streamSubscription =
         _queueHandler.responseStream.listen(_updateSearchResults);
-    if (userIds != null && userIds.isNotEmpty) {
-      var users = await _peopleService.getUsersByIds(userIds);
+    if (selectedUserIds != null && selectedUserIds.isNotEmpty) {
+      var users = await _peopleService.getUsersByIds(selectedUserIds);
       _selectedUsers.addAll(users);
       _setState(UserPickerViewModelState.selectedUsers);
     }
@@ -56,7 +62,7 @@ class UserPickerViewModel extends BaseViewModel {
     _setState(UserPickerViewModelState.selectedUsers);
   }
 
-  void unselect(User x) {
+  void unSelect(User x) {
     _selectedUsers.remove(x);
     if (_selectedUsers.isEmpty) {
       _setState(UserPickerViewModelState.initialState);
@@ -66,7 +72,7 @@ class UserPickerViewModel extends BaseViewModel {
   }
 
   Future<List<User>> _findPeople(String request) async {
-    var result = await _peopleService.find(request);
+    var result = await _peopleService.find(request, _allowCurrentUser);
     if (_selectedUsers.isNotEmpty) {
       var addedIds = _selectedUsers.map((x) => x.id);
       return result.where((x) => !addedIds.contains(x.id)).toList();

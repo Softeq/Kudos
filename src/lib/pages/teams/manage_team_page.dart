@@ -240,7 +240,8 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     var users = await Navigator.of(context).push(
       UserPickerRoute(
         allowMultipleSelection: true,
-        userIds: viewModel.members.items.map((x) => x.teamMember.id).toList(),
+        allowCurrentUser: true,
+        selectedUserIds: viewModel.members.items.map((x) => x.teamMember.id).toList(),
       ),
     );
     viewModel.replaceMembers(users);
@@ -251,7 +252,8 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     var users = await Navigator.of(context).push(
       UserPickerRoute(
         allowMultipleSelection: true,
-        userIds: viewModel.admins.items.map((x) => x.id).toList(),
+        allowCurrentUser: true,
+        selectedUserIds: viewModel.admins.items.map((x) => x.id).toList(),
       ),
     );
     viewModel.replaceAdmins(users);

@@ -33,13 +33,18 @@ class PeopleService {
     await query.setData(userRegistrationMap);
   }
 
-  Future<List<User>> find(String request) async {
-    //TODO VPY: we should cache all users if it possible to reduce query result
+  //TODO VPY: we should cache all users if it possible to reduce query result
+  Future<List<User>> find(String request, bool _allowCurrentUser) async {
     final query = _database.collection(_usersCollection).orderBy("name");
     final queryResult = await query.getDocuments();
+    final userFilter = _UserFilter(
+      _authService.currentUser.id,
+      _allowCurrentUser,
+      request,
+    );
     final users = queryResult.documents
         .map<User>((x) => User.fromDocument(x))
-        .where((User x) => x.name.toLowerCase().contains(request.toLowerCase()))
+        .where((x) => userFilter._filter(x))
         .toList();
     return users;
   }
@@ -51,5 +56,25 @@ class PeopleService {
         .getDocuments();
     var users = qs.documents.map<User>((x) => User.fromDocument(x)).toList();
     return users;
+  }
+}
+
+class _UserFilter {
+  final String _currentUserId;
+  final bool _allowCurrentUser;
+  final String _request;
+
+  _UserFilter(this._currentUserId, this._allowCurrentUser, this._request);
+
+  bool _filter(User x) {
+    if (_allowCurrentUser == false && x.id == _currentUserId) {
+      return false;
+    }
+
+    if (!x.name.toLowerCase().contains(_request.toLowerCase())) {
+      return false;
+    }
+
+    return true;
   }
 }

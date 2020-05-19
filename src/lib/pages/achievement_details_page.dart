@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
-import 'package:kudosapp/pages/sending_page.dart';
+import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
@@ -18,27 +19,38 @@ class AchievementDetailsRoute extends MaterialPageRoute {
               create: (context) {
                 return AchievementDetailsViewModel()..initialize(achievement);
               },
-              child: AchievementDetailsPage(),
+              child: _AchievementDetailsPage(),
             );
           },
         );
 }
 
-class AchievementDetailsPage extends StatelessWidget {
+class _AchievementDetailsPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _AchievementDetailsPageState();
+}
+
+class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
+  final TextEditingController _inputController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AchievementDetailsViewModel>(
         builder: (context, viewModel, child) {
       return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(viewModel.achievementViewModel.title),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
-                Navigator.of(context).push(EditAchievementRoute(
-                  achievement: viewModel.achievementViewModel.achievement,
-                ));
+                Navigator.of(context).push(
+                  EditAchievementRoute(
+                    achievement: viewModel.achievementViewModel.achievement,
+                  ),
+                );
               },
             ),
           ],
@@ -46,31 +58,27 @@ class AchievementDetailsPage extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.all(20),
           child: viewModel.isBusy
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : _buildBody(viewModel, context),
+              ? Center(child: CircularProgressIndicator())
+              : _buildBody(viewModel),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          heroTag: null,
           child: Icon(Icons.send),
-          onPressed: () => Navigator.of(context).push(
-            SendingRoute(viewModel.achievementViewModel.achievement),
-          ),
+          onPressed: _sendTapped,
         ),
       );
     });
   }
 
   Widget _buildBody(
-      AchievementDetailsViewModel viewModel, BuildContext context) {
+    AchievementDetailsViewModel viewModel,
+  ) {
     return Column(
       children: <Widget>[
         Container(
-            height: 140,
-            child:
-                AchievementHorizontalWidget((viewModel.achievementViewModel))),
+          height: 140,
+          child: AchievementHorizontalWidget(viewModel.achievementViewModel),
+        ),
         SizedBox(height: 24),
         _PopularityWidget(viewModel.statisticsValue),
         SizedBox(height: 24),
@@ -79,6 +87,117 @@ class AchievementDetailsPage extends StatelessWidget {
         _AchievementOwnerWidget(viewModel.ownerName)
       ],
     );
+  }
+
+  Future<void> _sendTapped() async {
+    var user = await Navigator.of(context).push(
+      UserPickerRoute(
+        allowMultipleSelection: false,
+        allowCurrentUser: false,
+        trailingBuilder: (context) {
+          return Icon(Icons.send);
+        },
+      ),
+    );
+    if (user != null && user.isNotEmpty) {
+      await _sendAchievementToUser(user.first);
+    }
+  }
+
+  Future<void> _sendAchievementToUser(User user) async {
+    try {
+      var commentText = await _putCommentDialog();
+      if (commentText != null) {
+        var viewModel =
+            Provider.of<AchievementDetailsViewModel>(context, listen: false);
+        await viewModel.sendTo(user, commentText);
+
+        _notifyAboutSuccess();
+      }
+    } catch (error) {
+      _notifyAboutError(error);
+    }
+  }
+
+  Future<String> _putCommentDialog() async {
+    bool accepted = false;
+
+    await showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            content: TextField(
+              controller: _inputController,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: locator<LocalizationService>().writeAComment,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(locator<LocalizationService>().cancel),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text(locator<LocalizationService>().send),
+                onPressed: () {
+                  accepted = true;
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+
+    return accepted ? _inputController.text : null;
+  }
+
+  void _notifyAboutSuccess() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(
+            "👍",
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          Text(
+            locator<LocalizationService>().sentSuccessfully,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          )
+        ],
+      ),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 4),
+    ));
+  }
+
+  void _notifyAboutError(error) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        locator<LocalizationService>().generalErrorMessage,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+      backgroundColor: Theme.of(context).errorColor,
+      duration: Duration(seconds: 4),
+    ));
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
   }
 }
 
