@@ -18,25 +18,28 @@ class MyProfilePage extends StatelessWidget {
           appBar: AppBar(
             title: Text(locator<LocalizationService>().profile),
           ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                    user.imageUrl,
+          body: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(
+                      user.imageUrl,
+                    ),
+                  ),
+                  title: Text(user.name ?? ''),
+                  subtitle: Text(user.email ?? ''),
+                  trailing: IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: viewModel.auth.signOut,
                   ),
                 ),
-                title: Text(user.name ?? ''),
-                subtitle: Text(user.email ?? ''),
-                trailing: IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  onPressed: viewModel.auth.signOut,
-                ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: UserTeamsWidget(user.id),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: UserTeamsWidget(user.id),
+                ),
               ),
               ProfileAchievementsList(viewModel.profile),
             ],
