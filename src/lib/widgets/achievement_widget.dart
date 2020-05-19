@@ -100,14 +100,11 @@ class AchievementWidget extends StatelessWidget {
                     onTap: () {
                       onAchievementClicked(achievement);
                     },
-                    child: Hero(
-                      child: AchievementImageWidget(
-                        file: achievement.file,
-                        imageUrl: achievement.imageUrl,
-                        radius: radius,
-                        isBusy: achievement.isFileLoading,
-                      ),
-                      tag: achievement.title,
+                    child: AchievementImageWidget(
+                      file: achievement.file,
+                      imageUrl: achievement.imageUrl,
+                      radius: radius,
+                      isBusy: achievement.isFileLoading,
                     ),
                   ),
                 ),

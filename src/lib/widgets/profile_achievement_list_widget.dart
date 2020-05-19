@@ -93,12 +93,9 @@ class ProfileAchievementsList extends StatelessWidget {
         return GestureDetector(
           child: Stack(
             children: <Widget>[
-              Hero(
-                child: AchievementImageWidget(
-                  imageUrl: relatedAchievement.imageUrl,
-                  radius: radius,
-                ),
-                tag: relatedAchievement.name,
+              AchievementImageWidget(
+                imageUrl: relatedAchievement.imageUrl,
+                radius: radius,
               ),
               if (achievementCollection.count > 1)
                 _buildCountBadge(achievementCollection, constraints.maxWidth)
