@@ -12,16 +12,19 @@ class TeamsService {
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
 
-  Future<void> createTeam(String name, String description) async {
+  Future<Team> createTeam(String name, String description) async {
     if (name == null || name.isEmpty) {
       throw ArgumentError.notNull(name);
     }
 
-    var docRef = await _database
-        .collection(_teamsCollection)
-        .add(_getTeamMap(name, description));
-
     var firstMember = TeamMember.fromUser(_authService.currentUser);
+
+    var docRef = await _database.collection(_teamsCollection).add({
+      "name": name,
+      "description": description,
+      "members": [firstMember.id],
+      "owners": [firstMember.id],
+    });
 
     await _database
         .collection(_teamsCollection)
@@ -36,6 +39,9 @@ class TeamsService {
         .collection(_ownersCollection)
         .document(firstMember.id)
         .setData(firstMember.toMap());
+
+    var document = await docRef.get();
+    return Team.fromDocument(document, [firstMember], [firstMember]);
   }
 
   Future<void> editTeam(String id, String name, String description) async {
@@ -43,10 +49,10 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    await _database
-        .collection(_teamsCollection)
-        .document(id)
-        .setData(_getTeamMap(name, description));
+    await _database.collection(_teamsCollection).document(id).setData({
+      "name": name,
+      "description": description,
+    }, merge: true);
   }
 
   Future<List<Team>> getTeams() async {
@@ -142,12 +148,5 @@ class TeamsService {
         .where(field, arrayContains: userId)
         .getDocuments();
     return qs.documents.map((x) => Team.fromDocument(x, null, null)).toList();
-  }
-
-  Map<String, dynamic> _getTeamMap(String name, String description) {
-    return {
-      "name": name,
-      "description": description,
-    };
   }
 }

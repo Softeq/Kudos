@@ -110,16 +110,13 @@ class _MyAchievementsWidget extends StatelessWidget {
                   );
                 }
 
-                return Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: AchievementListWidget.from(
-                    notifier.items,
-                    (x) {
-                      Navigator.of(context).push(
-                        AchievementDetailsRoute(x.achievement),
-                      );
-                    },
-                  ),
+                return AchievementListWidget.from(
+                  notifier.items,
+                  (x) {
+                    Navigator.of(context).push(
+                      AchievementDetailsRoute(x.achievement),
+                    );
+                  },
                 );
               },
             ),

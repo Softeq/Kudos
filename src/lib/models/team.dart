@@ -42,8 +42,8 @@ class Team {
       id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      owners: owners ?? this.owners,
-      members: members ?? this.members,
+      owners: owners ?? this.owners.toList(),
+      members: members ?? this.members.toList(),
     );
   }
 
