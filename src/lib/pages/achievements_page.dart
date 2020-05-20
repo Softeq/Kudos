@@ -6,7 +6,6 @@ import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
 import 'package:provider/provider.dart';
 
-//TODO VPY: remove from main page and rebuild for search achievement screen
 class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -12,16 +12,21 @@ class TeamsService {
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
 
-  Future<void> createTeam(String name, String description) async {
+  Future<Team> createTeam(String name, String description) async {
     if (name == null || name.isEmpty) {
       throw ArgumentError.notNull(name);
     }
 
-    var docRef = await _database
-        .collection(_teamsCollection)
-        .add(_getTeamMap(name, description));
-
     var firstMember = TeamMember.fromUser(_authService.currentUser);
+
+    var docRef = await _database.collection(_teamsCollection).add(
+          Team.createMap(
+            name: name,
+            description: description,
+            members: [firstMember.id],
+            owners: [firstMember.id],
+          ),
+        );
 
     await _database
         .collection(_teamsCollection)
@@ -36,6 +41,9 @@ class TeamsService {
         .collection(_ownersCollection)
         .document(firstMember.id)
         .setData(firstMember.toMap());
+
+    var document = await docRef.get();
+    return Team.fromDocument(document, [firstMember], [firstMember]);
   }
 
   Future<void> editTeam(String id, String name, String description) async {
@@ -43,17 +51,23 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    await _database
-        .collection(_teamsCollection)
-        .document(id)
-        .setData(_getTeamMap(name, description));
+    await _database.collection(_teamsCollection).document(id).setData(
+        Team.createMap(
+          name: name,
+          description: description,
+        ),
+        merge: true);
   }
 
-  Future<List<Team>> getTeams() async {
-    var userId = _authService.currentUser.id;
+  Future<List<Team>> getTeams([String id]) async {
+    var userId = id;
+    if (userId == null) {
+      userId = _authService.currentUser.id;
+    }
+
     //TODO VPY: find better method
-    var result = await _getTeams("owners", userId);
-    var members = await _getTeams("members", userId);
+    var result = await _getTeams(_ownersCollection, userId);
+    var members = await _getTeams(_membersCollection, userId);
 
     members.forEach((x) {
       var team = result.firstWhere((y) => y.id == x.id, orElse: () => null);
@@ -84,16 +98,6 @@ class TeamsService {
 
   Future<void> updateAdmins(String id, List<TeamMember> newMembers) {
     return _updateUsers(id, _ownersCollection, newMembers);
-  }
-
-  Future<List<Team>> getUserTeams(String userId) async {
-    var snapshot = await _database
-        .collection(_teamsCollection)
-        .where("members", arrayContains: userId)
-        .getDocuments();
-    return snapshot.documents
-        .map((x) => Team.fromDocument(x, null, null))
-        .toList();
   }
 
   Future<void> _updateUsers(
@@ -142,12 +146,5 @@ class TeamsService {
         .where(field, arrayContains: userId)
         .getDocuments();
     return qs.documents.map((x) => Team.fromDocument(x, null, null)).toList();
-  }
-
-  Map<String, dynamic> _getTeamMap(String name, String description) {
-    return {
-      "name": name,
-      "description": description,
-    };
   }
 }

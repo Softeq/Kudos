@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/team_member.dart';
 
 @immutable
@@ -42,15 +42,33 @@ class Team {
       id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      owners: owners ?? this.owners,
-      members: members ?? this.members,
+      owners: owners ?? this.owners.toList(),
+      members: members ?? this.members.toList(),
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      "name": name,
-      "description": description,
-    };
+    return createMap(name: name, description: description);
+  }
+
+  static Map<String, dynamic> createMap({
+    @required String name,
+    @required String description,
+    List<String> members,
+    List<String> owners,
+  }) {
+    var map = Map<String, dynamic>();
+    map["name"] = name;
+    map["description"] = description;
+
+    if (members != null) {
+      map["members"] = members;
+    }
+
+    if (owners != null) {
+      map["owners"] = owners;
+    }
+
+    return map;
   }
 }

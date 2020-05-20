@@ -55,6 +55,7 @@ class AchievementListWidget extends StatelessWidget {
         return _items[index];
       },
       itemCount: _items.length,
+      padding: EdgeInsets.only(top: 20.0),
     );
   }
 }

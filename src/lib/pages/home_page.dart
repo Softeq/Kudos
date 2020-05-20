@@ -22,21 +22,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _tabs.add(_TabItem(
-      icon: Icons.category,
-      title: locator<LocalizationService>().allAchievements,
-      body: ChangeNotifierProvider<AchievementsViewModel>(
-        create: (context) => AchievementsViewModel()..initialize(),
-        child: AchievementsPage(),
-      ),
-    ));
-
-    _tabs.add(_TabItem(
-      icon: Icons.people,
-      title: locator<LocalizationService>().people,
-      body: PeoplePage(),
-    ));
-
     _tabs.add(
       _TabItem(
         icon: Icons.person,
@@ -47,6 +32,21 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+
+    _tabs.add(_TabItem(
+      icon: Icons.people,
+      title: locator<LocalizationService>().people,
+      body: PeoplePage(),
+    ));
+
+    _tabs.add(_TabItem(
+      icon: Icons.category,
+      title: locator<LocalizationService>().allAchievements,
+      body: ChangeNotifierProvider<AchievementsViewModel>(
+        create: (context) => AchievementsViewModel()..initialize(),
+        child: AchievementsPage(),
+      ),
+    ));
   }
 
   void _selectTab(int index) {

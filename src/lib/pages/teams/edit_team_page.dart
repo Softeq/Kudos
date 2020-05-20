@@ -95,17 +95,10 @@ class _EditTeamPageState extends State<_EditTeamPage> {
             if (viewModel.isBusy) {
               return;
             }
-            await viewModel.save(
+            var team = await viewModel.save(
               _nameController.text,
               _descriptionController.text,
             );
-            Team team;
-            if (viewModel.initialTeam != null) {
-              team = viewModel.initialTeam.copy(
-                name: _nameController.text,
-                description: _descriptionController.text,
-              );
-            }
             Navigator.of(context).pop(team);
           }
         },
