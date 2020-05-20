@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/widgets/scroll_behaviors.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/teams/user_teams_widget.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -16,8 +17,12 @@ class MyProfilePage extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: _buildAppBar(viewModel),
-          body: CustomScrollView(
-            slivers: _buildSlivers(viewModel.user),
+          body: ScrollConfiguration(
+            behavior: DisableGlowingOverscrollBehavior(),
+            child: CustomScrollView(
+              physics: ClampingScrollPhysics(),
+              slivers: _buildSlivers(viewModel.user),
+            ),
           ),
         );
       },
