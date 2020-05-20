@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
@@ -109,12 +108,10 @@ class ProfileAchievementsListWidget extends StatelessWidget {
                 _buildCountBadge(achievementCollection, constraints.maxWidth)
             ],
           ),
-          onTap: () async {
-            // TODO YP: refactor
-            final achievementService = locator<AchievementsService>();
-            final achievement =
-                await achievementService.getAchievement(relatedAchievement.id);
-            Navigator.of(context).push(AchievementDetailsRoute(achievement));
+          onTap: () {
+            Navigator.of(context).push(
+              AchievementDetailsRoute(relatedAchievement.id),
+            );
           },
         );
       },

@@ -24,7 +24,7 @@ class AchievementsPage extends StatelessWidget {
               viewModel.achievements,
               (x) {
                 Navigator.of(context).push(
-                  AchievementDetailsRoute(x.achievement),
+                  AchievementDetailsRoute(x.achievement.id),
                 );
               },
             );

@@ -114,7 +114,7 @@ class _MyAchievementsWidget extends StatelessWidget {
                   notifier.items,
                   (x) {
                     Navigator.of(context).push(
-                      AchievementDetailsRoute(x.achievement),
+                      AchievementDetailsRoute(x.achievement.id),
                     );
                   },
                 );
