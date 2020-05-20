@@ -8,4 +8,9 @@ class ListNotifier<T> extends ChangeNotifier {
     items.addAll(newItems);
     notifyListeners();
   }
+
+  void add(T item) {
+    items.add(item);
+    notifyListeners();
+  }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Button extends StatelessWidget {
+//TODO VPY: delete
+class ButtonWidget extends StatelessWidget {
 
   final String title;
   final Function onPressed;
 
-  Button(this.title, this.onPressed);
+  ButtonWidget(this.title, this.onPressed);
 
   @override
   Widget build(BuildContext context) {

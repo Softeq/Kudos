@@ -109,6 +109,10 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
+    if (event.achievement.teamId != _initialTeam.id) {
+      return;
+    }
+
     var achievementViewModel = _achievements.firstWhere(
       (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,

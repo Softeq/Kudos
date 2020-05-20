@@ -52,6 +52,7 @@ class Achievement {
     String imageUrl,
     String teamId,
     TeamReference teamReference,
+    String userId,
   }) {
     return Achievement._(
       id: this.id,
@@ -70,7 +71,7 @@ class Achievement {
       "description": description,
       "image_url": imageUrl,
       "team_id": teamId,
-      "team": teamReference.toMap(),
+      "team": teamReference == null ? null : teamReference.toMap(),
       "user_id": userId,
     };
   }

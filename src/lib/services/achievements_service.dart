@@ -14,13 +14,16 @@ import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_reference.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 class AchievementsService {
-  final Firestore _database = Firestore.instance;
-  final String _achievementsCollection = "achievements";
-  final String _kudosFolder = "kudos";
+  final _database = Firestore.instance;
+  final _achievementsCollection = "achievements";
+  final _kudosFolder = "kudos";
+  final _authService = locator<BaseAuthService>();
 
   Future<List<Achievement>> getAchievements() async {
     var snapshot = await _database
@@ -62,6 +65,12 @@ class AchievementsService {
           name: team.name,
           id: team.id,
         ),
+      );
+    }
+
+    if (user != null) {
+      copyOfAchievement = copyOfAchievement.copy(
+        userId: user.id,
       );
     }
 
@@ -182,9 +191,18 @@ class AchievementsService {
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) async {
+    return _getAchievements("team_id", teamId);
+  }
+
+  Future<List<Achievement>> getMyAchievements() {
+    var userId = _authService.currentUser.id;
+    return _getAchievements("user_id", userId);
+  }
+
+  Future<List<Achievement>> _getAchievements(String field, String value) async {
     var qs = await _database
         .collection(_achievementsCollection)
-        .where("team_id", isEqualTo: teamId)
+        .where(field, isEqualTo: value)
         .getDocuments();
     var result = qs.documents.map((x) => Achievement.fromDocument(x)).toList();
     return result;

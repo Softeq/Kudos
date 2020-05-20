@@ -215,8 +215,8 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(localizationService.achivementStatisticsTitle,
-            localizationService.achivementStatisticsTooltip),
+        _SectionTitleWidget(localizationService.achievementStatisticsTitle,
+            localizationService.achievementStatisticsTooltip),
         SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
@@ -279,7 +279,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var localizationService = locator<LocalizationService>();
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achivementOwnerTitle),
+      _SectionTitleWidget(localizationService.achievementOwnerTitle),
       SizedBox(height: 12),
       Align(
           alignment: Alignment.topLeft,
@@ -309,7 +309,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.only(left: 12),
               child: Text(
-                localizationService.achivementHoldersEmptyPlaceholder,
+                localizationService.achievementHoldersEmptyPlaceholder,
                 style: Theme.of(context).textTheme.headline6,
               )));
     } else {
@@ -326,7 +326,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achivementHoldersTitle),
+      _SectionTitleWidget(localizationService.achievementHoldersTitle),
       SizedBox(height: 12),
       content
     ]);
