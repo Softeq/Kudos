@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
-import 'package:kudosapp/pages/profile/my_profile_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
+import 'package:kudosapp/pages/profile/my_profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
-import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
-import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {

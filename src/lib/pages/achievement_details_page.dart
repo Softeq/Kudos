@@ -9,7 +9,6 @@ import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';

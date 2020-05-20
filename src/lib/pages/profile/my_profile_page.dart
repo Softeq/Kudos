@@ -18,7 +18,7 @@ class MyProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var viewModel = Provider.of<MyProfileViewModel>(context, listen: false);
-    var user = viewModel.profile.user;
+    var user = viewModel.user;
     var localizationService = locator<LocalizationService>();
     return DefaultTabController(
       length: 3,
@@ -50,7 +50,7 @@ class MyProfilePage extends StatelessWidget {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.exit_to_app),
-              onPressed: viewModel.auth.signOut,
+              onPressed: viewModel.signOut,
             ),
           ],
           bottom: TabBar(
