@@ -57,12 +57,9 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             ),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.all(20),
-          child: viewModel.isBusy
-              ? Center(child: CircularProgressIndicator())
-              : _buildBody(viewModel),
-        ),
+        body: viewModel.isBusy
+            ? Center(child: CircularProgressIndicator())
+            : _buildBody(viewModel),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           child: Icon(Icons.send),
@@ -72,22 +69,23 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
     });
   }
 
-  Widget _buildBody(
-    AchievementDetailsViewModel viewModel,
-  ) {
-    return Column(
-      children: <Widget>[
-        Container(
-          height: 140,
-          child: AchievementHorizontalWidget(viewModel.achievementViewModel),
-        ),
-        SizedBox(height: 24),
-        _PopularityWidget(viewModel.statisticsValue),
-        SizedBox(height: 24),
-        _AchievementHoldersWidget(viewModel.achievementHolders),
-        SizedBox(height: 24),
-        _AchievementOwnerWidget(viewModel.ownerName)
-      ],
+  Widget _buildBody(AchievementDetailsViewModel viewModel) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 140,
+            child: AchievementHorizontalWidget(viewModel.achievementViewModel),
+          ),
+          SizedBox(height: 24),
+          _PopularityWidget(viewModel.statisticsValue),
+          SizedBox(height: 24),
+          _AchievementHoldersWidget(viewModel.achievementHolders),
+          SizedBox(height: 24),
+          _AchievementOwnerWidget(viewModel.ownerName)
+        ],
+      ),
     );
   }
 
@@ -154,7 +152,11 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           );
         });
 
-    return accepted ? _inputController.text : null;
+    var result = accepted ? _inputController.text : null;
+
+    _inputController.text = "";
+
+    return result;
   }
 
   void _notifyAboutSuccess() {

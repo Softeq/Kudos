@@ -8,7 +8,7 @@ class UserTeamsViewModel extends BaseViewModel {
   final _teamsService = locator<TeamsService>();
 
   void initialize(String userId) async {
-    var teams = await _teamsService.getUserTeams(userId);
+    var teams = await _teamsService.getTeams(userId);
     teamNames.addAll(teams.map((x) => x.name));
     notifyListeners();
   }
