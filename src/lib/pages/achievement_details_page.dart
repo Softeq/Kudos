@@ -6,6 +6,7 @@ import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
+import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
@@ -83,7 +84,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           SizedBox(height: 24),
           _AchievementHoldersWidget(viewModel.achievementHolders),
           SizedBox(height: 24),
-          _AchievementOwnerWidget(viewModel.ownerName)
+          _AchievementOwnerWidget(
+              viewModel.ownerType, viewModel.ownerName, viewModel.ownerId)
         ],
       ),
     );
@@ -273,8 +275,10 @@ class _SectionTitleWidget extends StatelessWidget {
 
 class _AchievementOwnerWidget extends StatelessWidget {
   final String _ownerName;
+  final String _ownerId;
+  final OwnerType _ownerType;
 
-  _AchievementOwnerWidget(this._ownerName);
+  _AchievementOwnerWidget(this._ownerType, this._ownerName, this._ownerId);
 
   @override
   Widget build(BuildContext context) {
@@ -286,10 +290,21 @@ class _AchievementOwnerWidget extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: Padding(
               padding: EdgeInsets.only(left: 12),
-              child: Text(
-                _ownerName,
-                style: Theme.of(context).textTheme.headline6,
-              )))
+              child: RaisedButton(
+                  onPressed: () {
+                    switch (_ownerType) {
+                      case OwnerType.user:
+                        Navigator.of(context).push(ProfileRoute(_ownerId));
+                        break;
+                      case OwnerType.team:
+                        Navigator.of(context).push(ManageTeamRoute(_ownerId));
+                        break;
+                    }
+                  },
+                  child: Text(
+                    _ownerName,
+                    style: Theme.of(context).textTheme.bodyText1
+                  ))))
     ]);
   }
 }
@@ -311,7 +326,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               padding: EdgeInsets.only(left: 12),
               child: Text(
                 localizationService.achievementHoldersEmptyPlaceholder,
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.bodyText1,
               )));
     } else {
       content = Padding(

@@ -56,16 +56,26 @@ class ManageTeamViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initialize(Team team) {
+  void initialize(String teamId) async{
+    isBusy = true;
+    initializeWithTeam(await loadTeam(teamId));
+  }
+
+  void initializeWithTeam(Team team){
     _initialTeam = team;
-    members.replace(team.members.map(_createTeamMemberViewModel));
-    admins.replace(team.owners);
+    members.replace(_initialTeam.members.map(_createTeamMemberViewModel));
+    admins.replace(_initialTeam.owners);
     notifyListeners();
     _refreshAchievement();
+    isBusy = false;
 
     _onAchievementUpdatedSubscription?.cancel();
     _onAchievementUpdatedSubscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
+  }
+
+  Future<Team> loadTeam(String id) {
+    return _teamsService.getTeam(id);
   }
 
   void replaceMembers(Iterable<User> users) {

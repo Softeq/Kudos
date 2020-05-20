@@ -168,8 +168,7 @@ class _MyTeamsWidget extends StatelessWidget {
               return ListTile(
                 title: Text(item.name),
                 onTap: () async {
-                  var team = await viewModel.loadTeam(item.id);
-                  Navigator.of(context).push(ManageTeamRoute(team));
+                  Navigator.of(context).push(ManageTeamRoute(item.id));
                 },
               );
             },

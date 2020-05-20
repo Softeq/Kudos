@@ -14,12 +14,12 @@ import 'package:kudosapp/widgets/achievement_widget.dart';
 import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
-  ManageTeamRoute(Team team)
+  ManageTeamRoute(String teamId)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ManageTeamViewModel>(
               create: (context) {
-                return ManageTeamViewModel()..initialize(team);
+                return ManageTeamViewModel()..initialize(teamId);
               },
               child: _ManageTeamPage(),
             );
@@ -231,7 +231,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     var team =
         await Navigator.of(context).push(EditTeamRoute(viewModel.modifiedTeam));
     if (team != null) {
-      viewModel.initialize(team);
+      viewModel.initializeWithTeam(team);
     }
   }
 

@@ -13,6 +13,8 @@ import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
+enum OwnerType { user, team }
+
 class AchievementDetailsViewModel extends BaseViewModel {
   final _achievementsService = locator<AchievementsService>();
   final _peopleService = locator<PeopleService>();
@@ -24,18 +26,20 @@ class AchievementDetailsViewModel extends BaseViewModel {
   AchievementViewModel _achievementViewModel;
   double _statisticsValue = 0;
   String _ownerName = "";
+  String _ownerId = "";
+  OwnerType _ownerType;
 
   AchievementDetailsViewModel() {
     isBusy = true;
   }
 
   AchievementViewModel get achievementViewModel => _achievementViewModel;
-
   List<AchievementHolder> get achievementHolders => _achievementHolders;
-
   double get statisticsValue => _statisticsValue;
 
   String get ownerName => _ownerName;
+  String get ownerId => _ownerId;
+  OwnerType get ownerType => _ownerType;
 
   Future<void> initialize(Achievement achievement) async {
     _achievementViewModel = AchievementViewModel(achievement);
@@ -43,19 +47,23 @@ class AchievementDetailsViewModel extends BaseViewModel {
     _subscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
     await loadStatistics();
-    await loadOwnerName();
+    await loadOwnerInfo();
     isBusy = false;
   }
 
-  Future<void> loadOwnerName() async {
+  Future<void> loadOwnerInfo() async {
     if (_achievementViewModel.teamId != null)
     {
       _ownerName = _achievementViewModel.teamName;
+      _ownerType = OwnerType.team;
+      _ownerId = _achievementViewModel.teamId;
     }
     else
     {
       var owners = await _peopleService.getUsersByIds([_achievementViewModel.userId]);
       _ownerName = owners.first.name;
+      _ownerType = OwnerType.user;
+      _ownerId = _achievementViewModel.userId;
     }
   }
 
