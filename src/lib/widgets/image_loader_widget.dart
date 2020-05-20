@@ -7,11 +7,11 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
-class ImageLoader extends StatelessWidget {
+class ImageLoaderWidget extends StatelessWidget {
   final String url;
   final File file;
 
-  ImageLoader({this.url, this.file});
+  ImageLoaderWidget({this.url, this.file});
 
   @override
   Widget build(BuildContext context) {

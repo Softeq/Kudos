@@ -87,6 +87,10 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
+    if (event.achievement.id != _achievementViewModel.achievement.id) {
+      return;
+    }
+
     _achievementViewModel.initialize(event.achievement);
     notifyListeners();
   }

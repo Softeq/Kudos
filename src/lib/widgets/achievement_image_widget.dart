@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kudosapp/widgets/image_loader.dart';
+import 'package:kudosapp/widgets/image_loader_widget.dart';
 
 class AchievementImageWidget extends StatelessWidget {
   final File file;
@@ -28,7 +28,7 @@ class AchievementImageWidget extends StatelessWidget {
       );
     } else if (imageUrl != null || file != null) {
       color = Color.fromARGB(255, 53, 38, 111);
-      child = ImageLoader(
+      child = ImageLoaderWidget(
         url: imageUrl,
         file: file,
       );

@@ -50,8 +50,19 @@ class TeamsService {
   }
 
   Future<List<Team>> getTeams() async {
-    var qs = await _database.collection(_teamsCollection).getDocuments();
-    return qs.documents.map((x) => Team.fromDocument(x, null, null)).toList();
+    var userId = _authService.currentUser.id;
+    //TODO VPY: find better method
+    var result = await _getTeams("owners", userId);
+    var members = await _getTeams("members", userId);
+
+    members.forEach((x) {
+      var team = result.firstWhere((y) => y.id == x.id, orElse: () => null);
+      if (team == null) {
+        result.add(x);
+      }
+    });
+
+    return result;
   }
 
   Future<Team> getTeam(String id) async {
@@ -80,7 +91,9 @@ class TeamsService {
         .collection(_teamsCollection)
         .where("members", arrayContains: userId)
         .getDocuments();
-    return snapshot.documents.map((x) => Team.fromDocument(x, null, null)).toList();
+    return snapshot.documents
+        .map((x) => Team.fromDocument(x, null, null))
+        .toList();
   }
 
   Future<void> _updateUsers(
@@ -121,6 +134,14 @@ class TeamsService {
     );
 
     await batch.commit();
+  }
+
+  Future<List<Team>> _getTeams(String field, String userId) async {
+    var qs = await _database
+        .collection(_teamsCollection)
+        .where(field, arrayContains: userId)
+        .getDocuments();
+    return qs.documents.map((x) => Team.fromDocument(x, null, null)).toList();
   }
 
   Map<String, dynamic> _getTeamMap(String name, String description) {

@@ -9,7 +9,6 @@ import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
@@ -215,8 +214,8 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(localizationService.achivementStatisticsTitle,
-            localizationService.achivementStatisticsTooltip),
+        _SectionTitleWidget(localizationService.achievementStatisticsTitle,
+            localizationService.achievementStatisticsTooltip),
         SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
@@ -279,7 +278,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var localizationService = locator<LocalizationService>();
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achivementOwnerTitle),
+      _SectionTitleWidget(localizationService.achievementOwnerTitle),
       SizedBox(height: 12),
       Align(
           alignment: Alignment.topLeft,
@@ -309,7 +308,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.only(left: 12),
               child: Text(
-                localizationService.achivementHoldersEmptyPlaceholder,
+                localizationService.achievementHoldersEmptyPlaceholder,
                 style: Theme.of(context).textTheme.headline6,
               )));
     } else {
@@ -326,7 +325,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achivementHoldersTitle),
+      _SectionTitleWidget(localizationService.achievementHoldersTitle),
       SizedBox(height: 12),
       content
     ]);

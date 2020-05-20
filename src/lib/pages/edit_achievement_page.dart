@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
@@ -13,6 +14,7 @@ class EditAchievementRoute extends MaterialPageRoute {
   EditAchievementRoute({
     Achievement achievement,
     Team team,
+    User user,
   }) : super(
           builder: (context) {
             var localizationService = locator<LocalizationService>();
@@ -21,6 +23,7 @@ class EditAchievementRoute extends MaterialPageRoute {
                 return EditAchievementViewModel(
                   achievement ?? Achievement.empty(),
                   team,
+                  user,
                 );
               },
               child: _EditAchievementPage(
