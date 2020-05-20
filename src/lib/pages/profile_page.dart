@@ -9,11 +9,11 @@ import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 
 class ProfileRoute extends MaterialPageRoute {
-  ProfileRoute(User user)
+  ProfileRoute(String userId)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ProfileViewModel>(
-              create: (context) => ProfileViewModel(user),
+              create: (context) => ProfileViewModel(userId)..initialize(),
               child: ProfilePage(),
             );
           },
@@ -27,17 +27,31 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
           return CustomScrollView(
-            slivers: [
-              _buildHeader(viewModel.user),
-              SliverSectionHeaderWidget(
-                title: locator<LocalizationService>().allAchievements,
-              ),
-              ProfileAchievementsList(viewModel),
-            ],
+            slivers: _buildSlivers(viewModel),
           );
         },
       ),
     );
+  }
+
+  List<Widget> _buildSlivers(ProfileViewModel viewModel) {
+    if (viewModel.user == null) {
+      return [
+        SliverFillRemaining(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ];
+    }
+
+    return [
+      _buildHeader(viewModel.user),
+      SliverSectionHeaderWidget(
+        title: locator<LocalizationService>().allAchievements,
+      ),
+      ProfileAchievementsListWidget(viewModel.user.id),
+    ];
   }
 
   Widget _buildHeader(User user) {
@@ -48,15 +62,19 @@ class ProfilePage extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(user.name),
-        background: CachedNetworkImage(
-          imageUrl: user.imageUrl,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
+        background: _buildHeaderBackground(user.imageUrl),
+      ),
+    );
+  }
+
+  Widget _buildHeaderBackground(String imageUrl) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.cover,
           ),
         ),
       ),

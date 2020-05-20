@@ -2,11 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
+import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
@@ -334,11 +337,26 @@ class _AchievementHoldersWidget extends StatelessWidget {
     return achievementHolders == null
         ? new List<Widget>()
         : achievementHolders
-            .map((u) => Tooltip(
-                message: u.recipient.name,
-                child: CircleAvatar(
-                    backgroundImage:
-                        CachedNetworkImageProvider(u.recipient.imageUrl))))
+            .map((u) => _buildUserAvatar(context, u.recipient))
             .toList();
+  }
+
+  Widget _buildUserAvatar(BuildContext context, RelatedUser holder) {
+    return Tooltip(
+      message: holder.name,
+      child: GestureDetector(
+        child: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(holder.imageUrl),
+        ),
+        onTap: () => _navigateToProfile(context, holder),
+      ),
+    );
+  }
+
+  void _navigateToProfile(
+    BuildContext context,
+    RelatedUser holder,
+  ) {
+    Navigator.of(context).push(ProfileRoute(holder.id));
   }
 }

@@ -1,40 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
-import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
+import 'package:kudosapp/services/localization_service.dart';
+import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
-class ProfileAchievementsList extends StatelessWidget {
-  final ProfileViewModel viewModel;
+class ProfileAchievementsListWidget extends StatelessWidget {
+  final String _userId;
 
-  const ProfileAchievementsList(this.viewModel);
+  const ProfileAchievementsListWidget(this._userId);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<UserAchievementCollection>>(
-      future: viewModel.achievements,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          return _buildList(snapshot.data);
-        }
-        return SliverFillRemaining(
-          hasScrollBody: false,
-          child: _buildChild(snapshot),
-        );
+    return ChangeNotifierProvider<ProfileAchievementsViewModel>(
+      create: (context) {
+        return ProfileAchievementsViewModel(_userId)..initialize();
       },
+      child: Consumer<ProfileAchievementsViewModel>(
+        builder: (context, viewModel, child) {
+          if (!viewModel.isBusy && viewModel.achievements.isNotEmpty) {
+            return _buildList(viewModel.achievements);
+          }
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: _buildChild(viewModel),
+          );
+        },
+      ),
     );
   }
 
-  _buildChild(AsyncSnapshot<List<UserAchievementCollection>> snapshot) {
-    if (snapshot.hasData) {
+  _buildChild(ProfileAchievementsViewModel viewModel) {
+    if (viewModel.isBusy) {
+      return _buildLoading();
+    }
+    if (viewModel.achievements.isEmpty) {
       return _buildEmpty();
     }
-    if (snapshot.hasError) {
-      return _buildError(snapshot.error);
-    }
-    return _buildLoading();
+    return _buildError("Something went wrong");
   }
 
   Widget _buildLoading() {
@@ -56,7 +62,9 @@ class ProfileAchievementsList extends StatelessWidget {
 
   Widget _buildEmpty() {
     return Center(
-      child: Text("No data"), // TODO YP: temporary
+      child: Text(
+        locator<LocalizationService>().profileAchievementsEmptyPlaceholder,
+      ),
     );
   }
 
