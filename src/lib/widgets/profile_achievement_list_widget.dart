@@ -9,8 +9,9 @@ import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
 class ProfileAchievementsListWidget extends StatelessWidget {
   final String _userId;
+  final bool _buildSliver;
 
-  const ProfileAchievementsListWidget(this._userId);
+  const ProfileAchievementsListWidget(this._userId, this._buildSliver);
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +22,25 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       child: Consumer<ProfileAchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (!viewModel.isBusy && viewModel.achievements.isNotEmpty) {
-            return _buildList(viewModel.achievements);
+            return _buildGridView(viewModel.achievements);
           }
-          return SliverFillRemaining(
-            hasScrollBody: false,
-            child: _buildChild(viewModel),
-          );
+          return _buildAdaptiveChild(viewModel);
         },
       ),
     );
   }
 
-  _buildChild(ProfileAchievementsViewModel viewModel) {
+  Widget _buildAdaptiveChild(ProfileAchievementsViewModel viewModel) {
+    if (_buildSliver) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: _buildChild(viewModel),
+      );
+    }
+    return _buildChild(viewModel);
+  }
+
+  Widget _buildChild(ProfileAchievementsViewModel viewModel) {
     if (viewModel.isBusy) {
       return _buildLoading();
     }
@@ -67,23 +75,45 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildList(List<UserAchievementCollection> achievementCollections) {
-    return SliverPadding(
+  Widget _buildGridView(List<UserAchievementCollection> achievementCollections) {
+    return _buildAdaptiveGridView(
       padding: EdgeInsets.all(16),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 10,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => _buildListItem(
-            context,
-            achievementCollections[index],
-          ),
-          childCount: achievementCollections.length,
-        ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 10,
       ),
+      itemCount: achievementCollections.length,
+      itemBuilder: (context, index) => _buildListItem(
+        context,
+        achievementCollections[index],
+      ),
+    );
+  }
+
+  Widget _buildAdaptiveGridView({
+    @required EdgeInsets padding,
+    @required SliverGridDelegate gridDelegate,
+    @required int itemCount,
+    @required Widget Function(BuildContext, int) itemBuilder,
+  }) {
+    if (_buildSliver) {
+      return SliverPadding(
+        padding: padding,
+        sliver: SliverGrid(
+          gridDelegate: gridDelegate,
+          delegate: SliverChildBuilderDelegate(
+            itemBuilder,
+            childCount: itemCount,
+          ),
+        ),
+      );
+    }
+    return GridView.builder(
+      padding: padding,
+      gridDelegate: gridDelegate,
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
     );
   }
 

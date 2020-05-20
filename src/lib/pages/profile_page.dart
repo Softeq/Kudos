@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
@@ -50,7 +51,7 @@ class ProfilePage extends StatelessWidget {
       SliverSectionHeaderWidget(
         title: locator<LocalizationService>().allAchievements,
       ),
-      ProfileAchievementsListWidget(viewModel.user.id),
+      ProfileAchievementsListWidget(viewModel.user.id, true),
     ];
   }
 

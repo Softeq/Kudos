@@ -11,7 +11,9 @@ import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
+import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
+import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {
@@ -63,9 +65,7 @@ class MyProfilePage extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            Center(
-              child: Text("TODO:"),
-            ),
+            ProfileAchievementsListWidget(user.id, false),
             ChangeNotifierProvider<MyTeamsViewModel>.value(
               value: viewModel.myTeamsViewModel..initialize(),
               child: _MyTeamsWidget(),
