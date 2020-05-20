@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/widgets/scroll_behaviors.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/people_viewmodel.dart';
@@ -55,9 +56,12 @@ class PeopleList extends StatelessWidget {
   }
 
   Widget _buildList(List<User> users) {
-    return ListView.builder(
-      itemCount: users.length,
-      itemBuilder: (context, index) => _buildItem(context, users[index]),
+    return ScrollConfiguration(
+      behavior: DisableGlowingOverscrollBehavior(),
+      child: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) => _buildItem(context, users[index]),
+      ),
     );
   }
 
