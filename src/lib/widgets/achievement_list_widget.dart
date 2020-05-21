@@ -10,7 +10,7 @@ class AchievementListWidget extends StatelessWidget {
     Function(AchievementViewModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
-    sortedList.sort((x, y) => x.teamName.compareTo(y.teamName));
+    sortedList.sort((x, y) => x.teamName?.compareTo(y.teamName) ?? -1);
 
     String teamName;
     var items = List<Widget>();
