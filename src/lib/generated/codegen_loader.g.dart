@@ -1,0 +1,111 @@
+// DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
+import 'dart:ui';
+
+import 'package:easy_localization/easy_localization.dart' show AssetLoader;
+
+class CodegenLoader extends AssetLoader{
+  const CodegenLoader();
+
+  @override
+  Future<Map<String, dynamic>> load(String fullPath, Locale locale ) {
+    return Future.value(mapLocales[locale.toString()]);
+  }
+
+    static const Map<String,dynamic> ru = {
+  "appName": "Kudos",
+  "signIn": "Войти через Google",
+  "allAchievements": "Все награды",
+  "fromCris": "От Криса",
+  "official": "Официальные",
+  "others": "Остальные",
+  "people": "Люди",
+  "profile": "Профиль",
+  "ok": "OK",
+  "cancel": "Отмена",
+  "achievementName": "Название",
+  "description": "Описание",
+  "editName": "Сделай название уникальным",
+  "editDescription": "Сделай описание значимым",
+  "editImage": "Сделай изображение узнаваемым",
+  "edit": "Редактировать",
+  "create": "Создать",
+  "fileIsNullErrorMessage": "Добавьте картинку",
+  "descriptionIsNullErrorMessage": "Добавьте описание",
+  "nameIsNullErrorMessage": "Введите название",
+  "generalErrorMessage": "Что-то пошло не так...",
+  "send": "Отправить",
+  "writeAComment": "Ваш комментарий",
+  "sentSuccessfully": "Награда успешно отправлена!",
+  "achievementStatisticsTitle": "Статистика",
+  "achievementStatisticsTooltip": "Как много людей уже получили эту награду",
+  "achievementHoldersTitle": "Обладатели",
+  "achievementHoldersEmptyPlaceholder": "Никто ещё не получал эту награду",
+  "profileAchievementsEmptyPlaceholder": "Еще не получал наград",
+  "achievementOwnerTitle": "Владелец",
+  "addPeople": "Добавить людей",
+  "addedPeople": "Добавленные люди",
+  "createTeam": "Создание команды",
+  "editTeam": "Редактирование команды",
+  "name": "Имя",
+  "optionalDescription": "Описание (опционально)",
+  "requiredField": "Обязательное поле",
+  "team": "Команда",
+  "admins": "Администраторы",
+  "teams": "Команды",
+  "owner": "Владелец",
+  "members": "Состав",
+  "save": "Сохранить",
+  "achievements": "Достижения",
+  "createYourOwnAchievements": "Создавайте свои собственные награды и дарите их своим коллегам!",
+  "createYourOwnTeams": "Создавайте свои команды и приглашайте в них своих коллег!"
+};
+  static const Map<String,dynamic> en = {
+  "appName": "Kudos",
+  "signIn": "Sign-In via Google",
+  "allAchievements": "All achievements",
+  "fromCris": "From Chris",
+  "official": "Official",
+  "others": "Others",
+  "people": "People",
+  "profile": "Profile",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "achievementName": "Name",
+  "description": "Description",
+  "editName": "Make the name unique",
+  "editDescription": "Make the description meaningful",
+  "editImage": "Make the image recognizable",
+  "edit": "Edit",
+  "create": "Create",
+  "fileIsNullErrorMessage": "Add a picture",
+  "descriptionIsNullErrorMessage": "Add a description",
+  "nameIsNullErrorMessage": "Enter name",
+  "generalErrorMessage": "Something went wrong...",
+  "send": "Send",
+  "writeAComment": "Your comment",
+  "sentSuccessfully": "The award has been successfully sent!",
+  "achievementStatisticsTitle": "Statistics",
+  "achievementStatisticsTooltip": "How many people have already received this award",
+  "achievementHoldersTitle": "Holders",
+  "achievementHoldersEmptyPlaceholder": "No one has ever received this achievement.",
+  "profileAchievementsEmptyPlaceholder": "Haven't received any achievements yet.",
+  "achievementOwnerTitle": "Owner",
+  "addPeople": "Add people",
+  "addedPeople": "Added people",
+  "createTeam": "Create team",
+  "editTeam": "Edit team",
+  "name": "Name",
+  "optionalDescription": "Description (optional)",
+  "requiredField": "Required field",
+  "team": "Team",
+  "admins": "Admins",
+  "teams": "Teams",
+  "owner": "Owner",
+  "members": "Members",
+  "save": "Save",
+  "achievements": "Achievements",
+  "createYourOwnAchievements": "Create your own rewards and give them to your colleagues!",
+  "createYourOwnTeams": "Create your teams and invite your colleagues to join them!"
+};
+  static const Map<String, Map<String,dynamic>> mapLocales = {"ru": ru, "en": en};
+}

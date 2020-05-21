@@ -10,13 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_localizations:
-    sdk: flutter
-
   # core
   provider: ^4.0.5+1
 
   get_it: ^4.0.2
+
+  easy_localization: ^2.3.2
 
   cloud_firestore: ^0.13.5
 
@@ -54,3 +53,6 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  assets:
+    - assets/translations/
