@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:kudosapp/generated/i18n.dart';
 import 'package:kudosapp/pages/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/home_page.dart';
@@ -9,7 +7,7 @@ import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class KudosApp extends StatelessWidget {
-  final i18n = I18n.delegate;
+  final localization = locator<Localization>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +17,8 @@ class KudosApp extends StatelessWidget {
       ],
       child: Consumer<AuthViewModel>(
         builder: (context, viewModel, child) => MaterialApp(
-          localizationsDelegates: [
-            i18n,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: i18n.supportedLocales,
+          localizationsDelegates: localization.localizationsDelegates,
+          supportedLocales: localization.supportedLocales,
           title: locator<LocalizationService>().appName,
           theme: ThemeData(),
           home: _buildHome(viewModel),
