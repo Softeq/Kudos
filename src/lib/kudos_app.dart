@@ -7,6 +7,8 @@ import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class KudosApp extends StatelessWidget {
+  final localization = locator<Localization>();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -15,6 +17,8 @@ class KudosApp extends StatelessWidget {
       ],
       child: Consumer<AuthViewModel>(
         builder: (context, viewModel, child) => MaterialApp(
+          localizationsDelegates: localization.localizationsDelegates,
+          supportedLocales: localization.supportedLocales,
           title: locator<LocalizationService>().appName,
           theme: ThemeData(),
           home: _buildHome(viewModel),

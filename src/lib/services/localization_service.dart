@@ -1,3 +1,9 @@
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 class LocalizationService {
   String get appName => "Kudos";
 
@@ -94,4 +100,67 @@ class LocalizationService {
 
   String get createYourOwnTeams =>
       "Создавайте свои команды и приглашайте в них своих коллег!";
+}
+
+class Localization {
+  static const AppLocalizationsDelegate delegate = AppLocalizationsDelegate();
+
+  List<Locale> get supportedLocales => delegate.supportedLocales;
+
+  List<LocalizationsDelegate> get localizationsDelegates {
+    return [
+      delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
+  }
+}
+
+class AppLocalizations implements WidgetsLocalizations {
+  final Locale locale;
+
+  const AppLocalizations(this.locale);
+
+  @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static Map<String, Map<String, String>> _localizedValues = {
+    'en': {
+      'title': 'Hello World',
+    },
+    'ru': {
+      'title': 'Привет мир',
+    },
+  };
+
+  String get title => _localizedValues[locale.languageCode]['title'];
+}
+
+class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+  const AppLocalizationsDelegate();
+
+  List<Locale> get supportedLocales {
+    return [
+      Locale('en'),
+      Locale('ru'),
+    ];
+  }
+
+  @override
+  bool isSupported(Locale locale) {
+    return supportedLocales.contains(locale);
+  }
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(AppLocalizations(locale));
+  }
+
+  @override
+  bool shouldReload(AppLocalizationsDelegate old) => false;
 }
