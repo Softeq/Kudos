@@ -20,6 +20,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _peopleService = locator<PeopleService>();
   final _eventBus = locator<EventBus>();
   final _authService = locator<BaseAuthService>();
+  final String _achievementId;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
   List<AchievementHolder> _achievementHolders;
@@ -29,7 +30,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   String _ownerId = "";
   OwnerType _ownerType;
 
-  AchievementDetailsViewModel() {
+  AchievementDetailsViewModel(this._achievementId) {
     isBusy = true;
   }
 
@@ -41,26 +42,30 @@ class AchievementDetailsViewModel extends BaseViewModel {
   String get ownerId => _ownerId;
   OwnerType get ownerType => _ownerType;
 
-  Future<void> initialize(Achievement achievement) async {
+  Future<void> initialize() async {
+    final achievement =
+        await _achievementsService.getAchievement(_achievementId);
+
     _achievementViewModel = AchievementViewModel(achievement);
     _subscription?.cancel();
     _subscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
+
+    // TODO YP: move to separate widgets
     await loadStatistics();
     await loadOwnerInfo();
+
     isBusy = false;
   }
 
   Future<void> loadOwnerInfo() async {
-    if (_achievementViewModel.teamId != null)
-    {
+    if (_achievementViewModel.teamId != null) {
       _ownerName = _achievementViewModel.teamName;
       _ownerType = OwnerType.team;
       _ownerId = _achievementViewModel.teamId;
-    }
-    else
-    {
-      var owners = await _peopleService.getUsersByIds([_achievementViewModel.userId]);
+    } else {
+      final userIds = [_achievementViewModel.userId];
+      var owners = await _peopleService.getUsersByIds(userIds);
       _ownerName = owners.first.name;
       _ownerType = OwnerType.user;
       _ownerId = _achievementViewModel.userId;

@@ -34,10 +34,7 @@ class EditAchievementViewModel extends BaseViewModel {
     }
     achievementViewModel.isFileLoading = true;
 
-    var file = await FilePicker.getFile(
-      type: FileType.custom,
-      allowedExtensions: ["svg, gif"],
-    );
+    var file = await FilePicker.getFile(type: FileType.image);
 
     achievementViewModel.isFileLoading = false;
 

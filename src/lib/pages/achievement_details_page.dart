@@ -15,12 +15,12 @@ import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
-  AchievementDetailsRoute(Achievement achievement)
+  AchievementDetailsRoute(String achievementId)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel()..initialize(achievement);
+                return AchievementDetailsViewModel(achievementId)..initialize();
               },
               child: _AchievementDetailsPage(),
             );
@@ -40,34 +40,42 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AchievementDetailsViewModel>(
-        builder: (context, viewModel, child) {
-      return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text(viewModel.achievementViewModel.title),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                Navigator.of(context).push(
-                  EditAchievementRoute(
-                    achievement: viewModel.achievementViewModel.achievement,
-                  ),
-                );
-              },
+      builder: (context, viewModel, child) {
+        if (viewModel.isBusy) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
-          ],
-        ),
-        body: viewModel.isBusy
-            ? Center(child: CircularProgressIndicator())
-            : _buildBody(viewModel),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(Icons.send),
-          onPressed: _sendTapped,
-        ),
-      );
-    });
+          );
+        }
+
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: Text(viewModel.achievementViewModel.title),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    EditAchievementRoute(
+                      achievement: viewModel.achievementViewModel.achievement,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          body: _buildBody(viewModel),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.send),
+            onPressed: _sendTapped,
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildBody(AchievementDetailsViewModel viewModel) {
