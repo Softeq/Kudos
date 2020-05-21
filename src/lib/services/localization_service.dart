@@ -89,8 +89,6 @@ class LocalizationService {
 
   String get achievements => "Достижения";
 
-  String get myAchievements => "Мои награды";
-
   String get createYourOwnAchievements =>
       "Создавайте свои собственные награды и дарите их своим коллегам!";
 

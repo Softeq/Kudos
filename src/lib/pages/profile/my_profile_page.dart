@@ -11,7 +11,6 @@ import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
-import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +58,7 @@ class MyProfilePage extends StatelessWidget {
             tabs: <Widget>[
               Tab(text: localizationService.achievements),
               Tab(text: localizationService.teams),
-              Tab(text: localizationService.myAchievements),
+              Tab(text: localizationService.owner),
             ],
           ),
         ),
