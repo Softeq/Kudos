@@ -5,8 +5,6 @@ import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 
@@ -70,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     return [
       _TabItem(
         icon: Icons.person,
-        title: LocaleKeys.hello.tr(), //locator<LocalizationService>().profile,
+        title: LocaleKeys.profile.tr(),
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
           child: MyProfilePage(),
@@ -78,12 +76,12 @@ class _HomePageState extends State<HomePage> {
       ),
       _TabItem(
         icon: Icons.people,
-        title: locator<LocalizationService>().people,
+        title: LocaleKeys.people.tr(),
         body: PeoplePage(),
       ),
       _TabItem(
         icon: Icons.category,
-        title: locator<LocalizationService>().allAchievements,
+        title: LocaleKeys.allAchievements.tr(),
         body: ChangeNotifierProvider<AchievementsViewModel>(
           create: (context) => AchievementsViewModel()..initialize(),
           child: AchievementsPage(),

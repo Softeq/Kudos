@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
 
@@ -70,7 +70,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget _buildEmpty() {
     return Center(
       child: Text(
-        locator<LocalizationService>().profileAchievementsEmptyPlaceholder,
+        LocaleKeys.profileAchievementsEmptyPlaceholder.tr(),
       ),
     );
   }

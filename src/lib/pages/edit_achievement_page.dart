@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
-import 'package:provider/provider.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
   EditAchievementRoute({
@@ -17,7 +17,6 @@ class EditAchievementRoute extends MaterialPageRoute {
     User user,
   }) : super(
           builder: (context) {
-            var localizationService = locator<LocalizationService>();
             return ChangeNotifierProvider<EditAchievementViewModel>(
               create: (context) {
                 return EditAchievementViewModel(
@@ -28,8 +27,8 @@ class EditAchievementRoute extends MaterialPageRoute {
               },
               child: _EditAchievementPage(
                 achievement == null
-                    ? localizationService.create
-                    : localizationService.edit,
+                    ? LocaleKeys.create.tr()
+                    : LocaleKeys.edit.tr(),
               ),
             );
           },
@@ -102,8 +101,6 @@ class _EditAchievementPage extends StatelessWidget {
         var buttonWidth = canvasWidth * 0.5 - horizontalOffset;
         var buttonHeight = freeY * 0.25;
 
-        var localizationService = locator<LocalizationService>();
-
         return Stack(
           children: <Widget>[
             Center(
@@ -142,7 +139,7 @@ class _EditAchievementPage extends StatelessWidget {
               ),
               child: FlatButton(
                 child: Text(
-                  localizationService.editName,
+                  LocaleKeys.editName.tr(),
                   textAlign: TextAlign.center,
                 ),
                 onPressed: () async {
@@ -151,7 +148,7 @@ class _EditAchievementPage extends StatelessWidget {
                     builder: (context) {
                       return Dialog(
                         child: _TextInputWidget(
-                          title: locator<LocalizationService>().achievementName,
+                          title: LocaleKeys.achievementName.tr(),
                           initialValue: viewModel.achievementViewModel.title,
                         ),
                       );
@@ -174,7 +171,7 @@ class _EditAchievementPage extends StatelessWidget {
               ),
               child: FlatButton(
                 child: Text(
-                  localizationService.editDescription,
+                  LocaleKeys.editDescription.tr(),
                   textAlign: TextAlign.center,
                 ),
                 onPressed: () async {
@@ -183,7 +180,7 @@ class _EditAchievementPage extends StatelessWidget {
                     builder: (context) {
                       return Dialog(
                         child: _TextInputWidget(
-                          title: locator<LocalizationService>().description,
+                          title: LocaleKeys.description.tr(),
                           initialValue:
                               viewModel.achievementViewModel.description,
                         ),
@@ -207,7 +204,7 @@ class _EditAchievementPage extends StatelessWidget {
               ),
               child: FlatButton(
                 child: Text(
-                  localizationService.editImage,
+                  LocaleKeys.editImage.tr(),
                   textAlign: TextAlign.center,
                 ),
                 onPressed: () {
@@ -234,21 +231,20 @@ class _EditAchievementPage extends StatelessWidget {
     } on ArgumentError catch (exception) {
       switch (exception.name) {
         case "file":
-          errorMessage = locator<LocalizationService>().fileIsNullErrorMessage;
+          errorMessage = LocaleKeys.fileIsNullErrorMessage.tr();
           break;
         case "name":
-          errorMessage = locator<LocalizationService>().nameIsNullErrorMessage;
+          errorMessage = LocaleKeys.nameIsNullErrorMessage.tr();
           break;
         case "description":
-          errorMessage =
-              locator<LocalizationService>().descriptionIsNullErrorMessage;
+          errorMessage = LocaleKeys.descriptionIsNullErrorMessage.tr();
           break;
         default:
-          errorMessage = locator<LocalizationService>().generalErrorMessage;
+          errorMessage = LocaleKeys.generalErrorMessage.tr();
           break;
       }
     } catch (exception) {
-      errorMessage = locator<LocalizationService>().generalErrorMessage;
+      errorMessage = LocaleKeys.generalErrorMessage.tr();
     } finally {
       viewModel.isBusy = false;
     }
@@ -261,7 +257,7 @@ class _EditAchievementPage extends StatelessWidget {
             content: Text(errorMessage),
             actions: <Widget>[
               FlatButton(
-                child: Text(locator<LocalizationService>().ok),
+                child: Text(LocaleKeys.ok.tr()),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -428,7 +424,6 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Column(
       children: <Widget>[
         Expanded(
@@ -461,7 +456,7 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
               onPressed: () {
                 Navigator.of(context).pop(null);
               },
-              child: Text(localizationService.cancel),
+              child: Text(LocaleKeys.cancel.tr()),
             ),
             FlatButton(
               onPressed: () {
@@ -472,7 +467,7 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
                 }
                 Navigator.of(context).pop(value);
               },
-              child: Text(localizationService.ok),
+              child: Text(LocaleKeys.ok.tr()),
             ),
           ],
         ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
-import 'package:provider/provider.dart';
 
 class UserPickerRoute extends MaterialPageRoute<List<User>> {
   UserPickerRoute({
@@ -43,7 +43,6 @@ class _UserPickerPage extends StatefulWidget {
 
 class _UserPickerPageState extends State<_UserPickerPage> {
   final _textEditingController = TextEditingController();
-  final _localizationService = locator<LocalizationService>();
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +68,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
           autofocus: true,
           controller: _textEditingController,
           decoration: InputDecoration.collapsed(
-            hintText: _localizationService.addPeople,
+            hintText: LocaleKeys.addPeople.tr(),
           ),
           onChanged: (x) {
             var viewModel = Provider.of<UserPickerViewModel>(
@@ -114,7 +113,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
                       left: 72.0,
                     ),
                     child: Text(
-                      _localizationService.addedPeople.toUpperCase(),
+                      LocaleKeys.addedPeople.tr().toUpperCase(),
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),

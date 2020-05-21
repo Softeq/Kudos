@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/pages/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
+import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/pages/home_page.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
-import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/service_locator.dart';
 
 class KudosApp extends StatelessWidget {
   @override
@@ -19,7 +18,7 @@ class KudosApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          title: locator<LocalizationService>().appName,
+          title: LocaleKeys.appName.tr(),
           theme: ThemeData(),
           home: _buildHome(viewModel),
         ),

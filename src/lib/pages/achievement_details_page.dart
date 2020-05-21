@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement.dart';
+import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
@@ -8,11 +10,8 @@ import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
-import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -141,18 +140,18 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
               controller: _inputController,
               autofocus: true,
               decoration: InputDecoration(
-                labelText: locator<LocalizationService>().writeAComment,
+                labelText: LocaleKeys.writeAComment.tr(),
               ),
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(locator<LocalizationService>().cancel),
+                child: Text(LocaleKeys.cancel.tr()),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text(locator<LocalizationService>().send),
+                child: Text(LocaleKeys.send.tr()),
                 onPressed: () {
                   accepted = true;
                   Navigator.of(context).pop();
@@ -181,7 +180,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             ),
           ),
           Text(
-            locator<LocalizationService>().sentSuccessfully,
+            LocaleKeys.sentSuccessfully.tr(),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -197,7 +196,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   void _notifyAboutError(error) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(
-        locator<LocalizationService>().generalErrorMessage,
+        LocaleKeys.generalErrorMessage.tr(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -222,12 +221,11 @@ class _PopularityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(localizationService.achievementStatisticsTitle,
-            localizationService.achievementStatisticsTooltip),
+        _SectionTitleWidget(LocaleKeys.achievementStatisticsTitle.tr(),
+            LocaleKeys.achievementStatisticsTooltip.tr()),
         SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
@@ -290,9 +288,8 @@ class _AchievementOwnerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achievementOwnerTitle),
+      _SectionTitleWidget(LocaleKeys.achievementOwnerTitle.tr()),
       SizedBox(height: 12),
       Align(
           alignment: Alignment.topLeft,
@@ -309,10 +306,8 @@ class _AchievementOwnerWidget extends StatelessWidget {
                         break;
                     }
                   },
-                  child: Text(
-                    _ownerName,
-                    style: Theme.of(context).textTheme.bodyText1
-                  ))))
+                  child: Text(_ownerName,
+                      style: Theme.of(context).textTheme.bodyText1))))
     ]);
   }
 }
@@ -324,7 +319,6 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     Widget content;
 
     if (_achievementHolders == null || _achievementHolders.length == 0) {
@@ -333,7 +327,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.only(left: 12),
               child: Text(
-                localizationService.achievementHoldersEmptyPlaceholder,
+                LocaleKeys.achievementHoldersEmptyPlaceholder.tr(),
                 style: Theme.of(context).textTheme.bodyText1,
               )));
     } else {
@@ -350,7 +344,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achievementHoldersTitle),
+      _SectionTitleWidget(LocaleKeys.achievementHoldersTitle.tr()),
       SizedBox(height: 12),
       content
     ]);

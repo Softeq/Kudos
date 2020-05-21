@@ -12,7 +12,7 @@ void main() {
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
-      fallbackLocale: Locale('en', 'US'),
+      // fallbackLocale: Locale('en', 'US'),
       useOnlyLangCode: true,
       path: 'assets/translations',
       assetLoader: CodegenLoader(),

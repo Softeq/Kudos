@@ -1,26 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
-import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var viewModel = Provider.of<MyProfileViewModel>(context, listen: false);
-    var user = viewModel.user;
-    var localizationService = locator<LocalizationService>();
+    final viewModel = Provider.of<MyProfileViewModel>(context, listen: false);
+    final user = viewModel.user;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -56,9 +56,9 @@ class MyProfilePage extends StatelessWidget {
           ],
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(text: localizationService.achievements),
-              Tab(text: localizationService.teams),
-              Tab(text: localizationService.owner),
+              Tab(text: LocaleKeys.achievements.tr()),
+              Tab(text: LocaleKeys.teams.tr()),
+              Tab(text: LocaleKeys.owner.tr()),
             ],
           ),
         ),
@@ -101,8 +101,7 @@ class _MyAchievementsWidget extends StatelessWidget {
                     child: FractionallySizedBox(
                       widthFactor: 0.7,
                       child: Text(
-                        locator<LocalizationService>()
-                            .createYourOwnAchievements,
+                        LocaleKeys.createYourOwnAchievements.tr(),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -153,7 +152,7 @@ class _MyTeamsWidget extends StatelessWidget {
               child: FractionallySizedBox(
                 widthFactor: 0.7,
                 child: Text(
-                  locator<LocalizationService>().createYourOwnTeams,
+                  LocaleKeys.createYourOwnTeams.tr(),
                   textAlign: TextAlign.center,
                 ),
               ),
