@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editImage" : MessageLookupByLibrary.simpleMessage("Сделай изображение узнаваемым"),
     "editName" : MessageLookupByLibrary.simpleMessage("Сделай название уникальным"),
     "editTeam" : MessageLookupByLibrary.simpleMessage("Редактирование команды"),
+    "enterName" : MessageLookupByLibrary.simpleMessage("Введите имя"),
     "fileIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте картинку"),
     "fromCris" : MessageLookupByLibrary.simpleMessage("От Криса"),
     "generalErrorMessage" : MessageLookupByLibrary.simpleMessage("Что-то пошло не так..."),

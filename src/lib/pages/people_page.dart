@@ -19,7 +19,7 @@ class PeoplePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SearchInputWidget(
-              hintText: "Введите имя", // TODO YP: localize
+              hintText: localizer().enterName,
             ),
             ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
               create: (context) => PeopleViewModel()..initialize(),

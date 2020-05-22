@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editImage" : MessageLookupByLibrary.simpleMessage("Make the image recognizable"),
     "editName" : MessageLookupByLibrary.simpleMessage("Make the name unique"),
     "editTeam" : MessageLookupByLibrary.simpleMessage("Edit team"),
+    "enterName" : MessageLookupByLibrary.simpleMessage("Enter name"),
     "fileIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Add a picture"),
     "fromCris" : MessageLookupByLibrary.simpleMessage("From Chris"),
     "generalErrorMessage" : MessageLookupByLibrary.simpleMessage("Something went wrong..."),

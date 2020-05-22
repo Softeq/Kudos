@@ -45,5 +45,6 @@
     "save": "Save",
     "achievements": "Achievements",
     "createYourOwnAchievements": "Create your own rewards and give them to your colleagues!",
-    "createYourOwnTeams": "Create your teams and invite your colleagues to join them!"
+    "createYourOwnTeams": "Create your teams and invite your colleagues to join them!",
+    "enterName": "Enter name"
 }
