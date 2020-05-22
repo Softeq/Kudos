@@ -64,7 +64,9 @@ class MyProfilePage extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            ProfileAchievementsListWidget(user.id, false),
+            Padding(
+                padding: EdgeInsets.all(16),
+                child: ProfileAchievementsListWidget(user.id, false)),
             ChangeNotifierProvider<MyTeamsViewModel>.value(
               value: viewModel.myTeamsViewModel..initialize(),
               child: _MyTeamsWidget(),
