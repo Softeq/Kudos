@@ -48,8 +48,8 @@ class TeamsService {
     @required String teamId,
     @required List<TeamMember> newMembers,
     @required List<TeamMember> newAdmins,
-  }) async {
-    _database.collection(_teamsCollection).document(teamId).setData(
+  }) {
+    return _database.collection(_teamsCollection).document(teamId).setData(
           Team.createMap(
             members: newMembers,
             owners: newAdmins,
