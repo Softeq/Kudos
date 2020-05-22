@@ -26,14 +26,13 @@ class AchievementsService {
   final _authService = locator<BaseAuthService>();
 
   Future<List<Achievement>> getAchievements() async {
-    var snapshot = await _database
+    final snapshot = await _database
         .collection(_achievementsCollection)
         .where("user_id", isNull: true)
         .getDocuments();
-    var result = snapshot.documents.map((x) {
+    final result = snapshot.documents.map((x) {
       return Achievement.fromDocument(x);
     }).toList();
-
     return result;
   }
 
@@ -120,8 +119,8 @@ class AchievementsService {
 
     // add an achievement to user's achievements
 
-    final userAchievementsReference = _database
-        .collection("users/${sendAchievement.recipient.id}/achievements");
+    final userAchievementsReference = _database.collection(
+        "users/${sendAchievement.recipient.id}/$_achievementsCollection");
 
     final userAchievementMap = UserAchievement(
       sender: RelatedUser.fromUser(sendAchievement.sender),
@@ -137,8 +136,8 @@ class AchievementsService {
 
     // TODO YP: can be made via Cloud Functions Triggers
 
-    final achievementHoldersReference = _database
-        .collection("achievements/${sendAchievement.achievement.id}/holders");
+    final achievementHoldersReference = _database.collection(
+        "$_achievementsCollection/${sendAchievement.achievement.id}/holders");
 
     final holderMap = AchievementHolder(
       date: timestamp,
@@ -151,60 +150,52 @@ class AchievementsService {
   }
 
   Future<List<UserAchievement>> getUserAchievements(String userId) async {
-    final userAchievementsCollection =
-        _database.collection("users/$userId/achievements");
-
-    final queryResult = await userAchievementsCollection.getDocuments();
-
+    final queryResult = await _database
+        .collection("users/$userId/$_achievementsCollection")
+        .getDocuments();
     final userAchievements = queryResult.documents
         .map((x) => UserAchievement.fromDocument(x))
         .toList();
-
     return userAchievements;
   }
 
-  //TODO VPY: fix misprint
   Future<List<AchievementHolder>> getAchievementHolders(
       String achivementId) async {
-    final achievementHoldersCollection =
-        _database.collection("achievements/$achivementId/holders");
-
-    final queryResult = await achievementHoldersCollection.getDocuments();
-
+    final queryResult = await _database
+        .collection("$_achievementsCollection/$achivementId/holders")
+        .getDocuments();
     final achievementHolders = queryResult.documents
         .map((x) => AchievementHolder.fromDocument(x))
         .toSet()
         .toList();
-
     return achievementHolders;
   }
 
   Future<Achievement> getAchievement(String achivementId) async {
-    final achievementReference =
-        _database.collection("achievements").document(achivementId);
-
-    final queryResult = await achievementReference.get();
-
+    final queryResult = await _database
+        .collection(_achievementsCollection)
+        .document(achivementId)
+        .get();
     final achievement = Achievement.fromDocument(queryResult);
-
     return achievement;
   }
 
-  Future<List<Achievement>> getTeamAchievements(String teamId) async {
+  Future<List<Achievement>> getTeamAchievements(String teamId) {
     return _getAchievements("team_id", teamId);
   }
 
   Future<List<Achievement>> getMyAchievements() {
-    var userId = _authService.currentUser.id;
+    final userId = _authService.currentUser.id;
     return _getAchievements("user_id", userId);
   }
 
   Future<List<Achievement>> _getAchievements(String field, String value) async {
-    var qs = await _database
+    final qs = await _database
         .collection(_achievementsCollection)
         .where(field, isEqualTo: value)
         .getDocuments();
-    var result = qs.documents.map((x) => Achievement.fromDocument(x)).toList();
+    final result =
+        qs.documents.map((x) => Achievement.fromDocument(x)).toList();
     return result;
   }
 }

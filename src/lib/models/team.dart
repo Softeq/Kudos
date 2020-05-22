@@ -10,17 +10,13 @@ class Team {
   final List<TeamMember> owners;
   final List<TeamMember> members;
 
-  factory Team.fromDocument(
-    DocumentSnapshot x,
-    List<TeamMember> owners,
-    List<TeamMember> members,
-  ) {
+  factory Team.fromDocument(DocumentSnapshot x) {
     return Team._(
       id: x.documentID,
       name: x.data["name"],
       description: x.data["description"],
-      owners: owners,
-      members: members,
+      owners: getMembers(x.data["team_owners"]),
+      members: getMembers(x.data["team_members"]),
     );
   }
 
@@ -51,22 +47,46 @@ class Team {
     return createMap(name: name, description: description);
   }
 
+  static List<TeamMember> getMembers(List<dynamic> x) {
+    if (x == null) {
+      return List<TeamMember>();
+    }
+
+    var mapList = x.cast<Map<String, dynamic>>();
+    return mapList.map((y) => TeamMember.fromMap(y)).toList();
+  }
+
   static Map<String, dynamic> createMap({
-    @required String name,
-    @required String description,
-    List<String> members,
-    List<String> owners,
+    String name,
+    String description,
+    List<TeamMember> members,
+    List<TeamMember> owners,
   }) {
     var map = Map<String, dynamic>();
-    map["name"] = name;
-    map["description"] = description;
+
+    if (name != null) {
+      map["name"] = name;
+    }
+
+    if (description != null) {
+      map["description"] = description;
+    }
+
+    var visibleFor = List<String>();
 
     if (members != null) {
-      map["members"] = members;
+      map["team_members"] = members.map((x) => x.toMap()).toList();
+      visibleFor.addAll(members.map((x) => x.id));
     }
 
     if (owners != null) {
-      map["owners"] = owners;
+      map["team_owners"] = owners.map((x) => x.toMap()).toList();
+      visibleFor.addAll(owners.map((x) => x.id));
+    }
+
+    if (visibleFor.isNotEmpty) {
+      visibleFor = visibleFor.toSet().toList();
+      map["visible_for"] = visibleFor;
     }
 
     return map;

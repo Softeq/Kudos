@@ -9,62 +9,65 @@ class PeopleService {
   final BaseAuthService _authService = locator<BaseAuthService>();
   static const _usersCollection = "users";
 
-  Future<List<User>> getAllUsers() async {
-    final query = _database.collection(_usersCollection).orderBy("name");
-    final queryResult = await query.getDocuments();
-    final users =
-        queryResult.documents.map<User>((x) => User.fromDocument(x)).toList();
-    return users;
+  //getting all users from firebase
+  Future<List<User>> getAllUsers() {
+    return _getAllUsers();
   }
 
+  //getting all users from firebase
   Future<List<User>> getAllowedUsers() async {
-    final query = _database.collection(_usersCollection).orderBy("name");
-    final queryResult = await query.getDocuments();
-    final users = queryResult.documents
-        .map<User>((x) => User.fromDocument(x))
-        .where((User x) => x.email != _authService.currentUser.email)
-        .toList();
+    final allUsers = await _getAllUsers();
+    final currentUserId = _authService.currentUser.id;
+    final users = allUsers.where((x) => x.id != currentUserId).toList();
     return users;
   }
 
   Future<void> tryRegisterUser(User user) async {
-    final query = _database.collection(_usersCollection).document(user.id);
     final userRegistrationMap = UserRegistration.fromUser(user).toMap();
-    await query.setData(userRegistrationMap);
+    await _database
+        .collection(_usersCollection)
+        .document(user.id)
+        .setData(userRegistrationMap);
   }
 
-  //TODO VPY: we should cache all users if it possible to reduce query result
+  //getting all users from firebase
   Future<List<User>> find(String request, bool _allowCurrentUser) async {
-    final query = _database.collection(_usersCollection).orderBy("name");
-    final queryResult = await query.getDocuments();
+    final allUsers = await _getAllUsers();
     final userFilter = _UserFilter(
       _authService.currentUser.id,
       _allowCurrentUser,
       request,
     );
-    final users = queryResult.documents
-        .map<User>((x) => User.fromDocument(x))
-        .where((x) => userFilter._filter(x))
-        .toList();
+    final users = allUsers.where((x) => userFilter._filter(x)).toList();
     return users;
   }
 
   Future<List<User>> getUsersByIds(List<String> userIds) async {
-    var qs = await _database
+    final qs = await _database
         .collection(_usersCollection)
         .where(FieldPath.documentId, whereIn: userIds)
         .getDocuments();
-    var users = qs.documents.map<User>((x) => User.fromDocument(x)).toList();
+    final users = qs.documents.map<User>((x) => User.fromDocument(x)).toList();
     return users;
   }
 
   Future<User> getUserById(String userId) async {
-    var query = _database.collection(_usersCollection).document(userId);
-    var queryResult = await query.get();
+    var queryResult =
+        await _database.collection(_usersCollection).document(userId).get();
     if (queryResult.data == null) {
-      throw("User not found");
+      throw ("User not found");
     }
     return User.fromDocument(queryResult);
+  }
+
+  Future<List<User>> _getAllUsers() async {
+    final queryResult = await _database
+        .collection(_usersCollection)
+        .orderBy("name")
+        .getDocuments();
+    final users =
+        queryResult.documents.map<User>((x) => User.fromDocument(x)).toList();
+    return users;
   }
 }
 
