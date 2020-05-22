@@ -15,10 +15,18 @@ class TeamMember {
     return TeamMember._(x.documentID, x.data["name"]);
   }
 
+  factory TeamMember.fromMap(Map<String, dynamic> map) {
+    return TeamMember._(
+      map["id"],
+      map["name"],
+    );
+  }
+
   TeamMember._(this.id, this.name);
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       "name": name,
     };
   }

@@ -74,9 +74,9 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildGridView(List<UserAchievementCollection> achievementCollections) {
+  Widget _buildGridView(
+      List<UserAchievementCollection> achievementCollections) {
     return _buildAdaptiveGridView(
-      padding: EdgeInsets.all(16),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 20,
@@ -91,25 +91,20 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildAdaptiveGridView({
-    @required EdgeInsets padding,
     @required SliverGridDelegate gridDelegate,
     @required int itemCount,
     @required Widget Function(BuildContext, int) itemBuilder,
   }) {
     if (_buildSliver) {
-      return SliverPadding(
-        padding: padding,
-        sliver: SliverGrid(
-          gridDelegate: gridDelegate,
-          delegate: SliverChildBuilderDelegate(
-            itemBuilder,
-            childCount: itemCount,
-          ),
+      return SliverGrid(
+        gridDelegate: gridDelegate,
+        delegate: SliverChildBuilderDelegate(
+          itemBuilder,
+          childCount: itemCount,
         ),
       );
     }
     return GridView.builder(
-      padding: padding,
       gridDelegate: gridDelegate,
       itemCount: itemCount,
       itemBuilder: itemBuilder,

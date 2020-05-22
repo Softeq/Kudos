@@ -10,6 +10,7 @@ import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
+import 'package:kudosapp/widgets/fancy_list_widget.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
   ManageTeamRoute(String teamId)
@@ -33,21 +34,22 @@ class _ManageTeamPage extends StatefulWidget {
 }
 
 class _ManageTeamPageState extends State<_ManageTeamPage> {
+  Widget _title;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<ManageTeamViewModel>(
         builder: (context, viewModel, child) {
-          if (!viewModel.isInitialized) {
+          if (viewModel.isBusy) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-
           return ListView.builder(
             itemBuilder: (context, index) {
               if (index == 0) {
-                return _buildTitle(viewModel);
+                return _title ?? (_title = _buildTitle(viewModel));
               } else {
                 var lineData = viewModel.getData(index);
                 return AchievementWidget(lineData, _achievementTapped);
@@ -68,6 +70,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     ManageTeamViewModel viewModel,
   ) {
     var textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -156,59 +159,16 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                   style: textTheme.caption,
                 ),
                 SizedBox(height: 6.0),
-                ChangeNotifierProvider<ListNotifier<TeamMemberViewModel>>.value(
-                  value: viewModel.members,
-                  child: Consumer<ListNotifier<TeamMemberViewModel>>(
-                    builder: (context, teamMembers, child) {
-                      if (teamMembers.items.isEmpty) {
-                        return Text(localizer().addPeople);
-                      } else {
-                        var memberWidgets = teamMembers.items
-                            .map((x) => _buildMember(x))
-                            .toList();
-                        return Wrap(
-                          spacing: 8.0,
-                          children: memberWidgets,
-                        );
-                      }
-                    },
-                  ),
-                ),
+                FancyListWidget<TeamMember>(
+                    viewModel.members,
+                    (TeamMember member) => member.name,
+                    localizationService.addPeople)
               ],
             ),
           ),
         ),
         SizedBox(height: 32.0),
       ],
-    );
-  }
-
-  static Widget _buildMember(TeamMemberViewModel teamMemberViewModel) {
-    var color = teamMemberViewModel.color;
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 4.0,
-        horizontal: 6.0,
-      ),
-      margin: EdgeInsets.only(bottom: 4.0),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(
-          40,
-          color.red,
-          color.green,
-          color.blue,
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: color,
-            width: 2.0,
-            style: BorderStyle.solid,
-          ),
-        ),
-      ),
-      child: Text(
-        teamMemberViewModel.teamMember.name,
-      ),
     );
   }
 
@@ -238,7 +198,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       UserPickerRoute(
         allowMultipleSelection: true,
         allowCurrentUser: true,
-        selectedUserIds: viewModel.members.items.map((x) => x.teamMember.id).toList(),
+        selectedUserIds: viewModel.members.items.map((x) => x.id).toList(),
       ),
     );
     viewModel.replaceMembers(users);

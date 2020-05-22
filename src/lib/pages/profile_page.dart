@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
+import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
+import 'package:kudosapp/widgets/fancy_list_widget.dart';
+import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 
@@ -27,14 +30,22 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
           return CustomScrollView(
-            slivers: _buildSlivers(viewModel),
+            slivers: _buildSlivers(context, viewModel),
           );
         },
       ),
     );
   }
 
-  List<Widget> _buildSlivers(ProfileViewModel viewModel) {
+  Widget _addDefaultSliverPadding(Widget widget,
+      [bool addBottomPadding = false]) {
+    return SliverPadding(
+        padding: EdgeInsets.only(
+            left: 16, right: 16, bottom: addBottomPadding ? 16 : 0),
+        sliver: widget);
+  }
+
+  List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
     if (viewModel.user == null) {
       return [
         SliverFillRemaining(
@@ -45,12 +56,27 @@ class ProfilePage extends StatelessWidget {
       ];
     }
 
+    var localizationService = locator<LocalizationService>();
+
     return [
       _buildHeader(viewModel.user),
-      SliverSectionHeaderWidget(
-        title: localizer().allAchievements,
-      ),
-      ProfileAchievementsListWidget(viewModel.user.id, true),
+      SliverToBoxAdapter(child: SizedBox(height: 16)),
+      _addDefaultSliverPadding(
+          SliverToBoxAdapter(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                SectionHeaderWidget(localizationService.teams),
+                FancyListWidget<Team>(viewModel.userTeams,
+                    (Team team) => team.name, localizationService.userTeamsEmptyPlaceholder)
+              ])),
+          true),
+      _addDefaultSliverPadding(
+          SliverToBoxAdapter(
+              child: SectionHeaderWidget(localizationService.allAchievements)),
+          true),
+      _addDefaultSliverPadding(
+          ProfileAchievementsListWidget(viewModel.user.id, true))
     ];
   }
 

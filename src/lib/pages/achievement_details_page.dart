@@ -11,6 +11,7 @@ import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
+import 'package:kudosapp/widgets/section_header_widget.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -223,9 +224,8 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(localizer().achievementStatisticsTitle,
+        SectionHeaderWidget(localizer().achievementStatisticsTitle,
             localizer().achievementStatisticsTooltip),
-        SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
             child: Align(
@@ -248,36 +248,6 @@ class _PopularityWidget extends StatelessWidget {
   }
 }
 
-class _SectionTitleWidget extends StatelessWidget {
-  final String _title;
-  final String _tooltipTitle;
-
-  _SectionTitleWidget(this._title, [this._tooltipTitle]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            _title,
-            style: Theme.of(context).textTheme.caption,
-          ),
-          SizedBox(width: 8),
-          Visibility(
-              visible: _tooltipTitle?.isNotEmpty ?? false,
-              child: Tooltip(
-                message: _tooltipTitle ?? "not visible",
-                child: Icon(
-                  Icons.info,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-              ))
-        ]);
-  }
-}
-
 class _AchievementOwnerWidget extends StatelessWidget {
   final String _ownerName;
   final String _ownerId;
@@ -288,8 +258,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizer().achievementOwnerTitle),
-      SizedBox(height: 12),
+      SectionHeaderWidget(localizer().achievementOwnerTitle),
       Align(
           alignment: Alignment.topLeft,
           child: Padding(
@@ -343,8 +312,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizer().achievementHoldersTitle),
-      SizedBox(height: 12),
+      SectionHeaderWidget(localizer().achievementHoldersTitle),
       content
     ]);
   }
