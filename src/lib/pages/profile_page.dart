@@ -81,10 +81,7 @@ class ProfilePage extends StatelessWidget {
         true,
       ),
       _addDefaultSliverPadding(
-        ProfileAchievementsListWidget(
-          viewModel.user.id,
-          true,
-        ),
+        ProfileAchievementsListWidget(viewModel.user.id, true),
       ),
     ];
   }

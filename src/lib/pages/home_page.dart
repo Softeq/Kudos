@@ -17,8 +17,6 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedTabIndex = 0;
 
-  bool isInitialized = false;
-
   @override
   void didChangeDependencies() {
 

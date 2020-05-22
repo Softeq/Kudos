@@ -11,9 +11,7 @@ import 'package:kudosapp/services/teams_service.dart';
 
 GetIt locator = GetIt.instance;
 
-S localizer([BuildContext context]) {
-  return S.of(context ?? Get.context);
-}
+S localizer([BuildContext context]) => S.of(context ?? Get.context);
 
 void setupLocator() {
   locator

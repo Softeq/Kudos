@@ -66,9 +66,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     );
   }
 
-  Widget _buildTitle(
-    ManageTeamViewModel viewModel,
-  ) {
+  Widget _buildTitle(ManageTeamViewModel viewModel) {
     var textTheme = Theme.of(context).textTheme;
 
     return Column(

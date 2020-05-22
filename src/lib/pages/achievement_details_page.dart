@@ -92,7 +92,10 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           _AchievementHoldersWidget(viewModel.achievementHolders),
           SizedBox(height: 24),
           _AchievementOwnerWidget(
-              viewModel.ownerType, viewModel.ownerName, viewModel.ownerId)
+            viewModel.ownerType,
+            viewModel.ownerName,
+            viewModel.ownerId,
+          )
         ],
       ),
     );
@@ -224,25 +227,30 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        SectionHeaderWidget(localizer().achievementStatisticsTitle,
-            localizer().achievementStatisticsTooltip),
+        SectionHeaderWidget(
+          localizer().achievementStatisticsTitle,
+          localizer().achievementStatisticsTooltip,
+        ),
         Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    height: 16,
-                    width: 144,
-                    child: LinearProgressIndicator(
-                      value: _popularityPercent, // percent filled
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor),
-                      backgroundColor: Theme.of(context).primaryColorLight,
-                    ),
+          padding: EdgeInsets.only(left: 12),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Container(
+                height: 16,
+                width: 144,
+                child: LinearProgressIndicator(
+                  value: _popularityPercent, // percent filled
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
                   ),
-                )))
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -260,22 +268,27 @@ class _AchievementOwnerWidget extends StatelessWidget {
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementOwnerTitle),
       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: RaisedButton(
-                  onPressed: () {
-                    switch (_ownerType) {
-                      case OwnerType.user:
-                        Navigator.of(context).push(ProfileRoute(_ownerId));
-                        break;
-                      case OwnerType.team:
-                        Navigator.of(context).push(ManageTeamRoute(_ownerId));
-                        break;
-                    }
-                  },
-                  child: Text(_ownerName,
-                      style: Theme.of(context).textTheme.bodyText1))))
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: RaisedButton(
+            onPressed: () {
+              switch (_ownerType) {
+                case OwnerType.user:
+                  Navigator.of(context).push(ProfileRoute(_ownerId));
+                  break;
+                case OwnerType.team:
+                  Navigator.of(context).push(ManageTeamRoute(_ownerId));
+                  break;
+              }
+            },
+            child: Text(
+              _ownerName,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          ),
+        ),
+      ),
     ]);
   }
 }
@@ -291,29 +304,33 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
     if (_achievementHolders == null || _achievementHolders.length == 0) {
       content = Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: Text(
-                localizer().achievementHoldersEmptyPlaceholder,
-                style: Theme.of(context).textTheme.bodyText1,
-              )));
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(
+            localizer().achievementHoldersEmptyPlaceholder,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+        ),
+      );
     } else {
       content = Padding(
-          padding: EdgeInsets.only(left: 12),
-          child: GridView.count(
-              children: _buildListItems(context, _achievementHolders),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              primary: true,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 7,
-              physics: ClampingScrollPhysics()));
+        padding: EdgeInsets.only(left: 12),
+        child: GridView.count(
+          children: _buildListItems(context, _achievementHolders),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          primary: true,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 7,
+          physics: ClampingScrollPhysics(),
+        ),
+      );
     }
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementHoldersTitle),
-      content
+      content,
     ]);
   }
 
