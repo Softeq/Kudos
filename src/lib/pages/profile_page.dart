@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
 import 'package:kudosapp/models/user.dart';
@@ -49,7 +48,7 @@ class ProfilePage extends StatelessWidget {
     return [
       _buildHeader(viewModel.user),
       SliverSectionHeaderWidget(
-        title: LocaleKeys.allAchievements.tr(),
+        title: localizer().allAchievements,
       ),
       ProfileAchievementsListWidget(viewModel.user.id, true),
     ];

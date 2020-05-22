@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
@@ -68,7 +67,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
           autofocus: true,
           controller: _textEditingController,
           decoration: InputDecoration.collapsed(
-            hintText: LocaleKeys.addPeople.tr(),
+            hintText: localizer().addPeople,
           ),
           onChanged: (x) {
             var viewModel = Provider.of<UserPickerViewModel>(
@@ -113,7 +112,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
                       left: 72.0,
                     ),
                     child: Text(
-                      LocaleKeys.addedPeople.tr().toUpperCase(),
+                      localizer().addedPeople.toUpperCase(),
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),

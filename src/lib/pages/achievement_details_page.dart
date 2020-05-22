@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
@@ -140,18 +139,18 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
               controller: _inputController,
               autofocus: true,
               decoration: InputDecoration(
-                labelText: LocaleKeys.writeAComment.tr(),
+                labelText: localizer().writeAComment,
               ),
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(LocaleKeys.cancel.tr()),
+                child: Text(localizer().cancel),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text(LocaleKeys.send.tr()),
+                child: Text(localizer().send),
                 onPressed: () {
                   accepted = true;
                   Navigator.of(context).pop();
@@ -180,7 +179,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             ),
           ),
           Text(
-            LocaleKeys.sentSuccessfully.tr(),
+            localizer().sentSuccessfully,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -196,7 +195,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   void _notifyAboutError(error) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(
-        LocaleKeys.generalErrorMessage.tr(),
+        localizer().generalErrorMessage,
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -224,8 +223,8 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(LocaleKeys.achievementStatisticsTitle.tr(),
-            LocaleKeys.achievementStatisticsTooltip.tr()),
+        _SectionTitleWidget(localizer().achievementStatisticsTitle,
+            localizer().achievementStatisticsTooltip),
         SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
@@ -289,7 +288,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      _SectionTitleWidget(LocaleKeys.achievementOwnerTitle.tr()),
+      _SectionTitleWidget(localizer().achievementOwnerTitle),
       SizedBox(height: 12),
       Align(
           alignment: Alignment.topLeft,
@@ -327,7 +326,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.only(left: 12),
               child: Text(
-                LocaleKeys.achievementHoldersEmptyPlaceholder.tr(),
+                localizer().achievementHoldersEmptyPlaceholder,
                 style: Theme.of(context).textTheme.bodyText1,
               )));
     } else {
@@ -344,7 +343,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(LocaleKeys.achievementHoldersTitle.tr()),
+      _SectionTitleWidget(localizer().achievementHoldersTitle),
       SizedBox(height: 12),
       content
     ]);

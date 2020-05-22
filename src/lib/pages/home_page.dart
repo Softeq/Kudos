@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/l10n/localizer.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<_TabItem> _tabs = [];
+  List<_TabItem> _tabs = [];
 
   int _selectedTabIndex = 0;
 
@@ -22,11 +22,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-    if (!isInitialized) {
-      _tabs.addAll(_buildTabs(context));
 
-      isInitialized = true;
-    }
+    _tabs.clear();
+    _tabs.addAll(_buildTabs(context));
 
     super.didChangeDependencies();
   }
@@ -68,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     return [
       _TabItem(
         icon: Icons.person,
-        title: LocaleKeys.profile.tr(),
+        title: Localizer.of(context).profile, // TODO : replace
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
           child: MyProfilePage(),
@@ -76,12 +74,12 @@ class _HomePageState extends State<HomePage> {
       ),
       _TabItem(
         icon: Icons.people,
-        title: LocaleKeys.people.tr(),
+        title: localizer().people,
         body: PeoplePage(),
       ),
       _TabItem(
         icon: Icons.category,
-        title: LocaleKeys.allAchievements.tr(),
+        title: localizer().allAchievements,
         body: ChangeNotifierProvider<AchievementsViewModel>(
           create: (context) => AchievementsViewModel()..initialize(),
           child: AchievementsPage(),

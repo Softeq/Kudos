@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
@@ -56,9 +55,9 @@ class MyProfilePage extends StatelessWidget {
           ],
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(text: LocaleKeys.achievements.tr()),
-              Tab(text: LocaleKeys.teams.tr()),
-              Tab(text: LocaleKeys.owner.tr()),
+              Tab(text: localizer().achievements),
+              Tab(text: localizer().teams),
+              Tab(text: localizer().owner),
             ],
           ),
         ),
@@ -101,7 +100,7 @@ class _MyAchievementsWidget extends StatelessWidget {
                     child: FractionallySizedBox(
                       widthFactor: 0.7,
                       child: Text(
-                        LocaleKeys.createYourOwnAchievements.tr(),
+                        localizer().createYourOwnAchievements,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -152,7 +151,7 @@ class _MyTeamsWidget extends StatelessWidget {
               child: FractionallySizedBox(
                 widthFactor: 0.7,
                 child: Text(
-                  LocaleKeys.createYourOwnTeams.tr(),
+                  localizer().createYourOwnTeams,
                   textAlign: TextAlign.center,
                 ),
               ),

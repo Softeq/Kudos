@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
@@ -127,7 +126,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  LocaleKeys.admins.tr(),
+                  localizer().admins,
                   style: textTheme.caption,
                 ),
                 SizedBox(height: 6.0),
@@ -153,7 +152,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  LocaleKeys.members.tr(),
+                  localizer().members,
                   style: textTheme.caption,
                 ),
                 SizedBox(height: 6.0),
@@ -162,7 +161,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                   child: Consumer<ListNotifier<TeamMemberViewModel>>(
                     builder: (context, teamMembers, child) {
                       if (teamMembers.items.isEmpty) {
-                        return Text(LocaleKeys.addPeople.tr());
+                        return Text(localizer().addPeople);
                       } else {
                         var memberWidgets = teamMembers.items
                             .map((x) => _buildMember(x))

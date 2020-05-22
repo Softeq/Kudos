@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
@@ -41,8 +40,8 @@ class _EditTeamPageState extends State<_EditTeamPage> {
       appBar: AppBar(
         title: Text(
           viewModel.isCreating
-              ? LocaleKeys.createTeam.tr()
-              : LocaleKeys.editTeam.tr(),
+              ? localizer().createTeam
+              : localizer().editTeam,
         ),
       ),
       body: Consumer<EditTeamViewModel>(
@@ -63,18 +62,18 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 24.0),
-                    Text(LocaleKeys.name.tr()),
+                    Text(localizer().name),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
                         if (x.isEmpty) {
-                          return LocaleKeys.requiredField.tr();
+                          return localizer().requiredField;
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: 36.0),
-                    Text(LocaleKeys.optionalDescription.tr()),
+                    Text(localizer().optionalDescription),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,
@@ -102,7 +101,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
             Navigator.of(context).pop(team);
           }
         },
-        label: Text(LocaleKeys.save.tr()),
+        label: Text(localizer().save),
         icon: Icon(Icons.create),
       ),
     );

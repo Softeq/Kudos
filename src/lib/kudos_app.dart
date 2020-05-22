@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:kudosapp/l10n/localizer.dart';
 import 'package:provider/provider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:kudosapp/generated/locale_keys.g.dart';
 import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/pages/home_page.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
@@ -14,11 +15,17 @@ class KudosApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
       ],
       child: Consumer<AuthViewModel>(
-        builder: (context, viewModel, child) => MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: LocaleKeys.appName.tr(),
+        builder: (context, viewModel, child) => GetMaterialApp(
+          localizationsDelegates: [
+            Localizer.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            Locale('en'),
+            Locale('ru'),
+          ],
+          title: "~TODO~",
           theme: ThemeData(),
           home: _buildHome(viewModel),
         ),
