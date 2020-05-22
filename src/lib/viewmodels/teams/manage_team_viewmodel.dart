@@ -23,7 +23,7 @@ class ManageTeamViewModel extends BaseViewModel {
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
   final _random = Random();
-  
+
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
       _onAchievementUpdatedSubscription;
@@ -56,12 +56,12 @@ class ManageTeamViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initialize(String teamId) async{
+  void initialize(String teamId) async {
     isBusy = true;
     initializeWithTeam(await loadTeam(teamId));
   }
 
-  void initializeWithTeam(Team team){
+  void initializeWithTeam(Team team) {
     _initialTeam = team;
     members.replace(_initialTeam.members.map(_createTeamMemberViewModel));
     admins.replace(_initialTeam.owners);
@@ -87,8 +87,9 @@ class ManageTeamViewModel extends BaseViewModel {
     members.replace(teamMembers.map(_createTeamMemberViewModel));
 
     _teamsService.updateTeamMembers(
-      _initialTeam.id,
-      teamMembers,
+      teamId: _initialTeam.id,
+      newMembers: teamMembers,
+      newAdmins: admins.items,
     );
   }
 
@@ -97,12 +98,13 @@ class ManageTeamViewModel extends BaseViewModel {
       return;
     }
 
-    var teamMembers = users.map((x) => TeamMember.fromUser(x)).toList();
-    admins.replace(teamMembers);
+    var owners = users.map((x) => TeamMember.fromUser(x)).toList();
+    admins.replace(owners);
 
-    _teamsService.updateAdmins(
-      _initialTeam.id,
-      teamMembers,
+    _teamsService.updateTeamMembers(
+      teamId: _initialTeam.id,
+      newMembers: members.items.map((x) => x.teamMember).toList(),
+      newAdmins: owners,
     );
   }
 

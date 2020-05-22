@@ -76,6 +76,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     // Number of users with this badge divided by the total number of users
     _achievementHolders = await _achievementsService
         .getAchievementHolders(achievementViewModel.achievement.id);
+    
+    //TODO VPY: find better solution to get people count
     var allUsers = await _peopleService.getAllUsers();
     _statisticsValue =
         allUsers.length == 0 ? 0 : _achievementHolders.length / allUsers.length;
