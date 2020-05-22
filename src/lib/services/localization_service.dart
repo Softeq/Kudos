@@ -77,6 +77,8 @@ class LocalizationService {
 
   String get team => "Команда";
 
+  String get userTeamsEmptyPlaceholder => "Этот пользователь пока не состоит ни в одной команде";
+
   String get admins => "Администраторы";
 
   String get teams => "Команды";
