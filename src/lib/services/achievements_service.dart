@@ -78,29 +78,30 @@ class AchievementsService {
     }
 
     if (file != null) {
-      var fileExtension = path.extension(file.path);
-      var firebaseStorage = FirebaseStorage.instance;
-      var storageReference = firebaseStorage
-          .ref()
-          .child(_kudosFolder)
-          .child("${Uuid().v4()}$fileExtension");
-      var storageUploadTask = storageReference.putFile(file);
-      var storageTaskSnapshot = await storageUploadTask.onComplete;
+      final fileExtension = path.extension(file.path);
+      final fileName = "${Uuid().v4()}$fileExtension";
+      final storageReference =
+          FirebaseStorage.instance.ref().child(_kudosFolder).child(fileName);
+      final storageUploadTask = storageReference.putFile(file);
+      final storageTaskSnapshot = await storageUploadTask.onComplete;
 
       if (storageTaskSnapshot.error != null) {
         throw UploadFileError();
       }
 
-      var imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
-      copyOfAchievement = copyOfAchievement.copy(imageUrl: imageUrl);
+      final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      copyOfAchievement = copyOfAchievement.copy(
+        imageUrl: imageUrl,
+        imageName: fileName,
+      );
     }
 
     if (copyOfAchievement.id == null) {
-      var docRef = await _database
+      final docRef = await _database
           .collection(_achievementsCollection)
           .add(copyOfAchievement.toMap());
 
-      var document = await docRef.get();
+      final document = await docRef.get();
       return Achievement.fromDocument(document);
     } else {
       await _database
