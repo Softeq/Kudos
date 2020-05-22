@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signIn" : MessageLookupByLibrary.simpleMessage("Sign-In via Google"),
     "team" : MessageLookupByLibrary.simpleMessage("Team"),
     "teams" : MessageLookupByLibrary.simpleMessage("Teams"),
+    "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("This user is not yet part of any team"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Your comment")
   };
 }

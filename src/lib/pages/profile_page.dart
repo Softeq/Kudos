@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
-import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/models/user.dart';
@@ -56,27 +55,37 @@ class ProfilePage extends StatelessWidget {
       ];
     }
 
-    var localizationService = locator<LocalizationService>();
-
     return [
       _buildHeader(viewModel.user),
       SliverToBoxAdapter(child: SizedBox(height: 16)),
       _addDefaultSliverPadding(
-          SliverToBoxAdapter(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                SectionHeaderWidget(localizationService.teams),
-                FancyListWidget<Team>(viewModel.userTeams,
-                    (Team team) => team.name, localizationService.userTeamsEmptyPlaceholder)
-              ])),
-          true),
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SectionHeaderWidget(localizer().teams),
+              FancyListWidget<Team>(
+                viewModel.userTeams,
+                (Team team) => team.name,
+                localizer().userTeamsEmptyPlaceholder,
+              ),
+            ],
+          ),
+        ),
+        true,
+      ),
       _addDefaultSliverPadding(
-          SliverToBoxAdapter(
-              child: SectionHeaderWidget(localizationService.allAchievements)),
-          true),
+        SliverToBoxAdapter(
+          child: SectionHeaderWidget(localizer().allAchievements),
+        ),
+        true,
+      ),
       _addDefaultSliverPadding(
-          ProfileAchievementsListWidget(viewModel.user.id, true))
+        ProfileAchievementsListWidget(
+          viewModel.user.id,
+          true,
+        ),
+      ),
     ];
   }
 

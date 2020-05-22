@@ -37,6 +37,7 @@
     "optionalDescription": "Описание (опционально)",
     "requiredField": "Обязательное поле",
     "team": "Команда",
+    "userTeamsEmptyPlaceholder": "Этот пользователь пока не состоит ни в одной команде",
     "admins": "Администраторы",
     "teams": "Команды",
     "owner": "Владелец",

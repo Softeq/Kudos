@@ -369,6 +369,15 @@ class S {
     );
   }
 
+  String get userTeamsEmptyPlaceholder {
+    return Intl.message(
+      'This user is not yet part of any team',
+      name: 'userTeamsEmptyPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get admins {
     return Intl.message(
       'Admins',

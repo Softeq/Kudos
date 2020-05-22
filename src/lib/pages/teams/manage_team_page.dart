@@ -160,9 +160,10 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                 ),
                 SizedBox(height: 6.0),
                 FancyListWidget<TeamMember>(
-                    viewModel.members,
-                    (TeamMember member) => member.name,
-                    localizationService.addPeople)
+                  viewModel.members,
+                  (TeamMember member) => member.name,
+                  localizer().addPeople,
+                ),
               ],
             ),
           ),

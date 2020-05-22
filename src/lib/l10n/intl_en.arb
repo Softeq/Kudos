@@ -37,6 +37,7 @@
     "optionalDescription": "Description (optional)",
     "requiredField": "Required field",
     "team": "Team",
+    "userTeamsEmptyPlaceholder": "This user is not yet part of any team",
     "admins": "Admins",
     "teams": "Teams",
     "owner": "Owner",

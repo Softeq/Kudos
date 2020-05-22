@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signIn" : MessageLookupByLibrary.simpleMessage("Войти через Google"),
     "team" : MessageLookupByLibrary.simpleMessage("Команда"),
     "teams" : MessageLookupByLibrary.simpleMessage("Команды"),
+    "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Этот пользователь пока не состоит ни в одной команде"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Ваш комментарий")
   };
 }
