@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
-import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
@@ -76,7 +75,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     // Number of users with this badge divided by the total number of users
     _achievementHolders = await _achievementsService
         .getAchievementHolders(achievementViewModel.achievement.id);
-    
+
     //TODO VPY: find better solution to get people count
     var allUsers = await _peopleService.getAllUsers();
     _statisticsValue =
