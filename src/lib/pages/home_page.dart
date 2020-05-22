@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/l10n/localizer.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
@@ -66,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     return [
       _TabItem(
         icon: Icons.person,
-        title: Localizer.of(context).profile, // TODO : replace
+        title: localizer().profile,
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
           child: MyProfilePage(),

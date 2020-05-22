@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:kudosapp/l10n/localizer.dart';
+import 'package:kudosapp/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/pages/home_page.dart';
@@ -17,15 +17,13 @@ class KudosApp extends StatelessWidget {
       child: Consumer<AuthViewModel>(
         builder: (context, viewModel, child) => GetMaterialApp(
           localizationsDelegates: [
-            Localizer.delegate,
+            S.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: [
-            Locale('en'),
-            Locale('ru'),
-          ],
-          title: "~TODO~",
+          supportedLocales: S.delegate.supportedLocales,
+          title: S().appName,
           theme: ThemeData(),
           home: _buildHome(viewModel),
         ),
