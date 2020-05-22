@@ -7,7 +7,6 @@ import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
-import 'package:kudosapp/widgets/sliver_section_header_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
