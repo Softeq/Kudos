@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
@@ -12,6 +11,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
+import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
@@ -226,9 +226,8 @@ class _PopularityWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _SectionTitleWidget(localizationService.achievementStatisticsTitle,
+        SectionHeaderWidget(localizationService.achievementStatisticsTitle,
             localizationService.achievementStatisticsTooltip),
-        SizedBox(height: 12),
         Padding(
             padding: EdgeInsets.only(left: 12),
             child: Align(
@@ -251,36 +250,6 @@ class _PopularityWidget extends StatelessWidget {
   }
 }
 
-class _SectionTitleWidget extends StatelessWidget {
-  final String _title;
-  final String _tooltipTitle;
-
-  _SectionTitleWidget(this._title, [this._tooltipTitle]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            _title,
-            style: Theme.of(context).textTheme.caption,
-          ),
-          SizedBox(width: 8),
-          Visibility(
-              visible: _tooltipTitle?.isNotEmpty ?? false,
-              child: Tooltip(
-                message: _tooltipTitle ?? "not visible",
-                child: Icon(
-                  Icons.info,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-              ))
-        ]);
-  }
-}
-
 class _AchievementOwnerWidget extends StatelessWidget {
   final String _ownerName;
   final String _ownerId;
@@ -292,8 +261,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var localizationService = locator<LocalizationService>();
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achievementOwnerTitle),
-      SizedBox(height: 12),
+      SectionHeaderWidget(localizationService.achievementOwnerTitle),
       Align(
           alignment: Alignment.topLeft,
           child: Padding(
@@ -350,8 +318,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
               physics: ClampingScrollPhysics()));
     }
     return Column(children: <Widget>[
-      _SectionTitleWidget(localizationService.achievementHoldersTitle),
-      SizedBox(height: 12),
+      SectionHeaderWidget(localizationService.achievementHoldersTitle),
       content
     ]);
   }

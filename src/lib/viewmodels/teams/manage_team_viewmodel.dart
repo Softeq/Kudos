@@ -15,14 +15,13 @@ import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
-  final members = ListNotifier<TeamMemberViewModel>();
+  final members = ListNotifier<TeamMember>();
   final admins = ListNotifier<TeamMember>();
   final _achievements = List<AchievementViewModel>();
 
   final _achievementsService = locator<AchievementsService>();
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
-  final _random = Random();
 
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
@@ -34,11 +33,9 @@ class ManageTeamViewModel extends BaseViewModel {
 
   String get owners => admins.items.map((x) => x.name).join(", ");
 
-  bool get isInitialized => _initialTeam != null;
-
   Team get modifiedTeam {
     return _initialTeam.copy(
-      members: members.items.map((x) => x.teamMember).toList(),
+      members: members.items,
       owners: admins.items,
     );
   }
@@ -63,9 +60,8 @@ class ManageTeamViewModel extends BaseViewModel {
 
   void initializeWithTeam(Team team) {
     _initialTeam = team;
-    members.replace(_initialTeam.members.map(_createTeamMemberViewModel));
+    members.replace(_initialTeam.members);
     admins.replace(_initialTeam.owners);
-    notifyListeners();
     _refreshAchievement();
     isBusy = false;
 
@@ -84,7 +80,7 @@ class ManageTeamViewModel extends BaseViewModel {
     }
 
     var teamMembers = users.map((x) => TeamMember.fromUser(x)).toList();
-    members.replace(teamMembers.map(_createTeamMemberViewModel));
+    members.replace(teamMembers);
 
     _teamsService.updateTeamMembers(
       teamId: _initialTeam.id,
@@ -103,7 +99,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
     _teamsService.updateTeamMembers(
       teamId: _initialTeam.id,
-      newMembers: members.items.map((x) => x.teamMember).toList(),
+      newMembers: members.items,
       newAdmins: owners,
     );
   }
@@ -147,27 +143,4 @@ class ManageTeamViewModel extends BaseViewModel {
     _achievements.addAll(result.map((x) => AchievementViewModel(x)));
     notifyListeners();
   }
-
-  TeamMemberViewModel _createTeamMemberViewModel(TeamMember teamMember) {
-    var color = Color.fromARGB(
-      255,
-      _random.nextInt(255),
-      _random.nextInt(255),
-      _random.nextInt(255),
-    );
-    return TeamMemberViewModel(
-      teamMember: teamMember,
-      color: color,
-    );
-  }
-}
-
-class TeamMemberViewModel {
-  final TeamMember teamMember;
-  final Color color;
-
-  TeamMemberViewModel({
-    this.teamMember,
-    this.color,
-  });
 }
