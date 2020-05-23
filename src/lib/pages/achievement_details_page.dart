@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
@@ -7,12 +9,9 @@ import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
-import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -93,7 +92,10 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           _AchievementHoldersWidget(viewModel.achievementHolders),
           SizedBox(height: 24),
           _AchievementOwnerWidget(
-              viewModel.ownerType, viewModel.ownerName, viewModel.ownerId)
+            viewModel.ownerType,
+            viewModel.ownerName,
+            viewModel.ownerId,
+          )
         ],
       ),
     );
@@ -141,18 +143,18 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
               controller: _inputController,
               autofocus: true,
               decoration: InputDecoration(
-                labelText: locator<LocalizationService>().writeAComment,
+                labelText: localizer().writeAComment,
               ),
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(locator<LocalizationService>().cancel),
+                child: Text(localizer().cancel),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text(locator<LocalizationService>().send),
+                child: Text(localizer().send),
                 onPressed: () {
                   accepted = true;
                   Navigator.of(context).pop();
@@ -181,7 +183,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             ),
           ),
           Text(
-            locator<LocalizationService>().sentSuccessfully,
+            localizer().sentSuccessfully,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -197,7 +199,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   void _notifyAboutError(error) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(
-        locator<LocalizationService>().generalErrorMessage,
+        localizer().generalErrorMessage,
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -222,29 +224,33 @@ class _PopularityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        SectionHeaderWidget(localizationService.achievementStatisticsTitle,
-            localizationService.achievementStatisticsTooltip),
+        SectionHeaderWidget(
+          localizer().achievementStatisticsTitle,
+          localizer().achievementStatisticsTooltip,
+        ),
         Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    height: 16,
-                    width: 144,
-                    child: LinearProgressIndicator(
-                      value: _popularityPercent, // percent filled
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor),
-                      backgroundColor: Theme.of(context).primaryColorLight,
-                    ),
+          padding: EdgeInsets.only(left: 12),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Container(
+                height: 16,
+                width: 144,
+                child: LinearProgressIndicator(
+                  value: _popularityPercent, // percent filled
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
                   ),
-                )))
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -259,28 +265,30 @@ class _AchievementOwnerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     return Column(children: <Widget>[
-      SectionHeaderWidget(localizationService.achievementOwnerTitle),
+      SectionHeaderWidget(localizer().achievementOwnerTitle),
       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: RaisedButton(
-                  onPressed: () {
-                    switch (_ownerType) {
-                      case OwnerType.user:
-                        Navigator.of(context).push(ProfileRoute(_ownerId));
-                        break;
-                      case OwnerType.team:
-                        Navigator.of(context).push(ManageTeamRoute(_ownerId));
-                        break;
-                    }
-                  },
-                  child: Text(
-                    _ownerName,
-                    style: Theme.of(context).textTheme.bodyText1
-                  ))))
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: RaisedButton(
+            onPressed: () {
+              switch (_ownerType) {
+                case OwnerType.user:
+                  Navigator.of(context).push(ProfileRoute(_ownerId));
+                  break;
+                case OwnerType.team:
+                  Navigator.of(context).push(ManageTeamRoute(_ownerId));
+                  break;
+              }
+            },
+            child: Text(
+              _ownerName,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          ),
+        ),
+      ),
     ]);
   }
 }
@@ -292,34 +300,37 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
     Widget content;
 
     if (_achievementHolders == null || _achievementHolders.length == 0) {
       content = Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: Text(
-                localizationService.achievementHoldersEmptyPlaceholder,
-                style: Theme.of(context).textTheme.bodyText1,
-              )));
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(
+            localizer().achievementHoldersEmptyPlaceholder,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+        ),
+      );
     } else {
       content = Padding(
-          padding: EdgeInsets.only(left: 12),
-          child: GridView.count(
-              children: _buildListItems(context, _achievementHolders),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              primary: true,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 7,
-              physics: ClampingScrollPhysics()));
+        padding: EdgeInsets.only(left: 12),
+        child: GridView.count(
+          children: _buildListItems(context, _achievementHolders),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          primary: true,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 7,
+          physics: ClampingScrollPhysics(),
+        ),
+      );
     }
     return Column(children: <Widget>[
-      SectionHeaderWidget(localizationService.achievementHoldersTitle),
-      content
+      SectionHeaderWidget(localizer().achievementHoldersTitle),
+      content,
     ]);
   }
 

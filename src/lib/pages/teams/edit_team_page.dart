@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class EditTeamRoute extends MaterialPageRoute<Team> {
   EditTeamRoute([Team team])
@@ -35,14 +34,14 @@ class _EditTeamPageState extends State<_EditTeamPage> {
 
   @override
   Widget build(BuildContext context) {
-    var localizationService = locator<LocalizationService>();
-    var viewModel = Provider.of<EditTeamViewModel>(context, listen: false);
+    final viewModel = Provider.of<EditTeamViewModel>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           viewModel.isCreating
-              ? localizationService.createTeam
-              : localizationService.editTeam,
+              ? localizer().createTeam
+              : localizer().editTeam,
         ),
       ),
       body: Consumer<EditTeamViewModel>(
@@ -63,18 +62,18 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 24.0),
-                    Text(localizationService.name),
+                    Text(localizer().name),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
                         if (x.isEmpty) {
-                          return localizationService.requiredField;
+                          return localizer().requiredField;
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: 36.0),
-                    Text(localizationService.optionalDescription),
+                    Text(localizer().optionalDescription),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,
@@ -102,7 +101,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
             Navigator.of(context).pop(team);
           }
         },
-        label: Text(localizationService.save),
+        label: Text(localizer().save),
         icon: Icon(Icons.create),
       ),
     );

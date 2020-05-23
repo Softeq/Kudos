@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/viewmodels/teams/user_teams_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:kudosapp/viewmodels/teams/user_teams_viewmodel.dart';
 
 class UserTeamsWidget extends StatelessWidget {
   final String _userId;
@@ -32,7 +31,7 @@ class UserTeamsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                locator<LocalizationService>().teams,
+                localizer().teams,
                 style: Theme.of(context).textTheme.caption,
               ),
               Wrap(

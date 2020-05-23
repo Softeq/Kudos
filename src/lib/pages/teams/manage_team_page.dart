@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/models/list_notifier.dart';
-import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
-import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
   ManageTeamRoute(String teamId)
@@ -69,8 +67,8 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
   }
 
   Widget _buildTitle(ManageTeamViewModel viewModel) {
-    var localizationService = locator<LocalizationService>();
     var textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -129,7 +127,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  localizationService.admins,
+                  localizer().admins,
                   style: textTheme.caption,
                 ),
                 SizedBox(height: 6.0),
@@ -155,14 +153,15 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  localizationService.members,
+                  localizer().members,
                   style: textTheme.caption,
                 ),
                 SizedBox(height: 6.0),
                 FancyListWidget<TeamMember>(
-                    viewModel.members,
-                    (TeamMember member) => member.name,
-                    localizationService.addPeople)
+                  viewModel.members,
+                  (TeamMember member) => member.name,
+                  localizer().addPeople,
+                ),
               ],
             ),
           ),

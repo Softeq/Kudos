@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/core/errors/auth_error.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 
@@ -16,7 +15,7 @@ class LoginPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(locator<LocalizationService>().appName),
+          title: Text(localizer().appName),
         ),
         body: _buildBody(),
       ),
@@ -46,7 +45,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       color: Colors.blue,
                       child: Text(
-                        locator<LocalizationService>().signIn,
+                        localizer().signIn,
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,

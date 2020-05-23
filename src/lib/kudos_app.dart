@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/pages/login_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:kudosapp/generated/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/pages/home_page.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
-import 'package:kudosapp/services/localization_service.dart';
-import 'package:kudosapp/service_locator.dart';
 
 class KudosApp extends StatelessWidget {
   @override
@@ -14,8 +15,15 @@ class KudosApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
       ],
       child: Consumer<AuthViewModel>(
-        builder: (context, viewModel, child) => MaterialApp(
-          title: locator<LocalizationService>().appName,
+        builder: (context, viewModel, child) => GetMaterialApp(
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          title: S().appName,
           theme: ThemeData(),
           home: _buildHome(viewModel),
         ),

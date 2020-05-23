@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,39 +13,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<_TabItem> _tabs = [];
+  List<_TabItem> _tabs = [];
 
   int _selectedTabIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
 
-    _tabs.add(
-      _TabItem(
-        icon: Icons.person,
-        title: locator<LocalizationService>().profile,
-        body: ChangeNotifierProvider<MyProfileViewModel>(
-          create: (context) => MyProfileViewModel(),
-          child: MyProfilePage(),
-        ),
-      ),
-    );
+    _tabs.clear();
+    _tabs.addAll(_buildTabs(context));
 
-    _tabs.add(_TabItem(
-      icon: Icons.people,
-      title: locator<LocalizationService>().people,
-      body: PeoplePage(),
-    ));
-
-    _tabs.add(_TabItem(
-      icon: Icons.category,
-      title: locator<LocalizationService>().allAchievements,
-      body: ChangeNotifierProvider<AchievementsViewModel>(
-        create: (context) => AchievementsViewModel()..initialize(),
-        child: AchievementsPage(),
-      ),
-    ));
+    super.didChangeDependencies();
   }
 
   void _selectTab(int index) {
@@ -80,6 +57,32 @@ class _HomePageState extends State<HomePage> {
               ))
           .toList(),
     );
+  }
+
+  List<_TabItem> _buildTabs(BuildContext context) {
+    return [
+      _TabItem(
+        icon: Icons.person,
+        title: localizer().profile,
+        body: ChangeNotifierProvider<MyProfileViewModel>(
+          create: (context) => MyProfileViewModel(),
+          child: MyProfilePage(),
+        ),
+      ),
+      _TabItem(
+        icon: Icons.people,
+        title: localizer().people,
+        body: PeoplePage(),
+      ),
+      _TabItem(
+        icon: Icons.category,
+        title: localizer().allAchievements,
+        body: ChangeNotifierProvider<AchievementsViewModel>(
+          create: (context) => AchievementsViewModel()..initialize(),
+          child: AchievementsPage(),
+        ),
+      ),
+    ];
   }
 }
 

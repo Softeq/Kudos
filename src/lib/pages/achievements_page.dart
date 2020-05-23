@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/localization_service.dart';
+import 'package:provider/provider.dart';
+import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
-import 'package:provider/provider.dart';
 
 class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(locator<LocalizationService>().allAchievements),
+        title: Text(localizer().allAchievements),
       ),
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
