@@ -45,6 +45,15 @@ class S {
     );
   }
 
+  String get notSignedIn {
+    return Intl.message(
+      'You are not currently signed in',
+      name: 'notSignedIn',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get allAchievements {
     return Intl.message(
       'All achievements',

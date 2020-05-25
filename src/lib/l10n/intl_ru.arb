@@ -1,6 +1,7 @@
 {
     "appName": "Kudos",
     "signIn": "Войти через Google",
+    "notSignedIn": "Вы не вошли в приложение",
     "allAchievements": "Все награды",
     "fromCris": "От Криса",
     "official": "Официальные",
