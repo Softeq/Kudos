@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:event_bus/event_bus.dart';
-import 'package:flutter/material.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/team.dart';
@@ -117,7 +115,7 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
-    if (event.achievement.teamId != _initialTeam.id) {
+    if (event.achievement.teamReference?.id != _initialTeam.id) {
       return;
     }
 

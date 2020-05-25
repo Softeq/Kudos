@@ -1,19 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/snack_bar_notifier.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/list_notifier.dart';
-import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/models/user_reference.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
+import 'package:kudosapp/widgets/snack_bar_notifier.dart';
+import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -302,7 +302,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
             .toList();
   }
 
-  Widget _buildUserAvatar(BuildContext context, RelatedUser holder) {
+  Widget _buildUserAvatar(BuildContext context, UserReference holder) {
     return Tooltip(
       message: holder.name,
       child: GestureDetector(
@@ -316,7 +316,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
   void _navigateToProfile(
     BuildContext context,
-    RelatedUser holder,
+    UserReference holder,
   ) {
     Navigator.of(context).push(ProfileRoute(holder.id));
   }
