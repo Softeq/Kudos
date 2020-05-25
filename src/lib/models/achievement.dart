@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/team_reference.dart';
+import 'package:kudosapp/models/user_reference.dart';
 
 @immutable
 class Achievement {
@@ -8,9 +9,8 @@ class Achievement {
   final String name;
   final String description;
   final String imageUrl;
-  final String teamId;
   final TeamReference teamReference;
-  final String userId;
+  final UserReference userReference;
   final String imageName;
 
   Achievement._({
@@ -18,9 +18,8 @@ class Achievement {
     @required this.name,
     @required this.description,
     @required this.imageUrl,
-    @required this.teamId,
     @required this.teamReference,
-    @required this.userId,
+    @required this.userReference,
     @required this.imageName,
   });
 
@@ -30,9 +29,8 @@ class Achievement {
       name: x.data["name"],
       description: x.data["description"],
       imageUrl: x.data["image_url"],
-      teamId: x.data["team_id"],
       teamReference: TeamReference.fromMap(x.data["team"]),
-      userId: x.data["user_id"],
+      userReference: UserReference.fromMap(x.data["user"]),
       imageName: x.data["image_name"],
     );
   }
@@ -44,8 +42,7 @@ class Achievement {
       imageUrl: null,
       id: null,
       teamReference: null,
-      teamId: null,
-      userId: null,
+      userReference: null,
       imageName: null,
     );
   }
@@ -54,9 +51,8 @@ class Achievement {
     String name,
     String description,
     String imageUrl,
-    String teamId,
     TeamReference teamReference,
-    String userId,
+    UserReference userReference,
     String imageName,
   }) {
     return Achievement._(
@@ -64,10 +60,9 @@ class Achievement {
       name: name ?? this.name,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
-      teamId: teamId ?? this.teamId,
-      teamReference: teamReference ?? this.teamReference,
-      userId: userId ?? this.userId,
       imageName: imageName ?? this.imageName,
+      teamReference: teamReference ?? this.teamReference,
+      userReference: userReference ?? this.userReference,
     );
   }
 
@@ -76,10 +71,9 @@ class Achievement {
       "name": name,
       "description": description,
       "image_url": imageUrl,
-      "team_id": teamId,
-      "team": teamReference == null ? null : teamReference.toMap(),
-      "user_id": userId,
       "image_name": imageName,
+      "team": teamReference == null ? null : teamReference.toMap(),
+      "user": userReference == null ? null : userReference.toMap(),
     };
   }
 }

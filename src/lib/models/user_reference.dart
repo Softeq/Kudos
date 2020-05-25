@@ -2,27 +2,31 @@ import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user.dart';
 
 /// Sender / Recipient [User] model
-class RelatedUser {
+class UserReference {
   final String id;
   final String name;
   final String imageUrl;
 
-  RelatedUser._({
+  UserReference._({
     @required this.id,
     @required this.name,
     @required this.imageUrl,
   });
 
-  factory RelatedUser.fromUser(User x) {
-    return RelatedUser._(
+  factory UserReference.fromUser(User x) {
+    return UserReference._(
       id: x.id,
       name: x.name,
       imageUrl: x.imageUrl,
     );
   }
 
-  factory RelatedUser.fromMap(Map<String, dynamic> x) {
-    return RelatedUser._(
+  factory UserReference.fromMap(Map<String, dynamic> x) {
+    if (x == null) {
+      return null;
+    }
+
+    return UserReference._(
       id: x["id"],
       name: x["name"],
       imageUrl: x["imageUrl"],

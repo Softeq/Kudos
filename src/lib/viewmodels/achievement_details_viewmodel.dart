@@ -59,16 +59,14 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> loadOwnerInfo() async {
-    if (_achievementViewModel.teamId != null) {
-      _ownerName = _achievementViewModel.teamName;
+    if (_achievementViewModel.team != null) {
+      _ownerName = _achievementViewModel.team.name;
+      _ownerId = _achievementViewModel.team.id;
       _ownerType = OwnerType.team;
-      _ownerId = _achievementViewModel.teamId;
     } else {
-      final userIds = [_achievementViewModel.userId];
-      var owners = await _peopleService.getUsersByIds(userIds);
-      _ownerName = owners.first.name;
+      _ownerName = _achievementViewModel.user.name;
+      _ownerId = _achievementViewModel.user.id;
       _ownerType = OwnerType.user;
-      _ownerId = _achievementViewModel.userId;
     }
   }
 

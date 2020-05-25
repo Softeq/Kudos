@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/related_achievement.dart';
-import 'package:kudosapp/models/related_user.dart';
+import 'package:kudosapp/models/user_reference.dart';
 
 class UserAchievement {
-  final RelatedUser sender;
+  final UserReference sender;
   final RelatedAchievement achievement;
   final String comment;
   final Timestamp date;
@@ -18,7 +18,7 @@ class UserAchievement {
 
   factory UserAchievement.fromDocument(DocumentSnapshot x) {
     return UserAchievement(
-      sender: RelatedUser.fromMap(x.data["sender"]),
+      sender: UserReference.fromMap(x.data["sender"]),
       achievement: RelatedAchievement.fromMap(x.data["achievement"]),
       comment: x.data["comment"],
       date: x.data["date"],

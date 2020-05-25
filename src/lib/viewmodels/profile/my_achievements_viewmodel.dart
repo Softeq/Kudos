@@ -50,7 +50,7 @@ class MyAchievementsViewModel extends BaseViewModel {
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
     var userId = currentUser.id;
-    if (event.achievement.userId != userId) {
+    if (event.achievement.userReference?.id != userId) {
       return;
     }
 

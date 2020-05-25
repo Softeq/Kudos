@@ -9,11 +9,11 @@ import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/related_achievement.dart';
-import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_reference.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/models/user_achievement.dart';
+import 'package:kudosapp/models/user_reference.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:path/path.dart' as path;
@@ -28,7 +28,7 @@ class AchievementsService {
   Future<List<Achievement>> getAchievements() async {
     final snapshot = await _database
         .collection(_achievementsCollection)
-        .where("user_id", isNull: true)
+        .where("user", isNull: true)
         .getDocuments();
     final result = snapshot.documents.map((x) {
       return Achievement.fromDocument(x);
@@ -59,7 +59,6 @@ class AchievementsService {
 
     if (team != null) {
       copyOfAchievement = copyOfAchievement.copy(
-        teamId: team.id,
         teamReference: TeamReference(
           name: team.name,
           id: team.id,
@@ -69,11 +68,12 @@ class AchievementsService {
 
     if (user != null) {
       copyOfAchievement = copyOfAchievement.copy(
-        userId: user.id,
+        userReference: UserReference.fromUser(user),
       );
     }
 
-    if (copyOfAchievement.teamId == null && copyOfAchievement.userId == null) {
+    if (copyOfAchievement.teamReference == null &&
+        copyOfAchievement.userReference == null) {
       throw ArgumentError("team or user should be set");
     }
 
@@ -124,7 +124,7 @@ class AchievementsService {
         "users/${sendAchievement.recipient.id}/$_achievementsCollection");
 
     final userAchievementMap = UserAchievement(
-      sender: RelatedUser.fromUser(sendAchievement.sender),
+      sender: UserReference.fromUser(sendAchievement.sender),
       achievement:
           RelatedAchievement.fromAchievement(sendAchievement.achievement),
       comment: sendAchievement.comment,
@@ -142,7 +142,7 @@ class AchievementsService {
 
     final holderMap = AchievementHolder(
       date: timestamp,
-      recipient: RelatedUser.fromUser(sendAchievement.recipient),
+      recipient: UserReference.fromUser(sendAchievement.recipient),
     ).toMap();
 
     batch.setData(achievementHoldersReference.document(), holderMap);
@@ -182,12 +182,12 @@ class AchievementsService {
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
-    return _getAchievements("team_id", teamId);
+    return _getAchievements("team.id", teamId);
   }
 
   Future<List<Achievement>> getMyAchievements() {
     final userId = _authService.currentUser.id;
-    return _getAchievements("user_id", userId);
+    return _getAchievements("user.id", userId);
   }
 
   Future<List<Achievement>> _getAchievements(String field, String value) async {

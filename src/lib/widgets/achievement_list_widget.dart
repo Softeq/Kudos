@@ -10,7 +10,7 @@ class AchievementListWidget extends StatelessWidget {
     Function(AchievementViewModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
-    sortedList.sort((x, y) => x.teamName?.compareTo(y.teamName) ?? 0);
+    sortedList.sort((x, y) => x.team?.name?.compareTo(y.team?.name) ?? 0);
 
     String teamName;
     var items = List<Widget>();
@@ -23,12 +23,12 @@ class AchievementListWidget extends StatelessWidget {
     for (var i = 0; i < sortedList.length; i++) {
       var item = sortedList[i];
 
-      if (teamName != item.teamName) {
+      if (teamName != item.team?.name) {
         if (achievements.isNotEmpty) {
           addFunction(items, achievements);
         }
 
-        teamName = item.teamName;
+        teamName = item.team.name;
         items.add(_GroupListItem(teamName));
       }
 

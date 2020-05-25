@@ -34,8 +34,6 @@ class _ManageTeamPage extends StatefulWidget {
 }
 
 class _ManageTeamPageState extends State<_ManageTeamPage> {
-  Widget _title;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +47,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           return ListView.builder(
             itemBuilder: (context, index) {
               if (index == 0) {
-                return _title ?? (_title = _buildTitle(viewModel));
+                return _buildTitle(viewModel);
               } else {
                 var lineData = viewModel.getData(index);
                 return AchievementWidget(lineData, _achievementTapped);

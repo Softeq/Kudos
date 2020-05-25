@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/related_user.dart';
+import 'package:kudosapp/models/user_reference.dart';
 
 class AchievementHolder extends Equatable {
   final Timestamp date;
-  final RelatedUser recipient;
+  final UserReference recipient;
 
   AchievementHolder({
     @required this.date,
@@ -15,7 +15,7 @@ class AchievementHolder extends Equatable {
   factory AchievementHolder.fromDocument(DocumentSnapshot x) {
     return AchievementHolder(
       date: x.data["date"],
-      recipient: RelatedUser.fromMap(x.data["recipient"]),
+      recipient: UserReference.fromMap(x.data["recipient"]),
     );
   }
 
