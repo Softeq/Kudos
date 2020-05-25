@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/related_user.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
@@ -35,6 +37,7 @@ class _AchievementDetailsPage extends StatefulWidget {
 class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   final TextEditingController _inputController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final SnackBarNotifier _snackBarNotifier = SnackBarNotifier();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +92,11 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),
           SizedBox(height: 24),
-          _AchievementHoldersWidget(viewModel.achievementHolders),
+          ChangeNotifierProvider.value(
+              value: viewModel.achievementHolders,
+              child: Consumer<ListNotifier<AchievementHolder>>(
+                  builder: (context, notifier, child) =>
+                      _AchievementHoldersWidget(viewModel.achievementHolders))),
           SizedBox(height: 24),
           _AchievementOwnerWidget(
             viewModel.ownerType,
@@ -124,10 +131,12 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             Provider.of<AchievementDetailsViewModel>(context, listen: false);
         await viewModel.sendTo(user, commentText);
 
-        _notifyAboutSuccess();
+        // _snackBarNotifier.showSuccessMessage(_scaffoldKey.currentContext,
+        //     _scaffoldKey.currentState, localizer().sentSuccessfully);
       }
     } catch (error) {
-      _notifyAboutError(error);
+      _snackBarNotifier.showGeneralErrorMessage(
+          _scaffoldKey.currentContext, _scaffoldKey.currentState);
     }
   }
 
@@ -169,45 +178,6 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
     _inputController.text = "";
 
     return result;
-  }
-
-  void _notifyAboutSuccess() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Text(
-            "👍",
-            style: TextStyle(
-              fontSize: 24,
-            ),
-          ),
-          Text(
-            localizer().sentSuccessfully,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-          )
-        ],
-      ),
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 4),
-    ));
-  }
-
-  void _notifyAboutError(error) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
-        localizer().generalErrorMessage,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-      ),
-      backgroundColor: Theme.of(context).errorColor,
-      duration: Duration(seconds: 4),
-    ));
   }
 
   @override
@@ -268,33 +238,28 @@ class _AchievementOwnerWidget extends StatelessWidget {
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementOwnerTitle),
       Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: EdgeInsets.only(left: 12),
-          child: RaisedButton(
-            onPressed: () {
-              switch (_ownerType) {
-                case OwnerType.user:
-                  Navigator.of(context).push(ProfileRoute(_ownerId));
-                  break;
-                case OwnerType.team:
-                  Navigator.of(context).push(ManageTeamRoute(_ownerId));
-                  break;
-              }
-            },
-            child: Text(
-              _ownerName,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
-        ),
-      ),
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: RaisedButton(
+                  onPressed: () {
+                    switch (_ownerType) {
+                      case OwnerType.user:
+                        Navigator.of(context).push(ProfileRoute(_ownerId));
+                        break;
+                      case OwnerType.team:
+                        Navigator.of(context).push(ManageTeamRoute(_ownerId));
+                        break;
+                    }
+                  },
+                  child: Text(_ownerName,
+                      style: Theme.of(context).textTheme.bodyText1))))
     ]);
   }
 }
 
 class _AchievementHoldersWidget extends StatelessWidget {
-  final List<AchievementHolder> _achievementHolders;
+  final ListNotifier<AchievementHolder> _achievementHolders;
 
   _AchievementHoldersWidget(this._achievementHolders);
 
@@ -302,7 +267,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_achievementHolders == null || _achievementHolders.length == 0) {
+    if (_achievementHolders == null || _achievementHolders.items.length == 0) {
       content = Align(
         alignment: Alignment.topLeft,
         child: Padding(
@@ -315,18 +280,12 @@ class _AchievementHoldersWidget extends StatelessWidget {
       );
     } else {
       content = Padding(
-        padding: EdgeInsets.only(left: 12),
-        child: GridView.count(
-          children: _buildListItems(context, _achievementHolders),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          primary: true,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 7,
-          physics: ClampingScrollPhysics(),
-        ),
-      );
+          padding: EdgeInsets.only(left: 12),
+          child: Align(
+              alignment: Alignment.topLeft,
+              child: Wrap(
+                  children: _buildListItems(context, _achievementHolders),
+                  spacing: 10)));
     }
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementHoldersTitle),
@@ -334,11 +293,11 @@ class _AchievementHoldersWidget extends StatelessWidget {
     ]);
   }
 
-  List<Widget> _buildListItems(
-      BuildContext context, List<AchievementHolder> achievementHolders) {
+  List<Widget> _buildListItems(BuildContext context,
+      ListNotifier<AchievementHolder> achievementHolders) {
     return achievementHolders == null
         ? new List<Widget>()
-        : achievementHolders
+        : achievementHolders.items
             .map((u) => _buildUserAvatar(context, u.recipient))
             .toList();
   }

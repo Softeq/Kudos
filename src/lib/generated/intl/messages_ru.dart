@@ -52,6 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "members" : MessageLookupByLibrary.simpleMessage("Состав"),
     "name" : MessageLookupByLibrary.simpleMessage("Имя"),
     "nameIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Введите название"),
+    "notSignedIn" : MessageLookupByLibrary.simpleMessage("Вы не вошли в приложение"),
     "official" : MessageLookupByLibrary.simpleMessage("Официальные"),
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "optionalDescription" : MessageLookupByLibrary.simpleMessage("Описание (опционально)"),

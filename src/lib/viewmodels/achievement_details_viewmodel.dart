@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
+import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -22,24 +23,24 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final String _achievementId;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
-  List<AchievementHolder> _achievementHolders;
   AchievementViewModel _achievementViewModel;
   double _statisticsValue = 0;
   String _ownerName = "";
   String _ownerId = "";
   OwnerType _ownerType;
 
-  AchievementDetailsViewModel(this._achievementId) {
-    isBusy = true;
-  }
+  final ListNotifier<AchievementHolder> achievementHolders = new ListNotifier();
 
   AchievementViewModel get achievementViewModel => _achievementViewModel;
-  List<AchievementHolder> get achievementHolders => _achievementHolders;
   double get statisticsValue => _statisticsValue;
 
   String get ownerName => _ownerName;
   String get ownerId => _ownerId;
   OwnerType get ownerType => _ownerType;
+
+  AchievementDetailsViewModel(this._achievementId) {
+    isBusy = true;
+  }
 
   Future<void> initialize() async {
     final achievement =
@@ -73,16 +74,17 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   Future<void> loadStatistics() async {
     // Number of users with this badge divided by the total number of users
-    _achievementHolders = await _achievementsService
-        .getAchievementHolders(achievementViewModel.achievement.id);
+    achievementHolders.replace(await _achievementsService
+        .getAchievementHolders(achievementViewModel.achievement.id));
 
-    //TODO VPY: find better solution to get people count
-    var allUsers = await _peopleService.getAllUsers();
-    _statisticsValue =
-        allUsers.length == 0 ? 0 : _achievementHolders.length / allUsers.length;
+    var allUsersCount = await _peopleService.getUsersCount();
+    _statisticsValue = allUsersCount == 0
+        ? 0
+        : achievementHolders.items.length / allUsersCount;
   }
 
   Future<void> sendTo(User recipient, String comment) async {
+    isBusy = true;
     final achievementToSend = AchievementToSend(
       sender: _authService.currentUser,
       recipient: recipient,
@@ -91,6 +93,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     );
 
     await _achievementsService.sendAchievement(achievementToSend);
+    await initialize();
+    isBusy = false;
   }
 
   @override

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/core/errors/auth_error.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 
 class LoginPage extends StatelessWidget {
+  final SnackBarNotifier _snackBarNotifier = SnackBarNotifier();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProxyProvider<AuthViewModel, LoginViewModel>(
@@ -31,7 +34,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Text(
-                "You are not currently signed in.", // TODO YP: UI not final
+                localizer().notSignedIn,
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -65,15 +68,7 @@ class LoginPage extends StatelessWidget {
       await viewModel.signIn();
     } on AuthError catch (error) {
       final internalMessage = (error.internalError as AuthError)?.message;
-      _showNotification(context, '${error.message}: $internalMessage');
+      _snackBarNotifier.showErrorMessage(context, Scaffold.of(context), '${error.message}: $internalMessage');
     }
-  }
-
-  void _showNotification(BuildContext context, String message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 3),
-      backgroundColor: Theme.of(context).errorColor,
-    ));
   }
 }

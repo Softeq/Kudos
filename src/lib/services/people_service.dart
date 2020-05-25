@@ -9,6 +9,14 @@ class PeopleService {
   final BaseAuthService _authService = locator<BaseAuthService>();
   static const _usersCollection = "users";
 
+  //TODO VPY: find better solution to get people count
+  Future<int> getUsersCount() async {
+    final queryResult = await _database.
+        collection(_usersCollection).
+        getDocuments();
+    return queryResult.documents.length;
+  }
+
   //getting all users from firebase
   Future<List<User>> getAllUsers() {
     return _getAllUsers();
