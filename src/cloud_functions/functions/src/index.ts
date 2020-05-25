@@ -25,7 +25,7 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
 
     const teamId: string = context.params.teamId;
 
-    const qs = await db.collection('achievements').where('team_id', "==", teamId).get();
+    const qs = await db.collection('achievements').where('team.id', "==", teamId).get();
     if (qs.docs.length === 0) {
         return;
     }
