@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
-import 'package:kudosapp/viewmodels/profile_achievements_viewodel.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_image_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProfileAchievementsListWidget extends StatelessWidget {
   final String _userId;
@@ -125,7 +125,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               AchievementImageWidget(
-                imageUrl: relatedAchievement.imageUrl,
+                imageViewModel: achievementCollection.imageViewModel,
                 radius: radius,
               ),
               if (achievementCollection.count > 1)

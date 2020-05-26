@@ -47,6 +47,51 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
 });
 
 /**
+ * Trigger updates information about achievement in achievement_references collection
+ * when achievement image_url changes
+ */
+export const updateAchievement = functions.firestore.document('achievements/{achievementId}').onUpdate(async (snapshot, context) => {
+    const oldData = snapshot.before.data();
+    const newData = snapshot.after.data();
+
+    if (!oldData || !newData) {
+        return;
+    }
+
+    const oldValue: string = oldData.image_url;
+    const newValue: string = newData.image_url;
+
+    if (oldValue === newValue) {
+        return;
+    }
+
+    const achievementId: string = context.params.achievementId;
+
+    const qs = await db.collectionGroup('achievement_references').where('achievement.id', "==", achievementId).get();
+    if (qs.docs.length === 0) {
+        return;
+    }
+
+    const achievementName = newData.name;
+
+    const data = {
+        achievement: {
+            id: achievementId,
+            name: achievementName,
+            imageUrl: newValue,
+        },
+    };
+
+    const batch = db.batch();
+
+    qs.docs.forEach((x) => {
+        batch.set(x.ref, data, { merge: true });
+    });
+
+    await batch.commit();
+});
+
+/**
  * Cleans up unused images from storage
  */
 export const cleanupStorage = functions.https.onRequest(async (request, response) => {

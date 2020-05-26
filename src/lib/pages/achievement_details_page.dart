@@ -35,9 +35,9 @@ class _AchievementDetailsPage extends StatefulWidget {
 }
 
 class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
-  final TextEditingController _inputController = TextEditingController();
+  final _inputController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final SnackBarNotifier _snackBarNotifier = SnackBarNotifier();
+  final _snackBarNotifier = SnackBarNotifier();
 
   @override
   Widget build(BuildContext context) {

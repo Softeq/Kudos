@@ -47,7 +47,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(imageRadius),
               elevation: 2,
               child: AchievementImageWidget(
-                imageUrl: _achievementViewModel.imageUrl,
+                imageViewModel: _achievementViewModel.imageViewModel,
                 radius: imageRadius,
               ),
             ),

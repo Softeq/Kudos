@@ -101,10 +101,8 @@ class AchievementWidget extends StatelessWidget {
                       onAchievementClicked(achievement);
                     },
                     child: AchievementImageWidget(
-                      file: achievement.file,
-                      imageUrl: achievement.imageUrl,
+                      imageViewModel: achievement.imageViewModel,
                       radius: radius,
-                      isBusy: achievement.isFileLoading,
                     ),
                   ),
                 ),
