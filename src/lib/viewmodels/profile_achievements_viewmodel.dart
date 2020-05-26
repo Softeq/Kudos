@@ -20,6 +20,9 @@ class ProfileAchievementsViewModel extends BaseViewModel {
     final allUserAchievements =
         await _achievementsService.getUserAchievements(_userId);
 
+    _achievements.forEach((element) {
+      element.imageViewModel.dispose();
+    });
     _achievements = _merge(allUserAchievements);
 
     isBusy = false;
@@ -40,5 +43,13 @@ class ProfileAchievementsViewModel extends BaseViewModel {
     }
 
     return _map.values.toList();
+  }
+
+  @override
+  void dispose() {
+    _achievements.forEach((element) {
+      element.imageViewModel.dispose();
+    });
+    super.dispose();
   }
 }

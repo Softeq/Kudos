@@ -22,6 +22,7 @@ import 'package:uuid/uuid.dart';
 class AchievementsService {
   final _database = Firestore.instance;
   final _achievementsCollection = "achievements";
+  final _achievementReferencesCollection = "achievement_references";
   final _kudosFolder = "kudos";
   final _authService = locator<BaseAuthService>();
 
@@ -121,7 +122,7 @@ class AchievementsService {
     // add an achievement to user's achievements
 
     final userAchievementsReference = _database.collection(
-        "users/${sendAchievement.recipient.id}/$_achievementsCollection");
+        "users/${sendAchievement.recipient.id}/$_achievementReferencesCollection");
 
     final userAchievementMap = UserAchievement(
       sender: UserReference.fromUser(sendAchievement.sender),
@@ -152,7 +153,7 @@ class AchievementsService {
 
   Future<List<UserAchievement>> getUserAchievements(String userId) async {
     final queryResult = await _database
-        .collection("users/$userId/$_achievementsCollection")
+        .collection("users/$userId/$_achievementReferencesCollection")
         .getDocuments();
     final userAchievements = queryResult.documents
         .map((x) => UserAchievement.fromDocument(x))

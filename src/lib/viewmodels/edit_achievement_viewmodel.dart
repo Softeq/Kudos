@@ -29,24 +29,20 @@ class EditAchievementViewModel extends BaseViewModel {
   }
 
   void pickFile() async {
-    if (achievementViewModel.isFileLoading) {
+    if (achievementViewModel.imageViewModel.isBusy) {
       return;
     }
-    achievementViewModel.isFileLoading = true;
+    achievementViewModel.imageViewModel.update(isBusy: true);
 
     var file = await FilePicker.getFile(type: FileType.image);
 
-    achievementViewModel.isFileLoading = false;
-
-    if (file != null) {
-      achievementViewModel.file = file;
-    }
+    achievementViewModel.imageViewModel.update(isBusy: false, file: file);
   }
 
   Future<void> save() async {
     var result = await _achievementsService.createOrUpdate(
       achievement: achievementViewModel.getModifiedAchievement(),
-      file: achievementViewModel.file,
+      file: achievementViewModel.imageViewModel.file,
       team: _team,
       user: _user,
     );

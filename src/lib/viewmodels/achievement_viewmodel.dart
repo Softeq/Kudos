@@ -1,16 +1,14 @@
-import 'dart:io';
-
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/team_reference.dart';
 import 'package:kudosapp/models/user_reference.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class AchievementViewModel extends BaseViewModel {
   Achievement _initialAchievement;
   String _title;
   String _description;
-  File _file;
-  bool _isFileLoading = false;
+  ImageViewModel _imageViewModel;
 
   AchievementViewModel(Achievement achievement) {
     initialize(achievement);
@@ -32,21 +30,7 @@ class AchievementViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String get imageUrl => _initialAchievement.imageUrl;
-
-  File get file => _file;
-
-  set file(File value) {
-    _file = value;
-    notifyListeners();
-  }
-
-  bool get isFileLoading => _isFileLoading;
-
-  set isFileLoading(bool value) {
-    _isFileLoading = value;
-    notifyListeners();
-  }
+  ImageViewModel get imageViewModel => _imageViewModel;
 
   TeamReference get team => _initialAchievement.teamReference;
 
@@ -67,7 +51,17 @@ class AchievementViewModel extends BaseViewModel {
     _initialAchievement = achievement;
     _title = achievement.name;
     _description = achievement.description;
-    _isFileLoading = false;
-    _file = null;
+
+    if (_imageViewModel == null) {
+      _imageViewModel = ImageViewModel();
+    }
+
+    _imageViewModel.initialize(achievement.imageUrl, null, false);
+  }
+
+  @override
+  void dispose() {
+    _imageViewModel.dispose();
+    super.dispose();
   }
 }
