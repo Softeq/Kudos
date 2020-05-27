@@ -15,15 +15,15 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 class ManageTeamViewModel extends BaseViewModel {
   final members = ListNotifier<TeamMember>();
   final admins = ListNotifier<TeamMember>();
-  final _achievements = List<AchievementViewModel>();
 
+  final _achievements = List<AchievementViewModel>();
   final _achievementsService = locator<AchievementsService>();
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
 
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
-      _onAchievementUpdatedSubscription;
+  _onAchievementUpdatedSubscription;
 
   String get name => _initialTeam.name;
 
@@ -51,25 +51,25 @@ class ManageTeamViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void initialize(String teamId) async {
+  Future<void> initialize(String teamId) async {
     isBusy = true;
-    initializeWithTeam(await loadTeam(teamId));
-  }
-
-  void initializeWithTeam(Team team) {
+    final team = await _teamsService.getTeam(teamId);
     _initialTeam = team;
     members.replace(_initialTeam.members);
     admins.replace(_initialTeam.owners);
-    _refreshAchievement();
-    isBusy = false;
-
+    _loadAchievements();
     _onAchievementUpdatedSubscription?.cancel();
     _onAchievementUpdatedSubscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
+    isBusy = false;
   }
 
-  Future<Team> loadTeam(String id) {
-    return _teamsService.getTeam(id);
+  void updateTeamMetadata(String name, String description) {
+    _initialTeam = _initialTeam.copy(
+      name: name,
+      description: description,
+    );
+    notifyListeners();
   }
 
   void replaceMembers(Iterable<User> users) {
@@ -120,7 +120,7 @@ class ManageTeamViewModel extends BaseViewModel {
     }
 
     var achievementViewModel = _achievements.firstWhere(
-      (x) => x.achievement.id == event.achievement.id,
+          (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,
     );
     if (achievementViewModel != null) {
@@ -131,14 +131,14 @@ class ManageTeamViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> _refreshAchievement() async {
+  Future<void> _loadAchievements() async {
     var result =
-        await _achievementsService.getTeamAchievements(_initialTeam.id);
-    _achievements.forEach((x) {
+    await _achievementsService.getTeamAchievements(_initialTeam.id);
+    _achievements.toList().forEach((x) {
       x.dispose();
     });
     _achievements.clear();
-    _achievements.addAll(result.map((x) => AchievementViewModel(x)));
+    _achievements.addAll(result.map((x) => AchievementViewModel(x)).toList());
     notifyListeners();
   }
 }

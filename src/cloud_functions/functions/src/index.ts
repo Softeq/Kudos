@@ -92,6 +92,115 @@ export const updateAchievement = functions.firestore.document('achievements/{ach
 });
 
 /**
+ * Trigger sends push notification to user when he gets a new achievement 
+ */
+export const onCreateAchievementReferences = functions.firestore.document('/users/{userId}/achievement_references/{referenceId}').onCreate(async (snapshot, context) => {
+    const documentData = snapshot.data();
+
+    if (!documentData) {
+        return;
+    }
+
+    const userId: string = context.params.userId;
+
+    const qs = await db.collection(`/users/${userId}/push_tokens`).get();
+    if (qs.docs.length === 0) {
+        return;
+    }
+
+    const tokens: Array<string> = new Array<string>();
+
+    qs.docs.forEach(x => {
+        const token: string = x.data().token;
+        tokens.push(token);
+    });
+
+    if (tokens.length === 0) {
+        return;
+    }
+
+    const achievementName = documentData.achievement.name;
+    const senderName = documentData.sender.name;
+
+    const payload = {
+        notification: {
+            title: 'Congratulations!',
+            body: `You received ${achievementName} from ${senderName}`,
+        }
+    };
+
+    const response = await admin.messaging().sendToDevice(tokens, payload);
+
+    const invalidTokens: Array<number> = new Array<number>();
+
+    for (let index = 0; index < response.results.length; index++) {
+        const x = response.results[index];
+        if (x.error && x.error.code === 'messaging/registration-token-not-registered') {
+            invalidTokens.push(index);
+        }
+    }
+
+    if (invalidTokens.length === 0) {
+        return;
+    }
+
+    const batch = db.batch();
+
+    invalidTokens.forEach(x => {
+        batch.delete(qs.docs[x].ref);
+    });
+
+    await batch.commit();
+});
+
+export const testFunc = functions.https.onRequest(async (request, response) => {
+    const qs = await db.collection('/users/vadim.pylsky/push_tokens').get();
+    if (qs.docs.length === 0) {
+        return;
+    }
+
+    const tokens: Array<string> = new Array<string>();
+
+    qs.docs.forEach(x => {
+        const token: string = x.data().token;
+        if (token) {
+            tokens.push(token);
+        }
+    });
+
+    if (tokens.length === 0) {
+        return;
+    }
+
+    const payload = {
+        notification: {
+            title: 'Congratulations!',
+            body: 'You recieved',
+        }
+    };
+
+    const messagingResponse = await admin.messaging().sendToDevice(tokens, payload);
+
+    const invalidTokens: Array<string> = new Array<string>();
+
+    messagingResponse.results.forEach(x => {
+        if (x.error) {
+            invalidTokens.push(x.error.code);
+        } else {
+            invalidTokens.push("ololol");
+        }
+
+        if (x.canonicalRegistrationToken) {
+            invalidTokens.push(x.canonicalRegistrationToken);
+        } else {
+            invalidTokens.push("fffffff");
+        }
+    });
+
+    response.send({ invalidTokens: invalidTokens });
+});
+
+/**
  * Cleans up unused images from storage
  */
 export const cleanupStorage = functions.https.onRequest(async (request, response) => {
