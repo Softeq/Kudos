@@ -6,8 +6,8 @@ import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
 class AuthService extends BaseAuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final _firebaseAuth = FirebaseAuth.instance;
 
   User _currentUser;
 

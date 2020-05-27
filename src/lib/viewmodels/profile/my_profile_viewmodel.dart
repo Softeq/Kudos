@@ -1,6 +1,7 @@
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
@@ -8,7 +9,7 @@ import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 class MyProfileViewModel extends BaseViewModel {
   final myAchievementsViewModel = MyAchievementsViewModel();
   final myTeamsViewModel = MyTeamsViewModel();
-
+  final _peopleService = locator<PeopleService>();
   final _authService = locator<BaseAuthService>();
 
   User get user => _authService.currentUser;
@@ -20,7 +21,8 @@ class MyProfileViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void signOut() {
-    _authService.signOut();
+  Future<void> signOut() async {
+    await _peopleService.unSubscribeFromNotifications();
+    await _authService.signOut();
   }
 }

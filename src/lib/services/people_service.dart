@@ -3,17 +3,19 @@ import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/models/user_registration.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/push_notifications_service.dart';
 
 class PeopleService {
-  final Firestore _database = Firestore.instance;
-  final BaseAuthService _authService = locator<BaseAuthService>();
+  final _database = Firestore.instance;
+  final _authService = locator<BaseAuthService>();
+  final _pushNotificationsService = locator<PushNotificationsService>();
   static const _usersCollection = "users";
+  static const _pushTokenCollection = "push_tokens";
 
   //TODO VPY: find better solution to get people count
   Future<int> getUsersCount() async {
-    final queryResult = await _database.
-        collection(_usersCollection).
-        getDocuments();
+    final queryResult =
+        await _database.collection(_usersCollection).getDocuments();
     return queryResult.documents.length;
   }
 
@@ -30,12 +32,28 @@ class PeopleService {
     return users;
   }
 
-  Future<void> tryRegisterUser(User user) async {
+  Future<void> tryRegisterCurrentUser() async {
+    final user = _authService.currentUser;
     final userRegistrationMap = UserRegistration.fromUser(user).toMap();
+    final token = await _pushNotificationsService.subscribeForNotifications();
     await _database
         .collection(_usersCollection)
         .document(user.id)
         .setData(userRegistrationMap);
+
+    if (token == null) {
+      return;
+    }
+
+    await _database
+        .collection(_usersCollection)
+        .document(user.id)
+        .collection(_pushTokenCollection)
+        .add({"token": token});
+  }
+
+  Future<void> unSubscribeFromNotifications() {
+    return _pushNotificationsService.unSubscribeFromNotifications();
   }
 
   //getting all users from firebase
