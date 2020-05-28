@@ -11,7 +11,6 @@ class Achievement {
   final String imageUrl;
   final TeamReference teamReference;
   final UserReference userReference;
-  final String imageName;
 
   Achievement._({
     @required this.id,
@@ -20,7 +19,6 @@ class Achievement {
     @required this.imageUrl,
     @required this.teamReference,
     @required this.userReference,
-    @required this.imageName,
   });
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
@@ -30,8 +28,7 @@ class Achievement {
       description: x.data["description"],
       imageUrl: x.data["image_url"],
       teamReference: TeamReference.fromMap(x.data["team"]),
-      userReference: UserReference.fromMap(x.data["user"]),
-      imageName: x.data["image_name"],
+      userReference: UserReference.fromMap(x.data["user"])
     );
   }
 
@@ -42,8 +39,7 @@ class Achievement {
       imageUrl: null,
       id: null,
       teamReference: null,
-      userReference: null,
-      imageName: null,
+      userReference: null
     );
   }
 
@@ -60,7 +56,6 @@ class Achievement {
       name: name ?? this.name,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
-      imageName: imageName ?? this.imageName,
       teamReference: teamReference ?? this.teamReference,
       userReference: userReference ?? this.userReference,
     );
@@ -71,7 +66,6 @@ class Achievement {
       "name": name,
       "description": description,
       "image_url": imageUrl,
-      "image_name": imageName,
       "team": teamReference == null ? null : teamReference.toMap(),
       "user": userReference == null ? null : userReference.toMap(),
     };

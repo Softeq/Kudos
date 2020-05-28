@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/core/errors/upload_file_error.dart';
+import 'package:kudosapp/helpers/image_uploader.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
@@ -79,21 +80,10 @@ class AchievementsService {
     }
 
     if (file != null) {
-      final fileExtension = path.extension(file.path);
-      final fileName = "${Uuid().v4()}$fileExtension";
-      final storageReference =
-          FirebaseStorage.instance.ref().child(_kudosFolder).child(fileName);
-      final storageUploadTask = storageReference.putFile(file);
-      final storageTaskSnapshot = await storageUploadTask.onComplete;
-
-      if (storageTaskSnapshot.error != null) {
-        throw UploadFileError();
-      }
-
-      final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      final imageUrl = await ImageUploader.uploadImage(file);
       copyOfAchievement = copyOfAchievement.copy(
         imageUrl: imageUrl,
-        imageName: fileName,
+        //imageName: fileName,
       );
     }
 
