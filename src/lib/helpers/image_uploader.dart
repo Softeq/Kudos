@@ -5,11 +5,19 @@ import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
+class ImageData
+{
+  final String url;
+  final String name;
+
+  ImageData(this.url, this.name);
+}
+
 class ImageUploader
 {
   static const kudosFolder = "kudos";
 
-  static Future<String> uploadImage(File file) async {
+  static Future<ImageData> uploadImage(File file) async {
     if (file != null) {
       final fileExtension = path.extension(file.path);
       final fileName = "${Uuid().v4()}$fileExtension";
@@ -21,7 +29,7 @@ class ImageUploader
       if (storageTaskSnapshot.error != null) {
         throw UploadFileError();
       }
-      return await storageTaskSnapshot.ref.getDownloadURL();
+      return ImageData(await storageTaskSnapshot.ref.getDownloadURL(), fileName);
     }
     return null;
   }

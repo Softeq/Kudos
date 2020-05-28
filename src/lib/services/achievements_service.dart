@@ -80,10 +80,10 @@ class AchievementsService {
     }
 
     if (file != null) {
-      final imageUrl = await ImageUploader.uploadImage(file);
+      final imageData = await ImageUploader.uploadImage(file);
       copyOfAchievement = copyOfAchievement.copy(
-        imageUrl: imageUrl,
-        //imageName: fileName,
+        imageUrl: imageData.url,
+        imageName: imageData.name,
       );
     }
 

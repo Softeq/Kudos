@@ -19,14 +19,15 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    var imageUrl = await ImageUploader.uploadImage(file);
+    var imageData = await ImageUploader.uploadImage(file);
 
     var firstMember = TeamMember.fromUser(_authService.currentUser);
 
     var docRef = await _database.collection(_teamsCollection).add(
           Team.createMap(
             name: name,
-            imageUrl: imageUrl,
+            imageUrl: imageData.url,
+            imageName: imageData.name,
             description: description,
             members: [firstMember],
             owners: [firstMember],
@@ -43,11 +44,11 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    var imageUrl = await ImageUploader.uploadImage(file);
+    var imageData = await ImageUploader.uploadImage(file);
 
     await _database.collection(_teamsCollection).document(id).setData(
         Team.createMap(
-            name: name, description: description, imageUrl: imageUrl),
+            name: name, description: description, imageUrl: imageData.url, imageName: imageData.name),
         merge: true);
   }
 

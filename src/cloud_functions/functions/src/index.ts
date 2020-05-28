@@ -204,12 +204,21 @@ export const testFunc = functions.https.onRequest(async (request, response) => {
  * Cleans up unused images from storage
  */
 export const cleanupStorage = functions.https.onRequest(async (request, response) => {
-    const achievementImages: Array<string> = new Array<string>();
-    const qs = await db.collection('achievements').get();
-    qs.docs.forEach(x => {
+    const images: Array<string> = new Array<string>();
+
+    const achivements = await db.collection('achievements').get();
+    achivements.docs.forEach(x => {
         const image_name: string = x.data().image_name;
         if (image_name) {
-            achievementImages.push(`kudos/${image_name}`);
+            images.push(`kudos/${image_name}`);
+        }
+    });
+
+    const teams = await db.collection('teams').get();
+    teams.docs.forEach(x => {
+        const image_name: string = x.data().image_name;
+        if (image_name) {
+            images.push(`kudos/${image_name}`);
         }
     });
 
@@ -217,7 +226,7 @@ export const cleanupStorage = functions.https.onRequest(async (request, response
     const filesResponse = await storage.bucket().getFiles({ directory: 'kudos' });
     const deletedFiles: Array<string> = new Array<string>();
     filesResponse[0].forEach(async x => {
-        if (!achievementImages.some(y => y === x.name)) {
+        if (!images.some(y => y === x.name)) {
             deletedFiles.push(x.name);
             await x.delete();
         }

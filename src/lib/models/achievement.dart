@@ -11,54 +11,54 @@ class Achievement {
   final String imageUrl;
   final TeamReference teamReference;
   final UserReference userReference;
+  final String imageName;
 
-  Achievement._({
-    @required this.id,
-    @required this.name,
-    @required this.description,
-    @required this.imageUrl,
-    @required this.teamReference,
-    @required this.userReference,
-  });
+  Achievement._(
+      {@required this.id,
+      @required this.name,
+      @required this.description,
+      @required this.imageUrl,
+      @required this.teamReference,
+      @required this.userReference,
+      @required this.imageName});
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
     return Achievement._(
-      id: x.documentID,
-      name: x.data["name"],
-      description: x.data["description"],
-      imageUrl: x.data["image_url"],
-      teamReference: TeamReference.fromMap(x.data["team"]),
-      userReference: UserReference.fromMap(x.data["user"])
-    );
+        id: x.documentID,
+        name: x.data["name"],
+        description: x.data["description"],
+        imageUrl: x.data["image_url"],
+        teamReference: TeamReference.fromMap(x.data["team"]),
+        userReference: UserReference.fromMap(x.data["user"]),
+        imageName: x.data["image_name"]);
   }
 
   factory Achievement.empty() {
     return Achievement._(
-      description: null,
-      name: null,
-      imageUrl: null,
-      id: null,
-      teamReference: null,
-      userReference: null
-    );
+        description: null,
+        name: null,
+        imageUrl: null,
+        id: null,
+        teamReference: null,
+        userReference: null,
+        imageName: null);
   }
 
-  Achievement copy({
-    String name,
-    String description,
-    String imageUrl,
-    TeamReference teamReference,
-    UserReference userReference,
-    String imageName,
-  }) {
+  Achievement copy(
+      {String name,
+      String description,
+      String imageUrl,
+      TeamReference teamReference,
+      UserReference userReference,
+      String imageName}) {
     return Achievement._(
-      id: this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      teamReference: teamReference ?? this.teamReference,
-      userReference: userReference ?? this.userReference,
-    );
+        id: this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        teamReference: teamReference ?? this.teamReference,
+        userReference: userReference ?? this.userReference,
+        imageName: imageName ?? this.imageName);
   }
 
   Map<String, dynamic> toMap() {
@@ -68,6 +68,7 @@ class Achievement {
       "image_url": imageUrl,
       "team": teamReference == null ? null : teamReference.toMap(),
       "user": userReference == null ? null : userReference.toMap(),
+      "image_name": imageName
     };
   }
 }
