@@ -1,42 +1,59 @@
 import 'package:event_bus/event_bus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
+import '../image_view_model.dart';
+
 class EditTeamViewModel extends BaseViewModel {
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
-  final Team initialTeam;
+  final Team _initialTeam;
+  final ImageViewModel _imageViewModel;
 
   factory EditTeamViewModel.fromTeam(Team team) {
     return EditTeamViewModel._(team);
   }
 
-  EditTeamViewModel._(
-    this.initialTeam,
-  );
+  EditTeamViewModel._(this._initialTeam)
+      : _imageViewModel = ImageViewModel()
+          ..initialize(_initialTeam?.imageUrl, null, false);
 
-  bool get isCreating => initialTeam == null;
+  String get pageTitle => _initialTeam == null ? localizer().createTeam : localizer().editTeam;
 
-  String get initialName {
-    return isCreating ? "" : initialTeam.name;
-  }
+  ImageViewModel get imageViewModel => _imageViewModel;
 
-  String get initialDescription {
-    return isCreating ? "" : initialTeam.description;
+  String get initialImageUrl => _initialTeam?.imageUrl;
+
+  String get initialName => _initialTeam?.name ?? "";
+
+  String get initialDescription => _initialTeam?.description ?? "";
+
+  void pickFile() async {
+    if (_imageViewModel.isBusy) {
+      return;
+    }
+    _imageViewModel.update(isBusy: true);
+    final file = await FilePicker.getFile(type: FileType.image);
+
+    _imageViewModel.update(isBusy: false, file: file);
+    notifyListeners();
   }
 
   Future<Team> save(String name, String description) async {
     isBusy = true;
     Team team;
     try {
-      if (isCreating) {
-        team = await _teamsService.createTeam(name, description);
+      if (_initialTeam == null) {
+        team = await _teamsService.createTeam(
+            name, description, _imageViewModel.file);
       } else {
-        await _teamsService.editTeam(initialTeam.id, name, description);
-        team = initialTeam.copy(
+        await _teamsService.editTeam(
+            _initialTeam.id, name, description, _imageViewModel.file);
+        team = _initialTeam.copy(
           name: name,
           description: description,
         );

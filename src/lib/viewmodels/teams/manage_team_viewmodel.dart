@@ -29,6 +29,8 @@ class ManageTeamViewModel extends BaseViewModel {
 
   String get description => _initialTeam.description;
 
+  String get imageUrl => _initialTeam.imageUrl;
+
   String get owners => admins.items.map((x) => x.name).join(", ");
 
   Team get modifiedTeam {

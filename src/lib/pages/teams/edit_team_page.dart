@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/avatar_with_placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
@@ -39,9 +40,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          viewModel.isCreating
-              ? localizer().createTeam
-              : localizer().editTeam,
+          viewModel.pageTitle,
         ),
       ),
       body: Consumer<EditTeamViewModel>(
@@ -59,10 +58,18 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                 key: _formKey,
                 autovalidate: false,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 24.0),
-                    Text(localizer().name),
+                    GestureDetector(
+                        onTap: () {
+                          viewModel.pickFile();
+                        },
+                        child: AvatarWithPlaceholder(viewModel.imageViewModel,
+                            viewModel.initialName, 50)),
+                    SizedBox(height: 24.0),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(localizer().name)),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
@@ -73,7 +80,9 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                       },
                     ),
                     SizedBox(height: 36.0),
-                    Text(localizer().optionalDescription),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(localizer().optionalDescription)),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,
@@ -102,7 +111,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
           }
         },
         label: Text(localizer().save),
-        icon: Icon(Icons.create),
+        icon: Icon(Icons.save),
       ),
     );
   }
