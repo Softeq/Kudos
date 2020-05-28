@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kudosapp/helpers/image_uploader.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -11,16 +14,19 @@ class TeamsService {
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
 
-  Future<Team> createTeam(String name, String description) async {
+  Future<Team> createTeam(String name, String description, [File file]) async {
     if (name == null || name.isEmpty) {
       throw ArgumentError.notNull(name);
     }
+
+    var imageUrl = await ImageUploader.uploadImage(file);
 
     var firstMember = TeamMember.fromUser(_authService.currentUser);
 
     var docRef = await _database.collection(_teamsCollection).add(
           Team.createMap(
             name: name,
+            imageUrl: imageUrl,
             description: description,
             members: [firstMember],
             owners: [firstMember],
@@ -31,16 +37,17 @@ class TeamsService {
     return Team.fromDocument(document);
   }
 
-  Future<void> editTeam(String id, String name, String description) async {
+  Future<void> editTeam(String id, String name, String description,
+      [File file]) async {
     if (name == null || name.isEmpty) {
       throw ArgumentError.notNull(name);
     }
 
+    var imageUrl = await ImageUploader.uploadImage(file);
+
     await _database.collection(_teamsCollection).document(id).setData(
         Team.createMap(
-          name: name,
-          description: description,
-        ),
+            name: name, description: description, imageUrl: imageUrl),
         merge: true);
   }
 
