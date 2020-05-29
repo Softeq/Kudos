@@ -29,13 +29,16 @@ class AchievementDetailsViewModel extends BaseViewModel {
   String _ownerId = "";
   OwnerType _ownerType;
 
-  final ListNotifier<AchievementHolder> achievementHolders = new ListNotifier();
+  final achievementHolders = new ListNotifier<AchievementHolder>();
 
   AchievementViewModel get achievementViewModel => _achievementViewModel;
+
   double get statisticsValue => _statisticsValue;
 
   String get ownerName => _ownerName;
+
   String get ownerId => _ownerId;
+
   OwnerType get ownerType => _ownerType;
 
   AchievementDetailsViewModel(this._achievementId) {
@@ -43,6 +46,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> initialize() async {
+    isBusy = true;
+
     final achievement =
         await _achievementsService.getAchievement(_achievementId);
 
@@ -52,13 +57,36 @@ class AchievementDetailsViewModel extends BaseViewModel {
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
 
     // TODO YP: move to separate widgets
-    await loadStatistics();
-    await loadOwnerInfo();
+    await _loadStatistics();
+    await _loadOwnerInfo();
 
     isBusy = false;
   }
 
-  Future<void> loadOwnerInfo() async {
+  Future<void> sendTo(User recipient, String comment) async {
+    isBusy = true;
+
+    final achievementToSend = AchievementToSend(
+      sender: _authService.currentUser,
+      recipient: recipient,
+      achievement: achievementViewModel.achievement,
+      comment: comment,
+    );
+
+    await _achievementsService.sendAchievement(achievementToSend);
+    await initialize();
+
+    isBusy = false;
+  }
+
+  @override
+  void dispose() {
+    _achievementViewModel.dispose();
+    _subscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadOwnerInfo() async {
     if (_achievementViewModel.team != null) {
       _ownerName = _achievementViewModel.team.name;
       _ownerId = _achievementViewModel.team.id;
@@ -70,7 +98,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> loadStatistics() async {
+  Future<void> _loadStatistics() async {
     // Number of users with this badge divided by the total number of users
     achievementHolders.replace(await _achievementsService
         .getAchievementHolders(achievementViewModel.achievement.id));
@@ -79,27 +107,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
     _statisticsValue = allUsersCount == 0
         ? 0
         : achievementHolders.items.length / allUsersCount;
-  }
-
-  Future<void> sendTo(User recipient, String comment) async {
-    isBusy = true;
-    final achievementToSend = AchievementToSend(
-      sender: _authService.currentUser,
-      recipient: recipient,
-      achievement: achievementViewModel.achievement,
-      comment: comment,
-    );
-
-    await _achievementsService.sendAchievement(achievementToSend);
-    await initialize();
-    isBusy = false;
-  }
-
-  @override
-  void dispose() {
-    _achievementViewModel.dispose();
-    _subscription.cancel();
-    super.dispose();
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {

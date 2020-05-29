@@ -136,8 +136,6 @@ class AchievementsService {
 
     // add a user to achievements
 
-    // TODO YP: can be made via Cloud Functions Triggers
-
     final achievementHoldersReference = _database.collection(
         "$_achievementsCollection/${sendAchievement.achievement.id}/holders");
 

@@ -17,7 +17,7 @@ S localizer([BuildContext context]) => S.of(context ?? Get.context);
 void setupLocator() {
   locator
     ..registerLazySingleton<BaseAuthService>(() => AuthService())
-    ..registerFactory(() => PeopleService())
+    ..registerLazySingleton<PeopleService>(() => PeopleService())
     ..registerFactory(() => AchievementsService())
     ..registerLazySingleton<TeamsService>(() => TeamsService())
     ..registerLazySingleton<EventBus>(() => EventBus())
