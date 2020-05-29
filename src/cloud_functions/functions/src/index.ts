@@ -153,53 +153,6 @@ export const onCreateAchievementReferences = functions.firestore.document('/user
     await batch.commit();
 });
 
-export const testFunc = functions.https.onRequest(async (request, response) => {
-    const qs = await db.collection('/users/vadim.pylsky/push_tokens').get();
-    if (qs.docs.length === 0) {
-        return;
-    }
-
-    const tokens: Array<string> = new Array<string>();
-
-    qs.docs.forEach(x => {
-        const token: string = x.data().token;
-        if (token) {
-            tokens.push(token);
-        }
-    });
-
-    if (tokens.length === 0) {
-        return;
-    }
-
-    const payload = {
-        notification: {
-            title: 'Congratulations!',
-            body: 'You recieved',
-        }
-    };
-
-    const messagingResponse = await admin.messaging().sendToDevice(tokens, payload);
-
-    const invalidTokens: Array<string> = new Array<string>();
-
-    messagingResponse.results.forEach(x => {
-        if (x.error) {
-            invalidTokens.push(x.error.code);
-        } else {
-            invalidTokens.push("ololol");
-        }
-
-        if (x.canonicalRegistrationToken) {
-            invalidTokens.push(x.canonicalRegistrationToken);
-        } else {
-            invalidTokens.push("fffffff");
-        }
-    });
-
-    response.send({ invalidTokens: invalidTokens });
-});
-
 /**
  * Cleans up unused images from storage
  */
