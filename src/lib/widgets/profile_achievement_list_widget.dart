@@ -3,7 +3,7 @@ import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_image_widget.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProfileAchievementsListWidget extends StatelessWidget {
@@ -119,14 +119,12 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         achievementCollection.userAchievement.achievement;
     return LayoutBuilder(
       builder: (context, constraints) {
-        var radius = constraints.maxWidth / 2.0;
-
         return GestureDetector(
           child: Stack(
             children: <Widget>[
-              AchievementImageWidget(
+              CircleImageWidget(
                 imageViewModel: achievementCollection.imageViewModel,
-                radius: radius,
+                size: constraints.maxWidth,
               ),
               if (achievementCollection.count > 1)
                 _buildCountBadge(achievementCollection, constraints.maxWidth)

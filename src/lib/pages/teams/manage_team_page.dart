@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/avatar_with_placeholder.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/team_member.dart';
@@ -94,7 +93,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             children: <Widget>[
               Padding(
                   padding: EdgeInsets.only(top: 4.0),
-                  child: AvatarWithPlaceholder.withUrl(viewModel.imageUrl, viewModel.name)),
+                  child: CircleImageWidget.withUrl(viewModel.imageUrl, viewModel.name, 45)),
               SizedBox(width: 12),
               Expanded(
                 child: Column(

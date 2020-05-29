@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/avatar_with_placeholder.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
@@ -64,8 +64,10 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                         onTap: () {
                           viewModel.pickFile();
                         },
-                        child: AvatarWithPlaceholder(viewModel.imageViewModel,
-                            viewModel.initialName, 50)),
+                        child: CircleImageWidget(
+                            imageViewModel: viewModel.imageViewModel,
+                            name: viewModel.initialName,
+                            size: 100)),
                     SizedBox(height: 24.0),
                     Align(
                         alignment: Alignment.centerLeft,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class AvatarPlaceholder {
+class ImagePlaceholder {
   final Color color;
   final String abbreviation;
 
-  AvatarPlaceholder(this.abbreviation, this.color);
+  ImagePlaceholder(this.abbreviation, this.color);
 }
 
-class AvatarPlaceholderBuilder {
-  static AvatarPlaceholder build(String name) {
+class ImagePlaceholderBuilder {
+  static ImagePlaceholder build(String name) {
     var colors = [
       0xff1abc9c,
       0xff2ecc71,
@@ -34,7 +34,7 @@ class AvatarPlaceholderBuilder {
     var abbr = _getAbbreviation(name);
     var index = abbr.hashCode.abs() % (colors.length - 1);
 
-    return AvatarPlaceholder(abbr, Color(colors[index]));
+    return ImagePlaceholder(abbr, Color(colors[index]));
   }
 
   static String _getAbbreviation(String data) {
