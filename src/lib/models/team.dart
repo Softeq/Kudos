@@ -14,43 +14,43 @@ class Team {
 
   factory Team.fromDocument(DocumentSnapshot x) {
     return Team._(
-        id: x.documentID,
-        name: x.data["name"],
-        imageUrl: x.data["image_url"],
-        imageName: x.data["image_name"],
-        description: x.data["description"],
-        owners: getMembers(x.data["team_owners"]),
-        members: getMembers(x.data["team_members"]));
+      id: x.documentID,
+      name: x.data["name"],
+      imageUrl: x.data["image_url"],
+      imageName: x.data["image_name"],
+      description: x.data["description"],
+      owners: getMembers(x.data["team_owners"]),
+      members: getMembers(x.data["team_members"]),
+    );
   }
 
-  Team._(
-      {this.id,
-      this.name,
-      this.imageUrl,
-      this.imageName,
-      this.description,
-      this.owners,
-      this.members});
+  Team._({
+    this.id,
+    this.name,
+    this.imageUrl,
+    this.imageName,
+    this.description,
+    this.owners,
+    this.members,
+  });
 
-  Team copy(
-      {String name,
-      String imageUrl,
-      String imageName,
-      String description,
-      List<TeamMember> owners,
-      List<TeamMember> members}) {
+  Team copy({
+    String name,
+    String imageUrl,
+    String imageName,
+    String description,
+    List<TeamMember> owners,
+    List<TeamMember> members,
+  }) {
     return Team._(
-        id: this.id,
-        name: name ?? this.name,
-        imageUrl: imageUrl ?? this.imageUrl,
-        imageName: imageName ?? this.imageName,
-        description: description ?? this.description,
-        owners: owners ?? this.owners.toList(),
-        members: members ?? this.members.toList());
-  }
-
-  Map<String, dynamic> toMap() {
-    return createMap(name: name, description: description);
+      id: this.id,
+      name: name ?? this.name,
+      imageUrl: imageUrl ?? this.imageUrl,
+      imageName: imageName ?? this.imageName,
+      description: description ?? this.description,
+      owners: owners ?? this.owners.toList(),
+      members: members ?? this.members.toList(),
+    );
   }
 
   static List<TeamMember> getMembers(List<dynamic> x) {
@@ -62,13 +62,14 @@ class Team {
     return mapList.map((y) => TeamMember.fromMap(y)).toList();
   }
 
-  static Map<String, dynamic> createMap(
-      {String name,
-      String imageUrl,
-      String imageName,
-      String description,
-      List<TeamMember> members,
-      List<TeamMember> owners}) {
+  static Map<String, dynamic> createMap({
+    String name,
+    String imageUrl,
+    String imageName,
+    String description,
+    List<TeamMember> members,
+    List<TeamMember> owners,
+  }) {
     var map = Map<String, dynamic>();
 
     if (name != null) {
