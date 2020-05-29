@@ -191,7 +191,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     var team =
         await Navigator.of(context).push(EditTeamRoute(viewModel.modifiedTeam));
     if (team != null) {
-      viewModel.updateTeamMetadata(team.name, team.description);
+      viewModel.updateTeamMetadata(team.name, team.description, team.imageUrl);
     }
   }
 

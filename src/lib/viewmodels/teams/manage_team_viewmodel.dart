@@ -66,10 +66,11 @@ class ManageTeamViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  void updateTeamMetadata(String name, String description) {
+  void updateTeamMetadata(String name, String description, String imageUrl) {
     _initialTeam = _initialTeam.copy(
       name: name,
       description: description,
+      imageUrl: imageUrl
     );
     notifyListeners();
   }

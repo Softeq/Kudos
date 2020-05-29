@@ -19,15 +19,19 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    var imageData = await ImageUploader.uploadImage(file);
+    ImageData imageData;
+
+    if (file != null) {
+      imageData = await ImageUploader.uploadImage(file);
+    }
 
     var firstMember = TeamMember.fromUser(_authService.currentUser);
 
     var docRef = await _database.collection(_teamsCollection).add(
           Team.createMap(
             name: name,
-            imageUrl: imageData.url,
-            imageName: imageData.name,
+            imageUrl: imageData?.url,
+            imageName: imageData?.name,
             description: description,
             members: [firstMember],
             owners: [firstMember],
@@ -38,18 +42,36 @@ class TeamsService {
     return Team.fromDocument(document);
   }
 
-  Future<void> editTeam(String id, String name, String description,
+  Future<Team> editTeam(String id, String name, String description,
       [File file]) async {
     if (name == null || name.isEmpty) {
       throw ArgumentError.notNull(name);
     }
 
-    var imageData = await ImageUploader.uploadImage(file);
+    DocumentReference docRef =
+        _database.collection(_teamsCollection).document(id);
 
-    await _database.collection(_teamsCollection).document(id).setData(
-        Team.createMap(
-            name: name, description: description, imageUrl: imageData.url, imageName: imageData.name),
-        merge: true);
+    if (file != null) {
+      var imageData = await ImageUploader.uploadImage(file);
+
+      docRef.setData(
+          Team.createMap(
+            name: name,
+            description: description,
+            imageUrl: imageData?.url,
+            imageName: imageData?.name,
+          ),
+          merge: true);
+    } else {
+      await docRef.setData(
+          Team.createMap(
+            name: name,
+            description: description,
+          ),
+          merge: true);
+    }
+    var document = await docRef.get();
+    return Team.fromDocument(document);
   }
 
   Future<void> updateTeamMembers({

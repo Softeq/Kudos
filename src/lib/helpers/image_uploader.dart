@@ -31,6 +31,6 @@ class ImageUploader
       }
       return ImageData(await storageTaskSnapshot.ref.getDownloadURL(), fileName);
     }
-    return null;
+    throw UploadFileError();
   }
 }

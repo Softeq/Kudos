@@ -5,8 +5,7 @@ import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-
-import '../image_view_model.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class EditTeamViewModel extends BaseViewModel {
   final _teamsService = locator<TeamsService>();
@@ -22,7 +21,8 @@ class EditTeamViewModel extends BaseViewModel {
       : _imageViewModel = ImageViewModel()
           ..initialize(_initialTeam?.imageUrl, null, false);
 
-  String get pageTitle => _initialTeam == null ? localizer().createTeam : localizer().editTeam;
+  String get pageTitle =>
+      _initialTeam == null ? localizer().createTeam : localizer().editTeam;
 
   ImageViewModel get imageViewModel => _imageViewModel;
 
@@ -51,12 +51,8 @@ class EditTeamViewModel extends BaseViewModel {
         team = await _teamsService.createTeam(
             name, description, _imageViewModel.file);
       } else {
-        await _teamsService.editTeam(
+        team = await _teamsService.editTeam(
             _initialTeam.id, name, description, _imageViewModel.file);
-        team = _initialTeam.copy(
-          name: name,
-          description: description,
-        );
       }
     } finally {
       isBusy = false;
