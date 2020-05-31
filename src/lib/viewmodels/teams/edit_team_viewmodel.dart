@@ -36,23 +36,35 @@ class EditTeamViewModel extends BaseViewModel {
     if (_imageViewModel.isBusy) {
       return;
     }
+
     _imageViewModel.update(isBusy: true);
+
     final file = await FilePicker.getFile(type: FileType.image);
 
     _imageViewModel.update(isBusy: false, file: file);
+
     notifyListeners();
   }
 
   Future<Team> save(String name, String description) async {
-    isBusy = true;
     Team team;
+
     try {
+      isBusy = true;
+
       if (_initialTeam == null) {
         team = await _teamsService.createTeam(
-            name, description, _imageViewModel.file);
+          name,
+          description,
+          _imageViewModel.file,
+        );
       } else {
         team = await _teamsService.editTeam(
-            _initialTeam.id, name, description, _imageViewModel.file);
+          _initialTeam.id,
+          name,
+          description,
+          _imageViewModel.file,
+        );
       }
     } finally {
       isBusy = false;
