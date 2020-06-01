@@ -34,46 +34,75 @@ class CircleImageWidget extends StatelessWidget {
       child: Consumer<ImageViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
-            return getBusyWidget();
+            return _buildBusyWidget();
           } else if (imageViewModel.file == null &&
               (imageViewModel.imageUrl == null ||
                   imageViewModel.imageUrl.isEmpty)) {
-            return getPlaceholderWidget();
+            return _buildPlaceholderWidget();
           } else if (viewModel.file != null) {
-            return getImageWidget();
+            return _buildImageWidget();
           } else {
             viewModel.loadImageFileIfNeeded();
-            return Container(height: size, width: size);
+            return ClipOval(
+              child: Container(
+                width: size,
+                height: size,
+                color: imagePlaceholder.color,
+              ),
+            );
           }
         },
       ),
     );
   }
 
-  Widget getBusyWidget() {
-    return CircularProgressIndicator();
-  }
-
-  Widget getPlaceholderWidget() {
+  Widget _buildBusyWidget() {
     return ClipOval(
-        child: Container(
-            width: size,
-            height: size,
-            color: imagePlaceholder.color,
-            child: Center(child: Text(imagePlaceholder.abbreviation))));
+      child: Container(
+        width: size,
+        height: size,
+        color: imagePlaceholder.color,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 
-  Widget getImageWidget() {
+  Widget _buildPlaceholderWidget() {
+    return ClipOval(
+      child: Container(
+        width: size,
+        height: size,
+        color: imagePlaceholder.color,
+        child: Center(
+          child: Text(imagePlaceholder.abbreviation),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageWidget() {
     var fileExtension = path.extension(imageViewModel.file.path);
     switch (fileExtension) {
       case ".svg":
         return ClipOval(
-            child: SvgPicture.file(imageViewModel.file,
-                width: size, height: size, fit: BoxFit.cover));
+          child: SvgPicture.file(
+            imageViewModel.file,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+          ),
+        );
       default:
         return ClipOval(
-            child: Image.file(imageViewModel.file,
-                width: size, height: size, fit: BoxFit.cover));
+          child: Image.file(
+            imageViewModel.file,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+          ),
+        );
     }
   }
 }

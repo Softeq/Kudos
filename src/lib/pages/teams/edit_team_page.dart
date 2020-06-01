@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:provider/provider.dart';
 
 class EditTeamRoute extends MaterialPageRoute<Team> {
   EditTeamRoute([Team team])
@@ -61,30 +61,31 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                   children: <Widget>[
                     SizedBox(height: 24.0),
                     GestureDetector(
-                        onTap: () {
-                          viewModel.pickFile();
-                        },
-                        child: CircleImageWidget(
-                            imageViewModel: viewModel.imageViewModel,
-                            name: viewModel.initialName,
-                            size: 100)),
+                      onTap: () {
+                        viewModel.pickFile();
+                      },
+                      child: CircleImageWidget(
+                        imageViewModel: viewModel.imageViewModel,
+                        name: viewModel.initialName,
+                        size: 100.0,
+                      ),
+                    ),
                     SizedBox(height: 24.0),
                     Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(localizer().name)),
+                      alignment: Alignment.centerLeft,
+                      child: Text(localizer().name),
+                    ),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
-                        if (x.isEmpty) {
-                          return localizer().requiredField;
-                        }
-                        return null;
+                        return x.isEmpty ? localizer().requiredField : null;
                       },
                     ),
                     SizedBox(height: 36.0),
                     Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(localizer().optionalDescription)),
+                      alignment: Alignment.centerLeft,
+                      child: Text(localizer().optionalDescription),
+                    ),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,

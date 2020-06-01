@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ImagePlaceholder {
   final Color color;
@@ -34,12 +35,16 @@ class ImagePlaceholderBuilder {
     var abbr = _getAbbreviation(name);
     var index = abbr.hashCode.abs() % (colors.length - 1);
 
+    if (abbr.isEmpty) {
+      return ImagePlaceholder(abbr, Colors.white);
+    }
+
     return ImagePlaceholder(abbr, Color(colors[index]));
   }
 
   static String _getAbbreviation(String data) {
     if (data == null || data.isEmpty) {
-      return "X";
+      return "";
     } else {
       return data
           .split(new RegExp('\\s+'))

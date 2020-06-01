@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/helpers/image_uploader.dart';
+import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/image_service.dart';
 
 class TeamsService {
   static const String _teamsCollection = "teams";
@@ -22,7 +23,8 @@ class TeamsService {
     ImageData imageData;
 
     if (file != null) {
-      imageData = await ImageUploader.uploadImage(file);
+      final imageService = locator<ImageService>();
+      imageData = await imageService.uploadImage(file);
     }
 
     var firstMember = TeamMember.fromUser(_authService.currentUser);
@@ -48,29 +50,28 @@ class TeamsService {
       throw ArgumentError.notNull(name);
     }
 
-    DocumentReference docRef =
-        _database.collection(_teamsCollection).document(id);
+    final docRef = _database.collection(_teamsCollection).document(id);
+    Map<String, dynamic> map;
 
     if (file != null) {
-      var imageData = await ImageUploader.uploadImage(file);
-
-      docRef.setData(
-          Team.createMap(
-            name: name,
-            description: description,
-            imageUrl: imageData?.url,
-            imageName: imageData?.name,
-          ),
-          merge: true);
+      final imageService = locator<ImageService>();
+      final imageData = await imageService.uploadImage(file);
+      map = Team.createMap(
+        name: name,
+        description: description,
+        imageUrl: imageData?.url,
+        imageName: imageData?.name,
+      );
     } else {
-      await docRef.setData(
-          Team.createMap(
-            name: name,
-            description: description,
-          ),
-          merge: true);
+      map = Team.createMap(
+        name: name,
+        description: description,
+      );
     }
-    var document = await docRef.get();
+
+    await docRef.setData(map, merge: true);
+
+    final document = await docRef.get();
     return Team.fromDocument(document);
   }
 
@@ -94,7 +95,7 @@ class TeamsService {
       userId = _authService.currentUser.id;
     }
 
-    var qs = await _database
+    final qs = await _database
         .collection(_teamsCollection)
         .where("visible_for", arrayContains: userId)
         .getDocuments();
@@ -102,7 +103,7 @@ class TeamsService {
   }
 
   Future<Team> getTeam(String id) async {
-    var document =
+    final document =
         await _database.collection(_teamsCollection).document(id).get();
     return Team.fromDocument(document);
   }

@@ -159,8 +159,8 @@ export const onCreateAchievementReferences = functions.firestore.document('/user
 export const cleanupStorage = functions.https.onRequest(async (request, response) => {
     const images: Array<string> = new Array<string>();
 
-    const achivements = await db.collection('achievements').get();
-    achivements.docs.forEach(x => {
+    const achievements = await db.collection('achievements').get();
+    achievements.docs.forEach(x => {
         const image_name: string = x.data().image_name;
         if (image_name) {
             images.push(`kudos/${image_name}`);
