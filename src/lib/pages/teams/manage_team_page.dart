@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
 import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
+import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
   ManageTeamRoute(String teamId)
@@ -90,6 +91,15 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: CircleImageWidget.withUrl(
+                  viewModel.imageUrl,
+                  viewModel.name,
+                  45.0,
+                ),
+              ),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -182,10 +192,16 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
 
   Future<void> _editTeamTapped() async {
     var viewModel = _getViewModel();
-    var team =
-        await Navigator.of(context).push(EditTeamRoute(viewModel.modifiedTeam));
+    var team = await Navigator.of(context).push(
+      EditTeamRoute(viewModel.modifiedTeam),
+    );
     if (team != null) {
-      viewModel.updateTeamMetadata(team.name, team.description);
+      viewModel.updateTeamMetadata(
+        team.name,
+        team.description,
+        team.imageUrl,
+        team.imageName,
+      );
     }
   }
 

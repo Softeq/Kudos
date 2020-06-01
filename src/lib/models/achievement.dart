@@ -60,9 +60,9 @@ class Achievement {
       name: name ?? this.name,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
-      imageName: imageName ?? this.imageName,
       teamReference: teamReference ?? this.teamReference,
       userReference: userReference ?? this.userReference,
+      imageName: imageName ?? this.imageName,
     );
   }
 
@@ -71,9 +71,9 @@ class Achievement {
       "name": name,
       "description": description,
       "image_url": imageUrl,
-      "image_name": imageName,
       "team": teamReference == null ? null : teamReference.toMap(),
       "user": userReference == null ? null : userReference.toMap(),
+      "image_name": imageName,
     };
   }
 }

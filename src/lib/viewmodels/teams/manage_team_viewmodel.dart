@@ -23,11 +23,13 @@ class ManageTeamViewModel extends BaseViewModel {
 
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
-  _onAchievementUpdatedSubscription;
+      _onAchievementUpdatedSubscription;
 
   String get name => _initialTeam.name;
 
   String get description => _initialTeam.description;
+
+  String get imageUrl => _initialTeam.imageUrl;
 
   String get owners => admins.items.map((x) => x.name).join(", ");
 
@@ -64,10 +66,17 @@ class ManageTeamViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  void updateTeamMetadata(String name, String description) {
+  void updateTeamMetadata(
+    String name,
+    String description,
+    String imageUrl,
+    String imageName,
+  ) {
     _initialTeam = _initialTeam.copy(
       name: name,
       description: description,
+      imageUrl: imageUrl,
+      imageName: imageName,
     );
     notifyListeners();
   }
@@ -120,7 +129,7 @@ class ManageTeamViewModel extends BaseViewModel {
     }
 
     var achievementViewModel = _achievements.firstWhere(
-          (x) => x.achievement.id == event.achievement.id,
+      (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,
     );
     if (achievementViewModel != null) {
@@ -133,7 +142,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
   Future<void> _loadAchievements() async {
     var result =
-    await _achievementsService.getTeamAchievements(_initialTeam.id);
+        await _achievementsService.getTeamAchievements(_initialTeam.id);
     _achievements.toList().forEach((x) {
       x.dispose();
     });
