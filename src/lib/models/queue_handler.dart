@@ -4,9 +4,8 @@ import 'package:semaphore/semaphore.dart';
 typedef Future<TResponse> Query<TResponse, TRequest>(TRequest request);
 
 class QueueHandler<TResponse, TRequest> {
-  final LocalSemaphore _semaphore = LocalSemaphore(1);
-  final PublishSubject<TResponse> _responseSubject =
-      PublishSubject<TResponse>();
+  final _semaphore = LocalSemaphore(1);
+  final _responseSubject = PublishSubject<TResponse>();
   final Query<TResponse, TRequest> _query;
   TRequest _latestRequest;
 

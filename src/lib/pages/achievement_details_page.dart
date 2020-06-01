@@ -93,10 +93,15 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           _PopularityWidget(viewModel.statisticsValue),
           SizedBox(height: 24),
           ChangeNotifierProvider.value(
-              value: viewModel.achievementHolders,
-              child: Consumer<ListNotifier<AchievementHolder>>(
-                  builder: (context, notifier, child) =>
-                      _AchievementHoldersWidget(viewModel.achievementHolders))),
+            value: viewModel.achievementHolders,
+            child: Consumer<ListNotifier<AchievementHolder>>(
+              builder: (context, notifier, child) {
+                return _AchievementHoldersWidget(
+                  viewModel.achievementHolders,
+                );
+              },
+            ),
+          ),
           SizedBox(height: 24),
           _AchievementOwnerWidget(
             viewModel.ownerType,
