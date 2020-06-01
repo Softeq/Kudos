@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/core/errors/upload_file_error.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
@@ -16,14 +14,12 @@ import 'package:kudosapp/models/user_achievement.dart';
 import 'package:kudosapp/models/user_reference.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:path/path.dart' as path;
-import 'package:uuid/uuid.dart';
+import 'package:kudosapp/services/image_service.dart';
 
 class AchievementsService {
   final _database = Firestore.instance;
   final _achievementsCollection = "achievements";
   final _achievementReferencesCollection = "achievement_references";
-  final _kudosFolder = "kudos";
   final _authService = locator<BaseAuthService>();
 
   Future<List<Achievement>> getAchievements() async {
@@ -79,21 +75,11 @@ class AchievementsService {
     }
 
     if (file != null) {
-      final fileExtension = path.extension(file.path);
-      final fileName = "${Uuid().v4()}$fileExtension";
-      final storageReference =
-          FirebaseStorage.instance.ref().child(_kudosFolder).child(fileName);
-      final storageUploadTask = storageReference.putFile(file);
-      final storageTaskSnapshot = await storageUploadTask.onComplete;
-
-      if (storageTaskSnapshot.error != null) {
-        throw UploadFileError();
-      }
-
-      final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      final imageService = locator<ImageService>();
+      final imageData = await imageService.uploadImage(file);
       copyOfAchievement = copyOfAchievement.copy(
-        imageUrl: imageUrl,
-        imageName: fileName,
+        imageUrl: imageData.url,
+        imageName: imageData.name,
       );
     }
 

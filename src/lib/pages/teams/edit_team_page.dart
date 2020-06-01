@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
+import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:provider/provider.dart';
 
 class EditTeamRoute extends MaterialPageRoute<Team> {
   EditTeamRoute([Team team])
@@ -39,9 +40,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          viewModel.isCreating
-              ? localizer().createTeam
-              : localizer().editTeam,
+          viewModel.pageTitle,
         ),
       ),
       body: Consumer<EditTeamViewModel>(
@@ -59,21 +58,34 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                 key: _formKey,
                 autovalidate: false,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 24.0),
-                    Text(localizer().name),
+                    GestureDetector(
+                      onTap: () {
+                        viewModel.pickFile();
+                      },
+                      child: CircleImageWidget(
+                        imageViewModel: viewModel.imageViewModel,
+                        name: viewModel.initialName,
+                        size: 100.0,
+                      ),
+                    ),
+                    SizedBox(height: 24.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(localizer().name),
+                    ),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
-                        if (x.isEmpty) {
-                          return localizer().requiredField;
-                        }
-                        return null;
+                        return x.isEmpty ? localizer().requiredField : null;
                       },
                     ),
                     SizedBox(height: 36.0),
-                    Text(localizer().optionalDescription),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(localizer().optionalDescription),
+                    ),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,
@@ -102,7 +114,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
           }
         },
         label: Text(localizer().save),
-        icon: Icon(Icons.create),
+        icon: Icon(Icons.save),
       ),
     );
   }

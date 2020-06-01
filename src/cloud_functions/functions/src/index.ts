@@ -153,63 +153,25 @@ export const onCreateAchievementReferences = functions.firestore.document('/user
     await batch.commit();
 });
 
-export const testFunc = functions.https.onRequest(async (request, response) => {
-    const qs = await db.collection('/users/vadim.pylsky/push_tokens').get();
-    if (qs.docs.length === 0) {
-        return;
-    }
-
-    const tokens: Array<string> = new Array<string>();
-
-    qs.docs.forEach(x => {
-        const token: string = x.data().token;
-        if (token) {
-            tokens.push(token);
-        }
-    });
-
-    if (tokens.length === 0) {
-        return;
-    }
-
-    const payload = {
-        notification: {
-            title: 'Congratulations!',
-            body: 'You recieved',
-        }
-    };
-
-    const messagingResponse = await admin.messaging().sendToDevice(tokens, payload);
-
-    const invalidTokens: Array<string> = new Array<string>();
-
-    messagingResponse.results.forEach(x => {
-        if (x.error) {
-            invalidTokens.push(x.error.code);
-        } else {
-            invalidTokens.push("ololol");
-        }
-
-        if (x.canonicalRegistrationToken) {
-            invalidTokens.push(x.canonicalRegistrationToken);
-        } else {
-            invalidTokens.push("fffffff");
-        }
-    });
-
-    response.send({ invalidTokens: invalidTokens });
-});
-
 /**
  * Cleans up unused images from storage
  */
 export const cleanupStorage = functions.https.onRequest(async (request, response) => {
-    const achievementImages: Array<string> = new Array<string>();
-    const qs = await db.collection('achievements').get();
-    qs.docs.forEach(x => {
+    const images: Array<string> = new Array<string>();
+
+    const achievements = await db.collection('achievements').get();
+    achievements.docs.forEach(x => {
         const image_name: string = x.data().image_name;
         if (image_name) {
-            achievementImages.push(`kudos/${image_name}`);
+            images.push(`kudos/${image_name}`);
+        }
+    });
+
+    const teams = await db.collection('teams').get();
+    teams.docs.forEach(x => {
+        const image_name: string = x.data().image_name;
+        if (image_name) {
+            images.push(`kudos/${image_name}`);
         }
     });
 
@@ -217,7 +179,7 @@ export const cleanupStorage = functions.https.onRequest(async (request, response
     const filesResponse = await storage.bucket().getFiles({ directory: 'kudos' });
     const deletedFiles: Array<string> = new Array<string>();
     filesResponse[0].forEach(async x => {
-        if (!achievementImages.some(y => y === x.name)) {
+        if (!images.some(y => y === x.name)) {
             deletedFiles.push(x.name);
             await x.delete();
         }
