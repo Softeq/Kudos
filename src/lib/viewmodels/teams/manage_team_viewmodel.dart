@@ -21,6 +21,8 @@ class ManageTeamViewModel extends BaseViewModel {
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
 
+  bool _canEdit;
+
   Team _initialTeam;
   StreamSubscription<AchievementUpdatedMessage>
       _onAchievementUpdatedSubscription;
@@ -32,6 +34,14 @@ class ManageTeamViewModel extends BaseViewModel {
   String get imageUrl => _initialTeam.imageUrl;
 
   String get owners => admins.items.map((x) => x.name).join(", ");
+
+  bool get canEdit {
+    if (_canEdit == null) {
+      _canEdit = _teamsService.canBeModifiedByCurrentUser(_initialTeam);
+    }
+
+    return _canEdit;
+  }
 
   Team get modifiedTeam {
     return _initialTeam.copy(

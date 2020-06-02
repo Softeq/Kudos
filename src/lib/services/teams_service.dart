@@ -107,4 +107,11 @@ class TeamsService {
         await _database.collection(_teamsCollection).document(id).get();
     return Team.fromDocument(document);
   }
+
+  bool canBeModifiedByCurrentUser(Team team) {
+    final userId = _authService.currentUser.id;
+    final admin = team.owners.firstWhere((x) => x.id == userId, orElse: () => null);
+    final result = admin != null;
+    return result;
+  }
 }

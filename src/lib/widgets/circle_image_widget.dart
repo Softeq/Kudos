@@ -87,20 +87,26 @@ class CircleImageWidget extends StatelessWidget {
     switch (fileExtension) {
       case ".svg":
         return ClipOval(
-          child: SvgPicture.file(
-            imageViewModel.file,
-            width: size,
-            height: size,
-            fit: BoxFit.cover,
+          child: Container(
+            color: imagePlaceholder.color,
+            child: SvgPicture.file(
+              imageViewModel.file,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+            ),
           ),
         );
       default:
         return ClipOval(
-          child: Image.file(
-            imageViewModel.file,
-            width: size,
-            height: size,
-            fit: BoxFit.cover,
+          child: Container(
+            color: imagePlaceholder.color,
+            child: Image.file(
+              imageViewModel.file,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+            ),
           ),
         );
     }
