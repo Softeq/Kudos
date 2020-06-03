@@ -12,6 +12,7 @@ class Achievement {
   final TeamReference teamReference;
   final UserReference userReference;
   final String imageName;
+  final bool canBeModifiedByCurrentUser;
 
   Achievement._({
     @required this.id,
@@ -21,6 +22,7 @@ class Achievement {
     @required this.teamReference,
     @required this.userReference,
     @required this.imageName,
+    @required this.canBeModifiedByCurrentUser,
   });
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
@@ -32,6 +34,7 @@ class Achievement {
       teamReference: TeamReference.fromMap(x.data["team"]),
       userReference: UserReference.fromMap(x.data["user"]),
       imageName: x.data["image_name"],
+      canBeModifiedByCurrentUser: false,
     );
   }
 
@@ -44,6 +47,7 @@ class Achievement {
       teamReference: null,
       userReference: null,
       imageName: null,
+      canBeModifiedByCurrentUser: null,
     );
   }
 
@@ -54,6 +58,7 @@ class Achievement {
     TeamReference teamReference,
     UserReference userReference,
     String imageName,
+    bool canBeModifiedByCurrentUser,
   }) {
     return Achievement._(
       id: this.id,
@@ -63,6 +68,7 @@ class Achievement {
       teamReference: teamReference ?? this.teamReference,
       userReference: userReference ?? this.userReference,
       imageName: imageName ?? this.imageName,
+      canBeModifiedByCurrentUser: canBeModifiedByCurrentUser ?? this.canBeModifiedByCurrentUser,
     );
   }
 

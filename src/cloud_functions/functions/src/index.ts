@@ -16,32 +16,68 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
         return;
     }
 
-    const oldName: string = oldData.name;
-    const newName: string = newData.name;
-
-    if (oldName === newName) {
-        return;
-    }
-
     const teamId: string = context.params.teamId;
-
     const qs = await db.collection('achievements').where('team.id', "==", teamId).get();
     if (qs.docs.length === 0) {
         return;
     }
 
-    const data = {
-        team: {
-            id: teamId,
-            name: newName,
-        },
-    };
-
     const batch = db.batch();
 
-    qs.docs.forEach((x) => {
-        batch.set(x.ref, data, { merge: true });
-    });
+    //begin update team name in achievements collection
+    const oldName: string = oldData.name;
+    const newName: string = newData.name;
+
+    if (oldName !== newName) {
+        const data = {
+            team: {
+                id: teamId,
+                name: newName,
+            },
+        };
+
+        qs.docs.forEach((x) => {
+            batch.set(x.ref, data, { merge: true });
+        });
+    }
+    //end update team name in achievements collection
+
+    //begin update edit rights for achievements
+    const oldOwners: Array<any> = oldData.team_owners;
+    const newOwners: Array<any> = newData.team_owners;
+    if (oldOwners && newOwners) {
+        const oldIds = new Array<String>();
+        const newIds = new Array<String>();
+
+        oldOwners.forEach(x => {
+            const item: String = x.id;
+            if (item) {
+                oldIds.push(item);
+            }
+        });
+
+        newOwners.forEach(x => {
+            const item: String = x.id;
+            if (item) {
+                newIds.push(item);
+            }
+        });
+
+        const oldIdsStr = oldIds.join();
+        const newIdsStr = newIds.join();
+
+        if (oldIdsStr !== newIdsStr) {
+            const data = {
+                owners: newIds,
+            };
+
+            qs.docs.forEach((x) => {
+                batch.set(x.ref, data, { merge: true });
+            });
+        }
+    }
+
+    //end update edit rights for achievements
 
     await batch.commit();
 });

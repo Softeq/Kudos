@@ -158,12 +158,18 @@ class AchievementsService {
   }
 
   Future<Achievement> getAchievement(String achivementId) async {
-    final queryResult = await _database
+    final documentSnapshot = await _database
         .collection(_achievementsCollection)
         .document(achivementId)
         .get();
-    final achievement = Achievement.fromDocument(queryResult);
-    return achievement;
+    final achievement = Achievement.fromDocument(documentSnapshot);
+    final canBeModifiedByCurrentUser = _canBeModifiedByCurrentUser(
+      documentSnapshot,
+      achievement,
+    );
+    return achievement.copy(
+      canBeModifiedByCurrentUser: canBeModifiedByCurrentUser,
+    );
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
@@ -183,5 +189,24 @@ class AchievementsService {
     final result =
         qs.documents.map((x) => Achievement.fromDocument(x)).toList();
     return result;
+  }
+
+  bool _canBeModifiedByCurrentUser(
+      DocumentSnapshot snapshot, Achievement achievement) {
+    final userId = _authService.currentUser.id;
+    final ownersData = snapshot.data["owners"] as List<dynamic>;
+    if (ownersData != null) {
+      final ownersArray = ownersData.cast<String>();
+      if (ownersArray.contains(userId)) {
+        return true;
+      }
+    }
+
+    if (achievement.userReference != null &&
+        achievement.userReference.id == userId) {
+      return true;
+    }
+
+    return false;
   }
 }
