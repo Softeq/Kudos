@@ -167,8 +167,17 @@ class AchievementsService {
       documentSnapshot,
       achievement,
     );
+    var canBeSentByCurrentUser = canBeModifiedByCurrentUser;
+    if (!canBeSentByCurrentUser) {
+      canBeSentByCurrentUser = _canBeSentByCurrentUser(
+        documentSnapshot,
+        achievement,
+      );
+    }
+
     return achievement.copy(
       canBeModifiedByCurrentUser: canBeModifiedByCurrentUser,
+      canBeSentByCurrentUser: canBeSentByCurrentUser,
     );
   }
 
@@ -198,6 +207,25 @@ class AchievementsService {
     if (ownersData != null) {
       final ownersArray = ownersData.cast<String>();
       if (ownersArray.contains(userId)) {
+        return true;
+      }
+    }
+
+    if (achievement.userReference != null &&
+        achievement.userReference.id == userId) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool _canBeSentByCurrentUser(
+      DocumentSnapshot snapshot, Achievement achievement) {
+    final userId = _authService.currentUser.id;
+    final data = snapshot.data["members"] as List<dynamic>;
+    if (data != null) {
+      final array = data.cast<String>();
+      if (array.contains(userId)) {
         return true;
       }
     }

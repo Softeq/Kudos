@@ -73,11 +73,13 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                 : null,
           ),
           body: _buildBody(viewModel),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(Icons.send),
-            onPressed: _sendTapped,
-          ),
+          floatingActionButton: viewModel.canSend
+              ? FloatingActionButton(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: Icon(Icons.send),
+                  onPressed: _sendTapped,
+                )
+              : null,
         );
       },
     );

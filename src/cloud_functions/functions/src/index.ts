@@ -76,8 +76,43 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
             });
         }
     }
-
     //end update edit rights for achievements
+
+    //begin update send rights for achievements
+    const oldMembers: Array<any> = oldData.team_members;
+    const newMembers: Array<any> = newData.team_members;
+    if (oldMembers && newMembers) {
+        const oldIds = new Array<String>();
+        const newIds = new Array<String>();
+
+        oldMembers.forEach(x => {
+            const item: String = x.id;
+            if (item) {
+                oldIds.push(item);
+            }
+        });
+
+        newMembers.forEach(x => {
+            const item: String = x.id;
+            if (item) {
+                newIds.push(item);
+            }
+        });
+
+        const oldIdsStr = oldIds.join();
+        const newIdsStr = newIds.join();
+
+        if (oldIdsStr !== newIdsStr) {
+            const data = {
+                members: newIds,
+            };
+
+            qs.docs.forEach((x) => {
+                batch.set(x.ref, data, { merge: true });
+            });
+        }
+    }
+    //end update send rights for achievements
 
     await batch.commit();
 });

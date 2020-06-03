@@ -44,6 +44,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
   bool get canEdit =>
       achievementViewModel.achievement.canBeModifiedByCurrentUser;
 
+  bool get canSend =>
+      achievementViewModel.achievement.canBeSentByCurrentUser;
+
   AchievementDetailsViewModel(this._achievementId) {
     isBusy = true;
   }
