@@ -56,25 +56,30 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text(viewModel.achievementViewModel.title),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    EditAchievementRoute(
-                      achievement: viewModel.achievementViewModel.achievement,
+            actions: viewModel.canEdit
+                ? <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          EditAchievementRoute(
+                            achievement:
+                                viewModel.achievementViewModel.achievement,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ],
+                  ]
+                : null,
           ),
           body: _buildBody(viewModel),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(Icons.send),
-            onPressed: _sendTapped,
-          ),
+          floatingActionButton: viewModel.canSend
+              ? FloatingActionButton(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: Icon(Icons.send),
+                  onPressed: _sendTapped,
+                )
+              : null,
         );
       },
     );

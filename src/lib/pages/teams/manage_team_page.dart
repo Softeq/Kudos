@@ -37,15 +37,18 @@ class _ManageTeamPage extends StatefulWidget {
 class _ManageTeamPageState extends State<_ManageTeamPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<ManageTeamViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isBusy) {
-            return Center(
+    return Consumer<ManageTeamViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isBusy) {
+          return Scaffold(
+            body: Center(
               child: CircularProgressIndicator(),
-            );
-          }
-          return ListView.builder(
+            ),
+          );
+        }
+
+        return Scaffold(
+          body: ListView.builder(
             itemBuilder: (context, index) {
               if (index == 0) {
                 return _buildTitle(viewModel);
@@ -55,13 +58,15 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
               }
             },
             itemCount: viewModel.itemsCount,
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _createAchievementTapped,
-        child: Icon(Icons.add),
-      ),
+          ),
+          floatingActionButton: viewModel.canEdit
+              ? FloatingActionButton(
+                  onPressed: _createAchievementTapped,
+                  child: Icon(Icons.add),
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -115,13 +120,15 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: IconButton(
-                  onPressed: _editTeamTapped,
-                  icon: Icon(Icons.edit),
-                ),
-              ),
+              viewModel.canEdit
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.0),
+                      child: IconButton(
+                        onPressed: _editTeamTapped,
+                        icon: Icon(Icons.edit),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),
@@ -207,6 +214,10 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
 
   Future<void> _membersTapped() async {
     var viewModel = _getViewModel();
+    if (!viewModel.canEdit) {
+      return;
+    }
+
     var users = await Navigator.of(context).push(
       UserPickerRoute(
         allowMultipleSelection: true,
@@ -219,6 +230,10 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
 
   Future<void> _adminsTapped() async {
     var viewModel = _getViewModel();
+    if (!viewModel.canEdit) {
+      return;
+    }
+
     var users = await Navigator.of(context).push(
       UserPickerRoute(
         allowMultipleSelection: true,

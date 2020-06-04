@@ -16,32 +16,69 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
         return;
     }
 
-    const oldName: string = oldData.name;
-    const newName: string = newData.name;
-
-    if (oldName === newName) {
-        return;
-    }
-
     const teamId: string = context.params.teamId;
-
     const qs = await db.collection('achievements').where('team.id', "==", teamId).get();
     if (qs.docs.length === 0) {
         return;
     }
 
-    const data = {
-        team: {
-            id: teamId,
-            name: newName,
-        },
-    };
-
     const batch = db.batch();
 
-    qs.docs.forEach((x) => {
-        batch.set(x.ref, data, { merge: true });
-    });
+    //begin update team name in achievements collection
+    const oldName: string = oldData.name;
+    const newName: string = newData.name;
+
+    if (oldName !== newName) {
+        const data = {
+            team: {
+                id: teamId,
+                name: newName,
+            },
+        };
+
+        qs.docs.forEach((x) => {
+            batch.set(x.ref, data, { merge: true });
+        });
+    }
+    //end update team name in achievements collection
+
+    //begin update edit rights for achievements
+    const oldOwners: Array<any> = oldData.team_owners;
+    const newOwners: Array<any> = newData.team_owners;
+    if (oldOwners && newOwners) {
+        const oldIds = oldOwners.map<String>(x => x.id);
+        const newIds = newOwners.map<String>(x => x.id);
+
+        if (!arraysEquals(oldIds, newIds)) {
+            const data = {
+                owners: newIds,
+            };
+
+            qs.docs.forEach((x) => {
+                batch.set(x.ref, data, { merge: true });
+            });
+        }
+    }
+    //end update edit rights for achievements
+
+    //begin update send rights for achievements
+    const oldMembers: Array<any> = oldData.team_members;
+    const newMembers: Array<any> = newData.team_members;
+    if (oldMembers && newMembers) {
+        const oldIds = oldMembers.map<String>(x => x.id);
+        const newIds = newMembers.map<String>(x => x.id);
+
+        if (!arraysEquals(oldIds, newIds)) {
+            const data = {
+                members: newIds,
+            };
+
+            qs.docs.forEach((x) => {
+                batch.set(x.ref, data, { merge: true });
+            });
+        }
+    }
+    //end update send rights for achievements
 
     await batch.commit();
 });
@@ -187,4 +224,33 @@ export const cleanupStorage = functions.https.onRequest(async (request, response
 
     response.send({ deleted_files: deletedFiles });
 });
+
+function arraysEquals(array1: Array<String>, array2: Array<String>): boolean {
+    if (array1.length !== array2.length) {
+        return false;
+    }
+
+    const sortedArray1 = array1.sort(stringComparer);
+    const sortedArray2 = array2.sort(stringComparer);
+
+    for (let i = 0; i < sortedArray1.length; i++) {
+        if (sortedArray1[i] !== sortedArray2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function stringComparer(value1: String, value2: String) {
+    if (value1 > value2) {
+        return 1;
+    }
+
+    if (value1 < value2) {
+        return -1;
+    }
+
+    return 0;
+}
 

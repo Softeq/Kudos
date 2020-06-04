@@ -86,7 +86,7 @@ class AchievementsService {
     if (copyOfAchievement.id == null) {
       final docRef = await _database
           .collection(_achievementsCollection)
-          .add(copyOfAchievement.toMap());
+          .add(copyOfAchievement.toMap(team));
 
       final document = await docRef.get();
       return Achievement.fromDocument(document);
@@ -94,7 +94,7 @@ class AchievementsService {
       await _database
           .collection(_achievementsCollection)
           .document(copyOfAchievement.id)
-          .setData(copyOfAchievement.toMap());
+          .setData(copyOfAchievement.toMap(team));
     }
 
     return copyOfAchievement;
@@ -158,12 +158,27 @@ class AchievementsService {
   }
 
   Future<Achievement> getAchievement(String achivementId) async {
-    final queryResult = await _database
+    final documentSnapshot = await _database
         .collection(_achievementsCollection)
         .document(achivementId)
         .get();
-    final achievement = Achievement.fromDocument(queryResult);
-    return achievement;
+    final achievement = Achievement.fromDocument(documentSnapshot);
+    final canBeModifiedByCurrentUser = _canBeModifiedByCurrentUser(
+      documentSnapshot,
+      achievement,
+    );
+    var canBeSentByCurrentUser = canBeModifiedByCurrentUser;
+    if (!canBeSentByCurrentUser) {
+      canBeSentByCurrentUser = _canBeSentByCurrentUser(
+        documentSnapshot,
+        achievement,
+      );
+    }
+
+    return achievement.copy(
+      canBeModifiedByCurrentUser: canBeModifiedByCurrentUser,
+      canBeSentByCurrentUser: canBeSentByCurrentUser,
+    );
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
@@ -183,5 +198,40 @@ class AchievementsService {
     final result =
         qs.documents.map((x) => Achievement.fromDocument(x)).toList();
     return result;
+  }
+
+  bool _canBeModifiedByCurrentUser(
+      DocumentSnapshot snapshot, Achievement achievement) {
+    final userId = _authService.currentUser.id;
+
+    if (_ownedByCurrentUser(achievement, userId)) {
+      return true;
+    }
+
+    return _contains(snapshot.data["owners"], userId);
+  }
+
+  bool _canBeSentByCurrentUser(
+      DocumentSnapshot snapshot, Achievement achievement) {
+    final userId = _authService.currentUser.id;
+
+    if (_ownedByCurrentUser(achievement, userId)) {
+      return true;
+    }
+
+    return _contains(snapshot.data["members"], userId);
+  }
+
+  bool _contains(List<dynamic> list, value) {
+    if (list == null) {
+      return false;
+    }
+
+    return List<String>.from(list).contains(value);
+  }
+
+  bool _ownedByCurrentUser(Achievement achievement, String userId) {
+    return achievement.userReference != null &&
+        achievement.userReference.id == userId;
   }
 }

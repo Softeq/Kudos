@@ -41,6 +41,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   OwnerType get ownerType => _ownerType;
 
+  bool get canEdit =>
+      achievementViewModel.achievement.canBeModifiedByCurrentUser;
+
+  bool get canSend =>
+      achievementViewModel.achievement.canBeSentByCurrentUser;
+
   AchievementDetailsViewModel(this._achievementId) {
     isBusy = true;
   }

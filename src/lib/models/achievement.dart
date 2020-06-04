@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_reference.dart';
 import 'package:kudosapp/models/user_reference.dart';
 
@@ -12,6 +13,8 @@ class Achievement {
   final TeamReference teamReference;
   final UserReference userReference;
   final String imageName;
+  final bool canBeModifiedByCurrentUser;
+  final bool canBeSentByCurrentUser;
 
   Achievement._({
     @required this.id,
@@ -21,6 +24,8 @@ class Achievement {
     @required this.teamReference,
     @required this.userReference,
     @required this.imageName,
+    @required this.canBeModifiedByCurrentUser,
+    @required this.canBeSentByCurrentUser,
   });
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
@@ -32,6 +37,8 @@ class Achievement {
       teamReference: TeamReference.fromMap(x.data["team"]),
       userReference: UserReference.fromMap(x.data["user"]),
       imageName: x.data["image_name"],
+      canBeModifiedByCurrentUser: false,
+      canBeSentByCurrentUser: false,
     );
   }
 
@@ -44,6 +51,8 @@ class Achievement {
       teamReference: null,
       userReference: null,
       imageName: null,
+      canBeModifiedByCurrentUser: null,
+      canBeSentByCurrentUser: null,
     );
   }
 
@@ -54,6 +63,8 @@ class Achievement {
     TeamReference teamReference,
     UserReference userReference,
     String imageName,
+    bool canBeModifiedByCurrentUser,
+    bool canBeSentByCurrentUser,
   }) {
     return Achievement._(
       id: this.id,
@@ -63,11 +74,15 @@ class Achievement {
       teamReference: teamReference ?? this.teamReference,
       userReference: userReference ?? this.userReference,
       imageName: imageName ?? this.imageName,
+      canBeModifiedByCurrentUser:
+          canBeModifiedByCurrentUser ?? this.canBeModifiedByCurrentUser,
+      canBeSentByCurrentUser:
+          canBeSentByCurrentUser ?? this.canBeSentByCurrentUser,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap(Team team) {
+    final map = {
       "name": name,
       "description": description,
       "image_url": imageUrl,
@@ -75,5 +90,12 @@ class Achievement {
       "user": userReference == null ? null : userReference.toMap(),
       "image_name": imageName,
     };
+
+    if (team != null) {
+      map["members"] = team.members.map((x) => x.id).toList();
+      map["owners"] = team.owners.map((x) => x.id).toList();
+    }
+
+    return map;
   }
 }
