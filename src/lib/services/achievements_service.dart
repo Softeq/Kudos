@@ -86,7 +86,7 @@ class AchievementsService {
     if (copyOfAchievement.id == null) {
       final docRef = await _database
           .collection(_achievementsCollection)
-          .add(copyOfAchievement.toMap());
+          .add(copyOfAchievement.toMap(team));
 
       final document = await docRef.get();
       return Achievement.fromDocument(document);
@@ -94,7 +94,7 @@ class AchievementsService {
       await _database
           .collection(_achievementsCollection)
           .document(copyOfAchievement.id)
-          .setData(copyOfAchievement.toMap());
+          .setData(copyOfAchievement.toMap(team));
     }
 
     return copyOfAchievement;

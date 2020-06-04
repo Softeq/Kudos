@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_reference.dart';
 import 'package:kudosapp/models/user_reference.dart';
 
@@ -80,8 +81,8 @@ class Achievement {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap(Team team) {
+    final map = {
       "name": name,
       "description": description,
       "image_url": imageUrl,
@@ -89,5 +90,12 @@ class Achievement {
       "user": userReference == null ? null : userReference.toMap(),
       "image_name": imageName,
     };
+
+    if (team != null) {
+      map["members"] = team.members.map((x) => x.id).toList();
+      map["owners"] = team.owners.map((x) => x.id).toList();
+    }
+
+    return map;
   }
 }
