@@ -46,24 +46,8 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
     const oldOwners: Array<any> = oldData.team_owners;
     const newOwners: Array<any> = newData.team_owners;
     if (oldOwners && newOwners) {
-        const oldIds = new Array<String>();
-        const newIds = new Array<String>();
-
-        oldOwners.forEach(x => {
-            const item: String = x.id;
-            if (item) {
-                oldIds.push(item);
-            }
-        });
-
-        newOwners.forEach(x => {
-            const item: String = x.id;
-            if (item) {
-                newIds.push(item);
-            }
-        });
-
-        const oldIdsStr = oldIds.join();
+        const oldIdsStr = oldOwners.map<String>(x => x.id).join();
+        const newIds = newOwners.map<String>(x => x.id);
         const newIdsStr = newIds.join();
 
         if (oldIdsStr !== newIdsStr) {
@@ -82,24 +66,8 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
     const oldMembers: Array<any> = oldData.team_members;
     const newMembers: Array<any> = newData.team_members;
     if (oldMembers && newMembers) {
-        const oldIds = new Array<String>();
-        const newIds = new Array<String>();
-
-        oldMembers.forEach(x => {
-            const item: String = x.id;
-            if (item) {
-                oldIds.push(item);
-            }
-        });
-
-        newMembers.forEach(x => {
-            const item: String = x.id;
-            if (item) {
-                newIds.push(item);
-            }
-        });
-
-        const oldIdsStr = oldIds.join();
+        const oldIdsStr = oldMembers.map<String>(x => x.id).join();
+        const newIds = newMembers.map<String>(x => x.id);
         const newIdsStr = newIds.join();
 
         if (oldIdsStr !== newIdsStr) {

@@ -203,38 +203,35 @@ class AchievementsService {
   bool _canBeModifiedByCurrentUser(
       DocumentSnapshot snapshot, Achievement achievement) {
     final userId = _authService.currentUser.id;
-    final ownersData = snapshot.data["owners"] as List<dynamic>;
-    if (ownersData != null) {
-      final ownersArray = ownersData.cast<String>();
-      if (ownersArray.contains(userId)) {
-        return true;
-      }
-    }
 
-    if (achievement.userReference != null &&
-        achievement.userReference.id == userId) {
+    if (_ownedByCurrentUser(achievement, userId)) {
       return true;
     }
 
-    return false;
+    return _contains(snapshot.data["owners"], userId);
   }
 
   bool _canBeSentByCurrentUser(
       DocumentSnapshot snapshot, Achievement achievement) {
     final userId = _authService.currentUser.id;
-    final data = snapshot.data["members"] as List<dynamic>;
-    if (data != null) {
-      final array = data.cast<String>();
-      if (array.contains(userId)) {
-        return true;
-      }
-    }
 
-    if (achievement.userReference != null &&
-        achievement.userReference.id == userId) {
+    if (_ownedByCurrentUser(achievement, userId)) {
       return true;
     }
 
-    return false;
+    return _contains(snapshot.data["members"], userId);
+  }
+
+  bool _contains(List<dynamic> list, value) {
+    if (list == null) {
+      return false;
+    }
+
+    return List<String>.from(list).contains(value);
+  }
+
+  bool _ownedByCurrentUser(Achievement achievement, String userId) {
+    return achievement.userReference != null &&
+        achievement.userReference.id == userId;
   }
 }
