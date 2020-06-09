@@ -20,7 +20,7 @@ class User {
       id: x.documentID,
       name: x.data["name"],
       email: x.data["email"],
-      imageUrl: x.data["imageUrl"],
+      imageUrl: x.data["image_url"],
     );
   }
 
@@ -49,7 +49,7 @@ class User {
       "id": id,
       "name": name,
       "email": email,
-      "imageUrl": imageUrl,
+      "image_url": imageUrl,
     };
   }
 }

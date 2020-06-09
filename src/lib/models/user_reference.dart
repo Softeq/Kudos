@@ -29,7 +29,7 @@ class UserReference {
     return UserReference._(
       id: x["id"],
       name: x["name"],
-      imageUrl: x["imageUrl"],
+      imageUrl: x["image_url"],
     );
   }
 
@@ -37,7 +37,7 @@ class UserReference {
     return {
       "id": id,
       "name": name,
-      "imageUrl": imageUrl,
+      "image_url": imageUrl,
     };
   }
 }
