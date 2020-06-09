@@ -163,6 +163,7 @@ export const onCreateAchievementReferences = functions.firestore.document('/user
         notification: {
             title: 'Congratulations!',
             body: `You received ${achievementName} from ${senderName}`,
+            sound: "default",
         }
     };
 
@@ -253,4 +254,3 @@ function stringComparer(value1: String, value2: String) {
 
     return 0;
 }
-
