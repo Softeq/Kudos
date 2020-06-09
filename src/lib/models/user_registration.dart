@@ -25,7 +25,7 @@ class UserRegistration {
     return {
       "name": name,
       "email": email,
-      "imageUrl": imageUrl,
+      "image_url": imageUrl,
     };
   }
 

@@ -25,7 +25,7 @@ class RelatedAchievement {
     return RelatedAchievement(
       id: x["id"],
       name: x["name"],
-      imageUrl: x["imageUrl"],
+      imageUrl: x["image_url"],
     );
   }
 
@@ -33,7 +33,7 @@ class RelatedAchievement {
     return {
       "id": id,
       "name": name,
-      "imageUrl": imageUrl,
+      "image_url": imageUrl,
     };
   }
 }

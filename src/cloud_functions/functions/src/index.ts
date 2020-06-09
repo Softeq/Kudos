@@ -115,7 +115,7 @@ export const updateAchievement = functions.firestore.document('achievements/{ach
         achievement: {
             id: achievementId,
             name: achievementName,
-            imageUrl: newValue,
+            image_url: newValue,
         },
     };
 
