@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/file_service.dart';
 import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
@@ -32,18 +33,22 @@ class EditTeamViewModel extends BaseViewModel {
 
   String get initialDescription => _initialTeam?.description ?? "";
 
-  void pickFile() async {
+  Future<bool> pickFile() async {
     if (_imageViewModel.isBusy) {
-      return;
+      return true;
     }
 
     _imageViewModel.update(isBusy: true);
 
     final file = await FilePicker.getFile(type: FileType.image);
+    final fileService = locator<FileService>();
+    var isValid = await fileService.isFileSizeValid(file);
 
-    _imageViewModel.update(isBusy: false, file: file);
+    _imageViewModel.update(isBusy: false, file: isValid ? file : null);
 
     notifyListeners();
+
+    return isValid;
   }
 
   Future<Team> save(String name, String description) async {
