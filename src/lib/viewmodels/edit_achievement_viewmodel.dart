@@ -6,6 +6,7 @@ import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/file_service.dart';
 import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
@@ -28,15 +29,19 @@ class EditAchievementViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void pickFile() async {
+  Future<bool> pickFile() async {
     if (achievementViewModel.imageViewModel.isBusy) {
-      return;
+      return true;
     }
     achievementViewModel.imageViewModel.update(isBusy: true);
 
     var file = await FilePicker.getFile(type: FileType.image);
+    final fileService = locator<FileService>();
+    var isValid = await fileService.isFileSizeValid(file);
 
-    achievementViewModel.imageViewModel.update(isBusy: false, file: file);
+    achievementViewModel.imageViewModel.update(isBusy: false, file: isValid ? file : achievementViewModel.imageViewModel.file);
+
+    return isValid;
   }
 
   Future<void> save() async {

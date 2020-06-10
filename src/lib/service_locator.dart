@@ -6,6 +6,7 @@ import 'package:kudosapp/generated/l10n.dart';
 import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/auth_service.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/file_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/services/push_notifications_service.dart';
@@ -23,5 +24,6 @@ void setupLocator() {
     ..registerLazySingleton<TeamsService>(() => TeamsService())
     ..registerLazySingleton<EventBus>(() => EventBus())
     ..registerLazySingleton<PushNotificationsService>(() => PushNotificationsService())
-    ..registerFactory<ImageService>(() => ImageService());
+    ..registerFactory<ImageService>(() => ImageService())
+    ..registerLazySingleton<FileService>(() => FileService());
 }

@@ -206,8 +206,27 @@ class _EditAchievementPage extends StatelessWidget {
                   localizer().editImage,
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () {
-                  viewModel.pickFile();
+                onPressed: () async {
+                  var isValid = await viewModel.pickFile();
+                  if(!isValid)
+                  {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(localizer().fileSizeTooBig),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(localizer().ok),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
