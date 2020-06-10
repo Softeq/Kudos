@@ -38,6 +38,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "createTeam" : MessageLookupByLibrary.simpleMessage("Create team"),
     "createYourOwnAchievements" : MessageLookupByLibrary.simpleMessage("Create your own rewards and give them to your colleagues!"),
     "createYourOwnTeams" : MessageLookupByLibrary.simpleMessage("Create your teams and invite your colleagues to join them!"),
+    "delete" : MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteAchievementWarning" : MessageLookupByLibrary.simpleMessage("Do you really want to delete this achievement?"),
     "description" : MessageLookupByLibrary.simpleMessage("Description"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Add a description"),
     "edit" : MessageLookupByLibrary.simpleMessage("Edit"),
@@ -70,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "team" : MessageLookupByLibrary.simpleMessage("Team"),
     "teams" : MessageLookupByLibrary.simpleMessage("Teams"),
     "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("This user is not yet part of any team"),
+    "warning" : MessageLookupByLibrary.simpleMessage("Warning"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Your comment")
   };
 }

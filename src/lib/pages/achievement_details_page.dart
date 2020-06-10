@@ -69,6 +69,9 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                         );
                       },
                     ),
+                    IconButton(
+                        icon: Icon(Icons.delete_forever),
+                        onPressed: () => _deleteAchievement(viewModel))
                   ]
                 : null,
           ),
@@ -83,6 +86,38 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         );
       },
     );
+  }
+
+  void _deleteAchievement(AchievementDetailsViewModel viewModel) async {
+    bool delete = false;
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(localizer().warning),
+            content: Text(localizer().deleteAchievementWarning),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(localizer().cancel),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text(localizer().delete, style: TextStyle(color: Color.fromARGB(255, 255, 59, 48))),
+                onPressed: () {
+                  delete = true;
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+    if (delete) {
+      await viewModel.delete();
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    }
   }
 
   Widget _buildBody(AchievementDetailsViewModel viewModel) {

@@ -11,6 +11,7 @@ class Team {
   final String description;
   final List<TeamMember> owners;
   final List<TeamMember> members;
+  final bool isActive;
 
   factory Team.fromDocument(DocumentSnapshot x) {
     return Team._(
@@ -21,6 +22,7 @@ class Team {
       description: x.data["description"],
       owners: getMembers(x.data["team_owners"]),
       members: getMembers(x.data["team_members"]),
+      isActive: x.data["is_active"],
     );
   }
 
@@ -32,6 +34,7 @@ class Team {
     this.description,
     this.owners,
     this.members,
+    this.isActive,
   });
 
   Team copy({
@@ -41,6 +44,7 @@ class Team {
     String description,
     List<TeamMember> owners,
     List<TeamMember> members,
+    bool isActive,
   }) {
     return Team._(
       id: this.id,
@@ -50,6 +54,7 @@ class Team {
       description: description ?? this.description,
       owners: owners ?? this.owners.toList(),
       members: members ?? this.members.toList(),
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -69,6 +74,7 @@ class Team {
     String description,
     List<TeamMember> members,
     List<TeamMember> owners,
+    bool isActive,
   }) {
     var map = Map<String, dynamic>();
 
@@ -86,6 +92,10 @@ class Team {
 
     if (description != null) {
       map["description"] = description;
+    }
+
+    if (isActive != null) {
+      map["is_active"] = isActive;
     }
 
     var visibleFor = List<String>();

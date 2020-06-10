@@ -26,6 +26,7 @@ class AchievementsService {
     final snapshot = await _database
         .collection(_achievementsCollection)
         .where("user", isNull: true)
+        .where("is_active", isEqualTo: true)
         .getDocuments();
     final result = snapshot.documents.map((x) {
       return Achievement.fromDocument(x);
@@ -98,6 +99,19 @@ class AchievementsService {
     }
 
     return copyOfAchievement;
+  }
+
+  Future<void> deleteAchievement(
+      Achievement achievement, int holdersCount) async {
+    if (holdersCount == 0) {
+      return _database
+          .collection(_achievementsCollection)
+          .document(achievement.id)
+          .delete();
+    } else {
+      achievement = achievement.copy(isActive: false);
+      return createOrUpdate(achievement: achievement);
+    }
   }
 
   Future<void> sendAchievement(AchievementToSend sendAchievement) async {
@@ -194,6 +208,7 @@ class AchievementsService {
     final qs = await _database
         .collection(_achievementsCollection)
         .where(field, isEqualTo: value)
+        .where("is_active", isEqualTo: true)
         .getDocuments();
     final result =
         qs.documents.map((x) => Achievement.fromDocument(x)).toList();
@@ -202,6 +217,9 @@ class AchievementsService {
 
   bool _canBeModifiedByCurrentUser(
       DocumentSnapshot snapshot, Achievement achievement) {
+    if (!achievement.isActive) {
+      return false;
+    }
     final userId = _authService.currentUser.id;
 
     if (_ownedByCurrentUser(achievement, userId)) {
@@ -213,6 +231,9 @@ class AchievementsService {
 
   bool _canBeSentByCurrentUser(
       DocumentSnapshot snapshot, Achievement achievement) {
+    if (!achievement.isActive) {
+      return false;
+    }
     final userId = _authService.currentUser.id;
 
     if (_ownedByCurrentUser(achievement, userId)) {
