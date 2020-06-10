@@ -467,6 +467,15 @@ class S {
       args: [],
     );
   }
+
+  String get fileSizeTooBig {
+    return Intl.message(
+      'Image size is too big. Please select another file',
+      name: 'fileSizeTooBig',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
