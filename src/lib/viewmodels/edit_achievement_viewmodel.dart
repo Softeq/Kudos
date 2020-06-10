@@ -39,7 +39,7 @@ class EditAchievementViewModel extends BaseViewModel {
     final fileService = locator<FileService>();
     var isValid = await fileService.isFileSizeValid(file);
 
-    achievementViewModel.imageViewModel.update(isBusy: false, file: isValid ? file : achievementViewModel.imageViewModel.file);
+    achievementViewModel.imageViewModel.update(isBusy: false, file: isValid ? file : null);
 
     return isValid;
   }
