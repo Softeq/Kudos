@@ -15,6 +15,7 @@ class Achievement {
   final String imageName;
   final bool canBeModifiedByCurrentUser;
   final bool canBeSentByCurrentUser;
+  final bool isActive;
 
   Achievement._({
     @required this.id,
@@ -26,6 +27,7 @@ class Achievement {
     @required this.imageName,
     @required this.canBeModifiedByCurrentUser,
     @required this.canBeSentByCurrentUser,
+    @required this.isActive,
   });
 
   factory Achievement.fromDocument(DocumentSnapshot x) {
@@ -39,6 +41,7 @@ class Achievement {
       imageName: x.data["image_name"],
       canBeModifiedByCurrentUser: false,
       canBeSentByCurrentUser: false,
+      isActive : x.data["is_active"],
     );
   }
 
@@ -51,6 +54,7 @@ class Achievement {
       teamReference: null,
       userReference: null,
       imageName: null,
+      isActive: true,
       canBeModifiedByCurrentUser: null,
       canBeSentByCurrentUser: null,
     );
@@ -65,6 +69,7 @@ class Achievement {
     String imageName,
     bool canBeModifiedByCurrentUser,
     bool canBeSentByCurrentUser,
+    bool isActive,
   }) {
     return Achievement._(
       id: this.id,
@@ -78,6 +83,7 @@ class Achievement {
           canBeModifiedByCurrentUser ?? this.canBeModifiedByCurrentUser,
       canBeSentByCurrentUser:
           canBeSentByCurrentUser ?? this.canBeSentByCurrentUser,
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -89,6 +95,7 @@ class Achievement {
       "team": teamReference == null ? null : teamReference.toMap(),
       "user": userReference == null ? null : userReference.toMap(),
       "image_name": imageName,
+      "is_active": isActive,
     };
 
     if (team != null) {

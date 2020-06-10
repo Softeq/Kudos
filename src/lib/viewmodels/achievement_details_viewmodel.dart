@@ -44,8 +44,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   bool get canEdit =>
       achievementViewModel.achievement.canBeModifiedByCurrentUser;
 
-  bool get canSend =>
-      achievementViewModel.achievement.canBeSentByCurrentUser;
+  bool get canSend => achievementViewModel.achievement.canBeSentByCurrentUser;
 
   AchievementDetailsViewModel(this._achievementId) {
     isBusy = true;
@@ -81,6 +80,15 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
     await _achievementsService.sendAchievement(achievementToSend);
     await initialize();
+
+    isBusy = false;
+  }
+
+  Future<void> delete() async {
+    isBusy = true;
+
+    await _achievementsService.deleteAchievement(
+        achievementViewModel.achievement, achievementHolders.items.length);
 
     isBusy = false;
   }
