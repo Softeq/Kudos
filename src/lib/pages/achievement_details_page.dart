@@ -90,7 +90,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
 
   void _deleteAchievement(AchievementDetailsViewModel viewModel) async {
     bool delete = false;
-    await showDialog<bool>(
+    await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
@@ -116,7 +116,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         });
     if (delete) {
       await viewModel.delete();
-      Navigator.pop(context);
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 
