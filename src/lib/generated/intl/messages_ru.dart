@@ -38,6 +38,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "createTeam" : MessageLookupByLibrary.simpleMessage("Создание команды"),
     "createYourOwnAchievements" : MessageLookupByLibrary.simpleMessage("Создавайте свои собственные награды и дарите их своим коллегам!"),
     "createYourOwnTeams" : MessageLookupByLibrary.simpleMessage("Создавайте свои команды и приглашайте в них своих коллег!"),
+    "delete" : MessageLookupByLibrary.simpleMessage("Удалить"),
+    "deleteAchievementWarning" : MessageLookupByLibrary.simpleMessage("Вы действительно хотите удалить эту награду?"),
     "description" : MessageLookupByLibrary.simpleMessage("Описание"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте описание"),
     "edit" : MessageLookupByLibrary.simpleMessage("Редактировать"),
@@ -69,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "team" : MessageLookupByLibrary.simpleMessage("Команда"),
     "teams" : MessageLookupByLibrary.simpleMessage("Команды"),
     "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Этот пользователь пока не состоит ни в одной команде"),
+    "warning" : MessageLookupByLibrary.simpleMessage("Внимание"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Ваш комментарий")
   };
 }
