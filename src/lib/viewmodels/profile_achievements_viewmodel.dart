@@ -2,10 +2,12 @@ import 'package:kudosapp/models/user_achievement.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ProfileAchievementsViewModel extends BaseViewModel {
   final _achievementsService = locator<AchievementsService>();
+  final _authService = locator<BaseAuthService>();
   final String _userId;
 
   List<UserAchievementCollection> _achievements = [];
@@ -13,6 +15,8 @@ class ProfileAchievementsViewModel extends BaseViewModel {
   ProfileAchievementsViewModel(this._userId);
 
   List<UserAchievementCollection> get achievements => _achievements;
+
+  bool get isMyProfile => _userId == _authService.currentUser.id;
 
   Future<void> initialize() async {
     isBusy = true;
@@ -36,7 +40,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
     for (final x in userAchievements) {
       final id = x.achievement.id;
       if (_map.containsKey(id)) {
-        _map[id] = _map[id].increaseCount();
+        _map[id] = _map[id].addAchievement(x);
       } else {
         _map[id] = UserAchievementCollection.single(x);
       }
