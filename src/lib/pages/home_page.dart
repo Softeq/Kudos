@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/service_locator.dart';
-import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-
     _tabs.clear();
     _tabs.addAll(_buildTabs(context));
 
@@ -35,10 +34,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final activeTab = _tabs[_selectedTabIndex];
-
-    return Scaffold(
-      body: activeTab.body,
-      bottomNavigationBar: _buildNavigationBar(),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: <Color>[
+            Color.fromARGB(179, 106, 24, 163),
+            Color.fromARGB(179, 57, 38, 179),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: activeTab.body,
+        bottomNavigationBar: _buildNavigationBar(),
+      ),
     );
   }
 
