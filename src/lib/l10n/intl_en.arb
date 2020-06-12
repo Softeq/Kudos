@@ -52,5 +52,6 @@
     "createYourOwnAchievements": "Create your own rewards and give them to your colleagues!",
     "createYourOwnTeams": "Create your teams and invite your colleagues to join them!",
     "enterName": "Enter name",
-    "fileSizeTooBig" : "Image size is too big. Please select another file"
+    "fileSizeTooBig" : "Image size is too big. Please select another file",
+    "noComment" : "No comment"
 }

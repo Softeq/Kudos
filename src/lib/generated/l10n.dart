@@ -572,6 +572,16 @@ class S {
       args: [],
     );
   }
+
+  /// `No comment`
+  String get noComment {
+    return Intl.message(
+      'No comment',
+      name: 'noComment',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
