@@ -87,8 +87,12 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                 },
               ),
               FlatButton(
-                child: Text(localizer().delete,
-                    style: TextStyle(color: Color.fromARGB(255, 255, 59, 48))),
+                child: Text(
+                  localizer().delete,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 59, 48),
+                  ),
+                ),
                 onPressed: () {
                   delete = true;
                   Navigator.of(context).pop();

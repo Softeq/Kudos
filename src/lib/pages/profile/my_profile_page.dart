@@ -124,7 +124,8 @@ class _MyAchievementsWidget extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 EditAchievementRoute.createUserAchievement(
-                    viewModel.currentUser),
+                  viewModel.currentUser,
+                ),
               );
             },
             child: Icon(Icons.add),
