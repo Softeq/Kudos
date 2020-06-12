@@ -42,7 +42,7 @@ class EditTeamViewModel extends BaseViewModel {
 
     final file = await FilePicker.getFile(type: FileType.image);
     final fileService = locator<FileService>();
-    var isValid = await fileService.isFileSizeValid(file);
+    var isValid = file == null || await fileService.isFileSizeValid(file);
 
     _imageViewModel.update(isBusy: false, file: isValid ? file : null);
 

@@ -61,7 +61,6 @@ class CircleImageWidget extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        color: imagePlaceholder.color,
         child: Center(
           child: CircularProgressIndicator(),
         ),
