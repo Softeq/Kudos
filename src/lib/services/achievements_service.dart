@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/achievement_holder.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
+import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/models/related_achievement.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_reference.dart';
@@ -17,10 +18,13 @@ import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
 class AchievementsService {
+  static const String _achievementsCollection = "achievements";
+  static const String _achievementReferencesCollection =
+      "achievement_references";
+
   final _database = Firestore.instance;
-  final _achievementsCollection = "achievements";
-  final _achievementReferencesCollection = "achievement_references";
   final _authService = locator<BaseAuthService>();
+  final imageService = locator<ImageService>();
 
   Future<List<Achievement>> getAchievements() async {
     final snapshot = await _database
@@ -28,89 +32,127 @@ class AchievementsService {
         .where("user", isNull: true)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    final result = snapshot.documents.map((x) {
-      return Achievement.fromDocument(x);
-    }).toList();
-    return result;
+    return snapshot.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
   }
 
-  Future<Achievement> createOrUpdate({
-    @required Achievement achievement,
-    Team team,
-    User user,
-    File file,
-  }) async {
-    if ((achievement.id == null && file == null) ||
-        achievement.imageUrl == null && file == null) {
-      throw ArgumentError.notNull("file");
-    }
-
-    if (achievement.name == null || achievement.name == "") {
-      throw ArgumentError.notNull("name");
-    }
-
-    if (achievement.description == null || achievement.description == "") {
-      throw ArgumentError.notNull("description");
-    }
-
-    var copyOfAchievement = achievement.copy();
-
-    if (team != null) {
-      copyOfAchievement = copyOfAchievement.copy(
-        teamReference: TeamReference(
-          name: team.name,
-          id: team.id,
-        ),
-      );
-    }
+  Future<Achievement> createAchievement(
+      {@required String name,
+      @required String description,
+      @required File file,
+      User user,
+      Team team}) async {
+    UserReference userReference;
+    TeamReference teamReference;
 
     if (user != null) {
-      copyOfAchievement = copyOfAchievement.copy(
-        userReference: UserReference.fromUser(user),
+      userReference = UserReference.fromUser(user);
+    } else if (team != null) {
+      teamReference = TeamReference(
+        name: team.name,
+        id: team.id,
       );
+    } else {
+      throw ArgumentError("Team or user must be set");
     }
 
-    if (copyOfAchievement.teamReference == null &&
-        copyOfAchievement.userReference == null) {
-      throw ArgumentError("team or user should be set");
+    var imageData = await imageService.uploadImage(file);
+
+    final docRef = await _database
+        .collection(_achievementsCollection)
+        .add(Achievement.createMap(
+          name: name,
+          description: description,
+          isActive: true,
+          imageName: imageData?.name,
+          imageUrl: imageData?.url,
+          userReference: userReference,
+          teamReference: teamReference,
+          team: team,
+        ));
+
+    final document = await docRef.get();
+    return Achievement.fromDocument(document, _authService.currentUser.id);
+  }
+
+  Future<Achievement> _updateAchievement(
+      {@required String id,
+      @required Map<String, dynamic> data,
+      WriteBatch batch}) async {
+    final docRef = _database.collection(_achievementsCollection).document(id);
+    if (batch == null) {
+      await docRef.setData(data, merge: true);
+
+      final document = await docRef.get();
+      return Achievement.fromDocument(document, _authService.currentUser.id);
+    } else {
+      batch.setData(docRef, data, merge: true);
+      return null;
     }
+  }
+
+  Future<Achievement> updateAchievement(
+      {@required String id,
+      String name,
+      String description,
+      bool isActive,
+      File file,
+      WriteBatch batch}) async {
+    ImageData imageData;
 
     if (file != null) {
       final imageService = locator<ImageService>();
-      final imageData = await imageService.uploadImage(file);
-      copyOfAchievement = copyOfAchievement.copy(
-        imageUrl: imageData.url,
-        imageName: imageData.name,
-      );
+      imageData = await imageService.uploadImage(file);
     }
 
-    if (copyOfAchievement.id == null) {
-      final docRef = await _database
-          .collection(_achievementsCollection)
-          .add(copyOfAchievement.toMap(team));
+    final data = Achievement.createMap(
+      imageUrl: imageData?.url,
+      imageName: imageData?.name,
+      name: name,
+      description: description,
+      isActive: isActive,
+    );
 
-      final document = await docRef.get();
-      return Achievement.fromDocument(document);
-    } else {
-      await _database
-          .collection(_achievementsCollection)
-          .document(copyOfAchievement.id)
-          .setData(copyOfAchievement.toMap(team));
-    }
-
-    return copyOfAchievement;
+    return _updateAchievement(id: id, data: data, batch: batch);
   }
 
-  Future<void> deleteAchievement(
-      Achievement achievement, int holdersCount) async {
-    if (holdersCount == 0) {
+  Future<Achievement> transferAchievement(
+      {@required String id, Team team, User user, WriteBatch batch}) async {
+    UserReference userReference;
+    TeamReference teamReference;
+    if (user != null && team != null)
+    {
+      throw ArgumentError("Team and user can't be set simultaneously");
+    }
+    else if (user != null) {
+      userReference = UserReference.fromUser(user);
+    } else if (team != null) {
+      teamReference = TeamReference(
+        name: team.name,
+        id: team.id,
+      );
+    } else {
+      throw ArgumentError("Team or user must be set");
+    }
+
+    final data = Achievement.createMap(
+      userReference: userReference,
+      teamReference: teamReference,
+    );
+    return _updateAchievement(id: id, data: data, batch: batch);
+  }
+
+  Future<void> deleteAchievement(String id,
+      {int holdersCount, WriteBatch batch}) {
+    if (holdersCount != null && holdersCount == 0) {
       return _database
           .collection(_achievementsCollection)
-          .document(achievement.id)
+          .document(id)
           .delete();
     } else {
-      achievement = achievement.copy(isActive: false);
-      return createOrUpdate(achievement: achievement);
+      final data = Achievement.createMap(
+        isActive: false,
+      );
+      return _updateAchievement(id: id, data: data, batch: batch);
     }
   }
 
@@ -176,23 +218,7 @@ class AchievementsService {
         .collection(_achievementsCollection)
         .document(achivementId)
         .get();
-    final achievement = Achievement.fromDocument(documentSnapshot);
-    final canBeModifiedByCurrentUser = _canBeModifiedByCurrentUser(
-      documentSnapshot,
-      achievement,
-    );
-    var canBeSentByCurrentUser = canBeModifiedByCurrentUser;
-    if (!canBeSentByCurrentUser) {
-      canBeSentByCurrentUser = _canBeSentByCurrentUser(
-        documentSnapshot,
-        achievement,
-      );
-    }
-
-    return achievement.copy(
-      canBeModifiedByCurrentUser: canBeModifiedByCurrentUser,
-      canBeSentByCurrentUser: canBeSentByCurrentUser,
-    );
+    return Achievement.fromDocument(documentSnapshot, _authService.currentUser.id);
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
@@ -211,48 +237,7 @@ class AchievementsService {
         .where("is_active", isEqualTo: true)
         .getDocuments();
     final result =
-        qs.documents.map((x) => Achievement.fromDocument(x)).toList();
+        qs.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
     return result;
-  }
-
-  bool _canBeModifiedByCurrentUser(
-      DocumentSnapshot snapshot, Achievement achievement) {
-    if (!achievement.isActive) {
-      return false;
-    }
-    final userId = _authService.currentUser.id;
-
-    if (_ownedByCurrentUser(achievement, userId)) {
-      return true;
-    }
-
-    return _contains(snapshot.data["owners"], userId);
-  }
-
-  bool _canBeSentByCurrentUser(
-      DocumentSnapshot snapshot, Achievement achievement) {
-    if (!achievement.isActive) {
-      return false;
-    }
-    final userId = _authService.currentUser.id;
-
-    if (_ownedByCurrentUser(achievement, userId)) {
-      return true;
-    }
-
-    return _contains(snapshot.data["members"], userId);
-  }
-
-  bool _contains(List<dynamic> list, value) {
-    if (list == null) {
-      return false;
-    }
-
-    return List<String>.from(list).contains(value);
-  }
-
-  bool _ownedByCurrentUser(Achievement achievement, String userId) {
-    return achievement.userReference != null &&
-        achievement.userReference.id == userId;
   }
 }

@@ -106,6 +106,14 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
+  Future<void> delete() async {
+    isBusy = true;
+
+    await _teamsService.deleteTeam(_initialTeam, _achievements.map((e) => e.achievement).toList());
+
+    isBusy = false;
+  }
+
   void replaceAdmins(Iterable<User> users) {
     if (users == null || users.isEmpty) {
       return;

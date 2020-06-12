@@ -513,6 +513,16 @@ class S {
     );
   }
 
+  /// `Do you really want to delete this team? All the team achievements will be removed as well`
+  String get deleteTeamWarning {
+    return Intl.message(
+      'Do you really want to delete this team? All the team achievements will be removed as well',
+      name: 'deleteTeamWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Achievements`
   String get achievements {
     return Intl.message(
@@ -553,6 +563,7 @@ class S {
     );
   }
 
+  /// `Image size is too big. Please select another file`
   String get fileSizeTooBig {
     return Intl.message(
       'Image size is too big. Please select another file',

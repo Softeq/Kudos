@@ -47,6 +47,7 @@
     "delete": "Delete",
     "warning": "Warning",
     "deleteAchievementWarning": "Do you really want to delete this achievement?",
+    "deleteTeamWarning": "Do you really want to delete this team? All the team achievements will be removed as well",
     "achievements": "Achievements",
     "createYourOwnAchievements": "Create your own rewards and give them to your colleagues!",
     "createYourOwnTeams": "Create your teams and invite your colleagues to join them!",

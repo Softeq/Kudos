@@ -16,12 +16,27 @@ class EditAchievementViewModel extends BaseViewModel {
   final User _user;
   final _achievementsService = locator<AchievementsService>();
   final _eventBus = locator<EventBus>();
+  final bool _create;
 
-  EditAchievementViewModel(Achievement achievement, Team team, User user)
-      : assert(achievement != null),
+  EditAchievementViewModel._(
+      Achievement achievement, Team team, User user)
+      :
         achievementViewModel = AchievementViewModel(achievement),
         _team = team,
-        _user = user;
+        _user = null,
+        _create = achievement == null;
+
+  factory EditAchievementViewModel.createTeamAchievement(Team team) {
+    return EditAchievementViewModel._(null, team, null);
+  }
+
+  factory EditAchievementViewModel.createUserAchievement(User user) {
+    return EditAchievementViewModel._(null, null, user);
+  }
+
+  factory EditAchievementViewModel.editAchievement(Achievement achievement) {
+    return EditAchievementViewModel._(achievement, null, null);
+  }
 
   @override
   void dispose() {
@@ -39,18 +54,28 @@ class EditAchievementViewModel extends BaseViewModel {
     final fileService = locator<FileService>();
     var isValid = await fileService.isFileSizeValid(file);
 
-    achievementViewModel.imageViewModel.update(isBusy: false, file: isValid ? file : null);
+    achievementViewModel.imageViewModel
+        .update(isBusy: false, file: isValid ? file : null);
 
     return isValid;
   }
 
   Future<void> save() async {
-    var result = await _achievementsService.createOrUpdate(
-      achievement: achievementViewModel.getModifiedAchievement(),
-      file: achievementViewModel.imageViewModel.file,
-      team: _team,
-      user: _user,
-    );
+    Achievement result;
+    if (_create) {
+      result = await _achievementsService.createAchievement(
+          name: achievementViewModel.title,
+          description: achievementViewModel.description,
+          file: achievementViewModel.imageViewModel.file,
+          user: _user,
+          team: _team);
+    } else {
+      result = await _achievementsService.updateAchievement(
+          id: achievementViewModel.achievement.id,
+          name: achievementViewModel.title,
+          description: achievementViewModel.description,
+          file: achievementViewModel.imageViewModel.file);
+    }
     _eventBus.fire(AchievementUpdatedMessage(result));
   }
 }

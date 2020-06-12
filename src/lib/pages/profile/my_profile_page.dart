@@ -123,9 +123,8 @@ class _MyAchievementsWidget extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(
-                EditAchievementRoute(
-                  user: viewModel.currentUser,
-                ),
+                EditAchievementRoute.createUserAchievement(
+                    viewModel.currentUser),
               );
             },
             child: Icon(Icons.add),

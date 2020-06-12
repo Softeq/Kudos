@@ -62,10 +62,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                       icon: Icon(Icons.edit),
                       onPressed: () {
                         Navigator.of(context).push(
-                          EditAchievementRoute(
-                            achievement:
-                                viewModel.achievementViewModel.achievement,
-                          ),
+                          EditAchievementRoute.editAchievement(
+                              viewModel.achievementViewModel.achievement),
                         );
                       },
                     ),
@@ -105,7 +103,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                 },
               ),
               FlatButton(
-                child: Text(localizer().delete, style: TextStyle(color: Color.fromARGB(255, 255, 59, 48))),
+                child: Text(localizer().delete,
+                    style: TextStyle(color: Color.fromARGB(255, 255, 59, 48))),
                 onPressed: () {
                   delete = true;
                   Navigator.of(context).pop();
