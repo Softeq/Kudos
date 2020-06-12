@@ -6,7 +6,7 @@ class FileService {
   Future<bool> isFileSizeValid(File file) async {
     if (file == null)
     {
-      return true;
+      return false;
     }
     var fileSize = await file.length();
     return fileSize <= fileSizeLimit;
