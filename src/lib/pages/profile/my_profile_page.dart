@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
@@ -15,6 +16,7 @@ import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
+import 'package:kudosapp/widgets/vector_icon.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {
@@ -26,121 +28,121 @@ class MyProfilePage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(height: 5.0),
-            Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                SizedBox(width: 16.0),
-                ClipOval(
-                  child: Container(
-                    color: KudosTheme.textColor,
-                    height: 40.0,
-                    width: 40.0,
-                    child: Center(
+                SizedBox(height: 5.0),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 16.0),
+                    ClipOval(
                       child: Container(
-                        height: 36.0,
-                        width: 36.0,
-                        child: CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                            user.imageUrl,
+                        color: KudosTheme.textColor,
+                        height: 40.0,
+                        width: 40.0,
+                        child: Center(
+                          child: Container(
+                            height: 36.0,
+                            width: 36.0,
+                            child: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                user.imageUrl,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
+                            user.name,
+                            style: KudosTheme.userNameTitleTextStyle,
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            user.email,
+                            style: KudosTheme.userNameSubTitleTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: SvgPicture.asset("assets/icons/exit.svg"),
+                      onPressed: viewModel.signOut,
+                    ),
+                  ],
                 ),
-                SizedBox(width: 16.0),
+                SizedBox(height: 12.0),
+                TabBar(
+                  labelColor: KudosTheme.accentColor,
+                  unselectedLabelColor: KudosTheme.textColor,
+                  indicatorColor: KudosTheme.accentColor,
+                  tabs: <Widget>[
+                    Tab(
+                      text: localizer().achievements,
+                      icon: VectorIcon("assets/icons/star.svg"),
+                    ),
+                    Tab(
+                      text: localizer().teams,
+                      icon: VectorIcon("assets/icons/teams.svg"),
+                    ),
+                    Tab(
+                      text: localizer().owner,
+                      icon: VectorIcon("assets/icons/owner.svg"),
+                    ),
+                  ],
+                ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: Stack(
+                    alignment: Alignment.topLeft,
                     children: <Widget>[
-                      Text(
-                        user.name,
-                        style: KudosTheme.userNameTitleTextStyle,
+                      Positioned.fill(
+                        child: TabBarView(
+                          children: <Widget>[
+                            Container(
+                              color: KudosTheme.contentColor,
+                              padding: EdgeInsets.all(16.0),
+                              child: ProfileAchievementsListWidget(
+                                user.id,
+                                false,
+                              ),
+                            ),
+                            ChangeNotifierProvider<MyTeamsViewModel>.value(
+                              value: viewModel.myTeamsViewModel..initialize(),
+                              child: _MyTeamsWidget(),
+                            ),
+                            ChangeNotifierProvider<
+                                MyAchievementsViewModel>.value(
+                              value: viewModel.myAchievementsViewModel
+                                ..initialize(),
+                              child: _MyAchievementsWidget(),
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        user.email,
-                        style: KudosTheme.userNameSubTitleTextStyle,
+                      Positioned.fromRect(
+                        child: CustomPaint(
+                          painter: _TopPainter(),
+                        ),
+                        rect: Rect.fromLTWH(
+                          0.0,
+                          0.0,
+                          constraints.maxWidth,
+                          46.0,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    color: KudosTheme.textColor,
-                    size: 24.0,
-                  ),
-                  onPressed: viewModel.signOut,
-                ),
               ],
-            ),
-            SizedBox(height: 12.0),
-            TabBar(
-              labelColor: KudosTheme.accentColor,
-              unselectedLabelColor: KudosTheme.textColor,
-              indicatorColor: KudosTheme.accentColor,
-              tabs: <Widget>[
-                Tab(
-                  text: localizer().achievements,
-                  icon: Icon(Icons.star_border),
-                ),
-                Tab(
-                  text: localizer().teams,
-                  icon: Icon(Icons.people_outline),
-                ),
-                Tab(
-                  text: localizer().owner,
-                  icon: Icon(Icons.wc),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Stack(
-                alignment: Alignment.topLeft,
-                children: <Widget>[
-                  Positioned.fill(
-                    child: TabBarView(
-                      children: <Widget>[
-                        Container(
-                          color: KudosTheme.contentColor,
-                          padding: EdgeInsets.all(16.0),
-                          child: ProfileAchievementsListWidget(
-                            user.id,
-                            false,
-                          ),
-                        ),
-                        ChangeNotifierProvider<MyTeamsViewModel>.value(
-                          value: viewModel.myTeamsViewModel..initialize(),
-                          child: _MyTeamsWidget(),
-                        ),
-                        ChangeNotifierProvider<MyAchievementsViewModel>.value(
-                          value: viewModel.myAchievementsViewModel
-                            ..initialize(),
-                          child: _MyAchievementsWidget(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          height: 46.0,
-                          child: CustomPaint(
-                            painter: _TopPainter(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -181,7 +183,7 @@ class _MyAchievementsWidget extends StatelessWidget {
 
                       return AchievementListWidget.from(
                         notifier.items,
-                            (x) {
+                        (x) {
                           Navigator.of(context).push(
                             AchievementDetailsRoute(x.achievement.id),
                           );
@@ -302,7 +304,7 @@ class _TopPainter extends CustomPainter {
       ..close();
 
     final startColor = KudosTheme.mainGradientStartColor;
-    final endColor = KudosTheme.mainGradientStartColor;
+    final endColor = KudosTheme.mainGradientEndColor;
     final gradient = LinearGradient(
       colors: <Color>[
         Color.fromARGB(
@@ -353,12 +355,13 @@ class _TopPainter extends CustomPainter {
     final path = Path()
       ..moveTo(0, 0)
       ..lineTo(x1, y1)
-      ..quadraticBezierTo(x2, y2, x3, y3)..quadraticBezierTo(x4, y4, x5, y5)
+      ..quadraticBezierTo(x2, y2, x3, y3)
+      ..quadraticBezierTo(x4, y4, x5, y5)
       ..lineTo(size.width, 0.0)
       ..close();
 
     final startColor = KudosTheme.mainGradientStartColor;
-    final endColor = KudosTheme.mainGradientStartColor;
+    final endColor = KudosTheme.mainGradientEndColor;
     final gradient = LinearGradient(
       colors: <Color>[
         Color.fromARGB(
@@ -409,7 +412,8 @@ class _TopPainter extends CustomPainter {
     final path = Path()
       ..moveTo(0, 0)
       ..lineTo(x1, y1)
-      ..quadraticBezierTo(x2, y2, x3, y3)..quadraticBezierTo(x4, y4, x5, y5)
+      ..quadraticBezierTo(x2, y2, x3, y3)
+      ..quadraticBezierTo(x4, y4, x5, y5)
       ..lineTo(size.width, 0.0)
       ..close();
 
