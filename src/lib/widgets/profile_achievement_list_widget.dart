@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievement_details_page.dart';
+import 'package:kudosapp/pages/profile/received_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/circle_image_widget.dart';
@@ -21,7 +22,10 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       child: Consumer<ProfileAchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (!viewModel.isBusy && viewModel.achievements.isNotEmpty) {
-            return _buildGridView(viewModel.achievements);
+            return _buildGridView(
+              viewModel.achievements,
+              viewModel.isMyProfile,
+            );
           }
           return _buildAdaptiveChild(viewModel);
         },
@@ -75,7 +79,9 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildGridView(
-      List<UserAchievementCollection> achievementCollections) {
+    List<UserAchievementCollection> achievementCollections,
+    bool isMyProfile,
+  ) {
     return _buildAdaptiveGridView(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -86,6 +92,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       itemBuilder: (context, index) => _buildListItem(
         context,
         achievementCollections[index],
+        isMyProfile,
       ),
     );
   }
@@ -114,9 +121,10 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget _buildListItem(
     BuildContext context,
     UserAchievementCollection achievementCollection,
+    bool isMyProfile,
   ) {
     final relatedAchievement =
-        achievementCollection.userAchievement.achievement;
+        achievementCollection.userAchievements[0].achievement;
     return LayoutBuilder(
       builder: (context, constraints) {
         return GestureDetector(
@@ -131,9 +139,15 @@ class ProfileAchievementsListWidget extends StatelessWidget {
             ],
           ),
           onTap: () {
-            Navigator.of(context).push(
-              AchievementDetailsRoute(relatedAchievement.id),
-            );
+            if (isMyProfile) {
+              Navigator.of(context).push(
+                ReceivedAchievementRoute(achievementCollection),
+              );
+            } else {
+              Navigator.of(context).push(
+                AchievementDetailsRoute(relatedAchievement.id),
+              );
+            }
           },
         );
       },
