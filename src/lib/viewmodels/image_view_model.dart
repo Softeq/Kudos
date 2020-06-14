@@ -6,7 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class ImageViewModel extends ChangeNotifier {
   String _imageUrl;
   File _file;
-  bool _isBusy;
+  bool _isBusy = false;
 
   String get imageUrl => _imageUrl;
 

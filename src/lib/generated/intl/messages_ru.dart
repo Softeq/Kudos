@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createYourOwnTeams" : MessageLookupByLibrary.simpleMessage("Создавайте свои команды и приглашайте в них своих коллег!"),
     "delete" : MessageLookupByLibrary.simpleMessage("Удалить"),
     "deleteAchievementWarning" : MessageLookupByLibrary.simpleMessage("Вы действительно хотите удалить эту награду?"),
+    "deleteTeamWarning" : MessageLookupByLibrary.simpleMessage("Вы действительно хотите удалить эту команду? Все награды этой команды будут также удалены"),
     "description" : MessageLookupByLibrary.simpleMessage("Описание"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте описание"),
     "edit" : MessageLookupByLibrary.simpleMessage("Редактировать"),

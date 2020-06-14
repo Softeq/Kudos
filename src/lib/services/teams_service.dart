@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kudosapp/models/achievement.dart';
 import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
@@ -14,6 +16,7 @@ class TeamsService {
 
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
+  final _achievementsService = locator<AchievementsService>();
 
   Future<Team> createTeam(String name, String description, [File file]) async {
     if (name == null || name.isEmpty) {
@@ -37,6 +40,7 @@ class TeamsService {
             description: description,
             members: [firstMember],
             owners: [firstMember],
+            isActive: true,
           ),
         );
 
@@ -98,6 +102,7 @@ class TeamsService {
     final qs = await _database
         .collection(_teamsCollection)
         .where("visible_for", arrayContains: userId)
+        .where("is_active", isEqualTo: true)
         .getDocuments();
     return qs.documents.map((x) => Team.fromDocument(x)).toList();
   }
@@ -108,9 +113,26 @@ class TeamsService {
     return Team.fromDocument(document);
   }
 
+  Future<void> deleteTeam(Team team, List<Achievement> achievements) async {
+    final docRef = _database.collection(_teamsCollection).document(team.id);
+
+    var batch = _database.batch();
+
+    if (achievements != null && achievements.length > 0) {
+      for (var achievement in achievements) {
+        _achievementsService.deleteAchievement(achievement.id, batch: batch);
+      }
+    }
+
+    var map = Team.createMap(isActive: false);
+    batch.setData(docRef, map, merge: true);
+    await batch.commit();
+  }
+
   bool canBeModifiedByCurrentUser(Team team) {
     final userId = _authService.currentUser.id;
-    final admin = team.owners.firstWhere((x) => x.id == userId, orElse: () => null);
+    final admin =
+        team.owners.firstWhere((x) => x.id == userId, orElse: () => null);
     final result = admin != null;
     return result;
   }

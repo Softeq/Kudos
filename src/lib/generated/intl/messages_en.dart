@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createYourOwnTeams" : MessageLookupByLibrary.simpleMessage("Create your teams and invite your colleagues to join them!"),
     "delete" : MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteAchievementWarning" : MessageLookupByLibrary.simpleMessage("Do you really want to delete this achievement?"),
+    "deleteTeamWarning" : MessageLookupByLibrary.simpleMessage("Do you really want to delete this team? All the team achievements will be removed as well"),
     "description" : MessageLookupByLibrary.simpleMessage("Description"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Add a description"),
     "edit" : MessageLookupByLibrary.simpleMessage("Edit"),
