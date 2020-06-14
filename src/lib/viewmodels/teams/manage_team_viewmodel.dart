@@ -1,22 +1,22 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/team_member.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
-import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/models/team_member.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
-import 'package:kudosapp/services/teams_service.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
   final members = ListNotifier<TeamMember>();
   final admins = ListNotifier<TeamMember>();
 
-  final _achievements = List<AchievementViewModel>();
+  final _achievements = List<AchievementModel>();
   final _achievementsService = locator<AchievementsService>();
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
@@ -129,11 +129,11 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
-  List<AchievementViewModel> getData(int index) {
+  List<AchievementModel> getData(int index) {
     var index2 = index * 2 - 1;
     var index1 = index2 - 1;
 
-    var list = List<AchievementViewModel>();
+    var list = List<AchievementModel>();
     list.add(_achievements[index1]);
     if (index2 < _achievements.length) {
       list.add(_achievements[index2]);
@@ -153,7 +153,7 @@ class ManageTeamViewModel extends BaseViewModel {
     if (achievementViewModel != null) {
       achievementViewModel.initialize(event.achievement);
     } else {
-      _achievements.add(AchievementViewModel(event.achievement));
+      _achievements.add(AchievementModel(event.achievement));
     }
     notifyListeners();
   }
@@ -165,7 +165,7 @@ class ManageTeamViewModel extends BaseViewModel {
       x.dispose();
     });
     _achievements.clear();
-    _achievements.addAll(result.map((x) => AchievementViewModel(x)).toList());
+    _achievements.addAll(result.map((x) => AchievementModel(x)).toList());
     notifyListeners();
   }
 }

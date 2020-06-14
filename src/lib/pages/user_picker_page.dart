@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
 
@@ -121,7 +121,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
                       trailingWidget: Icon(Icons.clear),
                       users: viewModel.selectedUsers,
                       trailingSelector: (x) {
-                        viewModel.unSelect(x);
+                        viewModel.deselect(x);
                       },
                     ),
                   ),

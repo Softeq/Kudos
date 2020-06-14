@@ -1,4 +1,4 @@
-import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/dto/achievement.dart';
 
 class AchievementUpdatedMessage {
   final Achievement achievement;

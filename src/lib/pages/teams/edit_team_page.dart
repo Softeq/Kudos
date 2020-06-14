@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
-import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/circle_image_widget.dart';

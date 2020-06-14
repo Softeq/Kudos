@@ -1,19 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:kudosapp/dto/achievement_holder.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/models/list_notifier.dart';
-import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/models/user_reference.dart';
-import 'package:kudosapp/pages/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/achievement_details_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
+
+import 'edit_achievement_page.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -69,7 +70,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                     ),
                     IconButton(
                         icon: Icon(Icons.delete_forever),
-                        onPressed: () => _deleteAchievement(viewModel))
+                        onPressed: () => viewModel.deleteAchievement(context))
                   ]
                 : null,
           ),
@@ -84,43 +85,6 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         );
       },
     );
-  }
-
-  void _deleteAchievement(AchievementDetailsViewModel viewModel) async {
-    bool delete = false;
-    await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(localizer().warning),
-            content: Text(localizer().deleteAchievementWarning),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(localizer().cancel),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  localizer().delete,
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 59, 48),
-                  ),
-                ),
-                onPressed: () {
-                  delete = true;
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
-    if (delete) {
-      await viewModel.delete();
-      Navigator.popUntil(context, ModalRoute.withName('/'));
-    }
   }
 
   Widget _buildBody(AchievementDetailsViewModel viewModel) {

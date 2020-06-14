@@ -1,8 +1,8 @@
-import 'package:kudosapp/models/user_achievement.dart';
+import 'package:kudosapp/dto/user_achievement.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ProfileAchievementsViewModel extends BaseViewModel {

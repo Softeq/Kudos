@@ -4,13 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
-import 'package:kudosapp/pages/achievement_details_page.dart';
-import 'package:kudosapp/pages/edit_achievement_page.dart';
+import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
+import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
@@ -167,7 +167,7 @@ class _MyAchievementsWidget extends StatelessWidget {
               Positioned.fill(
                 child: ChangeNotifierProvider.value(
                   value: viewModel.items,
-                  child: Consumer<ListNotifier<AchievementViewModel>>(
+                  child: Consumer<ListNotifier<AchievementModel>>(
                     builder: (context, notifier, child) {
                       if (notifier.items.isEmpty) {
                         return Center(

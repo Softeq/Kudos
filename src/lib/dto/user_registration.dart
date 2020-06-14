@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 
 /// [User] model that used for update user profile after auth.
+/// Users collection
+@immutable
 class UserRegistration {
   final String name;
   final String email;

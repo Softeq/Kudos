@@ -1,27 +1,30 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:kudosapp/models/achievement.dart';
+import 'package:flutter/widgets.dart';
+import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
-import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/dialogs_service.dart';
 import 'package:kudosapp/services/file_service.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class EditAchievementViewModel extends BaseViewModel {
-  final AchievementViewModel achievementViewModel;
+  final AchievementModel achievementViewModel;
   final Team _team;
   final User _user;
   final _achievementsService = locator<AchievementsService>();
+  final _dialogsService = locator<DialogsService>();
   final _eventBus = locator<EventBus>();
   final bool _create;
 
   EditAchievementViewModel._(
       Achievement achievement, Team team, User user)
       :
-        achievementViewModel = AchievementViewModel(achievement),
+        achievementViewModel = AchievementModel(achievement),
         _team = team,
         _user = null,
         _create = achievement == null;
@@ -44,9 +47,9 @@ class EditAchievementViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  Future<bool> pickFile() async {
+  void pickFile(BuildContext context) async {
     if (achievementViewModel.imageViewModel.isBusy) {
-      return true;
+      return;
     }
     achievementViewModel.imageViewModel.update(isBusy: true);
 
@@ -57,7 +60,10 @@ class EditAchievementViewModel extends BaseViewModel {
     achievementViewModel.imageViewModel
         .update(isBusy: false, file: isValid ? file : null);
 
-    return isValid;
+    if (!isValid)
+    {
+      _dialogsService.showOneButtonDialog(context: context, title: null, content: localizer().fileSizeTooBig);
+    }
   }
 
   Future<void> save() async {

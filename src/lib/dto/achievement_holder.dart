@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/user_reference.dart';
+import 'package:kudosapp/dto/user_reference.dart';
 
+/// Achievement collection -> Holders subcollection
+@immutable
 class AchievementHolder extends Equatable {
   final Timestamp date;
   final UserReference recipient;

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kudosapp/models/user_achievement.dart';
+import 'package:kudosapp/dto/user_achievement.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
-import 'package:kudosapp/pages/achievement_details_page.dart';
+import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/widgets/circle_image_widget.dart';
 
 class AchievementHorizontalWidget extends StatelessWidget {
-  final AchievementViewModel _achievementViewModel;
+  final AchievementModel _achievementViewModel;
 
   const AchievementHorizontalWidget(this._achievementViewModel);
 

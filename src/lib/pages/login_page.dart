@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/models/errors/auth_error.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/core/errors/auth_error.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 

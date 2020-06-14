@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
-import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
-import 'package:kudosapp/viewmodels/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
@@ -116,9 +116,9 @@ class _EditAchievementPage extends StatelessWidget {
         return Stack(
           children: <Widget>[
             Center(
-              child: ChangeNotifierProvider<AchievementViewModel>.value(
+              child: ChangeNotifierProvider<AchievementModel>.value(
                 value: viewModel.achievementViewModel,
-                child: Consumer<AchievementViewModel>(
+                child: Consumer<AchievementModel>(
                   builder: (context, viewModel, child) {
                     return AchievementWidget([viewModel]);
                   },
@@ -219,27 +219,7 @@ class _EditAchievementPage extends StatelessWidget {
                   localizer().editImage,
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () async {
-                  var isValid = await viewModel.pickFile();
-                  if (!isValid) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: Text(localizer().fileSizeTooBig),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text(localizer().ok),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
+                onPressed: () => viewModel.pickFile(context),
               ),
             ),
           ],

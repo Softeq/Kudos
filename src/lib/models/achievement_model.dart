@@ -1,17 +1,17 @@
-import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/team_reference.dart';
-import 'package:kudosapp/models/user_reference.dart';
+import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/dto/team_reference.dart';
+import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
-class AchievementViewModel extends BaseViewModel {
+class AchievementModel extends BaseViewModel {
   final _imageViewModel = new ImageViewModel();
 
   Achievement _initialAchievement;
   String _title;
   String _description;
 
-  AchievementViewModel([Achievement achievement]) {
+  AchievementModel([Achievement achievement]) {
     if (achievement != null) {
       initialize(achievement);
     }

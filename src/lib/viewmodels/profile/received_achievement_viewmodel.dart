@@ -1,4 +1,4 @@
-import 'package:kudosapp/models/related_achievement.dart';
+import 'package:kudosapp/dto/related_achievement.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
