@@ -4,7 +4,7 @@ import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile/received_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProfileAchievementsListWidget extends StatelessWidget {
@@ -130,7 +130,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         return GestureDetector(
           child: Stack(
             children: <Widget>[
-              CircleImageWidget(
+              RoundedImageWidget.circular(
                 imageViewModel: achievementCollection.imageViewModel,
                 size: constraints.maxWidth,
               ),

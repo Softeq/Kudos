@@ -3,7 +3,7 @@ import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class EditTeamRoute extends MaterialPageRoute<Team> {
@@ -62,7 +62,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                     SizedBox(height: 24.0),
                     GestureDetector(
                       onTap: () => viewModel.pickFile(context),
-                      child: CircleImageWidget(
+                      child: RoundedImageWidget.circular(
                         imageViewModel: viewModel.imageViewModel,
                         name: viewModel.initialName,
                         size: 100.0,

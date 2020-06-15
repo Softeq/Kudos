@@ -250,42 +250,56 @@ class _MyTeamsWidget extends StatelessWidget {
                   itemCount: viewModel.items.length,
                   itemBuilder: (context, index) {
                     var item = viewModel.items[index];
-                    return ListTile(
-                      leading: RoundedImageWidget(
-                        imageViewModel: item.imageViewModel,
-                        name: item.team.name,
-                        size: 56.0,
-                      ),
-                      title: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                    return GestureDetector(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
                               children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 28.0),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                  ),
+                                  child: RoundedImageWidget.rect(
+                                    imageViewModel: item.imageViewModel,
+                                    name: item.team.name,
+                                    size: 56.0,
+                                    borderRadius: 4.0,
+                                  ),
+                                ),
+                                Expanded(
                                   child: Text(
                                     item.team.name,
                                     style: KudosTheme.listTitleTextStyle,
                                   ),
                                 ),
-                                Container(
-                                  height: 1.0,
-                                  color: KudosTheme.accentColor,
+                                Padding(
+                                  padding: EdgeInsets.only(right: 16.0),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16.0,
+                                    color: KudosTheme.accentColor,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16.0,
-                            color: KudosTheme.accentColor,
-                          ),
-                        ],
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 8.0,
+                                left: 76.0,
+                              ),
+                              height: 1.0,
+                              color: KudosTheme.accentColor,
+                            ),
+                          ],
+                        ),
                       ),
-                      onTap: () async {
-                        Navigator.of(context)
-                            .push(ManageTeamRoute(item.team.id));
+                      onTap: () {
+                        Navigator.of(context).push(
+                          ManageTeamRoute(item.team.id),
+                        );
                       },
                     );
                   },
