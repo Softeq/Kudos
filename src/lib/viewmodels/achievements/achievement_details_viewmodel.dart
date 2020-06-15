@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kudosapp/dto/achievement_holder.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
@@ -87,9 +88,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  Future<void> deleteAchievement(BuildContext context) async {
+  Future<void> deleteAchievement() async {
     if (await _dialogsService.showDeleteCancelDialog(
-        context: context,
         title: localizer().warning,
         content: localizer().deleteAchievementWarning)) {
       isBusy = true;
@@ -99,7 +99,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
           holdersCount: achievementHolders.items?.length ?? 0);
 
       isBusy = false;
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+      Navigator.popUntil(Get.context, ModalRoute.withName('/'));
     }
   }
 

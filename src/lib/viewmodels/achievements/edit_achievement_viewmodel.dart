@@ -1,6 +1,5 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/widgets.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
@@ -21,10 +20,8 @@ class EditAchievementViewModel extends BaseViewModel {
   final _eventBus = locator<EventBus>();
   final bool _create;
 
-  EditAchievementViewModel._(
-      Achievement achievement, Team team, User user)
-      :
-        achievementViewModel = AchievementModel(achievement),
+  EditAchievementViewModel._(Achievement achievement, Team team, User user)
+      : achievementViewModel = AchievementModel(achievement),
         _team = team,
         _user = null,
         _create = achievement == null;
@@ -47,7 +44,7 @@ class EditAchievementViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void pickFile(BuildContext context) async {
+  void pickFile() async {
     if (achievementViewModel.imageViewModel.isBusy) {
       return;
     }
@@ -60,9 +57,9 @@ class EditAchievementViewModel extends BaseViewModel {
     achievementViewModel.imageViewModel
         .update(isBusy: false, file: isValid ? file : null);
 
-    if (!isValid)
-    {
-      _dialogsService.showOneButtonDialog(context: context, title: null, content: localizer().fileSizeTooBig);
+    if (!isValid) {
+      _dialogsService.showOneButtonDialog(
+          title: null, content: localizer().fileSizeTooBig);
     }
   }
 

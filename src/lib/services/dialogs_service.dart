@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class DialogsService {
-  Future<void> showOneButtonDialog(
-      {@required BuildContext context,
-      @required String title,
-      @required String content,
-      Function() onButtonPressed,
-      String buttonTitle,
-      Color buttonColor}) {
+  Future<void> showOneButtonDialog({
+    @required String title,
+    @required String content,
+    Function() onButtonPressed,
+    String buttonTitle,
+    Color buttonColor,
+  }) {
+    final context = Get.context;
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -31,7 +33,6 @@ class DialogsService {
   }
 
   Future<bool> showTwoButtonsDialog({
-    @required BuildContext context,
     @required String title,
     @required String content,
     @required String firstButtonTitle,
@@ -41,6 +42,7 @@ class DialogsService {
     Color firstButtonColor,
     Color secondButtonColor,
   }) async {
+    final context = Get.context;
     bool firstButton = false;
     await showDialog(
         context: context,
@@ -76,24 +78,22 @@ class DialogsService {
     return firstButton;
   }
 
-  Future<bool> buildOkCancelDialog(
-      {@required BuildContext context,
-      @required String title,
-      @required String content}) {
+  Future<bool> buildOkCancelDialog({
+    @required String title,
+    @required String content,
+  }) {
     return showTwoButtonsDialog(
-        context: context,
         title: title,
         content: content,
         firstButtonTitle: localizer().ok,
         secondButtonTitle: localizer().cancel);
   }
 
-  Future<bool> showDeleteCancelDialog(
-      {@required BuildContext context,
-      @required String title,
-      @required String content}) {
+  Future<bool> showDeleteCancelDialog({
+    @required String title,
+    @required String content,
+  }) {
     return showTwoButtonsDialog(
-        context: context,
         title: title,
         content: content,
         firstButtonTitle: localizer().delete,
