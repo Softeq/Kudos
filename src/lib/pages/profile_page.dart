@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/user.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 
 class ProfileRoute extends MaterialPageRoute {

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+/// Achievements collection -> team field
 @immutable
 class TeamReference {
   final String id;

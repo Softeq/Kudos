@@ -1,4 +1,4 @@
-import 'package:kudosapp/models/team.dart';
+import 'package:kudosapp/dto/team.dart';
 
 class TeamUpdatedMessage {
   final Team team;

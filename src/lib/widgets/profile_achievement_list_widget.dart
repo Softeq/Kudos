@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
-import 'package:kudosapp/pages/achievement_details_page.dart';
+import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile/received_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';

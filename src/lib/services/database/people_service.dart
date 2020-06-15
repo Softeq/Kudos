@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kudosapp/models/user.dart';
-import 'package:kudosapp/models/user_registration.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/dto/user_registration.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/push_notifications_service.dart';

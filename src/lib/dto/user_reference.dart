@@ -1,28 +1,34 @@
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/dto/user.dart';
 
-/// User [Achievement] model
-class RelatedAchievement {
+/// Sender / Recipient [User] model
+/// Achievements collection -> user field
+@immutable
+class UserReference {
   final String id;
   final String name;
   final String imageUrl;
 
-  RelatedAchievement({
+  UserReference._({
     @required this.id,
     @required this.name,
     @required this.imageUrl,
   });
 
-  factory RelatedAchievement.fromAchievement(Achievement x) {
-    return RelatedAchievement(
+  factory UserReference.fromUser(User x) {
+    return UserReference._(
       id: x.id,
       name: x.name,
       imageUrl: x.imageUrl,
     );
   }
 
-  factory RelatedAchievement.fromMap(Map<String, dynamic> x) {
-    return RelatedAchievement(
+  factory UserReference.fromMap(Map<String, dynamic> x) {
+    if (x == null) {
+      return null;
+    }
+
+    return UserReference._(
       id: x["id"],
       name: x["name"],
       imageUrl: x["image_url"],

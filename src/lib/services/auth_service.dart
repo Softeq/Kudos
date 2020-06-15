@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kudosapp/core/errors/auth_error.dart';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/errors/auth_error.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
 class AuthService extends BaseAuthService {

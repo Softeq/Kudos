@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 
 class AchievementListWidget extends StatelessWidget {
   final List<Widget> _items;
 
   factory AchievementListWidget.from(
-    List<AchievementViewModel> input,
-    Function(AchievementViewModel) onAchievementClicked,
+    List<AchievementModel> input,
+    Function(AchievementModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
     sortedList.sort((x, y) => x.team?.name?.compareTo(y.team?.name) ?? 0);
 
     String teamName;
     var items = List<Widget>();
-    var achievements = List<AchievementViewModel>();
-    var addFunction = (List<Widget> x, List<AchievementViewModel> y) {
+    var achievements = List<AchievementModel>();
+    var addFunction = (List<Widget> x, List<AchievementModel> y) {
       x.add(AchievementWidget(y.toList(), onAchievementClicked));
       y.clear();
     };

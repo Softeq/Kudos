@@ -1,4 +1,4 @@
-import 'package:kudosapp/models/user_achievement.dart';
+import 'package:kudosapp/dto/user_achievement.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class UserAchievementCollection {

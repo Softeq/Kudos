@@ -1,5 +1,5 @@
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/teams_service.dart';
+import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class UserTeamsViewModel extends BaseViewModel {

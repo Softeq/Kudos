@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/pages/achievements_page.dart';
+import 'package:kudosapp/pages/achievements/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/achievements_viewmodel.dart';
+import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/widgets/vector_icon.dart';
 import 'package:provider/provider.dart';

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 
+/// Teams collection -> team_members array
 @immutable
 class TeamMember {
   final String id;

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/models/team_reference.dart';
-import 'package:kudosapp/models/user_reference.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/team_reference.dart';
+import 'package:kudosapp/dto/user_reference.dart';
 
+/// Achievements collection
 @immutable
 class Achievement {
   final String id;

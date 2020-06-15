@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Users collection
+@immutable
 class User {
   final String id;
   final String name;

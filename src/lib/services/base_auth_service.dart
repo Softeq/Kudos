@@ -1,4 +1,4 @@
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 
 abstract class BaseAuthService {
   User get currentUser;

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
-import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/teams_service.dart';
+import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
