@@ -22,4 +22,10 @@ class KudosTheme {
         color: Color.fromARGB(160, 255, 255, 255),
         fontWeight: FontWeight.w500,
       );
+
+  static TextStyle get listTitleTextStyle => TextStyle(
+    fontSize: 16.0,
+    color: mainGradientEndColor,
+    fontWeight: FontWeight.w800,
+  );
 }

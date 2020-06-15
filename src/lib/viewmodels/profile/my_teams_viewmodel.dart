@@ -6,9 +6,10 @@ import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class MyTeamsViewModel extends BaseViewModel {
-  final items = List<Team>();
+  final items = List<TeamViewModel>();
 
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
@@ -24,8 +25,11 @@ class MyTeamsViewModel extends BaseViewModel {
 
     var teams = await _teamsService.getTeams();
 
+    items.forEach((x) {
+      x.dispose();
+    });
     items.clear();
-    items.addAll(teams);
+    items.addAll(teams.map((x) => TeamViewModel(x)));
 
     isBusy = false;
 
@@ -45,6 +49,26 @@ class MyTeamsViewModel extends BaseViewModel {
   @override
   void dispose() {
     _streamSubscription?.cancel();
+    items.forEach((x) {
+      x.dispose();
+    });
     super.dispose();
+  }
+}
+
+class TeamViewModel {
+  final Team team;
+  final ImageViewModel imageViewModel;
+
+  TeamViewModel(this.team)
+      : imageViewModel = ImageViewModel()
+          ..initialize(
+            team.imageUrl,
+            null,
+            false,
+          );
+
+  void dispose() {
+    imageViewModel.dispose();
   }
 }

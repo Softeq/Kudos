@@ -16,6 +16,7 @@ import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_list_widget.dart';
 import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/vector_icon.dart';
 import 'package:provider/provider.dart';
 
@@ -250,9 +251,41 @@ class _MyTeamsWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     var item = viewModel.items[index];
                     return ListTile(
-                      title: Text(item.name),
+                      leading: RoundedImageWidget(
+                        imageViewModel: item.imageViewModel,
+                        name: item.team.name,
+                        size: 56.0,
+                      ),
+                      title: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 28.0),
+                                  child: Text(
+                                    item.team.name,
+                                    style: KudosTheme.listTitleTextStyle,
+                                  ),
+                                ),
+                                Container(
+                                  height: 1.0,
+                                  color: KudosTheme.accentColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16.0,
+                            color: KudosTheme.accentColor,
+                          ),
+                        ],
+                      ),
                       onTap: () async {
-                        Navigator.of(context).push(ManageTeamRoute(item.id));
+                        Navigator.of(context)
+                            .push(ManageTeamRoute(item.team.id));
                       },
                     );
                   },
@@ -263,7 +296,7 @@ class _MyTeamsWidget extends StatelessWidget {
           Positioned.directional(
             textDirection: TextDirection.ltr,
             end: 16.0,
-            bottom: 16.0,
+            bottom: 32.0,
             child: FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(EditTeamRoute());
