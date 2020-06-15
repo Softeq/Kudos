@@ -146,12 +146,12 @@ class ManageTeamViewModel extends BaseViewModel {
       return;
     }
 
-    var achievementViewModel = _achievements.firstWhere(
+    var achievementModel = _achievements.firstWhere(
       (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,
     );
-    if (achievementViewModel != null) {
-      achievementViewModel.initialize(event.achievement);
+    if (achievementModel != null) {
+      achievementModel.initialize(event.achievement);
     } else {
       _achievements.add(AchievementModel(event.achievement));
     }

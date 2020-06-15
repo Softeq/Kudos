@@ -54,12 +54,12 @@ class MyAchievementsViewModel extends BaseViewModel {
       return;
     }
 
-    var achievementViewModel = _viewModelList.items.firstWhere(
+    var achievementModel = _viewModelList.items.firstWhere(
       (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,
     );
-    if (achievementViewModel != null) {
-      achievementViewModel.initialize(event.achievement);
+    if (achievementModel != null) {
+      achievementModel.initialize(event.achievement);
       _viewModelList.notifyListeners();
     } else {
       _viewModelList.add(AchievementModel(event.achievement));

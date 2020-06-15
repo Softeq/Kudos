@@ -4,9 +4,9 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/widgets/circle_image_widget.dart';
 
 class AchievementHorizontalWidget extends StatelessWidget {
-  final AchievementModel _achievementViewModel;
+  final AchievementModel _achievementModel;
 
-  const AchievementHorizontalWidget(this._achievementViewModel);
+  const AchievementHorizontalWidget(this._achievementModel);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: Text(_achievementViewModel.description,
+                        child: Text(_achievementModel.description,
                             maxLines: 5,
                             overflow: TextOverflow.fade,
                             textAlign: TextAlign.center),
@@ -47,7 +47,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(imageRadius),
               elevation: 2,
               child: CircleImageWidget(
-                imageViewModel: _achievementViewModel.imageViewModel,
+                imageViewModel: _achievementModel.imageViewModel,
                 size: imageRadius*2,
               ),
             ),

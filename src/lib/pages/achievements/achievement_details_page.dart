@@ -55,7 +55,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         return Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
-            title: Text(viewModel.achievementViewModel.title),
+            title: Text(viewModel.achievementModel.title),
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
@@ -63,7 +63,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           EditAchievementRoute.editAchievement(
-                              viewModel.achievementViewModel.achievement),
+                              viewModel.achievementModel.achievement),
                         );
                       },
                     ),
@@ -93,7 +93,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         children: <Widget>[
           Container(
             height: 140,
-            child: AchievementHorizontalWidget(viewModel.achievementViewModel),
+            child: AchievementHorizontalWidget(viewModel.achievementModel),
           ),
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),

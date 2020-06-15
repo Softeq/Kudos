@@ -66,7 +66,7 @@ class _EditAchievementPage extends StatelessWidget {
       ),
       body: Consumer<EditAchievementViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.achievementViewModel == null) {
+          if (viewModel.achievementModel == null) {
             return Container();
           } else if (viewModel.isBusy) {
             return Center(
@@ -117,7 +117,7 @@ class _EditAchievementPage extends StatelessWidget {
           children: <Widget>[
             Center(
               child: ChangeNotifierProvider<AchievementModel>.value(
-                value: viewModel.achievementViewModel,
+                value: viewModel.achievementModel,
                 child: Consumer<AchievementModel>(
                   builder: (context, viewModel, child) {
                     return AchievementWidget([viewModel]);
@@ -161,13 +161,13 @@ class _EditAchievementPage extends StatelessWidget {
                       return Dialog(
                         child: _TextInputWidget(
                           title: localizer().achievementName,
-                          initialValue: viewModel.achievementViewModel.title,
+                          initialValue: viewModel.achievementModel.title,
                         ),
                       );
                     },
                   );
                   if (result != null) {
-                    viewModel.achievementViewModel.title = result;
+                    viewModel.achievementModel.title = result;
                   }
                 },
               ),
@@ -194,13 +194,13 @@ class _EditAchievementPage extends StatelessWidget {
                         child: _TextInputWidget(
                           title: localizer().description,
                           initialValue:
-                              viewModel.achievementViewModel.description,
+                              viewModel.achievementModel.description,
                         ),
                       );
                     },
                   );
                   if (result != null) {
-                    viewModel.achievementViewModel.description = result;
+                    viewModel.achievementModel.description = result;
                   }
                 },
               ),
