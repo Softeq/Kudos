@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   rect: Rect.fromLTWH(
                     0.0,
-                    constraints.maxHeight - 26.0,
+                    constraints.maxHeight - 25.5,
                     constraints.maxWidth,
                     26.0,
                   ),
