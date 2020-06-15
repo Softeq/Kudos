@@ -70,43 +70,6 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     );
   }
 
-  void _deleteTeam(ManageTeamViewModel viewModel) async {
-    bool delete = false;
-    await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(localizer().warning),
-            content: Text(localizer().deleteTeamWarning),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(localizer().cancel),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  localizer().delete,
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 59, 48),
-                  ),
-                ),
-                onPressed: () {
-                  delete = true;
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
-    if (delete) {
-      await viewModel.delete();
-      Navigator.popUntil(context, ModalRoute.withName('/'));
-    }
-  }
-
   Widget _buildTitle(ManageTeamViewModel viewModel) {
     var textTheme = Theme.of(context).textTheme;
 
@@ -167,7 +130,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                         ),
                         IconButton(
                             icon: Icon(Icons.delete_forever),
-                            onPressed: () => _deleteTeam(viewModel))
+                            onPressed: () => viewModel.deleteTeam(context))
                       ]))
                   : Container(),
             ],

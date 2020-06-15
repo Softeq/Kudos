@@ -4,6 +4,7 @@ import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
@@ -193,8 +194,7 @@ class _EditAchievementPage extends StatelessWidget {
                       return Dialog(
                         child: _TextInputWidget(
                           title: localizer().description,
-                          initialValue:
-                              viewModel.achievementModel.description,
+                          initialValue: viewModel.achievementModel.description,
                         ),
                       );
                     },
@@ -260,22 +260,8 @@ class _EditAchievementPage extends StatelessWidget {
     }
 
     if (errorMessage != null) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(errorMessage),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(localizer().ok),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      locator<DialogService>()
+          .showOkDialog(context: context, content: errorMessage);
     } else {
       Navigator.of(context).pop();
     }

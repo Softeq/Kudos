@@ -13,7 +13,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
-import 'package:kudosapp/services/dialogs_service.dart';
+import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 enum OwnerType { user, team }
@@ -23,7 +23,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _peopleService = locator<PeopleService>();
   final _eventBus = locator<EventBus>();
   final _authService = locator<BaseAuthService>();
-  final _dialogsService = locator<DialogsService>();
+  final _dialogsService = locator<DialogService>();
   final String _achievementId;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;

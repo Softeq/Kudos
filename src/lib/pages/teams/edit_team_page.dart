@@ -61,27 +61,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                   children: <Widget>[
                     SizedBox(height: 24.0),
                     GestureDetector(
-                      onTap: () async {
-                        var isValid = await viewModel.pickFile();
-                        if (!isValid) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Text(localizer().fileSizeTooBig),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text(localizer().ok),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
+                      onTap: () => viewModel.pickFile(context),
                       child: CircleImageWidget(
                         imageViewModel: viewModel.imageViewModel,
                         name: viewModel.initialName,

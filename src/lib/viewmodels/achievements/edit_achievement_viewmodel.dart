@@ -1,7 +1,5 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
@@ -9,8 +7,7 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
-import 'package:kudosapp/services/dialogs_service.dart';
-import 'package:kudosapp/services/file_service.dart';
+import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class EditAchievementViewModel extends BaseViewModel {
@@ -18,7 +15,7 @@ class EditAchievementViewModel extends BaseViewModel {
   final Team _team;
   final User _user;
   final _achievementsService = locator<AchievementsService>();
-  final _dialogsService = locator<DialogsService>();
+  final _imageService = locator<ImageService>();
   final _eventBus = locator<EventBus>();
   final bool _create;
 
@@ -52,16 +49,9 @@ class EditAchievementViewModel extends BaseViewModel {
     }
     achievementModel.imageViewModel.update(isBusy: true);
 
-    var file = await FilePicker.getFile(type: FileType.image);
-    final fileService = locator<FileService>();
-    var isValid = file == null || await fileService.isFileSizeValid(file);
+    var file = await _imageService.pickImage(context);
 
-    achievementModel.imageViewModel
-        .update(isBusy: false, file: isValid ? file : null);
-
-    if (!isValid) {
-      _dialogsService.showOkDialog(context: context, content: localizer().fileSizeTooBig);
-    }
+    achievementModel.imageViewModel.update(isBusy: false, file: file);
   }
 
   Future<void> save() async {

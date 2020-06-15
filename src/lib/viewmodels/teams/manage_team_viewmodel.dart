@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/team_member.dart';
 import 'package:kudosapp/dto/user.dart';
@@ -10,6 +11,7 @@ import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
@@ -20,6 +22,7 @@ class ManageTeamViewModel extends BaseViewModel {
   final _achievementsService = locator<AchievementsService>();
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
+  final _dialogService = locator<DialogService>();
 
   bool _canEdit;
 
@@ -106,12 +109,19 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> delete() async {
-    isBusy = true;
+  Future<void> deleteTeam(BuildContext context) async {
+    if (await _dialogService.showDeleteCancelDialog(
+        context: context,
+        title: localizer().warning,
+        content: localizer().deleteTeamWarning)) {
+      isBusy = true;
 
-    await _teamsService.deleteTeam(_initialTeam, _achievements.map((e) => e.achievement).toList());
+      await _teamsService.deleteTeam(
+          _initialTeam, _achievements.map((e) => e.achievement).toList());
 
-    isBusy = false;
+      isBusy = false;
+      Navigator.popUntil(context, ModalRoute.withName('/'));
+    }
   }
 
   void replaceAdmins(Iterable<User> users) {

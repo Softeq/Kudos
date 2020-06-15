@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
 
-class DialogsService {
+class DialogService {
   Future<void> showOneButtonDialog({
     @required BuildContext context,
     @required String title,
