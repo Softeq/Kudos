@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/related_achievement.dart';
-import 'package:kudosapp/models/user_reference.dart';
+import 'package:kudosapp/dto/related_achievement.dart';
+import 'package:kudosapp/dto/user_reference.dart';
 
+/// Users collection -> achievement_references subcollection
+@immutable
 class UserAchievement {
   final UserReference sender;
   final RelatedAchievement achievement;

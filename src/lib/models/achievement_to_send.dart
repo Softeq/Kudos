@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/achievement.dart';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/dto/user.dart';
 
 class AchievementToSend {
   final User sender;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
-import 'package:kudosapp/models/team.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/circle_image_widget.dart';
@@ -61,27 +61,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                   children: <Widget>[
                     SizedBox(height: 24.0),
                     GestureDetector(
-                      onTap: () async {
-                        var isValid = await viewModel.pickFile();
-                        if (!isValid) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Text(localizer().fileSizeTooBig),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text(localizer().ok),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
+                      onTap: () => viewModel.pickFile(context),
                       child: CircleImageWidget(
                         imageViewModel: viewModel.imageViewModel,
                         name: viewModel.initialName,

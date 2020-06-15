@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
 class MockAuthService extends BaseAuthService {

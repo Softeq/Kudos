@@ -1,16 +1,19 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
-import 'package:kudosapp/models/achievement_holder.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kudosapp/dto/achievement_holder.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
-import 'package:kudosapp/models/user.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/people_service.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/database/people_service.dart';
+import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 enum OwnerType { user, team }
@@ -20,10 +23,11 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _peopleService = locator<PeopleService>();
   final _eventBus = locator<EventBus>();
   final _authService = locator<BaseAuthService>();
+  final _dialogsService = locator<DialogService>();
   final String _achievementId;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
-  AchievementViewModel _achievementViewModel;
+  AchievementModel _achievementModel;
   double _statisticsValue = 0;
   String _ownerName = "";
   String _ownerId = "";
@@ -31,7 +35,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   final achievementHolders = new ListNotifier<AchievementHolder>();
 
-  AchievementViewModel get achievementViewModel => _achievementViewModel;
+  AchievementModel get achievementModel => _achievementModel;
 
   double get statisticsValue => _statisticsValue;
 
@@ -41,10 +45,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   OwnerType get ownerType => _ownerType;
 
-  bool get canEdit =>
-      achievementViewModel.achievement.canBeModifiedByCurrentUser;
+  bool get canEdit => achievementModel.achievement.canBeModifiedByCurrentUser;
 
-  bool get canSend => achievementViewModel.achievement.canBeSentByCurrentUser;
+  bool get canSend => achievementModel.achievement.canBeSentByCurrentUser;
 
   AchievementDetailsViewModel(this._achievementId) {
     isBusy = true;
@@ -56,7 +59,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     final achievement =
         await _achievementsService.getAchievement(_achievementId);
 
-    _achievementViewModel = AchievementViewModel(achievement);
+    _achievementModel = AchievementModel(achievement);
     _subscription?.cancel();
     _subscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
@@ -74,7 +77,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     final achievementToSend = AchievementToSend(
       sender: _authService.currentUser,
       recipient: recipient,
-      achievement: achievementViewModel.achievement,
+      achievement: achievementModel.achievement,
       comment: comment,
     );
 
@@ -84,31 +87,37 @@ class AchievementDetailsViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  Future<void> delete() async {
-    isBusy = true;
+  Future<void> deleteAchievement(BuildContext context) async {
+    if (await _dialogsService.showDeleteCancelDialog(
+        context: context,
+        title: localizer().warning,
+        content: localizer().deleteAchievementWarning)) {
+      isBusy = true;
 
-    await _achievementsService.deleteAchievement(
-        achievementViewModel.achievement.id,
-        holdersCount: achievementHolders.items?.length ?? 0);
+      await _achievementsService.deleteAchievement(
+          achievementModel.achievement.id,
+          holdersCount: achievementHolders.items?.length ?? 0);
 
-    isBusy = false;
+      isBusy = false;
+      Navigator.popUntil(Get.context, ModalRoute.withName('/'));
+    }
   }
 
   @override
   void dispose() {
-    _achievementViewModel.dispose();
+    _achievementModel.dispose();
     _subscription.cancel();
     super.dispose();
   }
 
   Future<void> _loadOwnerInfo() async {
-    if (_achievementViewModel.team != null) {
-      _ownerName = _achievementViewModel.team.name;
-      _ownerId = _achievementViewModel.team.id;
+    if (_achievementModel.team != null) {
+      _ownerName = _achievementModel.team.name;
+      _ownerId = _achievementModel.team.id;
       _ownerType = OwnerType.team;
     } else {
-      _ownerName = _achievementViewModel.user.name;
-      _ownerId = _achievementViewModel.user.id;
+      _ownerName = _achievementModel.user.name;
+      _ownerId = _achievementModel.user.id;
       _ownerType = OwnerType.user;
     }
   }
@@ -116,7 +125,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   Future<void> _loadStatistics() async {
     // Number of users with this badge divided by the total number of users
     achievementHolders.replace(await _achievementsService
-        .getAchievementHolders(achievementViewModel.achievement.id));
+        .getAchievementHolders(achievementModel.achievement.id));
 
     var allUsersCount = await _peopleService.getUsersCount();
     _statisticsValue = allUsersCount == 0
@@ -125,11 +134,11 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
-    if (event.achievement.id != _achievementViewModel.achievement.id) {
+    if (event.achievement.id != _achievementModel.achievement.id) {
       return;
     }
 
-    _achievementViewModel.initialize(event.achievement);
+    _achievementModel.initialize(event.achievement);
     notifyListeners();
   }
 }

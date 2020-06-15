@@ -1,7 +1,7 @@
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/people_service.dart';
+import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';

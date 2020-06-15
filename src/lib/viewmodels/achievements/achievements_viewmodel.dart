@@ -1,10 +1,10 @@
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
-import 'package:kudosapp/viewmodels/achievement_viewmodel.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AchievementsViewModel extends BaseViewModel {
-  final achievements = List<AchievementViewModel>();
+  final achievements = List<AchievementModel>();
 
   final _achievementsService = locator<AchievementsService>();
 
@@ -14,7 +14,7 @@ class AchievementsViewModel extends BaseViewModel {
     var result = await _achievementsService.getAchievements();
     achievements.forEach((x) => x.dispose());
     achievements.clear();
-    achievements.addAll(result.map((x) => AchievementViewModel(x)));
+    achievements.addAll(result.map((x) => AchievementModel(x)));
 
     isBusy = false;
 

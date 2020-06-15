@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/achievement.dart';
+import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/dto/team_member.dart';
 import 'package:kudosapp/models/image_data.dart';
-import 'package:kudosapp/models/team.dart';
-import 'package:kudosapp/models/team_member.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
 class TeamsService {

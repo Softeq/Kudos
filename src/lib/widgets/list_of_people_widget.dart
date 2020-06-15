@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/user.dart';
+import 'package:kudosapp/dto/user.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
   final List<User> users;
