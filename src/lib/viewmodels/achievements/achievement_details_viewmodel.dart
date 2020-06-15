@@ -45,8 +45,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   OwnerType get ownerType => _ownerType;
 
-  bool get canEdit =>
-      achievementModel.achievement.canBeModifiedByCurrentUser;
+  bool get canEdit => achievementModel.achievement.canBeModifiedByCurrentUser;
 
   bool get canSend => achievementModel.achievement.canBeSentByCurrentUser;
 
@@ -88,8 +87,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  Future<void> deleteAchievement() async {
+  Future<void> deleteAchievement(BuildContext context) async {
     if (await _dialogsService.showDeleteCancelDialog(
+        context: context,
         title: localizer().warning,
         content: localizer().deleteAchievementWarning)) {
       isBusy = true;

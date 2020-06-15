@@ -69,7 +69,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                     ),
                     IconButton(
                         icon: Icon(Icons.delete_forever),
-                        onPressed: () => viewModel.deleteAchievement())
+                        onPressed: () => viewModel.deleteAchievement(context))
                   ]
                 : null,
           ),

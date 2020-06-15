@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class DialogsService {
   Future<void> showOneButtonDialog({
+    @required BuildContext context,
     @required String title,
     @required String content,
-    Function() onButtonPressed,
-    String buttonTitle,
+    @required String buttonTitle,
     Color buttonColor,
   }) {
-    final context = Get.context;
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-              title: Text(title),
-              content: Text(content),
+              title: title == null ? null : Text(title),
+              content: content == null ? null : Text(content),
               actions: <Widget>[
                 FlatButton(
-                  child: Text(buttonTitle ?? localizer().ok,
+                  child: Text(buttonTitle,
                       style: TextStyle(
                         color: buttonColor,
                       )),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    onButtonPressed?.call();
                   },
                 )
               ],
@@ -33,23 +30,21 @@ class DialogsService {
   }
 
   Future<bool> showTwoButtonsDialog({
+    @required BuildContext context,
     @required String title,
     @required String content,
     @required String firstButtonTitle,
     @required String secondButtonTitle,
-    Function() onFirstButtonPressed,
-    Function() onSecondButtonPressed,
     Color firstButtonColor,
     Color secondButtonColor,
   }) async {
-    final context = Get.context;
     bool firstButton = false;
     await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-              title: Text(title),
-              content: Text(content),
+              title: title == null ? null : Text(title),
+              content: content == null ? null : Text(content),
               actions: <Widget>[
                 FlatButton(
                     child: Text(firstButtonTitle,
@@ -58,7 +53,6 @@ class DialogsService {
                         )),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      onFirstButtonPressed?.call();
                       firstButton = true;
                     }),
                 FlatButton(
@@ -70,7 +64,6 @@ class DialogsService {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      onSecondButtonPressed?.call();
                       firstButton = false;
                     })
               ],
@@ -78,11 +71,25 @@ class DialogsService {
     return firstButton;
   }
 
-  Future<bool> buildOkCancelDialog({
-    @required String title,
-    @required String content,
+  Future<void> showOkDialog({
+    @required BuildContext context,
+    String title,
+    String content,
+  }) {
+    return showOneButtonDialog(
+        context: context,
+        title: title,
+        content: content,
+        buttonTitle: localizer().ok);
+  }
+
+  Future<bool> showOkCancelDialog({
+    @required BuildContext context,
+    String title,
+    String content,
   }) {
     return showTwoButtonsDialog(
+        context: context,
         title: title,
         content: content,
         firstButtonTitle: localizer().ok,
@@ -90,10 +97,12 @@ class DialogsService {
   }
 
   Future<bool> showDeleteCancelDialog({
-    @required String title,
-    @required String content,
+    @required BuildContext context,
+    String title,
+    String content,
   }) {
     return showTwoButtonsDialog(
+        context: context,
         title: title,
         content: content,
         firstButtonTitle: localizer().delete,

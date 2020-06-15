@@ -219,7 +219,7 @@ class _EditAchievementPage extends StatelessWidget {
                   localizer().editImage,
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () => viewModel.pickFile(),
+                onPressed: () => viewModel.pickFile(context),
               ),
             ),
           ],
