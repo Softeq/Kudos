@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 
 class AchievementHorizontalWidget extends StatelessWidget {
   final AchievementModel _achievementModel;
@@ -33,10 +32,12 @@ class AchievementHorizontalWidget extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: Text(_achievementModel.description,
-                            maxLines: 5,
-                            overflow: TextOverflow.fade,
-                            textAlign: TextAlign.center),
+                        child: Text(
+                          _achievementModel.description,
+                          maxLines: 5,
+                          overflow: TextOverflow.fade,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -46,9 +47,9 @@ class AchievementHorizontalWidget extends StatelessWidget {
             Material(
               borderRadius: BorderRadius.circular(imageRadius),
               elevation: 2,
-              child: CircleImageWidget(
+              child: RoundedImageWidget.circular(
                 imageViewModel: _achievementModel.imageViewModel,
-                size: imageRadius*2,
+                size: imageRadius * 2,
               ),
             ),
           ],

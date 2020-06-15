@@ -7,28 +7,28 @@ import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ReceivedAchievementRoute extends MaterialPageRoute {
   ReceivedAchievementRoute(UserAchievementCollection achievementCollection)
       : super(
-    builder: (context) {
-      return ChangeNotifierProvider<ReceivedAchievementViewModel>(
-        create: (context) {
-          return ReceivedAchievementViewModel(achievementCollection);
-        },
-        child: ReceivedAchievementPage(),
-      );
-    },
-  );
+          builder: (context) {
+            return ChangeNotifierProvider<ReceivedAchievementViewModel>(
+              create: (context) {
+                return ReceivedAchievementViewModel(achievementCollection);
+              },
+              child: ReceivedAchievementPage(),
+            );
+          },
+        );
 }
 
 class ReceivedAchievementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel =
-    Provider.of<ReceivedAchievementViewModel>(context, listen: false);
+        Provider.of<ReceivedAchievementViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,16 +48,16 @@ class ReceivedAchievementPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(ReceivedAchievementViewModel viewModel,
-      BuildContext context) {
+  Widget _buildBody(
+      ReceivedAchievementViewModel viewModel, BuildContext context) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
         children: <Widget>[
           GestureDetector(
-            child: CircleImageWidget(
+            child: RoundedImageWidget.circular(
               imageViewModel: viewModel.achievementCollection.imageViewModel,
-              size: 100,
+              size: 100.0,
             ),
             onTap: () {
               Navigator.of(context).push(
@@ -67,25 +67,23 @@ class ReceivedAchievementPage extends StatelessWidget {
           ),
           SizedBox(height: 20),
           ListView.separated(
-            separatorBuilder: (context, index) =>
-                Divider(
-                  color: Colors.black54,
-                ),
+            separatorBuilder: (context, index) => Divider(
+              color: Colors.black54,
+            ),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: viewModel.achievementCollection.count,
-            itemBuilder: (context, index) =>
-                _buildUserAchievementView(
-                    viewModel.achievementCollection.userAchievements[index],
-                    context),
+            itemBuilder: (context, index) => _buildUserAchievementView(
+                viewModel.achievementCollection.userAchievements[index],
+                context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildUserAchievementView(UserAchievement userAchievementModel,
-      BuildContext context) {
+  Widget _buildUserAchievementView(
+      UserAchievement userAchievementModel, BuildContext context) {
     return InkWell(
         onTap: () {
           Navigator.of(context)
@@ -113,7 +111,7 @@ class ReceivedAchievementPage extends StatelessWidget {
                               .add_jm()
                               .format(userAchievementModel.date.toDate()),
                           style:
-                          TextStyle(fontSize: 12, color: Colors.black38)),
+                              TextStyle(fontSize: 12, color: Colors.black38)),
                     ])
               ]),
               SizedBox(height: 10),
@@ -126,9 +124,9 @@ class ReceivedAchievementPage extends StatelessWidget {
   Widget _buildCommentView(String comment) {
     if (comment.isNotEmpty) {
       return Text(comment, style: TextStyle(fontSize: 16));
-    }
-    else {
-      return Text(localizer().noComment, style: TextStyle(fontSize: 16, color: Colors.black26));
+    } else {
+      return Text(localizer().noComment,
+          style: TextStyle(fontSize: 16, color: Colors.black26));
     }
   }
 }

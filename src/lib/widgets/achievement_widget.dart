@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 
 class AchievementWidget extends StatelessWidget {
   final List<AchievementModel> achievements;
@@ -100,9 +100,9 @@ class AchievementWidget extends StatelessWidget {
                     onTap: () {
                       onAchievementClicked(achievement);
                     },
-                    child: CircleImageWidget(
+                    child: RoundedImageWidget.circular(
                       imageViewModel: achievement.imageViewModel,
-                      size: radius*2,
+                      size: radius * 2,
                     ),
                   ),
                 ),

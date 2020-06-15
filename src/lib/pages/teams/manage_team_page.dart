@@ -9,8 +9,8 @@ import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
-import 'package:kudosapp/widgets/circle_image_widget.dart';
 import 'package:kudosapp/widgets/fancy_list_widget.dart';
+import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
@@ -98,10 +98,10 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
-                child: CircleImageWidget.withUrl(
-                  viewModel.imageUrl,
-                  viewModel.name,
-                  45.0,
+                child: RoundedImageWidget.circular(
+                  imageViewModel: viewModel.imageViewModel,
+                  size: 46.0,
+                  name: viewModel.name,
                 ),
               ),
               SizedBox(width: 12),
