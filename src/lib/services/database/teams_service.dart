@@ -8,9 +8,8 @@ import 'package:kudosapp/dto/team_member.dart';
 import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
-
-import 'achievements_service.dart';
 
 class TeamsService {
   static const String _teamsCollection = "teams";

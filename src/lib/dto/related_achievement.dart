@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-
-import 'achievement.dart';
+import 'package:kudosapp/dto/achievement.dart';
 
 /// User [Achievement] model
 /// Users collection -> achievement_references subcollection -> achievement field

@@ -1,10 +1,10 @@
+import 'package:flutter/widgets.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team_reference.dart';
 import 'package:kudosapp/dto/user_reference.dart';
-import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
-class AchievementModel extends BaseViewModel {
+class AchievementModel extends ChangeNotifier {
   final _imageViewModel = new ImageViewModel();
 
   Achievement _initialAchievement;

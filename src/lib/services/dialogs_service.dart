@@ -30,16 +30,17 @@ class DialogsService {
             ));
   }
 
-  Future<bool> showTwoButtonsDialog(
-      {@required BuildContext context,
-      @required String title,
-      @required String content,
-      @required String firstButtonTitle,
-      @required String secondButtonTitle,
-      Function() onFirstButtonPressed,
-      Function() onSecondButtonPressed,
-      Color firstButtonColor,
-      Color secondButtonColor}) async {
+  Future<bool> showTwoButtonsDialog({
+    @required BuildContext context,
+    @required String title,
+    @required String content,
+    @required String firstButtonTitle,
+    @required String secondButtonTitle,
+    Function() onFirstButtonPressed,
+    Function() onSecondButtonPressed,
+    Color firstButtonColor,
+    Color secondButtonColor,
+  }) async {
     bool firstButton = false;
     await showDialog(
         context: context,

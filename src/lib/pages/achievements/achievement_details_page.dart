@@ -4,6 +4,7 @@ import 'package:kudosapp/dto/achievement_holder.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
@@ -13,8 +14,6 @@ import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
-
-import 'edit_achievement_page.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
