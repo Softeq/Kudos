@@ -30,60 +30,36 @@ class Achievement {
     @required this.isActive,
   });
 
-  factory Achievement.fromDocument(DocumentSnapshot x) {
+  static bool _contains(List<dynamic> list, value) {
+    if (list == null) {
+      return false;
+    }
+
+    return List<String>.from(list).contains(value);
+  }
+
+  factory Achievement.fromDocument(DocumentSnapshot x, String userId) {
+    var isActive = x.data["is_active"];
+    var members = x.data["members"];
+    var userReference = UserReference.fromMap(x.data["user"]);
+    var owners = x.data["owners"];
+    var ownedByUser = userReference?.id == userId;
+    var canBeModifiedByCurrentUser =
+        isActive && (ownedByUser || _contains(owners, userId));
+    var canBeSentByCurrentUser = canBeModifiedByCurrentUser ||
+        (isActive && (ownedByUser || _contains(members, userId)));
+
     return Achievement._(
       id: x.documentID,
       name: x.data["name"],
       description: x.data["description"],
       imageUrl: x.data["image_url"],
-      teamReference: TeamReference.fromMap(x.data["team"]),
-      userReference: UserReference.fromMap(x.data["user"]),
       imageName: x.data["image_name"],
-      canBeModifiedByCurrentUser: false,
-      canBeSentByCurrentUser: false,
-      isActive : x.data["is_active"],
-    );
-  }
-
-  factory Achievement.empty() {
-    return Achievement._(
-      description: null,
-      name: null,
-      imageUrl: null,
-      id: null,
-      teamReference: null,
-      userReference: null,
-      imageName: null,
-      isActive: true,
-      canBeModifiedByCurrentUser: null,
-      canBeSentByCurrentUser: null,
-    );
-  }
-
-  Achievement copy({
-    String name,
-    String description,
-    String imageUrl,
-    TeamReference teamReference,
-    UserReference userReference,
-    String imageName,
-    bool canBeModifiedByCurrentUser,
-    bool canBeSentByCurrentUser,
-    bool isActive,
-  }) {
-    return Achievement._(
-      id: this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      teamReference: teamReference ?? this.teamReference,
-      userReference: userReference ?? this.userReference,
-      imageName: imageName ?? this.imageName,
-      canBeModifiedByCurrentUser:
-          canBeModifiedByCurrentUser ?? this.canBeModifiedByCurrentUser,
-      canBeSentByCurrentUser:
-          canBeSentByCurrentUser ?? this.canBeSentByCurrentUser,
-      isActive: isActive ?? this.isActive,
+      teamReference: TeamReference.fromMap(x.data["team"]),
+      userReference: userReference,
+      canBeModifiedByCurrentUser: canBeModifiedByCurrentUser,
+      canBeSentByCurrentUser: canBeSentByCurrentUser,
+      isActive: isActive,
     );
   }
 
@@ -97,6 +73,56 @@ class Achievement {
       "image_name": imageName,
       "is_active": isActive,
     };
+
+    if (team != null) {
+      map["members"] = team.members.map((x) => x.id).toList();
+      map["owners"] = team.owners.map((x) => x.id).toList();
+    }
+
+    return map;
+  }
+
+  static Map<String, dynamic> createMap({
+    String name,
+    String description,
+    String imageUrl,
+    String imageName,
+    TeamReference teamReference,
+    UserReference userReference,
+    bool isActive,
+    Team team,
+  }) {
+    var map = Map<String, dynamic>();
+
+    if (name != null) {
+      map["name"] = name;
+    }
+
+    if (imageUrl != null) {
+      map["image_url"] = imageUrl;
+    }
+
+    if (imageName != null) {
+      map["image_name"] = imageName;
+    }
+
+    if (description != null) {
+      map["description"] = description;
+    }
+
+    if (isActive != null) {
+      map["is_active"] = isActive;
+    }
+
+    if (teamReference != null) {
+      map["user"] = null;
+      map["team"] = teamReference.toMap();
+    }
+
+    if (userReference != null) {
+      map["team"] = null;
+      map["user"] = userReference.toMap();
+    }
 
     if (team != null) {
       map["members"] = team.members.map((x) => x.id).toList();

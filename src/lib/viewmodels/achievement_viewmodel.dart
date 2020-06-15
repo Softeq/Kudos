@@ -5,13 +5,16 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class AchievementViewModel extends BaseViewModel {
+  final _imageViewModel = new ImageViewModel();
+
   Achievement _initialAchievement;
   String _title;
   String _description;
-  ImageViewModel _imageViewModel;
 
-  AchievementViewModel(Achievement achievement) {
-    initialize(achievement);
+  AchievementViewModel([Achievement achievement]) {
+    if (achievement != null) {
+      initialize(achievement);
+    }
   }
 
   Achievement get achievement => _initialAchievement;
@@ -31,30 +34,13 @@ class AchievementViewModel extends BaseViewModel {
   }
 
   ImageViewModel get imageViewModel => _imageViewModel;
-
-  TeamReference get team => _initialAchievement.teamReference;
-
-  UserReference get user => _initialAchievement.userReference;
-
-  Achievement getModifiedAchievement() {
-    return _initialAchievement.copy(
-      name: title,
-      description: description,
-    );
-  }
+  TeamReference get team => _initialAchievement?.teamReference;
+  UserReference get user => _initialAchievement?.userReference;
 
   void initialize(Achievement achievement) {
-    if (achievement == null) {
-      return;
-    }
-
     _initialAchievement = achievement;
     _title = achievement.name;
     _description = achievement.description;
-
-    if (_imageViewModel == null) {
-      _imageViewModel = ImageViewModel();
-    }
 
     _imageViewModel.initialize(achievement.imageUrl, null, false);
   }

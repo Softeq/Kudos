@@ -88,7 +88,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     isBusy = true;
 
     await _achievementsService.deleteAchievement(
-        achievementViewModel.achievement, achievementHolders.items.length);
+        achievementViewModel.achievement.id,
+        holdersCount: achievementHolders.items?.length ?? 0);
 
     isBusy = false;
   }

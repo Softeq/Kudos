@@ -10,24 +10,37 @@ import 'package:kudosapp/viewmodels/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievement_widget.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
-  EditAchievementRoute({
-    Achievement achievement,
-    Team team,
-    User user,
-  }) : super(
+  EditAchievementRoute.createTeamAchievement(Team team)
+      : super(
+          builder: (context) {
+            return ChangeNotifierProvider<EditAchievementViewModel>(
+                create: (context) =>
+                    EditAchievementViewModel.createTeamAchievement(team),
+                child: _EditAchievementPage(localizer().create));
+          },
+          fullscreenDialog: true,
+        );
+
+  EditAchievementRoute.createUserAchievement(User user)
+      : super(
+          builder: (context) {
+            return ChangeNotifierProvider<EditAchievementViewModel>(
+                create: (context) =>
+                    EditAchievementViewModel.createUserAchievement(user),
+                child: _EditAchievementPage(localizer().create));
+          },
+          fullscreenDialog: true,
+        );
+
+  EditAchievementRoute.editAchievement(Achievement achievement)
+      : super(
           builder: (context) {
             return ChangeNotifierProvider<EditAchievementViewModel>(
               create: (context) {
-                return EditAchievementViewModel(
-                  achievement ?? Achievement.empty(),
-                  team,
-                  user,
-                );
+                return EditAchievementViewModel.editAchievement(achievement);
               },
               child: _EditAchievementPage(
-                achievement == null
-                    ? localizer().create
-                    : localizer().edit,
+                localizer().edit,
               ),
             );
           },
@@ -208,8 +221,7 @@ class _EditAchievementPage extends StatelessWidget {
                 ),
                 onPressed: () async {
                   var isValid = await viewModel.pickFile();
-                  if(!isValid)
-                  {
+                  if (!isValid) {
                     showDialog(
                       context: context,
                       builder: (context) {
