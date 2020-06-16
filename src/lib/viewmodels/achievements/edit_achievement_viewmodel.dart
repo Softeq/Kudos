@@ -22,7 +22,7 @@ class EditAchievementViewModel extends BaseViewModel {
   EditAchievementViewModel._(Achievement achievement, Team team, User user)
       : achievementModel = AchievementModel(achievement),
         _team = team,
-        _user = null,
+        _user = user,
         _create = achievement == null;
 
   factory EditAchievementViewModel.createTeamAchievement(Team team) {

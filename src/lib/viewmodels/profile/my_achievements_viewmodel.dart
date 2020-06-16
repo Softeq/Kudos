@@ -4,6 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
@@ -16,7 +17,8 @@ class MyAchievementsViewModel extends BaseViewModel {
   final _authService = locator<BaseAuthService>();
   final _eventBus = locator<EventBus>();
 
-  StreamSubscription _streamSubscription;
+  StreamSubscription _achievementUpdatedSubscription;
+  StreamSubscription _achievementDeletedSubscription;
 
   MyAchievementsViewModel() {
     isBusy = true;
@@ -35,16 +37,21 @@ class MyAchievementsViewModel extends BaseViewModel {
     _viewModelList.items.forEach((x) => x.dispose());
     _viewModelList.replace(viewModels);
 
-    _streamSubscription?.cancel();
-    _streamSubscription =
+    _achievementUpdatedSubscription?.cancel();
+    _achievementUpdatedSubscription =
         _eventBus.on<AchievementUpdatedMessage>().listen(_onAchievementUpdated);
+
+    _achievementDeletedSubscription?.cancel();
+    _achievementDeletedSubscription =
+        _eventBus.on<AchievementDeletedMessage>().listen(_onAchievementDeleted);
 
     isBusy = false;
   }
 
   @override
   void dispose() {
-    _streamSubscription?.cancel();
+    _achievementUpdatedSubscription?.cancel();
+    _achievementDeletedSubscription?.cancel();
     super.dispose();
   }
 
@@ -64,5 +71,11 @@ class MyAchievementsViewModel extends BaseViewModel {
     } else {
       _viewModelList.add(AchievementModel(event.achievement));
     }
+  }
+
+  void _onAchievementDeleted(AchievementDeletedMessage event) {
+    _viewModelList.items.removeWhere(
+        (element) => event.ids.contains(element.achievement.id));
+    _viewModelList.notifyListeners();
   }
 }
