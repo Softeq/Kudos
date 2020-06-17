@@ -9,6 +9,7 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
+import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -100,34 +101,55 @@ class AchievementDetailsViewModel extends BaseViewModel {
         secondButtonTitle: localizer().team,
         thirdButtonTitle: localizer().cancel);
 
-    if (result == 1) {
-      Navigator.of(context).push(PeoplePageRoute(
-          Icon(Icons.transfer_within_a_station), _onUserSelected));
-    } else if (result == 2) {
-      Navigator.of(context).push(MyTeamsRoute(Icon(Icons.transfer_within_a_station), _onTeamSelected));
+    switch (result) {
+      case 1:
+        {
+          var excludedUserId = achievementModel.user?.id;
+          Navigator.of(context).push(PeoplePageRoute(
+              excludedUserIds: excludedUserId == null ? null : {excludedUserId},
+              selectorIcon: Icon(Icons.transfer_within_a_station),
+              onItemSelected: _onUserSelected));
+          break;
+        }
+      case 2:
+        {
+          var excludedTeamId = achievementModel.team?.id;
+          Navigator.of(context).push(MyTeamsRoute(
+            excludedTeamIds: excludedTeamId == null ? null : {excludedTeamId},
+            selectorIcon: Icon(Icons.transfer_within_a_station),
+            onItemSelected: _onTeamSelected,
+          ));
+          break;
+        }
     }
   }
 
   Future<void> _onUserSelected(BuildContext context, User user) async {
     if (await _dialogsService.showOkCancelDialog(
-        context: context,
-        title: localizer().warning,
-        content: sprintf(
-            localizer().transferAchievementToUserWarning, [user.name]))) {
-      await _achievementsService.transferAchievement(
+      context: context,
+      title: localizer().warning,
+      content:
+          sprintf(localizer().transferAchievementToUserWarning, [user.name]),
+    )) {
+      var updatedAchievement = await _achievementsService.transferAchievement(
           id: achievementModel.achievement.id, user: user);
+
       Navigator.popUntil(context, ModalRoute.withName('/'));
+      _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
     }
   }
 
   Future<void> _onTeamSelected(BuildContext context, Team team) async {
     if (await _dialogsService.showOkCancelDialog(
-        context: context,
-        content: sprintf(
-            localizer().transferAchievementToTeamWarning, [team.name]))) {
-      await _achievementsService.transferAchievement(
+      context: context,
+      content:
+          sprintf(localizer().transferAchievementToTeamWarning, [team.name]),
+    )) {
+      var updatedAchievement = await _achievementsService.transferAchievement(
           id: achievementModel.achievement.id, team: team);
+
       Navigator.popUntil(context, ModalRoute.withName('/'));
+      _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
     }
   }
 

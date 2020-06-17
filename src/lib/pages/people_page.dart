@@ -10,33 +10,36 @@ import 'package:kudosapp/widgets/search_input_widget.dart';
 
 class PeoplePageRoute extends MaterialPageRoute {
   PeoplePageRoute(
-      Icon itemSelectorIcon, Function(BuildContext, User) itemSelector)
+      {Set<String> excludedUserIds,
+      Icon selectorIcon,
+      Function(BuildContext, User) onItemSelected})
       : super(
-          builder: (context) {
-            return ChangeNotifierProvider<PeopleViewModel>(
-              create: (context) {
-                return PeopleViewModel(excludeCurrentUser: false);
-              },
-              child:
-                  PeoplePage.withCustomSelector(itemSelectorIcon, itemSelector),
-            );
-          },
+          builder: (context) => PeoplePage(
+              excludedUserIds: excludedUserIds,
+              selectorIcon: selectorIcon,
+              onItemSelected: onItemSelected),
           fullscreenDialog: true,
         );
 }
 
 class PeoplePage extends StatelessWidget {
-  final Icon customIcon;
-  final Function(BuildContext, User) customItemSelector;
-  final bool useCustomSelector;
+  static final Icon defaultSelectorIcon = Icon(Icons.navigate_next);
+  static final Function(BuildContext, User) defaultItemSelector =
+      (context, user) => Navigator.of(context).push(
+            ProfileRoute(user.id),
+          );
 
-  PeoplePage.withCustomSelector(this.customIcon, this.customItemSelector)
-      : useCustomSelector = true;
+  final Set<String> _excludedUserIds;
+  final Function(BuildContext, User) _onItemSelected;
+  final Icon _selectorIcon;
 
-  PeoplePage()
-      : useCustomSelector = false,
-        customItemSelector = null,
-        customIcon = null;
+  PeoplePage({
+    Set<String> excludedUserIds,
+    Icon selectorIcon,
+    Function(BuildContext, User) onItemSelected,
+  })  : _excludedUserIds = excludedUserIds,
+        _selectorIcon = selectorIcon ?? defaultSelectorIcon,
+        _onItemSelected = onItemSelected ?? defaultItemSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +55,16 @@ class PeoplePage extends StatelessWidget {
               hintText: localizer().enterName,
             ),
             ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
-              create: (context) => PeopleViewModel()..initialize(),
+              create: (context) =>
+                  PeopleViewModel(excludedUserIds: _excludedUserIds)
+                    ..initialize(),
               update: (context, searchViewModel, peopleViewModel) {
                 return peopleViewModel..filterByName(searchViewModel.query);
               },
               child: Expanded(
                 child: PeopleList(
-                  (user) {
-                    useCustomSelector
-                        ? customItemSelector?.call(context, user)
-                        : Navigator.of(context).push(ProfileRoute(user.id));
-                  },
-                  useCustomSelector ? customIcon : Icon(Icons.navigate_next),
+                  (user) => _onItemSelected?.call(context, user),
+                  _selectorIcon,
                 ),
               ),
             ),

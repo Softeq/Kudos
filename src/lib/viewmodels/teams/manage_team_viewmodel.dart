@@ -8,6 +8,7 @@ import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
+import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/messages/team_deleted_message.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -34,6 +35,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
   StreamSubscription _achievementUpdatedSubscription;
   StreamSubscription _achievementDeletedSubscription;
+  StreamSubscription _achievementTransferredSubscription;
 
   String get name => _initialTeam.name;
 
@@ -69,6 +71,7 @@ class ManageTeamViewModel extends BaseViewModel {
     });
     _achievementUpdatedSubscription?.cancel();
     _achievementDeletedSubscription?.cancel();
+    _achievementTransferredSubscription?.cancel();
     imageViewModel.dispose();
     super.dispose();
   }
@@ -88,6 +91,11 @@ class ManageTeamViewModel extends BaseViewModel {
     _achievementDeletedSubscription?.cancel();
     _achievementDeletedSubscription =
         _eventBus.on<AchievementDeletedMessage>().listen(_onAchievementDeleted);
+
+    _achievementTransferredSubscription?.cancel();
+    _achievementTransferredSubscription = _eventBus
+        .on<AchievementTransferredMessage>()
+        .listen(_onAchievementTransferred);
 
     imageViewModel.initialize(team.imageUrl, null, false);
     isBusy = false;
@@ -136,7 +144,8 @@ class ManageTeamViewModel extends BaseViewModel {
 
       isBusy = false;
       _eventBus.fire(TeamDeletedMessage(_initialTeam.id));
-      _eventBus.fire(AchievementDeletedMessage.multiple(_achievements.map((a) => a.achievement.id).toSet()));
+      _eventBus.fire(AchievementDeletedMessage.multiple(
+          _achievements.map((a) => a.achievement.id).toSet()));
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
@@ -186,8 +195,25 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   void _onAchievementDeleted(AchievementDeletedMessage event) {
-    _achievements.removeWhere(
-        (element) => event.ids.contains(element.achievement.id));
+    _achievements
+        .removeWhere((element) => event.ids.contains(element.achievement.id));
+    notifyListeners();
+  }
+
+  void _onAchievementTransferred(AchievementTransferredMessage event) {
+    if (event.achievements.first.userReference?.id != _initialTeam.id) {
+      var achievementIds = event.achievements.map((a) => a.id).toSet();
+      _achievements.removeWhere(
+          (element) => achievementIds.contains(element.achievement.id));
+    } else {
+      var achievementIds = _achievements.map((a) => a.achievement.id).toSet();
+      for (var achievement in event.achievements) {
+        if (!achievementIds.contains(achievement.id)) {
+          _achievements.add(AchievementModel(achievement));
+        }
+      }
+    }
+
     notifyListeners();
   }
 

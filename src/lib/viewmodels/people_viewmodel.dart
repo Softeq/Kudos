@@ -9,13 +9,13 @@ import 'package:rxdart/rxdart.dart';
 class PeopleViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
   final List<User> _people = [];
-  final bool excludeCurrentUser;
+  final Set<String> _excludedUserIds;
 
-  PublishSubject<String> _filterByNameSubject;
+  final PublishSubject<String> _filterByNameSubject;
 
-  PeopleViewModel({this.excludeCurrentUser}) {
-    _filterByNameSubject = PublishSubject<String>();
-  }
+  PeopleViewModel({Set<String> excludedUserIds})
+      : _filterByNameSubject = PublishSubject<String>(),
+        _excludedUserIds = excludedUserIds;
 
   @override
   void dispose() {
@@ -42,12 +42,14 @@ class PeopleViewModel extends BaseViewModel {
   Future<void> _loadPeopleList() async {
     if (_people.isEmpty) {
       List<User> people = [];
-      if (excludeCurrentUser == null) {
-        people = await _peopleService.getAllUsers();
-      } else {
-        people = await _peopleService.getAllowedUsers();
-      }
+
+      people = await _peopleService.getAllUsers();
+
       _people.addAll(people);
+
+      if (_excludedUserIds != null) {
+        _people.removeWhere((user) => _excludedUserIds.contains(user.id));
+      }
     }
   }
 

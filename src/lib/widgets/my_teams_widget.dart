@@ -10,36 +10,47 @@ import 'package:kudosapp/widgets/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class MyTeamsRoute extends MaterialPageRoute {
-  MyTeamsRoute(Icon itemSelectorIcon, Function(BuildContext, Team) itemSelector)
-      : super(
+  MyTeamsRoute({
+    Set<String> excludedTeamIds,
+    Icon selectorIcon,
+    Function(BuildContext, Team) onItemSelected,
+  }) : super(
           builder: (context) {
             return ChangeNotifierProvider<MyTeamsViewModel>.value(
-                value: MyTeamsViewModel()..initialize(),
+                value: MyTeamsViewModel(excludedTeamIds: excludedTeamIds)..initialize(),
                 child: Scaffold(
                     appBar: AppBar(
                       title: Text(
                         localizer().chooseTeam,
                       ),
                     ),
-                    body: MyTeamsWidget.withCustomSelector(
-                        itemSelectorIcon, itemSelector)));
+                    body: MyTeamsWidget(
+                        selectorIcon: selectorIcon,
+                        onItemSelected: onItemSelected)));
           },
           fullscreenDialog: true,
         );
 }
 
 class MyTeamsWidget extends StatelessWidget {
-  final Icon customIcon;
-  final Function(BuildContext, Team) customItemSelector;
-  final bool useCustomSelector;
+  static final Icon defaultSelectorIcon = Icon(
+    Icons.arrow_forward_ios,
+    size: 16.0,
+    color: KudosTheme.accentColor,
+  );
+  static final Function(BuildContext, Team) defaultItemSelector =
+      (context, team) => Navigator.of(context).push(
+            ManageTeamRoute(team.id),
+          );
 
-  MyTeamsWidget.withCustomSelector(this.customIcon, this.customItemSelector)
-      : useCustomSelector = true;
+  final Function(BuildContext, Team) onItemSelected;
+  final Icon selectorIcon;
 
-  MyTeamsWidget()
-      : useCustomSelector = false,
-        customItemSelector = null,
-        customIcon = null;
+  MyTeamsWidget({
+    Icon selectorIcon,
+    Function(BuildContext, Team) onItemSelected,
+  })  : selectorIcon = selectorIcon ?? defaultSelectorIcon,
+        onItemSelected = onItemSelected ?? defaultItemSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -99,13 +110,7 @@ class MyTeamsWidget extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 16.0),
-                                  child: useCustomSelector
-                                      ? customIcon
-                                      : Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 16.0,
-                                          color: KudosTheme.accentColor,
-                                        ),
+                                  child: selectorIcon,
                                 ),
                               ],
                             ),
@@ -121,13 +126,7 @@ class MyTeamsWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      onTap: () {
-                        useCustomSelector
-                            ? customItemSelector?.call(context, item.team)
-                            : Navigator.of(context).push(
-                                ManageTeamRoute(item.team.id),
-                              );
-                      },
+                      onTap: () => onItemSelected?.call(context, item.team),
                     );
                   },
                 );
