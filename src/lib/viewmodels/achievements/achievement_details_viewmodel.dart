@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kudosapp/dto/achievement_holder.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
@@ -99,7 +99,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
           holdersCount: achievementHolders.items?.length ?? 0);
 
       isBusy = false;
-      Navigator.popUntil(Get.context, ModalRoute.withName('/'));
+      _eventBus.fire(AchievementDeletedMessage.single(achievementModel.achievement.id));
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 

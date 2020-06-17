@@ -2,19 +2,21 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/models/messages/team_deleted_message.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class MyTeamsViewModel extends BaseViewModel {
-  final items = List<TeamViewModel>();
+  final items = List<TeamModel>();
 
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
 
-  StreamSubscription _streamSubscription;
+  StreamSubscription _teamUpdatedSubscription;
+  StreamSubscription _teamDeletedSubscription;
 
   MyTeamsViewModel() {
     isBusy = true;
@@ -29,46 +31,40 @@ class MyTeamsViewModel extends BaseViewModel {
       x.dispose();
     });
     items.clear();
-    items.addAll(teams.map((x) => TeamViewModel(x)));
+    items.addAll(teams.map((x) => TeamModel(x)));
 
     isBusy = false;
 
-    _streamSubscription?.cancel();
-    _streamSubscription =
+    _teamUpdatedSubscription?.cancel();
+    _teamUpdatedSubscription =
         _eventBus.on<TeamUpdatedMessage>().listen(_onTeamUpdated);
+
+    _teamDeletedSubscription?.cancel();
+    _teamDeletedSubscription =
+        _eventBus.on<TeamDeletedMessage>().listen(_onTeamDeleted);
   }
 
   Future<Team> loadTeam(String id) {
     return _teamsService.getTeam(id);
   }
 
-  void _onTeamUpdated(TeamUpdatedMessage x) {
+  void _onTeamUpdated(TeamUpdatedMessage event) {
     initialize();
+  }
+
+  void _onTeamDeleted(TeamDeletedMessage event) {
+    items.removeWhere((teamModel) => teamModel.team.id == event.teamId);
+    notifyListeners();
   }
 
   @override
   void dispose() {
-    _streamSubscription?.cancel();
+    _teamUpdatedSubscription?.cancel();
+    _teamDeletedSubscription?.cancel();
+
     items.forEach((x) {
       x.dispose();
     });
     super.dispose();
-  }
-}
-
-class TeamViewModel {
-  final Team team;
-  final ImageViewModel imageViewModel;
-
-  TeamViewModel(this.team)
-      : imageViewModel = ImageViewModel()
-          ..initialize(
-            team.imageUrl,
-            null,
-            false,
-          );
-
-  void dispose() {
-    imageViewModel.dispose();
   }
 }
