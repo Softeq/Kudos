@@ -58,6 +58,9 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             title: Text(viewModel.achievementModel.title),
             actions: viewModel.canEdit
                 ? <Widget>[
+                  IconButton(
+                        icon: Icon(Icons.transfer_within_a_station),
+                        onPressed: () => viewModel.transferAchievement(context)),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {

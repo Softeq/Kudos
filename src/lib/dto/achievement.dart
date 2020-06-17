@@ -118,16 +118,19 @@ class Achievement {
     if (teamReference != null) {
       map["user"] = null;
       map["team"] = teamReference.toMap();
+
+      if (team != null) {
+        map["members"] = team.members.map((x) => x.id).toList();
+        map["owners"] = team.owners.map((x) => x.id).toList();
+      }
     }
 
     if (userReference != null) {
       map["team"] = null;
       map["user"] = userReference.toMap();
-    }
 
-    if (team != null) {
-      map["members"] = team.members.map((x) => x.id).toList();
-      map["owners"] = team.owners.map((x) => x.id).toList();
+      map["members"] = null;
+      map["owners"] = null;
     }
 
     return map;

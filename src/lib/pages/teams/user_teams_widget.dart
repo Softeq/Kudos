@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/pages/profile/my_profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/teams/user_teams_viewmodel.dart';
 

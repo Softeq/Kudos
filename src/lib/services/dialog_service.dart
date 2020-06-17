@@ -71,6 +71,62 @@ class DialogService {
     return firstButton;
   }
 
+  Future<int> showThreeButtonsDialog({
+    @required BuildContext context,
+    @required String title,
+    @required String content,
+    @required String firstButtonTitle,
+    @required String secondButtonTitle,
+    @required String thirdButtonTitle,
+    Color firstButtonColor,
+    Color secondButtonColor,
+    Color thirdButtonColor,
+  }) async {
+    int result = 0;
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: title == null ? null : Text(title),
+              content: content == null ? null : Text(content),
+              actions: <Widget>[
+                Align(alignment: Alignment.centerLeft, child:
+                FlatButton(
+                    child: Text(firstButtonTitle,
+                        style: TextStyle(
+                          color: firstButtonColor,
+                        )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      result = 1;
+                    })),
+                FlatButton(
+                    child: Text(
+                      secondButtonTitle,
+                      style: TextStyle(
+                        color: secondButtonColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      result = 2;
+                    }),
+                FlatButton(
+                    child: Text(
+                      thirdButtonTitle,
+                      style: TextStyle(
+                        color: thirdButtonColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      result = 3;
+                    })
+              ],
+            ));
+    return result;
+  }
+
   Future<void> showOkDialog({
     @required BuildContext context,
     String title,

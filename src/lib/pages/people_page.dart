@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/profile_page.dart';
@@ -7,7 +8,36 @@ import 'package:kudosapp/viewmodels/search_input_viewmodel.dart';
 import 'package:kudosapp/widgets/people_list_widget.dart';
 import 'package:kudosapp/widgets/search_input_widget.dart';
 
+class PeoplePageRoute extends MaterialPageRoute {
+  PeoplePageRoute(
+      Icon itemSelectorIcon, Function(BuildContext, User) itemSelector)
+      : super(
+          builder: (context) {
+            return ChangeNotifierProvider<PeopleViewModel>(
+              create: (context) {
+                return PeopleViewModel(excludeCurrentUser: false);
+              },
+              child:
+                  PeoplePage.withCustomSelector(itemSelectorIcon, itemSelector),
+            );
+          },
+          fullscreenDialog: true,
+        );
+}
+
 class PeoplePage extends StatelessWidget {
+  final Icon customIcon;
+  final Function(BuildContext, User) customItemSelector;
+  final bool useCustomSelector;
+
+  PeoplePage.withCustomSelector(this.customIcon, this.customItemSelector)
+      : useCustomSelector = true;
+
+  PeoplePage()
+      : useCustomSelector = false,
+        customItemSelector = null,
+        customIcon = null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +59,11 @@ class PeoplePage extends StatelessWidget {
               child: Expanded(
                 child: PeopleList(
                   (user) {
-                    Navigator.of(context).push(ProfileRoute(user.id));
+                    useCustomSelector
+                        ? customItemSelector?.call(context, user)
+                        : Navigator.of(context).push(ProfileRoute(user.id));
                   },
-                  Icon(Icons.navigate_next),
+                  useCustomSelector ? customIcon : Icon(Icons.navigate_next),
                 ),
               ),
             ),

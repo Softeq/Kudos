@@ -137,6 +137,7 @@ class AchievementsService {
     final data = Achievement.createMap(
       userReference: userReference,
       teamReference: teamReference,
+      team: team,
     );
     return _updateAchievement(id: id, data: data, batch: batch);
   }
