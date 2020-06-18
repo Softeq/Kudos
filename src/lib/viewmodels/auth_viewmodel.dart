@@ -6,8 +6,8 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AuthViewModel extends BaseViewModel {
   final _authService = locator<BaseAuthService>();
-  final _peopleService = locator<PeopleService>();
 
+  PeopleService _peopleService;
   User _currentUser;
   AuthViewModelState _authState = AuthViewModelState.unknown;
 
@@ -18,6 +18,14 @@ class AuthViewModel extends BaseViewModel {
           ? AuthViewModelState.loggedOut
           : AuthViewModelState.loggedIn;
     });
+  }
+
+  PeopleService get peopleService {
+    if (_peopleService == null) {
+      _peopleService = locator<PeopleService>();
+    }
+
+    return _peopleService;
   }
 
   User get currentUser => _currentUser;
@@ -31,11 +39,11 @@ class AuthViewModel extends BaseViewModel {
 
   Future<void> signIn() async {
     await _authService.signIn();
-    await _peopleService.tryRegisterCurrentUser();
+    await peopleService.tryRegisterCurrentUser();
   }
 
   Future<void> signOut() async {
-    await _peopleService.unSubscribeFromNotifications();
+    await peopleService.unSubscribeFromNotifications();
     await _authService.signOut();
   }
 }
