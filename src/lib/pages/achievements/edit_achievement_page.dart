@@ -6,9 +6,9 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
+import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
-import 'package:kudosapp/widgets/achievement_widget.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
   EditAchievementRoute.createTeamAchievement(Team team)

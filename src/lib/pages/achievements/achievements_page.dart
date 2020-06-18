@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
+import 'package:kudosapp/widgets/achievements/achievement_list_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/widgets/achievement_list_widget.dart';
 
 class AchievementsPage extends StatelessWidget {
   @override

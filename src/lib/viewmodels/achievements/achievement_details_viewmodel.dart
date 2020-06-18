@@ -19,7 +19,7 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:kudosapp/widgets/my_teams_widget.dart';
+import 'package:kudosapp/widgets/teams/my_teams_widget.dart';
 import 'package:sprintf/sprintf.dart';
 
 enum OwnerType { user, team }

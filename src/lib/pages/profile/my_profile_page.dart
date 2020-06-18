@@ -8,17 +8,14 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
-import 'package:kudosapp/pages/teams/edit_team_page.dart';
-import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_list_widget.dart';
-import 'package:kudosapp/widgets/my_teams_widget.dart';
-import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
-import 'package:kudosapp/widgets/rounded_image_widget.dart';
-import 'package:kudosapp/widgets/vector_icon.dart';
+import 'package:kudosapp/widgets/achievements/achievement_list_widget.dart';
+import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
+import 'package:kudosapp/widgets/common/vector_icon.dart';
+import 'package:kudosapp/widgets/teams/my_teams_widget.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {

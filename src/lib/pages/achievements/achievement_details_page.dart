@@ -9,10 +9,10 @@ import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_horizontal_widget.dart';
+import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
-import 'package:kudosapp/widgets/snack_bar_notifier.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
@@ -37,7 +37,7 @@ class _AchievementDetailsPage extends StatefulWidget {
 class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   final _inputController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _snackBarNotifier = SnackBarNotifier();
+  final _snackBarNotifier = locator<SnackBarNotifierService>();
 
   @override
   Widget build(BuildContext context) {

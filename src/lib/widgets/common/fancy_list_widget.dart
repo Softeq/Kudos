@@ -74,6 +74,4 @@ class FancyListWidget<T> extends StatelessWidget {
       _random.nextInt(255),
     );
   }
-
-
 }

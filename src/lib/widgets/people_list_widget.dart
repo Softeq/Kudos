@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/widgets/scroll_behaviors.dart';
+import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/people_viewmodel.dart';
 
