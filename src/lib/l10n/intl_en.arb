@@ -56,7 +56,7 @@
     "fileSizeTooBig" : "Image size is too big. Please select another file",
     "transferAchievementTitle" : "Transfer achievement",
     "transferAchievementDescription": "Do you want to trasfer this achievement to another user or another team?",
-    "transferAchievementToUserWarning": "Do you want to trasfer this achievement to %s? You might not have access to this achievement after the operation is complete",
+    "transferAchievementToUserWarning": "Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete",
     "transferAchievementToTeamWarning": "Do you want to trasfer this achievement to %s team? You might not have access to this achievement after the operation is complete",
     "noComment": "No comment",
     "chooseTeam": "Choose team"

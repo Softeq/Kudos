@@ -77,7 +77,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "transferAchievementDescription" : MessageLookupByLibrary.simpleMessage("Do you want to trasfer this achievement to another user or another team?"),
     "transferAchievementTitle" : MessageLookupByLibrary.simpleMessage("Transfer achievement"),
     "transferAchievementToTeamWarning" : MessageLookupByLibrary.simpleMessage("Do you want to trasfer this achievement to %s team? You might not have access to this achievement after the operation is complete"),
-    "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("Do you want to trasfer this achievement to %s? You might not have access to this achievement after the operation is complete"),
+    "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete"),
     "user" : MessageLookupByLibrary.simpleMessage("User"),
     "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("This user is not yet part of any team"),
     "warning" : MessageLookupByLibrary.simpleMessage("Warning"),

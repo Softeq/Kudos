@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement_holder.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/list_notifier.dart';
@@ -107,7 +108,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
           var excludedUserId = achievementModel.user?.id;
           Navigator.of(context).push(PeoplePageRoute(
               excludedUserIds: excludedUserId == null ? null : {excludedUserId},
-              selectorIcon: Icon(Icons.transfer_within_a_station),
+              selectorIcon: Icon(Icons.transfer_within_a_station,
+                  size: 24.0, color: KudosTheme.accentColor),
               onItemSelected: _onUserSelected));
           break;
         }
@@ -116,7 +118,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
           var excludedTeamId = achievementModel.team?.id;
           Navigator.of(context).push(MyTeamsRoute(
             excludedTeamIds: excludedTeamId == null ? null : {excludedTeamId},
-            selectorIcon: Icon(Icons.transfer_within_a_station),
+            selectorIcon: Icon(Icons.transfer_within_a_station,
+                size: 24.0, color: KudosTheme.accentColor),
             onItemSelected: _onTeamSelected,
           ));
           break;

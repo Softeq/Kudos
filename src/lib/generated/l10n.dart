@@ -603,10 +603,10 @@ class S {
     );
   }
 
-  /// `Do you want to trasfer this achievement to %s? You might not have access to this achievement after the operation is complete`
+  /// `Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete`
   String get transferAchievementToUserWarning {
     return Intl.message(
-      'Do you want to trasfer this achievement to %s? You might not have access to this achievement after the operation is complete',
+      'Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete',
       name: 'transferAchievementToUserWarning',
       desc: '',
       args: [],
