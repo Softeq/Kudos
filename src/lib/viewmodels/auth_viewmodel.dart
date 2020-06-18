@@ -43,7 +43,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   Future<void> signOut() async {
-    await peopleService.unSubscribeFromNotifications();
+    await peopleService.unsubscribeFromNotifications();
     await _authService.signOut();
   }
 }

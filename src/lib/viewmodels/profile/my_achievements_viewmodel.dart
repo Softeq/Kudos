@@ -95,9 +95,9 @@ class MyAchievementsViewModel extends BaseViewModel {
       _viewModelList.items.removeWhere(
           (element) => achievementIds.contains(element.achievement.id));
     } else {
+      var achievementIds =
+          _viewModelList.items.map((a) => a.achievement.id).toSet();
       for (var achievement in event.achievements) {
-        var achievementIds =
-            _viewModelList.items.map((a) => a.achievement.id).toSet();
         if (!achievementIds.contains(achievement.id)) {
           _viewModelList.items.add(AchievementModel(achievement));
         }
