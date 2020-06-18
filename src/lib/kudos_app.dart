@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:kudosapp/generated/l10n.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/pages/home_page.dart';
@@ -24,7 +25,11 @@ class KudosApp extends StatelessWidget {
           ],
           supportedLocales: S.delegate.supportedLocales,
           title: S().appName,
-          theme: ThemeData(),
+          theme: ThemeData(
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: KudosTheme.accentColor,
+            ),
+          ),
           home: _buildHome(viewModel),
         ),
       ),

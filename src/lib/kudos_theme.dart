@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class KudosTheme {
   static Color get textColor => Colors.white;
 
-  static Color get accentColor => Color.fromARGB(255, 13, 219, 199);
+  static Color get accentColor => Color.fromARGB(255, 3, 218, 197);
 
   static Color get contentColor => Colors.white;
 
