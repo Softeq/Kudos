@@ -130,9 +130,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
   Future<void> _onUserSelected(BuildContext context, User user) async {
     if (await _dialogsService.showOkCancelDialog(
       context: context,
-      title: localizer().warning,
-      content:
-          sprintf(localizer().transferAchievementToUserWarning, [user.name]),
+      title: sprintf(localizer().transferAchievementToUserTitle, [user.name]),
+      content: localizer().transferAchievementToUserWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
           id: achievementModel.achievement.id, user: user);
@@ -145,8 +144,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
   Future<void> _onTeamSelected(BuildContext context, Team team) async {
     if (await _dialogsService.showOkCancelDialog(
       context: context,
-      content:
-          sprintf(localizer().transferAchievementToTeamWarning, [team.name]),
+      title: sprintf(localizer().transferAchievementToTeamTitle, [team.name]),
+      content: localizer().transferAchievementToTeamWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
           id: achievementModel.achievement.id, team: team);

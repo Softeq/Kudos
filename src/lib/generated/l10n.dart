@@ -603,20 +603,40 @@ class S {
     );
   }
 
-  /// `Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete`
+  /// `Transfer to %s?`
+  String get transferAchievementToUserTitle {
+    return Intl.message(
+      'Transfer to %s?',
+      name: 'transferAchievementToUserTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transfer to %s team?`
+  String get transferAchievementToTeamTitle {
+    return Intl.message(
+      'Transfer to %s team?',
+      name: 'transferAchievementToTeamTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will not have access to this achievement after the operation is complete`
   String get transferAchievementToUserWarning {
     return Intl.message(
-      'Do you want to trasfer this achievement to %s? You will not have access to this achievement after the operation is complete',
+      'You will not have access to this achievement after the operation is complete',
       name: 'transferAchievementToUserWarning',
       desc: '',
       args: [],
     );
   }
 
-  /// `Do you want to trasfer this achievement to %s team? You might not have access to this achievement after the operation is complete`
+  /// `You might not have access to this achievement after the operation is complete`
   String get transferAchievementToTeamWarning {
     return Intl.message(
-      'Do you want to trasfer this achievement to %s team? You might not have access to this achievement after the operation is complete',
+      'You might not have access to this achievement after the operation is complete',
       name: 'transferAchievementToTeamWarning',
       desc: '',
       args: [],
