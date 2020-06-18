@@ -38,6 +38,7 @@
     "optionalDescription": "Описание (опционально)",
     "requiredField": "Обязательное поле",
     "team": "Команда",
+    "user": "Пользователь",
     "userTeamsEmptyPlaceholder": "Этот пользователь пока не состоит ни в одной команде",
     "admins": "Администраторы",
     "teams": "Команды",
@@ -53,5 +54,12 @@
     "createYourOwnTeams": "Создавайте свои команды и приглашайте в них своих коллег!",
     "enterName": "Введите имя",
     "fileSizeTooBig" : "Размер изображения слишком большой. Выберите другой файл",
-    "noComment" : "Нет комментария"
+    "transferAchievementTitle": "Сменить владельца",
+    "transferAchievementDescription": "Вы хотите сменить владельца текущей награды на другого пользователя или другую команду?",
+    "transferAchievementToUserTitle": "Сменить владельца на %s?",
+    "transferAchievementToTeamTitle": "Сменить владельца на команду %s?",
+    "transferAchievementToUserWarning": "Вы потеряете доступ к этой награде после завершения данной операции",
+    "transferAchievementToTeamWarning": "Вы можете потерять доступ к этой награде после завершения данной операции",
+    "noComment" : "Нет комментария",
+    "chooseTeam": "Выберите команду"
 }

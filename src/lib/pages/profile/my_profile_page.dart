@@ -8,16 +8,14 @@ import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
-import 'package:kudosapp/pages/teams/edit_team_page.dart';
-import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_list_widget.dart';
-import 'package:kudosapp/widgets/profile_achievement_list_widget.dart';
-import 'package:kudosapp/widgets/rounded_image_widget.dart';
-import 'package:kudosapp/widgets/vector_icon.dart';
+import 'package:kudosapp/widgets/achievements/achievement_list_widget.dart';
+import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
+import 'package:kudosapp/widgets/common/vector_icon.dart';
+import 'package:kudosapp/widgets/teams/my_teams_widget.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatelessWidget {
@@ -116,7 +114,7 @@ class MyProfilePage extends StatelessWidget {
                             ),
                             ChangeNotifierProvider<MyTeamsViewModel>.value(
                               value: viewModel.myTeamsViewModel..initialize(),
-                              child: _MyTeamsWidget(),
+                              child: MyTeamsWidget(),
                             ),
                             ChangeNotifierProvider<
                                 MyAchievementsViewModel>.value(
@@ -213,113 +211,6 @@ class _MyAchievementsWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _MyTeamsWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: KudosTheme.contentColor,
-      child: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: Consumer<MyTeamsViewModel>(
-              builder: (context, viewModel, child) {
-                if (viewModel.isBusy) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (viewModel.items.isEmpty) {
-                  return Center(
-                    child: FractionallySizedBox(
-                      widthFactor: 0.7,
-                      child: Text(
-                        localizer().createYourOwnTeams,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: EdgeInsets.only(top: 24.0),
-                  itemCount: viewModel.items.length,
-                  itemBuilder: (context, index) {
-                    var item = viewModel.items[index];
-                    return GestureDetector(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                  ),
-                                  child: RoundedImageWidget.rect(
-                                    imageViewModel: item.imageViewModel,
-                                    name: item.team.name,
-                                    size: 56.0,
-                                    borderRadius: 4.0,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    item.team.name,
-                                    style: KudosTheme.listTitleTextStyle,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 16.0),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 16.0,
-                                    color: KudosTheme.accentColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                top: 8.0,
-                                bottom: 8.0,
-                                left: 76.0,
-                              ),
-                              height: 1.0,
-                              color: KudosTheme.accentColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          ManageTeamRoute(item.team.id),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          Positioned.directional(
-            textDirection: TextDirection.ltr,
-            end: 16.0,
-            bottom: 32.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(EditTeamRoute());
-              },
-              child: Icon(Icons.add),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

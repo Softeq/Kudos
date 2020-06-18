@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/widgets/achievement_widget.dart';
+import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
 
 class AchievementListWidget extends StatelessWidget {
   final List<Widget> _items;

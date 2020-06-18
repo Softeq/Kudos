@@ -12,6 +12,7 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/services/push_notifications_service.dart';
+import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -27,5 +28,6 @@ void setupLocator() {
     ..registerLazySingleton<PushNotificationsService>(() => PushNotificationsService())
     ..registerLazySingleton<ImageService>(() => ImageService())
     ..registerLazySingleton<FileService>(() => FileService())
-    ..registerLazySingleton<DialogService>(() => DialogService());
+    ..registerLazySingleton<DialogService>(() => DialogService())
+    ..registerLazySingleton<SnackBarNotifierService>(() => SnackBarNotifierService());
 }

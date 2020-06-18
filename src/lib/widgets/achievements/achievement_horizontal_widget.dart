@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/widgets/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 
 class AchievementHorizontalWidget extends StatelessWidget {
   final AchievementModel _achievementModel;

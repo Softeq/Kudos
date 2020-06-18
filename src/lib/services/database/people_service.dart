@@ -32,13 +32,6 @@ class PeopleService {
     return _getAllUsers();
   }
 
-  Future<List<User>> getAllowedUsers() async {
-    final allUsers = await _getAllUsers();
-    final currentUserId = _authService.currentUser.id;
-    final users = allUsers.where((x) => x.id != currentUserId).toList();
-    return users;
-  }
-
   Future<void> tryRegisterCurrentUser() async {
     final user = _authService.currentUser;
     final userRegistrationMap = UserRegistration.fromUser(user).toMap();
@@ -59,7 +52,7 @@ class PeopleService {
         .add({"token": token});
   }
 
-  Future<void> unSubscribeFromNotifications() {
+  Future<void> unsubscribeFromNotifications() {
     return _pushNotificationsService.unSubscribeFromNotifications();
   }
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/errors/auth_error.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/snack_bar_notifier.dart';
+import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 
 class LoginPage extends StatelessWidget {
-  final SnackBarNotifier _snackBarNotifier = SnackBarNotifier();
+  final _snackBarNotifier = locator<SnackBarNotifierService>();
 
   @override
   Widget build(BuildContext context) {

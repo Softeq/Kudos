@@ -6,7 +6,7 @@ import 'package:kudosapp/pages/profile/my_profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
-import 'package:kudosapp/widgets/vector_icon.dart';
+import 'package:kudosapp/widgets/common/vector_icon.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {

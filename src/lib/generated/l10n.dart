@@ -423,6 +423,16 @@ class S {
     );
   }
 
+  /// `User`
+  String get user {
+    return Intl.message(
+      'User',
+      name: 'user',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `This user is not yet part of any team`
   String get userTeamsEmptyPlaceholder {
     return Intl.message(
@@ -573,11 +583,81 @@ class S {
     );
   }
 
+  /// `Transfer achievement`
+  String get transferAchievementTitle {
+    return Intl.message(
+      'Transfer achievement',
+      name: 'transferAchievementTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to trasfer this achievement to another user or another team?`
+  String get transferAchievementDescription {
+    return Intl.message(
+      'Do you want to trasfer this achievement to another user or another team?',
+      name: 'transferAchievementDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transfer to %s?`
+  String get transferAchievementToUserTitle {
+    return Intl.message(
+      'Transfer to %s?',
+      name: 'transferAchievementToUserTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transfer to %s team?`
+  String get transferAchievementToTeamTitle {
+    return Intl.message(
+      'Transfer to %s team?',
+      name: 'transferAchievementToTeamTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will not have access to this achievement after the operation is complete`
+  String get transferAchievementToUserWarning {
+    return Intl.message(
+      'You will not have access to this achievement after the operation is complete',
+      name: 'transferAchievementToUserWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You might not have access to this achievement after the operation is complete`
+  String get transferAchievementToTeamWarning {
+    return Intl.message(
+      'You might not have access to this achievement after the operation is complete',
+      name: 'transferAchievementToTeamWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No comment`
   String get noComment {
     return Intl.message(
       'No comment',
       name: 'noComment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose team`
+  String get chooseTeam {
+    return Intl.message(
+      'Choose team',
+      name: 'chooseTeam',
       desc: '',
       args: [],
     );

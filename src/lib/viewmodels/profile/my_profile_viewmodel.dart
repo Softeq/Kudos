@@ -22,7 +22,7 @@ class MyProfileViewModel extends BaseViewModel {
   }
 
   Future<void> signOut() async {
-    await _peopleService.unSubscribeFromNotifications();
+    await _peopleService.unsubscribeFromNotifications();
     await _authService.signOut();
   }
 }

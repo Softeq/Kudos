@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/service_locator.dart';
 
-import '../service_locator.dart';
-
-class SnackBarNotifier {
+class SnackBarNotifierService {
 
   void showErrorMessage(BuildContext context, ScaffoldState scaffoldState, String message) {
     scaffoldState.showSnackBar(SnackBar(

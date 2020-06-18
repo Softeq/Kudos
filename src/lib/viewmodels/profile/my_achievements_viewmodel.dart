@@ -5,6 +5,7 @@ import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
+import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
@@ -19,6 +20,7 @@ class MyAchievementsViewModel extends BaseViewModel {
 
   StreamSubscription _achievementUpdatedSubscription;
   StreamSubscription _achievementDeletedSubscription;
+  StreamSubscription _achievementTransferredSubscription;
 
   MyAchievementsViewModel() {
     isBusy = true;
@@ -45,6 +47,11 @@ class MyAchievementsViewModel extends BaseViewModel {
     _achievementDeletedSubscription =
         _eventBus.on<AchievementDeletedMessage>().listen(_onAchievementDeleted);
 
+    _achievementTransferredSubscription?.cancel();
+    _achievementTransferredSubscription = _eventBus
+        .on<AchievementTransferredMessage>()
+        .listen(_onAchievementTransferred);
+
     isBusy = false;
   }
 
@@ -52,6 +59,8 @@ class MyAchievementsViewModel extends BaseViewModel {
   void dispose() {
     _achievementUpdatedSubscription?.cancel();
     _achievementDeletedSubscription?.cancel();
+    _achievementTransferredSubscription?.cancel();
+
     super.dispose();
   }
 
@@ -74,8 +83,27 @@ class MyAchievementsViewModel extends BaseViewModel {
   }
 
   void _onAchievementDeleted(AchievementDeletedMessage event) {
-    _viewModelList.items.removeWhere(
-        (element) => event.ids.contains(element.achievement.id));
+    _viewModelList.items
+        .removeWhere((element) => event.ids.contains(element.achievement.id));
+    _viewModelList.notifyListeners();
+  }
+
+  void _onAchievementTransferred(AchievementTransferredMessage event) {
+    if (event.achievements.first.userReference?.id !=
+        _authService.currentUser.id) {
+      var achievementIds = event.achievements.map((a) => a.id).toSet();
+      _viewModelList.items.removeWhere(
+          (element) => achievementIds.contains(element.achievement.id));
+    } else {
+      var achievementIds =
+          _viewModelList.items.map((a) => a.achievement.id).toSet();
+      for (var achievement in event.achievements) {
+        if (!achievementIds.contains(achievement.id)) {
+          _viewModelList.items.add(AchievementModel(achievement));
+        }
+      }
+    }
+
     _viewModelList.notifyListeners();
   }
 }

@@ -7,7 +7,7 @@ import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
-import 'package:kudosapp/widgets/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ReceivedAchievementRoute extends MaterialPageRoute {

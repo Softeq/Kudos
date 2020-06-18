@@ -8,9 +8,9 @@ import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
-import 'package:kudosapp/widgets/achievement_widget.dart';
-import 'package:kudosapp/widgets/fancy_list_widget.dart';
-import 'package:kudosapp/widgets/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
+import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
