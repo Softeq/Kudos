@@ -13,7 +13,7 @@ class MyTeamsRoute extends MaterialPageRoute {
   MyTeamsRoute({
     Set<String> excludedTeamIds,
     Icon selectorIcon,
-    Function(BuildContext, Team) onItemSelected,
+    void Function(BuildContext, Team) onItemSelected,
   }) : super(
           builder: (context) {
             return ChangeNotifierProvider<MyTeamsViewModel>.value(
@@ -38,12 +38,12 @@ class MyTeamsWidget extends StatelessWidget {
     size: 16.0,
     color: KudosTheme.accentColor,
   );
-  static final Function(BuildContext, Team) defaultItemSelector =
+  static final void Function(BuildContext, Team) defaultItemSelector =
       (context, team) => Navigator.of(context).push(
             ManageTeamRoute(team.id),
           );
 
-  final Function(BuildContext, Team) onItemSelected;
+  final void Function(BuildContext, Team) onItemSelected;
   final Icon selectorIcon;
 
   MyTeamsWidget({
