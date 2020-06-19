@@ -11,8 +11,12 @@ class UserAchievementCollection {
 
   factory UserAchievementCollection.single(UserAchievement userAchievement) {
     final imageViewModel = ImageViewModel();
-    imageViewModel.initialize(userAchievement.achievement.imageUrl, null, false);
-    var userAchievements = new List<UserAchievement>();
+    imageViewModel.initialize(
+      userAchievement.achievement.imageUrl,
+      null,
+      false,
+    );
+    final userAchievements = new List<UserAchievement>();
     userAchievements.add(userAchievement);
     return UserAchievementCollection._(userAchievements, imageViewModel);
   }
@@ -21,5 +25,13 @@ class UserAchievementCollection {
     userAchievements.add(userAchievement);
     userAchievements.sort((x, y) => y.date.compareTo(x.date));
     return UserAchievementCollection._(userAchievements, imageViewModel);
+  }
+
+  String get senders {
+    return userAchievements
+        .map((x) => x.sender.name)
+        .toSet()
+        .toList()
+        .join(", ");
   }
 }

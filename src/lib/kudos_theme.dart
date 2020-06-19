@@ -24,8 +24,13 @@ class KudosTheme {
       );
 
   static TextStyle get listTitleTextStyle => TextStyle(
-    fontSize: 16.0,
-    color: mainGradientEndColor,
-    fontWeight: FontWeight.w800,
-  );
+        fontSize: 16.0,
+        color: mainGradientEndColor,
+        fontWeight: FontWeight.w800,
+      );
+
+  static TextStyle get listSubTitleTextStyle => TextStyle(
+        fontSize: 14.0,
+        color: Color.fromRGBO(189, 189, 189, 1),
+      );
 }
