@@ -13,4 +13,9 @@ class ListNotifier<T> extends ChangeNotifier {
     items.add(item);
     notifyListeners();
   }
+
+  void addAll(Iterable<T> newItems) {
+    items.addAll(newItems);
+    notifyListeners();
+  }
 }

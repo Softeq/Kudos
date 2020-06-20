@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fromCris" : MessageLookupByLibrary.simpleMessage("From Chris"),
     "generalErrorMessage" : MessageLookupByLibrary.simpleMessage("Something went wrong..."),
     "members" : MessageLookupByLibrary.simpleMessage("Members"),
+    "myAchievements" : MessageLookupByLibrary.simpleMessage("My achievements"),
     "name" : MessageLookupByLibrary.simpleMessage("Name"),
     "nameIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Enter name"),
     "noComment" : MessageLookupByLibrary.simpleMessage("No comment"),

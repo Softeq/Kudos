@@ -61,5 +61,6 @@
     "transferAchievementToUserWarning": "You will not have access to this achievement after the operation is complete",
     "transferAchievementToTeamWarning": "You might not have access to this achievement after the operation is complete",
     "noComment": "No comment",
-    "chooseTeam": "Choose team"
+    "chooseTeam": "Choose team",
+    "myAchievements": "My achievements"
 }

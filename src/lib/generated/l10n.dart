@@ -662,6 +662,15 @@ class S {
       args: [],
     );
   }
+
+  String get myAchievements {
+    return Intl.message(
+      'My achievements',
+      name: 'myAchievements',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

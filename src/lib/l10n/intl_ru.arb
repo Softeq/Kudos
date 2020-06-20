@@ -61,5 +61,6 @@
     "transferAchievementToUserWarning": "Вы потеряете доступ к этой награде после завершения данной операции",
     "transferAchievementToTeamWarning": "Вы можете потерять доступ к этой награде после завершения данной операции",
     "noComment" : "Нет комментария",
-    "chooseTeam": "Выберите команду"
+    "chooseTeam": "Выберите команду",
+    "myAchievements": "Mои награды"
 }
