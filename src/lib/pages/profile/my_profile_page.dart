@@ -165,7 +165,7 @@ class _MyAchievementsWidget extends StatelessWidget {
             children: <Widget>[
               Positioned.fill(
                 child: ChangeNotifierProvider.value(
-                  value: viewModel.items,
+                  value: viewModel.achievements,
                   child: Consumer<ListNotifier<AchievementModel>>(
                     builder: (context, notifier, child) {
                       if (notifier.items.isEmpty) {

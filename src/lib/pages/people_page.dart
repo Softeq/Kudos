@@ -12,7 +12,7 @@ class PeoplePageRoute extends MaterialPageRoute {
   PeoplePageRoute(
       {Set<String> excludedUserIds,
       Icon selectorIcon,
-      Function(BuildContext, User) onItemSelected})
+      void Function(BuildContext, User) onItemSelected})
       : super(
           builder: (context) => PeoplePage(
               excludedUserIds: excludedUserIds,
@@ -24,13 +24,13 @@ class PeoplePageRoute extends MaterialPageRoute {
 
 class PeoplePage extends StatelessWidget {
   static final Icon defaultSelectorIcon = Icon(Icons.navigate_next);
-  static final Function(BuildContext, User) defaultItemSelector =
+  static final void Function(BuildContext, User) defaultItemSelector =
       (context, user) => Navigator.of(context).push(
             ProfileRoute(user.id),
           );
 
   final Set<String> _excludedUserIds;
-  final Function(BuildContext, User) _onItemSelected;
+  final void Function(BuildContext, User) _onItemSelected;
   final Icon _selectorIcon;
 
   PeoplePage({
