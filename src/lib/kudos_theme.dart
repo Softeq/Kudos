@@ -39,4 +39,16 @@ class KudosTheme {
         fontSize: 14.0,
         color: Color.fromRGBO(189, 189, 189, 1),
       );
+
+  static TextStyle get screenStateTitleTextStyle => TextStyle(
+        fontSize: 20.0,
+        color: Color.fromARGB(160, 0, 0, 0),
+        fontWeight: FontWeight.w500,
+      );
+
+  static TextStyle get raisedButtonTextStyle => TextStyle(
+        fontSize: 16.0,
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
+      );
 }

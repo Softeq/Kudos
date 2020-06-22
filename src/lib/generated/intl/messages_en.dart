@@ -59,7 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "name" : MessageLookupByLibrary.simpleMessage("Name"),
     "nameIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Enter name"),
     "noComment" : MessageLookupByLibrary.simpleMessage("No comment"),
-    "notSignedIn" : MessageLookupByLibrary.simpleMessage("You are not currently signed in"),
+    "notSignedIn" : MessageLookupByLibrary.simpleMessage("Sign in to view your achievements"),
     "official" : MessageLookupByLibrary.simpleMessage("Official"),
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "optionalDescription" : MessageLookupByLibrary.simpleMessage("Description (optional)"),

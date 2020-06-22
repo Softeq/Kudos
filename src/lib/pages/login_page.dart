@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/errors/auth_error.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
+import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
+import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/viewmodels/login_viewmodel.dart';
-import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 
 class LoginPage extends StatelessWidget {
   final _snackBarNotifier = locator<SnackBarNotifierService>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class LoginPage extends StatelessWidget {
         return LoginViewModel(authViewModel);
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: GradientAppBar(title: localizer().appName),
         body: _buildBody(),
       ),
@@ -30,31 +32,37 @@ class LoginPage extends StatelessWidget {
       child: Consumer<LoginViewModel>(
         builder: (context, viewModel, child) {
           return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
                 localizer().notSignedIn,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                style: KudosTheme.screenStateTitleTextStyle,
               ),
-              viewModel.isBusy
-                  ? CircularProgressIndicator()
-                  : RaisedButton(
-                      elevation: 5.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      color: Colors.blue,
-                      child: Text(
-                        localizer().signIn,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
+              Image(
+                image: AssetImage('assets/icons/prize.png'),
+                width: 200,
+                color: KudosTheme.mainGradientStartColor,
+              ),
+              Container(
+                height: 100,
+                alignment: Alignment.center,
+                child: viewModel.isBusy
+                    ? CircularProgressIndicator()
+                    : RaisedButton(
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
-                      ),
-                      onPressed: () => _signIn(context, viewModel),
-                    ),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        color: KudosTheme.accentColor,
+                        child: Text(
+                          localizer().signIn,
+                          style: KudosTheme.raisedButtonTextStyle,
+                        ),
+                        onPressed: () async =>
+                            await viewModel.signIn(_onAuthError)),
+              )
             ],
           );
         },
@@ -62,12 +70,8 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void _signIn(BuildContext context, LoginViewModel viewModel) async {
-    try {
-      await viewModel.signIn();
-    } on AuthError catch (error) {
-      final internalMessage = (error.internalError as AuthError)?.message;
-      _snackBarNotifier.showErrorMessage(context, Scaffold.of(context), '${error.message}: $internalMessage');
-    }
+  void _onAuthError(String message) {
+    _snackBarNotifier.showErrorMessage(
+        _scaffoldKey.currentContext, _scaffoldKey.currentState, message);
   }
 }
