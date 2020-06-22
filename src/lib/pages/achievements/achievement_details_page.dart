@@ -12,6 +12,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
       builder: (context, viewModel, child) {
         if (viewModel.isBusy) {
           return Scaffold(
-            appBar: AppBar(),
+            appBar: GradientAppBar(),
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -54,8 +55,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
 
         return Scaffold(
           key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(viewModel.achievementModel.title),
+          appBar: GradientAppBar(
+            title: viewModel.achievementModel.title,
             actions: viewModel.canEdit
                 ? <Widget>[
                   IconButton(
@@ -281,7 +282,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_achievementHolders == null || _achievementHolders.items.length == 0) {
+    if (_achievementHolders == null || _achievementHolders.length == 0) {
       content = Align(
         alignment: Alignment.topLeft,
         child: Padding(

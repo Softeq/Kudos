@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/viewmodels/people_viewmodel.dart';
@@ -44,9 +45,7 @@ class PeoplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(localizer().people),
-      ),
+      appBar: GradientAppBar(title: localizer().people),
       body: ChangeNotifierProvider<SearchInputViewModel>(
         create: (context) => SearchInputViewModel(),
         child: Column(
