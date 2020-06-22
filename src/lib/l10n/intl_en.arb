@@ -1,7 +1,7 @@
 {
     "appName": "Kudos",
     "signIn": "Sign-In via Google",
-    "notSignedIn": "You are not currently signed in",
+    "notSignedIn": "Sign in to view your achievements",
     "allAchievements": "All achievements",
     "fromCris": "From Chris",
     "official": "Official",
