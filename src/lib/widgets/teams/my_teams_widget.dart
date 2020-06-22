@@ -41,14 +41,14 @@ class MyTeamsWidget extends StatelessWidget {
             ManageTeamRoute(team.id),
           );
 
-  final void Function(BuildContext, Team) onItemSelected;
-  final Icon selectorIcon;
+  final void Function(BuildContext, Team) _onItemSelected;
+  final Icon _selectorIcon;
 
   MyTeamsWidget({
     Icon selectorIcon,
     Function(BuildContext, Team) onItemSelected,
-  })  : selectorIcon = selectorIcon ?? defaultSelectorIcon,
-        onItemSelected = onItemSelected ?? defaultItemSelector;
+  })  : _selectorIcon = selectorIcon ?? defaultSelectorIcon,
+        _onItemSelected = onItemSelected ?? defaultItemSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class MyTeamsWidget extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 16.0),
-                                  child: selectorIcon,
+                                  child: _selectorIcon,
                                 ),
                               ],
                             ),
@@ -124,7 +124,7 @@ class MyTeamsWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      onTap: () => onItemSelected?.call(context, item.team),
+                      onTap: () => _onItemSelected?.call(context, item.team),
                     );
                   },
                 );

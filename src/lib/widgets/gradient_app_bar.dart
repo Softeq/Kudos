@@ -4,7 +4,10 @@ import 'package:kudosapp/kudos_theme.dart';
 class GradientAppBar extends AppBar {
   GradientAppBar({String title, List<Widget> actions})
       : super(
-          title: Text(title ?? ""),
+          title: Text(
+            title ?? "",
+            style: KudosTheme.appBarTitleTextStyle,
+          ),
           actions: actions,
           flexibleSpace: _buildGradientBackground(),
         );
