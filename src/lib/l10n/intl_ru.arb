@@ -63,10 +63,13 @@
     "chooseTeam": "Выберите команду",
     "myAchievements": "Mои награды",
     "search" : "Поиск",
-    "searchMembers" : "Искать участников",
-    "searchAdmins" : "Искать администраторов",
-    "signOutConfirmationTitle" : "Вы уверены?",
-    "signOutConfirmationMessage" : "Подтвердите, что вы действительно хотите выйти из этого превосходного приложения",
-    "signOutConfirmButton" : "Выйти",
-    "signOutCancelButton" : "Остаться!"
+    "searchMembers": "Искать участников",
+    "searchAdmins": "Искать администраторов",
+    "signOutConfirmationTitle": "Вы уверены?",
+    "signOutConfirmationMessage": "Подтвердите, что вы действительно хотите выйти из этого превосходного приложения",
+    "signOutConfirmButton": "Выйти",
+    "signOutCancelButton": "Остаться!",
+    "noPeople": "Здесь никого нет",
+    "error": "Ошибка: %s",
+    "from": "От: %s"
 }
