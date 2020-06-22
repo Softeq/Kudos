@@ -106,7 +106,6 @@ class MyProfilePage extends StatelessWidget {
                           children: <Widget>[
                             Container(
                               color: KudosTheme.contentColor,
-                              padding: EdgeInsets.all(16.0),
                               child: ProfileAchievementsListWidget(
                                 user.id,
                                 false,

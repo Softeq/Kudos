@@ -78,7 +78,7 @@ class MyTeamsWidget extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.only(top: 24.0),
+                  padding: EdgeInsets.only(top: 48.0),
                   itemCount: viewModel.items.length,
                   itemBuilder: (context, index) {
                     var item = viewModel.items[index];
