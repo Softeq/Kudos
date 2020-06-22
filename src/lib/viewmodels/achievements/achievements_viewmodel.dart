@@ -78,14 +78,13 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   void _onAchievementTransferred(AchievementTransferredMessage event) {
-    if (event.achievements.first.userReference?.id !=
-        _authService.currentUser.id && event.achievements.first.teamReference == null) {
-      var achievementIds = event.achievements.map((a) => a.id).toSet();
-      _achievements.items.removeWhere(
-              (element) => achievementIds.contains(element.achievement.id));
-    } else {
+    var achievementIds = event.achievements.map((a) => a.id).toSet();
+    _achievements.items.removeWhere(
+            (element) => achievementIds.contains(element.achievement.id));
+
+    if (event.achievements.first.userReference?.id ==
+        _authService.currentUser.id || event.achievements.first.teamReference != null) {
       for (var achievement in event.achievements) {
-        _achievements.items.removeWhere((a) => a.achievement.id == achievement.id);
         _achievements.items.add(AchievementModel(achievement));
       }
     }
