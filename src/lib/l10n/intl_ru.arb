@@ -64,5 +64,9 @@
     "myAchievements": "Mои награды",
     "search" : "Поиск",
     "searchMembers" : "Искать участников",
-    "searchAdmins" : "Искать администраторов"
+    "searchAdmins" : "Искать администраторов",
+    "signOutConfirmationTitle" : "Вы уверены?",
+    "signOutConfirmationMessage" : "Подтвердите, что вы действительно хотите выйти из этого превосходного приложения",
+    "signOutConfirmButton" : "Выйти",
+    "signOutCancelButton" : "Остаться!"
 }

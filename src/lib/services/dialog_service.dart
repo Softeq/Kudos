@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class DialogService {
@@ -163,6 +164,6 @@ class DialogService {
         content: content,
         firstButtonTitle: localizer().delete,
         secondButtonTitle: localizer().cancel,
-        firstButtonColor: Color.fromARGB(255, 255, 59, 48));
+        firstButtonColor: KudosTheme.destructiveButtonColor);
   }
 }

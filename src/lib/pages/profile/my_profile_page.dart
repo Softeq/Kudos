@@ -67,7 +67,7 @@ class MyProfilePage extends StatelessWidget {
                     ),
                     IconButton(
                       icon: SvgPicture.asset("assets/icons/exit.svg"),
-                      onPressed: viewModel.signOut,
+                      onPressed: () => viewModel.signOut(context),
                     ),
                   ],
                 ),

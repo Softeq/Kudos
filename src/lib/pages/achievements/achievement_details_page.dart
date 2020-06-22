@@ -80,7 +80,6 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           body: _buildBody(viewModel),
           floatingActionButton: viewModel.canSend
               ? FloatingActionButton(
-                  backgroundColor: Theme.of(context).primaryColor,
                   child: Icon(Icons.send),
                   onPressed: _sendTapped,
                 )
