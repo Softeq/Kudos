@@ -11,6 +11,12 @@ class KudosTheme {
 
   static Color get mainGradientEndColor => Color.fromARGB(255, 57, 38, 179);
 
+  static TextStyle get appBarTitleTextStyle => TextStyle(
+    fontSize: 20.0,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle get userNameTitleTextStyle => TextStyle(
         fontSize: 20.0,
         color: Colors.white,

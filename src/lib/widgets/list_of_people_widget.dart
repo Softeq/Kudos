@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
   final List<User> users;
@@ -14,14 +15,17 @@ class ListOfPeopleWidget extends StatelessWidget {
     this.itemSelector,
     this.trailingSelector,
     this.trailingWidget,
-    this.trailingWidgetFunction
+    this.trailingWidgetFunction,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: users.length,
-      itemBuilder: (context, index) => _buildItem(context, index),
+    return ScrollConfiguration(
+      behavior: DisableGlowingOverscrollBehavior(),
+      child: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) => _buildItem(context, index),
+      ),
     );
   }
 
