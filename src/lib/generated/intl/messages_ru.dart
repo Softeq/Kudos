@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fromCris" : MessageLookupByLibrary.simpleMessage("От Криса"),
     "generalErrorMessage" : MessageLookupByLibrary.simpleMessage("Что-то пошло не так..."),
     "members" : MessageLookupByLibrary.simpleMessage("Состав"),
+    "myAchievements" : MessageLookupByLibrary.simpleMessage("Mои награды"),
     "name" : MessageLookupByLibrary.simpleMessage("Имя"),
     "nameIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Введите название"),
     "noComment" : MessageLookupByLibrary.simpleMessage("Нет комментария"),
