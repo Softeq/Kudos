@@ -46,7 +46,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
       builder: (context, viewModel, child) {
         if (viewModel.isBusy) {
           return Scaffold(
-            appBar: GradientAppBar(),
+            appBar: GradientAppBar(title: viewModel?.achievementModel?.title),
             body: Center(
               child: CircularProgressIndicator(),
             ),
