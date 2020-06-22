@@ -164,7 +164,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
       await _achievementsService.deleteAchievement(
           achievementModel.achievement.id,
-          holdersCount: achievementHolders.items?.length ?? 0);
+          holdersCount: achievementHolders.length);
 
       isBusy = false;
       _eventBus.fire(
@@ -200,7 +200,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
     var allUsersCount = await _peopleService.getUsersCount();
     _statisticsValue = allUsersCount == 0
         ? 0
-        : achievementHolders.items.length / allUsersCount;
+        : achievementHolders.length / allUsersCount;
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {

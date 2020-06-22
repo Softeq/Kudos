@@ -168,7 +168,7 @@ class _MyAchievementsWidget extends StatelessWidget {
                   value: viewModel.achievements,
                   child: Consumer<ListNotifier<AchievementModel>>(
                     builder: (context, notifier, child) {
-                      if (notifier.items.isEmpty) {
+                      if (notifier.isEmpty) {
                         return Center(
                           child: FractionallySizedBox(
                             widthFactor: 0.7,

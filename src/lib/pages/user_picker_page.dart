@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
@@ -66,8 +67,8 @@ class _UserPickerPageState extends State<_UserPickerPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: TextField(
+      appBar: GradientAppBar.withWidget(
+        TextField(
           autofocus: true,
           controller: _textEditingController,
           decoration: InputDecoration.collapsed(

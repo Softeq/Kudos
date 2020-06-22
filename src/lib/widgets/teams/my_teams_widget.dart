@@ -7,6 +7,7 @@ import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class MyTeamsRoute extends MaterialPageRoute {
@@ -17,13 +18,10 @@ class MyTeamsRoute extends MaterialPageRoute {
   }) : super(
           builder: (context) {
             return ChangeNotifierProvider<MyTeamsViewModel>.value(
-                value: MyTeamsViewModel(excludedTeamIds: excludedTeamIds)..initialize(),
+                value: MyTeamsViewModel(excludedTeamIds: excludedTeamIds)
+                  ..initialize(),
                 child: Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        localizer().chooseTeam,
-                      ),
-                    ),
+                    appBar: GradientAppBar(title: localizer().chooseTeam),
                     body: MyTeamsWidget(
                         selectorIcon: selectorIcon,
                         onItemSelected: onItemSelected)));
