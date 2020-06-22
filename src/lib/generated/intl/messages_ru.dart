@@ -64,7 +64,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "optionalDescription" : MessageLookupByLibrary.simpleMessage("Описание (опционально)"),
     "others" : MessageLookupByLibrary.simpleMessage("Остальные"),
-    "owner" : MessageLookupByLibrary.simpleMessage("Владелец"),
     "people" : MessageLookupByLibrary.simpleMessage("Люди"),
     "profile" : MessageLookupByLibrary.simpleMessage("Профиль"),
     "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Еще не получал наград"),

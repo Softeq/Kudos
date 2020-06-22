@@ -414,15 +414,6 @@ class S {
     );
   }
 
-  String get owner {
-    return Intl.message(
-      'Owner',
-      name: 'owner',
-      desc: '',
-      args: [],
-    );
-  }
-
   String get members {
     return Intl.message(
       'Members',

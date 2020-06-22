@@ -64,7 +64,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "optionalDescription" : MessageLookupByLibrary.simpleMessage("Description (optional)"),
     "others" : MessageLookupByLibrary.simpleMessage("Others"),
-    "owner" : MessageLookupByLibrary.simpleMessage("Owner"),
     "people" : MessageLookupByLibrary.simpleMessage("People"),
     "profile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Haven\'t received any achievements yet."),

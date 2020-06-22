@@ -4,15 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/models/list_notifier.dart';
-import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
-import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/profile/my_achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
-import 'package:kudosapp/widgets/achievements/achievement_list_widget.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/vector_icon.dart';
 import 'package:kudosapp/widgets/teams/my_teams_widget.dart';
@@ -25,7 +19,7 @@ class MyProfilePage extends StatelessWidget {
     final user = viewModel.user;
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -91,10 +85,6 @@ class MyProfilePage extends StatelessWidget {
                       text: localizer().teams,
                       icon: VectorIcon("assets/icons/teams.svg"),
                     ),
-                    Tab(
-                      text: localizer().owner,
-                      icon: VectorIcon("assets/icons/owner.svg"),
-                    ),
                   ],
                 ),
                 Expanded(
@@ -114,12 +104,6 @@ class MyProfilePage extends StatelessWidget {
                             ChangeNotifierProvider<MyTeamsViewModel>.value(
                               value: viewModel.myTeamsViewModel..initialize(),
                               child: MyTeamsWidget(),
-                            ),
-                            ChangeNotifierProvider<
-                                MyAchievementsViewModel>.value(
-                              value: viewModel.myAchievementsViewModel
-                                ..initialize(),
-                              child: _MyAchievementsWidget(),
                             ),
                           ],
                         ),
@@ -143,73 +127,6 @@ class MyProfilePage extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-}
-
-class _MyAchievementsWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<MyAchievementsViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.isBusy) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        return Container(
-          color: KudosTheme.contentColor,
-          child: Stack(
-            children: <Widget>[
-              Positioned.fill(
-                child: ChangeNotifierProvider.value(
-                  value: viewModel.achievements,
-                  child: Consumer<ListNotifier<AchievementModel>>(
-                    builder: (context, notifier, child) {
-                      if (notifier.isEmpty) {
-                        return Center(
-                          child: FractionallySizedBox(
-                            widthFactor: 0.7,
-                            child: Text(
-                              localizer().createYourOwnAchievements,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      }
-
-                      return AchievementListWidget.from(
-                        notifier.items,
-                        (x) {
-                          Navigator.of(context).push(
-                            AchievementDetailsRoute(x.achievement.id),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Positioned.directional(
-                textDirection: TextDirection.ltr,
-                end: 16.0,
-                bottom: 16.0,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      EditAchievementRoute.createUserAchievement(
-                        viewModel.currentUser,
-                      ),
-                    );
-                  },
-                  child: Icon(Icons.add),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
