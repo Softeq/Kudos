@@ -22,6 +22,7 @@ class AchievementsViewModel extends BaseViewModel {
   StreamSubscription _achievementTransferredSubscription;
 
   final _achievements = ListNotifier<AchievementModel>();
+
   ListNotifier<AchievementModel> get achievements => _achievements;
 
   User get currentUser => _authService.currentUser;
@@ -34,7 +35,8 @@ class AchievementsViewModel extends BaseViewModel {
     _achievements.items.forEach((x) => x.dispose());
     _achievements.items.clear();
     _achievements.items.addAll(myAchievements.map((x) => AchievementModel(x)));
-    _achievements.items.addAll(teamsAchievements.map((x) => AchievementModel(x)));
+    _achievements.items
+        .addAll(teamsAchievements.map((x) => AchievementModel(x)));
     _achievements.notifyListeners();
 
     _achievementUpdatedSubscription?.cancel();
@@ -54,13 +56,13 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
-    var userId = currentUser.id;
-    if (event.achievement.userReference?.id != userId) {
+    if (event.achievement.userReference?.id != currentUser.id &&
+        event.achievement.teamReference == null) {
       return;
     }
 
     var achievementModel = _achievements.items.firstWhere(
-          (x) => x.achievement.id == event.achievement.id,
+      (x) => x.achievement.id == event.achievement.id,
       orElse: () => null,
     );
     if (achievementModel != null) {
@@ -72,18 +74,18 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   void _onAchievementDeleted(AchievementDeletedMessage event) {
-    _achievements.items.removeWhere(
-        (element) => event.ids.contains(element.achievement.id));
+    _achievements.items
+        .removeWhere((element) => event.ids.contains(element.achievement.id));
     _achievements.notifyListeners();
   }
 
   void _onAchievementTransferred(AchievementTransferredMessage event) {
     var achievementIds = event.achievements.map((a) => a.id).toSet();
     _achievements.items.removeWhere(
-            (element) => achievementIds.contains(element.achievement.id));
+        (element) => achievementIds.contains(element.achievement.id));
 
-    if (event.achievements.first.userReference?.id ==
-        _authService.currentUser.id || event.achievements.first.teamReference != null) {
+    if (event.achievements.first.userReference?.id == currentUser.id ||
+        event.achievements.first.teamReference != null) {
       for (var achievement in event.achievements) {
         _achievements.items.add(AchievementModel(achievement));
       }
