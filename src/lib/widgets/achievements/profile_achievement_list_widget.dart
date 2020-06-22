@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile/received_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/counter_widget.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 
 class ProfileAchievementsListWidget extends StatelessWidget {
   final String _userId;
@@ -63,7 +65,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget _buildError(Object error) {
     return Center(
       child: Text(
-        "Error: $error", // TODO YP: temporary
+        sprintf(localizer().error, [error]),
         style: TextStyle(
           color: Colors.red,
         ),
@@ -101,37 +103,19 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       );
     }
     return ListView.builder(
-      padding: EdgeInsets.only(
-        top: 48.0,
-      ),
+      padding: EdgeInsets.only(top: 46),
       itemCount: achievementCollections.length,
       itemBuilder: (context, index) {
         final achievementCollection = achievementCollections[index];
         final relatedAchievement =
             achievementCollection.userAchievements[0].achievement;
-        final children = <Widget>[
-          Center(
-            child: RoundedImageWidget.circular(
-              imageViewModel: achievementCollection.imageViewModel,
-              size: 60.0,
-            ),
-          ),
-        ];
 
-        if (achievementCollection.count > 1) {
-          children.add(
-            Positioned(
-              bottom: 0.0,
-              right: 8.0,
-              child: _buildCountBadge(
-                achievementCollection.count,
-                40.0,
-              ),
-            ),
-          );
-        }
-
-        return GestureDetector(
+        return SimpleListItem(
+          title: relatedAchievement.name,
+          description:
+              sprintf(localizer().from, [achievementCollection.senders]),
+          imageViewModel: achievementCollection.imageViewModel,
+          imageCounter: achievementCollection.count,
           onTap: () {
             if (isMyProfile) {
               Navigator.of(context).push(
@@ -143,53 +127,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             }
           },
-          child: Container(
-            color: Colors.transparent,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 92.0,
-                      child: Stack(
-                        children: children,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            SizedBox(height: 8.0),
-                            Text(
-                              relatedAchievement.name,
-                              style: KudosTheme.listTitleTextStyle,
-                            ),
-                            SizedBox(height: 6.0),
-                            Text(
-                              "from: ${achievementCollection.senders}",
-                              style: KudosTheme.listSubTitleTextStyle,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    top: 8.0,
-                    bottom: 8.0,
-                    left: 92.0,
-                  ),
-                  height: 1.0,
-                  color: KudosTheme.accentColor,
-                ),
-              ],
-            ),
-          ),
+          imageShape: ImageShape.circle(60),
         );
       },
     );
@@ -216,10 +154,9 @@ class ProfileAchievementsListWidget extends StatelessWidget {
             Positioned(
               bottom: 5.0,
               right: 2.0,
-              child: _buildCountBadge(
-                achievementCollection.count,
-                constraints.maxWidth / 3.0,
-              ),
+              child: CounterWidget(
+                  count: achievementCollection.count,
+                  height: constraints.maxWidth / 3.0),
             ),
           );
         }
@@ -241,55 +178,6 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           },
         );
       },
-    );
-  }
-
-  Widget _buildCountBadge(
-    int count,
-    double height,
-  ) {
-    final verticalPadding = height * 0.1;
-    final horizontalPadding = height * 0.17;
-    final borderWidth = height * 0.05;
-    final outerBorderRadius = height * 0.5;
-    final innerBorderRadius = outerBorderRadius - borderWidth;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(outerBorderRadius),
-      child: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.all(borderWidth),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(innerBorderRadius),
-                  child: Container(
-                    color: Colors.amber[900],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: verticalPadding,
-                horizontal: horizontalPadding,
-              ),
-              child: FittedBox(
-                child: Text(
-                  "x$count",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
