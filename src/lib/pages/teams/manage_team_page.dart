@@ -225,6 +225,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       UserPickerRoute(
         allowMultipleSelection: true,
         allowCurrentUser: true,
+        searchHint: localizer().searchMembers,
         selectedUserIds: viewModel.members.items.map((x) => x.id).toList(),
       ),
     );
@@ -241,6 +242,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       UserPickerRoute(
         allowMultipleSelection: true,
         allowCurrentUser: true,
+        searchHint: localizer().searchAdmins,
         selectedUserIds: viewModel.admins.items.map((x) => x.id).toList(),
       ),
     );

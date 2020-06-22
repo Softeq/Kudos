@@ -7,12 +7,14 @@ class ListOfPeopleWidget extends StatelessWidget {
   final Function(User user) itemSelector;
   final Function(User user) trailingSelector;
   final Widget trailingWidget;
+  final Widget Function(User user) trailingWidgetFunction;
 
   ListOfPeopleWidget({
     this.users,
     this.itemSelector,
     this.trailingSelector,
     this.trailingWidget,
+    this.trailingWidgetFunction
   });
 
   @override
@@ -28,7 +30,7 @@ class ListOfPeopleWidget extends StatelessWidget {
     return _UserWidget(
       onTapped: itemSelector,
       onTrailingTapped: trailingSelector,
-      trailing: trailingWidget,
+      trailing: trailingWidget ?? trailingWidgetFunction(user),
       user: user,
     );
   }
