@@ -28,7 +28,7 @@ class RoundedImageWidget extends StatelessWidget {
     return RoundedImageWidget._(imageViewModel, size, size / 2.0, name);
   }
 
-  factory RoundedImageWidget.rect({
+  factory RoundedImageWidget.square({
     @required ImageViewModel imageViewModel,
     @required double size,
     @required double borderRadius,
@@ -101,7 +101,6 @@ class RoundedImageWidget extends StatelessWidget {
         return ClipRRect(
           borderRadius: BorderRadius.circular(_borderRadius),
           child: Container(
-            color: _imagePlaceholder.color,
             child: SvgPicture.file(
               _imageViewModel.file,
               width: _size,
@@ -114,7 +113,6 @@ class RoundedImageWidget extends StatelessWidget {
         return ClipRRect(
           borderRadius: BorderRadius.circular(_borderRadius),
           child: Container(
-            color: _imagePlaceholder.color,
             child: Image.file(
               _imageViewModel.file,
               width: _size,

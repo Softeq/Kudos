@@ -67,8 +67,6 @@ class SimpleListItem extends StatelessWidget {
       item = Material(
           color: Colors.transparent,
           child: InkWell(
-            // splashColor: KudosTheme.accentColor.withAlpha(128),
-            // highlightColor: KudosTheme.accentColor.withAlpha(220),
             child: item,
             onTap: onTap,
           ));
@@ -152,7 +150,7 @@ class SimpleListItem extends StatelessWidget {
         name: title,
       );
     } else {
-      return RoundedImageWidget.rect(
+      return RoundedImageWidget.square(
         imageViewModel: imageViewModel,
         name: title,
         size: imageShape.size,
