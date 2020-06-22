@@ -662,6 +662,46 @@ class S {
       args: [],
     );
   }
+
+  /// `My achievements`
+  String get myAchievements {
+    return Intl.message(
+      'My achievements',
+      name: 'myAchievements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get search {
+    return Intl.message(
+      'Search',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search Members`
+  String get searchMembers {
+    return Intl.message(
+      'Search Members',
+      name: 'searchMembers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search Admins`
+  String get searchAdmins {
+    return Intl.message(
+      'Search Admins',
+      name: 'searchAdmins',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

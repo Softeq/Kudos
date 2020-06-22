@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/models/errors/auth_error.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
@@ -17,9 +18,7 @@ class LoginPage extends StatelessWidget {
         return LoginViewModel(authViewModel);
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(localizer().appName),
-        ),
+        appBar: GradientAppBar(title: localizer().appName),
         body: _buildBody(),
       ),
     );

@@ -7,6 +7,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 
@@ -57,9 +58,7 @@ class _EditAchievementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
+      appBar: GradientAppBar(title: _title),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.save),

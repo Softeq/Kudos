@@ -4,6 +4,7 @@ import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class EditTeamRoute extends MaterialPageRoute<Team> {
@@ -38,11 +39,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
     final viewModel = Provider.of<EditTeamViewModel>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          viewModel.pageTitle,
-        ),
-      ),
+      appBar: GradientAppBar(title: viewModel.pageTitle),
       body: Consumer<EditTeamViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {

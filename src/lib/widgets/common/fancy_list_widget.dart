@@ -19,7 +19,7 @@ class FancyListWidget<T> extends StatelessWidget {
     return ChangeNotifierProvider<ListNotifier<T>>.value(
       value: _items,
       child: Consumer<ListNotifier<T>>(builder: (context, teamMembers, child) {
-        if (teamMembers.items.isEmpty) {
+        if (teamMembers.isEmpty) {
           return Text(_emptyPlaceholder);
         } else {
           var memberWidgets =

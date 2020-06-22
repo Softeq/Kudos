@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
 
 class AchievementListWidget extends StatelessWidget {
@@ -10,7 +11,9 @@ class AchievementListWidget extends StatelessWidget {
     Function(AchievementModel) onAchievementClicked,
   ) {
     var sortedList = input.toList();
-    sortedList.sort((x, y) => x.team?.name?.compareTo(y.team?.name) ?? 0);
+    sortedList.sort((x, y) => x.team != null && y.team != null
+        ? x.team.name.compareTo(y.team.name)
+        : (x.team == null && y.team == null ? 0 : (x.team == null ? -1 : 1)));
 
     String teamName;
     var items = List<Widget>();
@@ -19,16 +22,18 @@ class AchievementListWidget extends StatelessWidget {
       x.add(AchievementWidget(y.toList(), onAchievementClicked));
       y.clear();
     };
+    var myAchievementsName = localizer().myAchievements;
 
     for (var i = 0; i < sortedList.length; i++) {
       var item = sortedList[i];
 
-      if (teamName != item.team?.name) {
+      if ((item.team == null && teamName != myAchievementsName) ||
+          (item.team != null && teamName != item.team?.name)) {
         if (achievements.isNotEmpty) {
           addFunction(items, achievements);
         }
 
-        teamName = item.team.name;
+        teamName = item.team?.name ?? myAchievementsName;
         items.add(_GroupListItem(teamName));
       }
 

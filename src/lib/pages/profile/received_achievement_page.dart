@@ -8,6 +8,7 @@ import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class ReceivedAchievementRoute extends MaterialPageRoute {
@@ -31,9 +32,7 @@ class ReceivedAchievementPage extends StatelessWidget {
         Provider.of<ReceivedAchievementViewModel>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(viewModel.relatedAchievement.name),
-      ),
+      appBar: GradientAppBar(title: viewModel.relatedAchievement.name),
       body: Consumer<ReceivedAchievementViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
