@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -70,9 +71,12 @@ class _UserPickerPageState extends State<_UserPickerPage> {
       appBar: GradientAppBar.withWidget(
         TextField(
           autofocus: true,
+          style: KudosTheme.searchTextStyle,
+          cursorColor: KudosTheme.accentColor,
           controller: _textEditingController,
           decoration: InputDecoration.collapsed(
             hintText: widget._searchHint,
+            hintStyle: KudosTheme.searchHintStyle,
           ),
           onChanged: (x) {
             var viewModel = Provider.of<UserPickerViewModel>(

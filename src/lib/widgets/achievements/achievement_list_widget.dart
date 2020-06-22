@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
@@ -78,7 +79,7 @@ class _GroupListItem extends StatelessWidget {
       ),
       child: Text(
         name,
-        style: Theme.of(context).textTheme.headline6,
+        style: KudosTheme.listTitleTextStyle,
         textAlign: TextAlign.center,
       ),
     );

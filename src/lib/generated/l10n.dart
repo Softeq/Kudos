@@ -620,6 +620,42 @@ class S {
       args: [],
     );
   }
+
+  String get signOutConfirmationTitle {
+    return Intl.message(
+      'Are you sure?',
+      name: 'signOutConfirmationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get signOutConfirmationMessage {
+    return Intl.message(
+      'Confirm that you really want to leave this super awesome app',
+      name: 'signOutConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get signOutConfirmButton {
+    return Intl.message(
+      'Sign Out',
+      name: 'signOutConfirmButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get signOutCancelButton {
+    return Intl.message(
+      'Stay!',
+      name: 'signOutCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

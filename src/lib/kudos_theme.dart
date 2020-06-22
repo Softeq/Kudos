@@ -11,9 +11,23 @@ class KudosTheme {
 
   static Color get mainGradientEndColor => Color.fromARGB(255, 57, 38, 179);
 
+  static Color get destructiveButtonColor => Color.fromARGB(255, 255, 59, 48);
+
   static TextStyle get appBarTitleTextStyle => TextStyle(
     fontSize: 20.0,
     color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle get searchTextStyle => TextStyle(
+    fontSize: 16.0,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle get searchHintStyle => TextStyle(
+    fontSize: 16.0,
+    color: Color.fromARGB(160, 255, 255, 255),
     fontWeight: FontWeight.w500,
   );
 

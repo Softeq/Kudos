@@ -64,5 +64,9 @@
     "myAchievements": "My achievements",
     "search" : "Search",
     "searchMembers" : "Search Members",
-    "searchAdmins" : "Search Admins"
+    "searchAdmins" : "Search Admins",
+    "signOutConfirmationTitle" : "Are you sure?",
+    "signOutConfirmationMessage" : "Confirm that you really want to leave this super awesome app",
+    "signOutConfirmButton" : "Sign Out",
+    "signOutCancelButton" : "Stay!"
 }
