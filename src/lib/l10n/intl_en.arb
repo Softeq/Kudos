@@ -62,5 +62,8 @@
     "transferAchievementToTeamWarning": "You might not have access to this achievement after the operation is complete",
     "noComment": "No comment",
     "chooseTeam": "Choose team",
-    "myAchievements": "My achievements"
+    "myAchievements": "My achievements",
+    "search" : "Search",
+    "searchMembers" : "Search Members",
+    "searchAdmins" : "Search Admins"
 }

@@ -9,6 +9,7 @@ class UserPickerRoute extends MaterialPageRoute<List<User>> {
   UserPickerRoute({
     @required bool allowMultipleSelection,
     @required bool allowCurrentUser,
+    String searchHint,
     List<String> selectedUserIds,
     WidgetBuilder trailingBuilder,
   }) : super(
@@ -21,7 +22,8 @@ class UserPickerRoute extends MaterialPageRoute<List<User>> {
                     allowCurrentUser,
                   );
               },
-              child: _UserPickerPage(allowMultipleSelection, trailingBuilder),
+              child: _UserPickerPage(allowMultipleSelection, trailingBuilder,
+                  searchHint ?? localizer().search),
             );
           },
           fullscreenDialog: true,
@@ -30,9 +32,11 @@ class UserPickerRoute extends MaterialPageRoute<List<User>> {
 
 class _UserPickerPage extends StatefulWidget {
   final bool _allowMultipleSelection;
+  final String _searchHint;
   final WidgetBuilder _trailingBuilder;
 
-  _UserPickerPage(this._allowMultipleSelection, this._trailingBuilder);
+  _UserPickerPage(
+      this._allowMultipleSelection, this._trailingBuilder, this._searchHint);
 
   @override
   State<StatefulWidget> createState() {
@@ -67,69 +71,37 @@ class _UserPickerPageState extends State<_UserPickerPage> {
           autofocus: true,
           controller: _textEditingController,
           decoration: InputDecoration.collapsed(
-            hintText: localizer().addPeople,
+            hintText: widget._searchHint,
           ),
           onChanged: (x) {
             var viewModel = Provider.of<UserPickerViewModel>(
               context,
               listen: false,
             );
-            viewModel.addToQueue(x);
+            viewModel.requestSearch(x);
           },
         ),
         actions: actions,
       ),
       body: Consumer<UserPickerViewModel>(
         builder: (context, viewModel, child) {
-          switch (viewModel.state) {
-            case UserPickerViewModelState.initialState:
-              return Container();
-            case UserPickerViewModelState.searchResults:
-              if (viewModel.users.isEmpty) {
-                return Container();
-              }
-              return ListOfPeopleWidget(
-                itemSelector: (x) {
-                  if (widget._allowMultipleSelection) {
-                    _textEditingController.text = "";
-                    viewModel.select(x);
-                  } else {
-                    Navigator.of(context).pop([x]);
-                  }
-                },
-                users: viewModel.users,
-                trailingWidget: widget._trailingBuilder == null
-                    ? null
-                    : widget._trailingBuilder(context),
-              );
-            case UserPickerViewModelState.selectedUsers:
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 20.0,
-                      left: 72.0,
-                    ),
-                    child: Text(
-                      localizer().addedPeople.toUpperCase(),
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ),
-                  Expanded(
-                    child: ListOfPeopleWidget(
-                      trailingWidget: Icon(Icons.clear),
-                      users: viewModel.selectedUsers,
-                      trailingSelector: (x) {
-                        viewModel.deselect(x);
-                      },
-                    ),
-                  ),
-                ],
-              );
-            default:
-              return Container();
+          if (viewModel.users.isEmpty) {
+            return Container();
           }
+          return ListOfPeopleWidget(
+              itemSelector: (x) {
+                if (widget._allowMultipleSelection) {
+                  viewModel.toggleUserSelection(x);
+                } else {
+                  Navigator.of(context).pop([x]);
+                }
+              },
+              users: viewModel.users,
+              trailingWidgetFunction: (x) => widget._trailingBuilder != null
+                  ? widget._trailingBuilder(context)
+                  : viewModel.isUserSelected(x)
+                      ? Icon(Icons.clear, color: Colors.redAccent)
+                      : Icon(Icons.add));
         },
       ),
     );

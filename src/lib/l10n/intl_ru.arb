@@ -62,5 +62,8 @@
     "transferAchievementToTeamWarning": "Вы можете потерять доступ к этой награде после завершения данной операции",
     "noComment" : "Нет комментария",
     "chooseTeam": "Выберите команду",
-    "myAchievements": "Mои награды"
+    "myAchievements": "Mои награды",
+    "search" : "Поиск",
+    "searchMembers" : "Искать участников",
+    "searchAdmins" : "Искать администраторов"
 }
