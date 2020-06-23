@@ -9,12 +9,14 @@ class User {
   final String name;
   final String email;
   final String imageUrl;
+  final int receivedAchievementsCount;
 
   User._({
     @required this.id,
     @required this.name,
     this.email,
     @required this.imageUrl,
+    @required this.receivedAchievementsCount,
   });
 
   factory User.fromDocument(DocumentSnapshot x) {
@@ -23,6 +25,7 @@ class User {
       name: x.data["name"],
       email: x.data["email"],
       imageUrl: x.data["image_url"],
+      receivedAchievementsCount: x.data["received_achievements_count"],
     );
   }
 
@@ -34,6 +37,7 @@ class User {
       name: x.displayName,
       email: x.email,
       imageUrl: x.photoUrl,
+      receivedAchievementsCount: 0,
     );
   }
 
@@ -43,6 +47,7 @@ class User {
       name: "Test Name #$index",
       email: "test.name@softeq.com",
       imageUrl: "https://picsum.photos/200?random=$index",
+      receivedAchievementsCount: 0,
     );
   }
 
@@ -52,6 +57,7 @@ class User {
       "name": name,
       "email": email,
       "image_url": imageUrl,
+      "received_achievements_count": receivedAchievementsCount,
     };
   }
 }

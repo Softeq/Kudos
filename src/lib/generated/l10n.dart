@@ -8,8 +8,12 @@ import 'intl/messages_all.dart';
 // Made by Localizely
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+
 class S {
   S();
+  
+  static S current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -19,7 +23,9 @@ class S {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S();
+      S.current = S();
+      
+      return S.current;
     });
   } 
 
@@ -27,6 +33,7 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Kudos`
   String get appName {
     return Intl.message(
       'Kudos',
@@ -36,6 +43,7 @@ class S {
     );
   }
 
+  /// `Sign-In via Google`
   String get signIn {
     return Intl.message(
       'Sign-In via Google',
@@ -45,6 +53,7 @@ class S {
     );
   }
 
+  /// `Sign in to view your achievements`
   String get notSignedIn {
     return Intl.message(
       'Sign in to view your achievements',
@@ -54,6 +63,7 @@ class S {
     );
   }
 
+  /// `All achievements`
   String get allAchievements {
     return Intl.message(
       'All achievements',
@@ -63,6 +73,7 @@ class S {
     );
   }
 
+  /// `From Chris`
   String get fromCris {
     return Intl.message(
       'From Chris',
@@ -72,6 +83,7 @@ class S {
     );
   }
 
+  /// `Official`
   String get official {
     return Intl.message(
       'Official',
@@ -81,6 +93,7 @@ class S {
     );
   }
 
+  /// `Others`
   String get others {
     return Intl.message(
       'Others',
@@ -90,6 +103,7 @@ class S {
     );
   }
 
+  /// `People`
   String get people {
     return Intl.message(
       'People',
@@ -99,6 +113,7 @@ class S {
     );
   }
 
+  /// `Profile`
   String get profile {
     return Intl.message(
       'Profile',
@@ -108,6 +123,7 @@ class S {
     );
   }
 
+  /// `OK`
   String get ok {
     return Intl.message(
       'OK',
@@ -117,6 +133,7 @@ class S {
     );
   }
 
+  /// `Cancel`
   String get cancel {
     return Intl.message(
       'Cancel',
@@ -126,6 +143,7 @@ class S {
     );
   }
 
+  /// `Name`
   String get achievementName {
     return Intl.message(
       'Name',
@@ -135,6 +153,7 @@ class S {
     );
   }
 
+  /// `Description`
   String get description {
     return Intl.message(
       'Description',
@@ -144,6 +163,7 @@ class S {
     );
   }
 
+  /// `Make the name unique`
   String get editName {
     return Intl.message(
       'Make the name unique',
@@ -153,6 +173,7 @@ class S {
     );
   }
 
+  /// `Make the description meaningful`
   String get editDescription {
     return Intl.message(
       'Make the description meaningful',
@@ -162,6 +183,7 @@ class S {
     );
   }
 
+  /// `Make the image recognizable`
   String get editImage {
     return Intl.message(
       'Make the image recognizable',
@@ -171,6 +193,7 @@ class S {
     );
   }
 
+  /// `Edit`
   String get edit {
     return Intl.message(
       'Edit',
@@ -180,6 +203,7 @@ class S {
     );
   }
 
+  /// `Create`
   String get create {
     return Intl.message(
       'Create',
@@ -189,6 +213,7 @@ class S {
     );
   }
 
+  /// `Add a picture`
   String get fileIsNullErrorMessage {
     return Intl.message(
       'Add a picture',
@@ -198,6 +223,7 @@ class S {
     );
   }
 
+  /// `Add a description`
   String get descriptionIsNullErrorMessage {
     return Intl.message(
       'Add a description',
@@ -207,6 +233,7 @@ class S {
     );
   }
 
+  /// `Enter name`
   String get nameIsNullErrorMessage {
     return Intl.message(
       'Enter name',
@@ -216,6 +243,7 @@ class S {
     );
   }
 
+  /// `Something went wrong...`
   String get generalErrorMessage {
     return Intl.message(
       'Something went wrong...',
@@ -225,6 +253,7 @@ class S {
     );
   }
 
+  /// `Send`
   String get send {
     return Intl.message(
       'Send',
@@ -234,6 +263,7 @@ class S {
     );
   }
 
+  /// `Your comment`
   String get writeAComment {
     return Intl.message(
       'Your comment',
@@ -243,6 +273,7 @@ class S {
     );
   }
 
+  /// `The award has been successfully sent!`
   String get sentSuccessfully {
     return Intl.message(
       'The award has been successfully sent!',
@@ -252,6 +283,7 @@ class S {
     );
   }
 
+  /// `Statistics`
   String get achievementStatisticsTitle {
     return Intl.message(
       'Statistics',
@@ -261,6 +293,7 @@ class S {
     );
   }
 
+  /// `How many people have already received this award`
   String get achievementStatisticsTooltip {
     return Intl.message(
       'How many people have already received this award',
@@ -270,6 +303,7 @@ class S {
     );
   }
 
+  /// `Holders`
   String get achievementHoldersTitle {
     return Intl.message(
       'Holders',
@@ -279,6 +313,7 @@ class S {
     );
   }
 
+  /// `No one has ever received this achievement.`
   String get achievementHoldersEmptyPlaceholder {
     return Intl.message(
       'No one has ever received this achievement.',
@@ -288,6 +323,7 @@ class S {
     );
   }
 
+  /// `Haven't received any achievements yet.`
   String get profileAchievementsEmptyPlaceholder {
     return Intl.message(
       'Haven\'t received any achievements yet.',
@@ -297,6 +333,7 @@ class S {
     );
   }
 
+  /// `Owner`
   String get achievementOwnerTitle {
     return Intl.message(
       'Owner',
@@ -306,6 +343,7 @@ class S {
     );
   }
 
+  /// `Add people`
   String get addPeople {
     return Intl.message(
       'Add people',
@@ -315,6 +353,7 @@ class S {
     );
   }
 
+  /// `Added people`
   String get addedPeople {
     return Intl.message(
       'Added people',
@@ -324,6 +363,7 @@ class S {
     );
   }
 
+  /// `Create team`
   String get createTeam {
     return Intl.message(
       'Create team',
@@ -333,6 +373,7 @@ class S {
     );
   }
 
+  /// `Edit team`
   String get editTeam {
     return Intl.message(
       'Edit team',
@@ -342,6 +383,7 @@ class S {
     );
   }
 
+  /// `Name`
   String get name {
     return Intl.message(
       'Name',
@@ -351,6 +393,7 @@ class S {
     );
   }
 
+  /// `Description (optional)`
   String get optionalDescription {
     return Intl.message(
       'Description (optional)',
@@ -360,6 +403,7 @@ class S {
     );
   }
 
+  /// `Required field`
   String get requiredField {
     return Intl.message(
       'Required field',
@@ -369,6 +413,7 @@ class S {
     );
   }
 
+  /// `Team`
   String get team {
     return Intl.message(
       'Team',
@@ -378,6 +423,7 @@ class S {
     );
   }
 
+  /// `User`
   String get user {
     return Intl.message(
       'User',
@@ -387,6 +433,7 @@ class S {
     );
   }
 
+  /// `This user is not yet part of any team`
   String get userTeamsEmptyPlaceholder {
     return Intl.message(
       'This user is not yet part of any team',
@@ -396,6 +443,7 @@ class S {
     );
   }
 
+  /// `Admins`
   String get admins {
     return Intl.message(
       'Admins',
@@ -405,6 +453,7 @@ class S {
     );
   }
 
+  /// `Teams`
   String get teams {
     return Intl.message(
       'Teams',
@@ -414,6 +463,7 @@ class S {
     );
   }
 
+  /// `Members`
   String get members {
     return Intl.message(
       'Members',
@@ -423,6 +473,7 @@ class S {
     );
   }
 
+  /// `Save`
   String get save {
     return Intl.message(
       'Save',
@@ -432,6 +483,7 @@ class S {
     );
   }
 
+  /// `Delete`
   String get delete {
     return Intl.message(
       'Delete',
@@ -441,6 +493,7 @@ class S {
     );
   }
 
+  /// `Warning`
   String get warning {
     return Intl.message(
       'Warning',
@@ -450,6 +503,7 @@ class S {
     );
   }
 
+  /// `Do you really want to delete this achievement?`
   String get deleteAchievementWarning {
     return Intl.message(
       'Do you really want to delete this achievement?',
@@ -459,6 +513,7 @@ class S {
     );
   }
 
+  /// `Do you really want to delete this team? All the team achievements will be removed as well`
   String get deleteTeamWarning {
     return Intl.message(
       'Do you really want to delete this team? All the team achievements will be removed as well',
@@ -468,6 +523,7 @@ class S {
     );
   }
 
+  /// `Achievements`
   String get achievements {
     return Intl.message(
       'Achievements',
@@ -477,6 +533,7 @@ class S {
     );
   }
 
+  /// `Create your own rewards and give them to your colleagues!`
   String get createYourOwnAchievements {
     return Intl.message(
       'Create your own rewards and give them to your colleagues!',
@@ -486,6 +543,7 @@ class S {
     );
   }
 
+  /// `Create your teams and invite your colleagues to join them!`
   String get createYourOwnTeams {
     return Intl.message(
       'Create your teams and invite your colleagues to join them!',
@@ -495,6 +553,7 @@ class S {
     );
   }
 
+  /// `Enter name`
   String get enterName {
     return Intl.message(
       'Enter name',
@@ -504,6 +563,7 @@ class S {
     );
   }
 
+  /// `Image size is too big. Please select another file`
   String get fileSizeTooBig {
     return Intl.message(
       'Image size is too big. Please select another file',
@@ -513,6 +573,7 @@ class S {
     );
   }
 
+  /// `Transfer achievement`
   String get transferAchievementTitle {
     return Intl.message(
       'Transfer achievement',
@@ -522,6 +583,7 @@ class S {
     );
   }
 
+  /// `Do you want to trasfer this achievement to another user or another team?`
   String get transferAchievementDescription {
     return Intl.message(
       'Do you want to trasfer this achievement to another user or another team?',
@@ -531,6 +593,7 @@ class S {
     );
   }
 
+  /// `Transfer to %s?`
   String get transferAchievementToUserTitle {
     return Intl.message(
       'Transfer to %s?',
@@ -540,6 +603,7 @@ class S {
     );
   }
 
+  /// `Transfer to %s team?`
   String get transferAchievementToTeamTitle {
     return Intl.message(
       'Transfer to %s team?',
@@ -549,6 +613,7 @@ class S {
     );
   }
 
+  /// `You will not have access to this achievement after the operation is complete`
   String get transferAchievementToUserWarning {
     return Intl.message(
       'You will not have access to this achievement after the operation is complete',
@@ -558,6 +623,7 @@ class S {
     );
   }
 
+  /// `You might not have access to this achievement after the operation is complete`
   String get transferAchievementToTeamWarning {
     return Intl.message(
       'You might not have access to this achievement after the operation is complete',
@@ -567,6 +633,7 @@ class S {
     );
   }
 
+  /// `No comment`
   String get noComment {
     return Intl.message(
       'No comment',
@@ -576,6 +643,7 @@ class S {
     );
   }
 
+  /// `Choose team`
   String get chooseTeam {
     return Intl.message(
       'Choose team',
@@ -585,6 +653,7 @@ class S {
     );
   }
 
+  /// `My achievements`
   String get myAchievements {
     return Intl.message(
       'My achievements',
@@ -594,6 +663,7 @@ class S {
     );
   }
 
+  /// `Search`
   String get search {
     return Intl.message(
       'Search',
@@ -603,6 +673,7 @@ class S {
     );
   }
 
+  /// `Search Members`
   String get searchMembers {
     return Intl.message(
       'Search Members',
@@ -612,6 +683,7 @@ class S {
     );
   }
 
+  /// `Search Admins`
   String get searchAdmins {
     return Intl.message(
       'Search Admins',
@@ -621,6 +693,7 @@ class S {
     );
   }
 
+  /// `Are you sure?`
   String get signOutConfirmationTitle {
     return Intl.message(
       'Are you sure?',
@@ -630,6 +703,7 @@ class S {
     );
   }
 
+  /// `Confirm that you really want to leave this super awesome app`
   String get signOutConfirmationMessage {
     return Intl.message(
       'Confirm that you really want to leave this super awesome app',
@@ -639,6 +713,7 @@ class S {
     );
   }
 
+  /// `Sign Out`
   String get signOutConfirmButton {
     return Intl.message(
       'Sign Out',
@@ -648,10 +723,61 @@ class S {
     );
   }
 
+  /// `Stay!`
   String get signOutCancelButton {
     return Intl.message(
       'Stay!',
       name: 'signOutCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nobody is here`
+  String get noPeople {
+    return Intl.message(
+      'Nobody is here',
+      name: 'noPeople',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: %s`
+  String get error {
+    return Intl.message(
+      'Error: %s',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From: %s`
+  String get from {
+    return Intl.message(
+      'From: %s',
+      name: 'from',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hasn't received any achievements yet`
+  String get receivedNoAchievements {
+    return Intl.message(
+      'Hasn\'t received any achievements yet',
+      name: 'receivedNoAchievements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Received achievements: %i`
+  String get receivedAchievements {
+    return Intl.message(
+      'Received achievements: %i',
+      name: 'receivedAchievements',
       desc: '',
       args: [],
     );

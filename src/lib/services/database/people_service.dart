@@ -15,7 +15,7 @@ class PeopleService {
     _database.collection(_usersCollection).snapshots().listen((s) {
       final users = s.documents.map<User>((x) => User.fromDocument(x)).toList();
       users.sort((x, y) => x.name.compareTo(y.name));
-      
+
       _cachedUsers.clear();
       _cachedUsers.addAll(users);
     });
@@ -80,6 +80,19 @@ class PeopleService {
       throw ("User not found");
     }
     return user;
+  }
+
+  Future<void> incrementReceivedAchievementsForUser(String userId,
+      {WriteBatch batch}) async {
+    var docRef = _database.collection(_usersCollection).document(userId);
+
+    if (batch != null) {
+      batch.updateData(
+          docRef, {"received_achievements_count": FieldValue.increment(1)});
+    } else {
+      return docRef
+          .updateData({"received_achievements_count": FieldValue.increment(1)});
+    }
   }
 
   Future<List<User>> _getAllUsers() {

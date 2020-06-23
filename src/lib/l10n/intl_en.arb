@@ -71,5 +71,7 @@
     "signOutCancelButton": "Stay!",
     "noPeople": "Nobody is here",
     "error": "Error: %s",
-    "from": "From: %s"
+    "from": "From: %s",
+    "receivedNoAchievements": "Hasn't received any achievements yet",
+    "receivedAchievements": "Received achievements: %i"
 }

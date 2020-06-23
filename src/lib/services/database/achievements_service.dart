@@ -15,6 +15,7 @@ import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
 class AchievementsService {
@@ -24,6 +25,7 @@ class AchievementsService {
 
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
+  final _peopleService = locator<PeopleService>();
   final imageService = locator<ImageService>();
 
   Future<List<Achievement>> getAchievements() async {
@@ -32,7 +34,9 @@ class AchievementsService {
         .where("user", isNull: true)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    return snapshot.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
+    return snapshot.documents
+        .map((x) => Achievement.fromDocument(x, _authService.currentUser.id))
+        .toList();
   }
 
   Future<Achievement> createAchievement(
@@ -119,11 +123,9 @@ class AchievementsService {
       {@required String id, Team team, User user, WriteBatch batch}) async {
     UserReference userReference;
     TeamReference teamReference;
-    if (user != null && team != null)
-    {
+    if (user != null && team != null) {
       throw ArgumentError("Team and user can't be set simultaneously");
-    }
-    else if (user != null) {
+    } else if (user != null) {
       userReference = UserReference.fromUser(user);
     } else if (team != null) {
       teamReference = TeamReference(
@@ -189,6 +191,10 @@ class AchievementsService {
 
     batch.setData(achievementHoldersReference.document(), holderMap);
 
+    _peopleService.incrementReceivedAchievementsForUser(
+        sendAchievement.recipient.id,
+        batch: batch);
+
     await batch.commit();
   }
 
@@ -219,7 +225,8 @@ class AchievementsService {
         .collection(_achievementsCollection)
         .document(achivementId)
         .get();
-    return Achievement.fromDocument(documentSnapshot, _authService.currentUser.id);
+    return Achievement.fromDocument(
+        documentSnapshot, _authService.currentUser.id);
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
@@ -237,8 +244,9 @@ class AchievementsService {
         .where(field, isEqualTo: value)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    final result =
-        qs.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
+    final result = qs.documents
+        .map((x) => Achievement.fromDocument(x, _authService.currentUser.id))
+        .toList();
     return result;
   }
 }
