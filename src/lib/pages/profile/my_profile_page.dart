@@ -28,20 +28,26 @@ class MyProfilePage extends StatelessWidget {
                 SizedBox(height: 5.0),
                 _buildTopBar(context, viewModel),
                 SizedBox(height: 12.0),
-                TabBar(
-                  labelColor: KudosTheme.accentColor,
-                  unselectedLabelColor: KudosTheme.textColor,
-                  indicatorColor: KudosTheme.accentColor,
-                  tabs: <Widget>[
-                    Tab(
-                      text: localizer().achievements,
-                      icon: VectorIcon("assets/icons/star.svg"),
+                Theme(
+                  data: ThemeData(
+                    splashColor: KudosTheme.tabBarSplashColor,
+                    highlightColor: KudosTheme.tabBarHighlightColor,
+                  ),
+                  child: TabBar(
+                      labelColor: KudosTheme.accentColor,
+                      unselectedLabelColor: KudosTheme.textColor,
+                      indicatorColor: KudosTheme.accentColor,
+                      tabs: <Widget>[
+                        Tab(
+                          text: localizer().achievements,
+                          icon: VectorIcon("assets/icons/star.svg"),
+                        ),
+                        Tab(
+                          text: localizer().teams,
+                          icon: VectorIcon("assets/icons/teams.svg"),
+                        ),
+                      ],
                     ),
-                    Tab(
-                      text: localizer().teams,
-                      icon: VectorIcon("assets/icons/teams.svg"),
-                    ),
-                  ],
                 ),
                 Expanded(
                   child: Stack(
