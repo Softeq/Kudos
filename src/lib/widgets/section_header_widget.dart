@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kudosapp/kudos_theme.dart';
 
 class SectionHeaderWidget extends StatelessWidget {
   final String _title;
@@ -16,17 +17,17 @@ class SectionHeaderWidget extends StatelessWidget {
             children: <Widget>[
               Text(
                 _title,
-                style: Theme.of(context).textTheme.caption,
+                style: KudosTheme.sectionTitleTextStyle,
               ),
               SizedBox(width: 8),
               Visibility(
                   visible: _tooltipTitle?.isNotEmpty ?? false,
                   child: Tooltip(
-                    message: _tooltipTitle ?? "not visible",
+                    message: _tooltipTitle ?? "",
                     child: Icon(
                       Icons.info,
                       size: 20,
-                      color: Colors.grey,
+                      color: KudosTheme.accentColor,
                     ),
                   ))
             ]));

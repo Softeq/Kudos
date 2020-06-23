@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "achievementHoldersEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("No one has ever received this achievement."),
+    "achievementHoldersEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("No one has ever received this achievement"),
     "achievementHoldersTitle" : MessageLookupByLibrary.simpleMessage("Holders"),
     "achievementName" : MessageLookupByLibrary.simpleMessage("Name"),
     "achievementOwnerTitle" : MessageLookupByLibrary.simpleMessage("Owner"),
@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fileSizeTooBig" : MessageLookupByLibrary.simpleMessage("Image size is too big. Please select another file"),
     "from" : MessageLookupByLibrary.simpleMessage("From: %s"),
     "fromCris" : MessageLookupByLibrary.simpleMessage("From Chris"),
+    "generalError" : MessageLookupByLibrary.simpleMessage("Something went wrong"),
     "generalErrorMessage" : MessageLookupByLibrary.simpleMessage("Something went wrong..."),
     "members" : MessageLookupByLibrary.simpleMessage("Members"),
     "myAchievements" : MessageLookupByLibrary.simpleMessage("My achievements"),
@@ -69,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "others" : MessageLookupByLibrary.simpleMessage("Others"),
     "people" : MessageLookupByLibrary.simpleMessage("People"),
     "profile" : MessageLookupByLibrary.simpleMessage("Profile"),
-    "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Haven\'t received any achievements yet."),
+    "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("No achievements yet"),
     "requiredField" : MessageLookupByLibrary.simpleMessage("Required field"),
     "save" : MessageLookupByLibrary.simpleMessage("Save"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),

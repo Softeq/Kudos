@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
 import 'package:provider/provider.dart';
@@ -36,12 +37,9 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _addDefaultSliverPadding(Widget widget,
-      [bool addBottomPadding = false]) {
+  Widget _addDefaultSliverPadding(Widget widget) {
     return SliverPadding(
-        padding: EdgeInsets.only(
-            left: 16, right: 16, bottom: addBottomPadding ? 16 : 0),
-        sliver: widget);
+        padding: EdgeInsets.only(left: 16, right: 16), sliver: widget);
   }
 
   List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
@@ -57,31 +55,28 @@ class ProfilePage extends StatelessWidget {
 
     return [
       _buildHeader(viewModel.user),
-      SliverToBoxAdapter(child: SizedBox(height: 16)),
       _addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              SizedBox(height: 16),
               SectionHeaderWidget(localizer().teams),
+              SizedBox(height: 10),
               FancyListWidget<Team>(
                 viewModel.userTeams,
                 (Team team) => team.name,
                 localizer().userTeamsEmptyPlaceholder,
               ),
+              SizedBox(height: 30),
+              SectionHeaderWidget(localizer().allAchievements),
+              SizedBox(height: 10),
             ],
           ),
         ),
-        true,
       ),
       _addDefaultSliverPadding(
-        SliverToBoxAdapter(
-          child: SectionHeaderWidget(localizer().allAchievements),
-        ),
-        true,
-      ),
-      _addDefaultSliverPadding(
-        ProfileAchievementsListWidget(viewModel.user.id, true),
+        ProfileAchievementsListWidget(viewModel.user.id, true, false),
       ),
     ];
   }
@@ -91,25 +86,45 @@ class ProfilePage extends StatelessWidget {
       expandedHeight: 350.0,
       floating: false,
       pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
-        title: Text(user.name),
-        background: _buildHeaderBackground(user.imageUrl),
-      ),
+      flexibleSpace: Container(
+          decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
+          child: FlexibleSpaceBar(
+            centerTitle: true,
+            title: Text(user.name, style: KudosTheme.userNameTitleTextStyle),
+            background: _buildHeaderBackground(user.imageUrl),
+          )),
     );
   }
 
   Widget _buildHeaderBackground(String imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
+    return Stack(children: <Widget>[
+      CachedNetworkImage(
+        imageUrl: imageUrl,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
-    );
+      Container(
+          height: 110,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: <Color>[
+            Colors.black.withAlpha(60),
+            Colors.transparent,
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter))),
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: <Color>[
+                Colors.black.withAlpha(60),
+                Colors.transparent,
+              ], begin: Alignment.bottomCenter, end: Alignment.topCenter))))
+    ]);
   }
 }

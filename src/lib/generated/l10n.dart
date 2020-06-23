@@ -762,6 +762,15 @@ class S {
       args: [],
     );
   }
+
+  String get generalError {
+    return Intl.message(
+      'Something went wrong',
+      name: 'generalError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

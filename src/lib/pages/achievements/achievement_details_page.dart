@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement_holder.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_reference.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
@@ -128,7 +129,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         allowMultipleSelection: false,
         allowCurrentUser: false,
         trailingBuilder: (context) {
-          return Icon(Icons.send);
+          return Icon(Icons.send, color: KudosTheme.accentColor);
         },
       ),
     );

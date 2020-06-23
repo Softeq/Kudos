@@ -28,7 +28,7 @@
     "achievementStatisticsTooltip": "Как много людей уже получили эту награду",
     "achievementHoldersTitle": "Обладатели",
     "achievementHoldersEmptyPlaceholder": "Никто ещё не получал эту награду",
-    "profileAchievementsEmptyPlaceholder": "Еще не получал наград",
+    "profileAchievementsEmptyPlaceholder": "Ещё нет наград",
     "achievementOwnerTitle": "Владелец",
     "addPeople": "Добавить людей",
     "addedPeople": "Добавленные люди",
@@ -71,5 +71,6 @@
     "signOutCancelButton": "Остаться!",
     "noPeople": "Здесь никого нет",
     "error": "Ошибка: %s",
-    "from": "От: %s"
+    "from": "От: %s",
+    "generalError": "Что-то пошло не так"
 }

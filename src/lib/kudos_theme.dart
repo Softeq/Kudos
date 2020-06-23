@@ -50,6 +50,24 @@ class KudosTheme {
         fontWeight: FontWeight.w500,
       );
 
+  static final TextStyle sectionTitleTextStyle = TextStyle(
+    fontSize: 16.0,
+    color: mainGradientEndColor,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle sectionEmptyTextStyle = TextStyle(
+    fontSize: 15.0,
+    color: Color.fromARGB(160, 0, 0, 0),
+    fontWeight: FontWeight.w500,
+  );
+
+  static final TextStyle errorTextStyle = TextStyle(
+    fontSize: 15.0,
+    color: Colors.redAccent,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle listTitleTextStyle = TextStyle(
         fontSize: 16.0,
         color: mainGradientEndColor,
@@ -72,4 +90,10 @@ class KudosTheme {
         color: Colors.white,
         fontWeight: FontWeight.w500,
       );
+
+  static TextStyle get fancyListItemTextStyle => TextStyle(
+    fontSize: 14.0,
+    color: Color.fromARGB(180, 0, 0, 0),
+    fontWeight: FontWeight.w500,
+  );
 }

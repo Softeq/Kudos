@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kudosapp/helpers/image_placeholder_builder.dart';
+import 'package:kudosapp/helpers/colored_placeholder_builder.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:path/path.dart' as path;
@@ -11,14 +11,14 @@ class RoundedImageWidget extends StatelessWidget {
   final ImageViewModel _imageViewModel;
   final double _size;
   final double _borderRadius;
-  final ImagePlaceholder _imagePlaceholder;
+  final ColoredPlaceholder _imagePlaceholder;
 
   RoundedImageWidget._(
     this._imageViewModel,
     this._size,
     this._borderRadius,
     String _name,
-  ) : _imagePlaceholder = ImagePlaceholderBuilder.build(_name);
+  ) : _imagePlaceholder = ColoredPlaceholderBuilder.build(_name);
 
   factory RoundedImageWidget.circular({
     @required ImageViewModel imageViewModel,
