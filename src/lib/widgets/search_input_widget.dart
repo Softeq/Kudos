@@ -4,22 +4,25 @@ import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/search_input_viewmodel.dart';
 
 class SearchInputWidget extends StatelessWidget {
-  final String hintText;
+  static const double _leftPadding = 0;
+  static const double _rightPadding = 24;
+  static const double _topBottomPadding = 4;
 
-  const SearchInputWidget({Key key, this.hintText}) : super(key: key);
+  final String hintText;
+  final double iconSize;
+
+  SearchInputWidget({this.hintText, this.iconSize});
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SearchInputViewModel>(context, listen: false);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 10,
-      ),
+      padding: EdgeInsets.fromLTRB(_leftPadding, _topBottomPadding, _rightPadding, _topBottomPadding),
       child: Row(
         children: <Widget>[
           Container(
-            width: 70,
+            width: iconSize ?? 92,
             child: Center(
               child: Icon(
                 Icons.search,
@@ -33,17 +36,13 @@ class SearchInputWidget extends StatelessWidget {
               cursorColor: KudosTheme.accentColor,
               onChanged: (value) => viewModel.query = value,
               decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: KudosTheme.accentColor)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: KudosTheme.accentColor)),
-                hintText: hintText,
-                hintStyle: KudosTheme.searchHintStyle
-              ),
+                  enabledBorder:
+                      UnderlineInputBorder(borderSide: BorderSide.none),
+                  focusedBorder:
+                      UnderlineInputBorder(borderSide: BorderSide.none),
+                  hintText: hintText,
+                  hintStyle: KudosTheme.searchHintStyle),
             ),
-          ),
-          SizedBox(
-            width: 24,
           ),
         ],
       ),

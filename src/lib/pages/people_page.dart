@@ -102,7 +102,7 @@ class PeoplePage extends StatelessWidget {
   Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
-      child: SearchInputWidget(hintText: localizer().enterName),
+      child: SearchInputWidget(hintText: localizer().enterName, iconSize: 82),
     );
   }
 
