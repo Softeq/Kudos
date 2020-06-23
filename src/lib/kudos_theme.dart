@@ -1,70 +1,73 @@
 import 'package:flutter/material.dart';
 
 class KudosTheme {
-  static Color get textColor => Colors.white;
+  static final Color textColor = Colors.white;
+  static final Color accentColor = Color.fromARGB(255, 3, 218, 197);
+  static final Color splashColor = Color.fromARGB(140, 3, 218, 197);
+  static final Color highlightColor = Color.fromARGB(50, 3, 218, 197);
+  static final Color buttonSplashColor = Color.fromARGB(255, 3, 255, 255);
+  static final Color tabBarSplashColor = Color.fromARGB(140, 157, 138, 255);
+  static final Color tabBarHighlightColor = Color.fromARGB(50, 157, 138, 255);
+  static final Color contentColor = Colors.white;
+  static final Color mainGradientStartColor = Color.fromARGB(255, 106, 24, 163);
+  static final Color mainGradientEndColor = Color.fromARGB(255, 57, 38, 179);
+  static final Color destructiveButtonColor = Color.fromARGB(255, 255, 59, 48);
 
-  static Color get accentColor => Color.fromARGB(255, 3, 218, 197);
+  static final LinearGradient mainGradient = LinearGradient(
+          colors: <Color>[
+            KudosTheme.mainGradientStartColor,
+            KudosTheme.mainGradientEndColor,
+          ],
+        );
 
-  static Color get splashColor => Color.fromARGB(140, 3, 218, 197);
-
-  static Color get highlightColor => Color.fromARGB(50, 3, 218, 197);
-
-  static Color get contentColor => Colors.white;
-
-  static Color get mainGradientStartColor => Color.fromARGB(255, 106, 24, 163);
-
-  static Color get mainGradientEndColor => Color.fromARGB(255, 57, 38, 179);
-
-  static Color get destructiveButtonColor => Color.fromARGB(255, 255, 59, 48);
-
-  static TextStyle get appBarTitleTextStyle => TextStyle(
+  static final TextStyle appBarTitleTextStyle = TextStyle(
     fontSize: 20.0,
     color: Colors.white,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle get searchTextStyle => TextStyle(
+  static final TextStyle searchTextStyle = TextStyle(
     fontSize: 16.0,
     color: Colors.white,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle get searchHintStyle => TextStyle(
+  static final TextStyle searchHintStyle = TextStyle(
     fontSize: 16.0,
     color: Color.fromARGB(160, 255, 255, 255),
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle get userNameTitleTextStyle => TextStyle(
+  static final TextStyle userNameTitleTextStyle = TextStyle(
         fontSize: 20.0,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get userNameSubTitleTextStyle => TextStyle(
+  static final TextStyle userNameSubTitleTextStyle = TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(160, 255, 255, 255),
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get listTitleTextStyle => TextStyle(
+  static final TextStyle listTitleTextStyle = TextStyle(
         fontSize: 16.0,
         color: mainGradientEndColor,
         fontWeight: FontWeight.w800,
       );
 
-  static TextStyle get listSubTitleTextStyle => TextStyle(
+  static final TextStyle listSubTitleTextStyle = TextStyle(
         fontSize: 14.0,
         color: Color.fromRGBO(189, 189, 189, 1),
       );
 
-  static TextStyle get screenStateTitleTextStyle => TextStyle(
+  static final TextStyle screenStateTitleTextStyle = TextStyle(
         fontSize: 20.0,
         color: Color.fromARGB(160, 0, 0, 0),
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get raisedButtonTextStyle => TextStyle(
+  static final TextStyle raisedButtonTextStyle = TextStyle(
         fontSize: 16.0,
         color: Colors.white,
         fontWeight: FontWeight.w500,

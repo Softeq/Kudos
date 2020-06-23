@@ -38,14 +38,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final activeTab = _tabs[_selectedTabIndex];
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            KudosTheme.mainGradientStartColor,
-            KudosTheme.mainGradientEndColor,
-          ],
-        ),
-      ),
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: LayoutBuilder(

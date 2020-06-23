@@ -13,7 +13,8 @@ class GradientAppBar extends AppBar {
           flexibleSpace: _buildGradientBackground(),
         );
 
-  GradientAppBar.withWidget(Widget titleWidget, {List<Widget> actions, double elevation})
+  GradientAppBar.withWidget(Widget titleWidget,
+      {List<Widget> actions, double elevation})
       : super(
           title: titleWidget,
           actions: actions,
@@ -23,14 +24,7 @@ class GradientAppBar extends AppBar {
 
   static Widget _buildGradientBackground() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            KudosTheme.mainGradientStartColor,
-            KudosTheme.mainGradientEndColor,
-          ],
-        ),
-      ),
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
     );
   }
 }
