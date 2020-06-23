@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/search_input_viewmodel.dart';
 
@@ -20,14 +21,24 @@ class SearchInputWidget extends StatelessWidget {
           Container(
             width: 70,
             child: Center(
-              child: Icon(Icons.search),
+              child: Icon(
+                Icons.search,
+                color: KudosTheme.accentColor,
+              ),
             ),
           ),
           Expanded(
             child: TextField(
+              style: KudosTheme.searchTextStyle,
+              cursorColor: KudosTheme.accentColor,
               onChanged: (value) => viewModel.query = value,
               decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: KudosTheme.accentColor)),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: KudosTheme.accentColor)),
                 hintText: hintText,
+                hintStyle: KudosTheme.searchHintStyle
               ),
             ),
           ),

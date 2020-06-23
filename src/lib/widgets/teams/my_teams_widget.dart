@@ -6,8 +6,8 @@ import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
-import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
 
 class MyTeamsRoute extends MaterialPageRoute {
@@ -78,53 +78,16 @@ class MyTeamsWidget extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.only(top: 48.0),
+                  padding: EdgeInsets.only(top: 46.0),
                   itemCount: viewModel.items.length,
                   itemBuilder: (context, index) {
                     var item = viewModel.items[index];
-                    return GestureDetector(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                  ),
-                                  child: RoundedImageWidget.rect(
-                                    imageViewModel: item.imageViewModel,
-                                    name: item.team.name,
-                                    size: 56.0,
-                                    borderRadius: 4.0,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    item.team.name,
-                                    style: KudosTheme.listTitleTextStyle,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 16.0),
-                                  child: _selectorIcon,
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                top: 8.0,
-                                bottom: 8.0,
-                                left: 76.0,
-                              ),
-                              height: 1.0,
-                              color: KudosTheme.accentColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                    return SimpleListItem(
+                      title: item.team.name,
                       onTap: () => _onItemSelected?.call(context, item.team),
+                      selectorIcon: _selectorIcon,
+                      imageShape: ImageShape.square(56, 4),
+                      imageViewModel: item.imageViewModel,
                     );
                   },
                 );

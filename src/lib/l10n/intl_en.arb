@@ -62,11 +62,14 @@
     "noComment": "No comment",
     "chooseTeam": "Choose team",
     "myAchievements": "My achievements",
-    "search" : "Search",
-    "searchMembers" : "Search Members",
-    "searchAdmins" : "Search Admins",
-    "signOutConfirmationTitle" : "Are you sure?",
-    "signOutConfirmationMessage" : "Confirm that you really want to leave this super awesome app",
-    "signOutConfirmButton" : "Sign Out",
-    "signOutCancelButton" : "Stay!"
+    "search": "Search",
+    "searchMembers": "Search Members",
+    "searchAdmins": "Search Admins",
+    "signOutConfirmationTitle": "Are you sure?",
+    "signOutConfirmationMessage": "Confirm that you really want to leave this super awesome app",
+    "signOutConfirmButton": "Sign Out",
+    "signOutCancelButton": "Stay!",
+    "noPeople": "Nobody is here",
+    "error": "Error: %s",
+    "from": "From: %s"
 }

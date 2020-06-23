@@ -5,6 +5,10 @@ class KudosTheme {
 
   static Color get accentColor => Color.fromARGB(255, 3, 218, 197);
 
+  static Color get splashColor => Color.fromARGB(140, 3, 218, 197);
+
+  static Color get highlightColor => Color.fromARGB(50, 3, 218, 197);
+
   static Color get contentColor => Colors.white;
 
   static Color get mainGradientStartColor => Color.fromARGB(255, 106, 24, 163);

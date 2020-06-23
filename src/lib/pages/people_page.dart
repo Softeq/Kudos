@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/viewmodels/people_viewmodel.dart';
 import 'package:kudosapp/viewmodels/search_input_viewmodel.dart';
 import 'package:kudosapp/widgets/search_input_widget.dart';
+import 'package:sprintf/sprintf.dart';
 
 class PeoplePageRoute extends MaterialPageRoute {
   PeoplePageRoute(
@@ -50,46 +52,64 @@ class PeoplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: localizer().people),
+      appBar: GradientAppBar(title: localizer().people, elevation: 0),
       body: ChangeNotifierProvider<SearchInputViewModel>(
         create: (context) => SearchInputViewModel(),
-        child: Column(
-          children: <Widget>[
-            SearchInputWidget(
-              hintText: localizer().enterName,
-            ),
-            ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
-              create: (context) =>
-                  PeopleViewModel(excludedUserIds: _excludedUserIds)
-                    ..initialize(),
-              update: (context, searchViewModel, peopleViewModel) {
-                return peopleViewModel..filterByName(searchViewModel.query);
-              },
-              child: Expanded(
-                child: Consumer<PeopleViewModel>(
-                    builder: (context, viewModel, child) {
-                  return StreamBuilder<List<User>>(
-                    stream: viewModel.people,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<User>> snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data.isEmpty) {
-                          return _buildEmpty();
-                        }
-                        return _buildList(context, snapshot.data);
-                      }
-                      if (snapshot.hasError) {
-                        return _buildError(snapshot.error);
-                      }
-                      return _buildLoading();
-                    },
-                  );
-                }),
-              ),
-            ),
+        child: SafeArea(
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(
+              children: <Widget>[
+                _buildSearchBar(),
+                TopDecorator(constraints.maxWidth),
+                ChangeNotifierProxyProvider<SearchInputViewModel,
+                    PeopleViewModel>(
+                  create: (context) =>
+                      PeopleViewModel(excludedUserIds: _excludedUserIds)
+                        ..initialize(),
+                  update: (context, searchViewModel, peopleViewModel) {
+                    return peopleViewModel..filterByName(searchViewModel.query);
+                  },
+                  child: Expanded(
+                    child: Consumer<PeopleViewModel>(
+                        builder: (context, viewModel, child) {
+                      return StreamBuilder<List<User>>(
+                        stream: viewModel.people,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<User>> snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data.isEmpty) {
+                              return _buildEmpty();
+                            }
+                            return _buildList(context, snapshot.data);
+                          }
+                          if (snapshot.hasError) {
+                            return _buildError(snapshot.error);
+                          }
+                          return _buildLoading();
+                        },
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: <Color>[
+            KudosTheme.mainGradientStartColor,
+            KudosTheme.mainGradientEndColor,
           ],
         ),
       ),
+      child: SearchInputWidget(hintText: localizer().enterName),
     );
   }
 
@@ -102,7 +122,7 @@ class PeoplePage extends StatelessWidget {
   Widget _buildError(Object error) {
     return Center(
       child: Text(
-        "Error: $error", // TODO YP: temporary
+        sprintf(localizer().error, [error]),
         style: TextStyle(
           color: Colors.red,
         ),
@@ -112,7 +132,7 @@ class PeoplePage extends StatelessWidget {
 
   Widget _buildEmpty() {
     return Center(
-      child: Text("No data"), // TODO YP: temporary
+      child: Text(localizer().noPeople),
     );
   }
 

@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
   final List<User> users;
@@ -31,58 +31,13 @@ class ListOfPeopleWidget extends StatelessWidget {
 
   Widget _buildItem(context, index) {
     var user = users[index];
-    return _UserWidget(
-      onTapped: itemSelector,
-      onTrailingTapped: trailingSelector,
-      trailing: trailingWidget ?? trailingWidgetFunction(user),
-      user: user,
+    return SimpleListItem(
+      title: user.name,
+      description: user.email,
+      onTap: () => itemSelector?.call(user),
+      imageUrl: user.imageUrl,
+      selectorIcon: trailingWidget ?? trailingWidgetFunction(user),
+      imageShape: ImageShape.circle(50),
     );
-  }
-}
-
-class _UserWidget extends StatelessWidget {
-  final User user;
-  final Function(User user) onTapped;
-  final Function(User user) onTrailingTapped;
-  final Widget trailing;
-
-  _UserWidget({
-    this.user,
-    this.onTapped,
-    this.onTrailingTapped,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget trailingElement = trailing;
-    if (onTrailingTapped != null && trailingElement != null) {
-      trailingElement = GestureDetector(
-        child: trailingElement,
-        onTap: () {
-          onTrailingTapped(user);
-        },
-      );
-    }
-
-    Widget item = ListTile(
-      leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(user.imageUrl),
-      ),
-      title: Text(user.name),
-      subtitle: Text(user.email),
-      trailing: trailingElement,
-    );
-
-    if (onTapped != null) {
-      item = InkWell(
-        child: item,
-        onTap: () {
-          onTapped(user);
-        },
-      );
-    }
-
-    return item;
   }
 }
