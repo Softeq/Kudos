@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile/received_achievement_page.dart';
@@ -15,8 +16,11 @@ import 'package:sprintf/sprintf.dart';
 class ProfileAchievementsListWidget extends StatelessWidget {
   final String _userId;
   final bool _buildSliver;
+  final bool _centerMessages;
 
-  ProfileAchievementsListWidget(this._userId, this._buildSliver);
+  ProfileAchievementsListWidget(this._userId, this._buildSliver,
+      [bool centerMessages])
+      : _centerMessages = centerMessages ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     if (viewModel.achievements.isEmpty) {
       return _buildEmpty();
     }
-    return _buildError("Something went wrong");
+    return _buildError(localizer().generalError);
   }
 
   Widget _buildLoading() {
@@ -65,22 +69,26 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildError(Object error) {
-    return Center(
-      child: Text(
-        sprintf(localizer().error, [error]),
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      ),
-    );
+    return _buildMessage(Text(sprintf(localizer().error, [error]),
+        style: KudosTheme.errorTextStyle));
   }
 
   Widget _buildEmpty() {
-    return Center(
-      child: Text(
-        localizer().profileAchievementsEmptyPlaceholder,
-      ),
-    );
+    return _buildMessage(Text(localizer().profileAchievementsEmptyPlaceholder,
+        style: KudosTheme.sectionEmptyTextStyle));
+  }
+
+  Widget _buildMessage(Text text) {
+    if (_centerMessages) {
+      return Center(
+        child: text,
+      );
+    } else {
+      return Padding(
+        padding: EdgeInsets.only(left: 16),
+        child: text,
+      );
+    }
   }
 
   Widget _buildView(

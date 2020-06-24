@@ -27,8 +27,8 @@
     "achievementStatisticsTitle": "Statistics",
     "achievementStatisticsTooltip": "How many people have already received this award",
     "achievementHoldersTitle": "Holders",
-    "achievementHoldersEmptyPlaceholder": "No one has ever received this achievement.",
-    "profileAchievementsEmptyPlaceholder": "Haven't received any achievements yet.",
+    "achievementHoldersEmptyPlaceholder": "No one has ever received this achievement",
+    "profileAchievementsEmptyPlaceholder": "No achievements yet",
     "achievementOwnerTitle": "Owner",
     "addPeople": "Add people",
     "addedPeople": "Added people",
@@ -72,6 +72,7 @@
     "noPeople": "Nobody is here",
     "error": "Error: %s",
     "from": "From: %s",
+    "generalError": "Something went wrong",
     "receivedNoAchievements": "Hasn't received any achievements yet",
     "receivedAchievements": "Received achievements: %i"
 }

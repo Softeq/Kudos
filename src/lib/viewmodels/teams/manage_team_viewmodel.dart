@@ -37,7 +37,7 @@ class ManageTeamViewModel extends BaseViewModel {
   StreamSubscription _achievementDeletedSubscription;
   StreamSubscription _achievementTransferredSubscription;
 
-  String get name => _initialTeam.name;
+  String get name => _initialTeam?.name;
 
   String get description => _initialTeam.description;
 
@@ -60,7 +60,7 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
-  int get itemsCount => (_achievements.length / 2.0).round() + 1;
+  int get itemsCount => (_achievements.length / 2.0).round();
 
   @override
   void dispose() {
@@ -166,8 +166,8 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   List<AchievementModel> getData(int index) {
-    var index2 = index * 2 - 1;
-    var index1 = index2 - 1;
+    var index1 = index * 2;
+    var index2 = index1 + 1;
 
     var list = List<AchievementModel>();
     list.add(_achievements[index1]);

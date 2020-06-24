@@ -74,6 +74,7 @@ class MyTeamsWidget extends StatelessWidget {
                       child: Text(
                         localizer().createYourOwnTeams,
                         textAlign: TextAlign.center,
+                        style: KudosTheme.sectionEmptyTextStyle
                       ),
                     ),
                   );

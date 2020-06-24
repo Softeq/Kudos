@@ -105,8 +105,8 @@ class _UserPickerPageState extends State<_UserPickerPage> {
               trailingWidgetFunction: (x) => widget._trailingBuilder != null
                   ? widget._trailingBuilder(context)
                   : viewModel.isUserSelected(x)
-                      ? Icon(Icons.clear, color: Colors.redAccent)
-                      : Icon(Icons.add));
+                      ? Icon(Icons.clear, color: KudosTheme.destructiveButtonColor)
+                      : Icon(Icons.add, color: KudosTheme.accentColor));
         },
       ),
     );

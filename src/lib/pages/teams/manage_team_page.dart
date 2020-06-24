@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/team_member.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
@@ -11,6 +12,8 @@ import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:kudosapp/widgets/gradient_app_bar.dart';
+import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
@@ -41,6 +44,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       builder: (context, viewModel, child) {
         if (viewModel.isBusy) {
           return Scaffold(
+            appBar: GradientAppBar(title: viewModel?.name),
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -48,17 +52,19 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         }
 
         return Scaffold(
-          body: ListView.builder(
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buildTitle(viewModel);
-              } else {
-                var lineData = viewModel.getData(index);
-                return AchievementWidget(lineData, _achievementTapped);
-              }
-            },
-            itemCount: viewModel.itemsCount,
+          appBar: GradientAppBar(
+            title: viewModel.name,
+            actions: viewModel.canEdit
+                ? <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.edit), onPressed: _editTeamTapped),
+                    IconButton(
+                        icon: Icon(Icons.delete_forever),
+                        onPressed: () => viewModel.deleteTeam(context)),
+                  ]
+                : null,
           ),
+          body: _buildBody(viewModel),
           floatingActionButton: viewModel.canEdit
               ? FloatingActionButton(
                   onPressed: _createAchievementTapped,
@@ -70,124 +76,76 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     );
   }
 
-  Widget _buildTitle(ManageTeamViewModel viewModel) {
-    var textTheme = Theme.of(context).textTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 4.0,
-              top: 4.0,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 20.0, top: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: RoundedImageWidget.circular(
+  Widget _buildBody(ManageTeamViewModel viewModel) {
+    return SingleChildScrollView(
+        padding: EdgeInsets.all(20.0),
+        child: Column(children: <Widget>[
+          viewModel.imageViewModel.file == null &&
+                  (viewModel.imageViewModel.imageUrl == null ||
+                      viewModel.imageViewModel.imageUrl.isEmpty)
+              ? Container()
+              : RoundedImageWidget.square(
                   imageViewModel: viewModel.imageViewModel,
-                  size: 46.0,
+                  size: 112.0,
+                  borderRadius: 8,
                   name: viewModel.name,
                 ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                      viewModel.name,
-                      style: textTheme.headline6,
-                    ),
-                    SizedBox(height: 6.0),
-                    Text(
-                      viewModel.description,
-                    ),
-                  ],
-                ),
-              ),
-              viewModel.canEdit
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Row(children: <Widget>[
-                        IconButton(
-                          onPressed: _editTeamTapped,
-                          icon: Icon(Icons.edit),
-                        ),
-                        IconButton(
-                            icon: Icon(Icons.delete_forever),
-                            onPressed: () => viewModel.deleteTeam(context))
-                      ]))
-                  : Container(),
-            ],
+          SizedBox(height: 24),
+          Text(
+            viewModel.description,
+            style: KudosTheme.descriptionTextStyle,
           ),
-        ),
-        SizedBox(height: 24.0),
-        GestureDetector(
-          onTap: _adminsTapped,
-          child: Container(
-            color: Colors.transparent,
-            padding: EdgeInsets.only(left: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  localizer().admins,
-                  style: textTheme.caption,
-                ),
-                SizedBox(height: 6.0),
-                ChangeNotifierProvider<ListNotifier<TeamMember>>.value(
-                  value: viewModel.admins,
-                  child: Consumer<ListNotifier<TeamMember>>(
-                    builder: (context, items, child) {
-                      return Text(viewModel.owners);
-                    },
+          SizedBox(height: 24.0),
+          GestureDetector(
+            onTap: _adminsTapped,
+            child: Container(
+              color: Colors.transparent,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SectionHeaderWidget(localizer().admins),
+                  SizedBox(height: 10.0),
+                  FancyListWidget<TeamMember>(
+                    viewModel.admins,
+                    (TeamMember member) => member.name,
+                    localizer().addPeople,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 24.0),
-        GestureDetector(
-          onTap: _membersTapped,
-          child: Container(
-            color: Colors.transparent,
-            padding: EdgeInsets.only(left: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  localizer().members,
-                  style: textTheme.caption,
-                ),
-                SizedBox(height: 6.0),
-                FancyListWidget<TeamMember>(
-                  viewModel.members,
-                  (TeamMember member) => member.name,
-                  localizer().addPeople,
-                ),
-              ],
+          SizedBox(height: 24.0),
+          GestureDetector(
+            onTap: _membersTapped,
+            child: Container(
+              color: Colors.transparent,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SectionHeaderWidget(localizer().members),
+                  SizedBox(height: 10.0),
+                  FancyListWidget<TeamMember>(
+                    viewModel.members,
+                    (TeamMember member) => member.name,
+                    localizer().addPeople,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 32.0),
-      ],
-    );
+          SizedBox(height: 24.0),
+          SectionHeaderWidget(localizer().achievements),
+          SizedBox(height: 10.0),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              var lineData = viewModel.getData(index);
+              return AchievementWidget(lineData, _achievementTapped);
+            },
+            itemCount: viewModel.itemsCount,
+          )
+        ]));
   }
 
   void _createAchievementTapped() {

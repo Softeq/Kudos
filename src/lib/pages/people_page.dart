@@ -128,9 +128,7 @@ class PeoplePage extends StatelessWidget {
     return Center(
       child: Text(
         sprintf(localizer().error, [error]),
-        style: TextStyle(
-          color: Colors.red,
-        ),
+        style: KudosTheme.errorTextStyle,
       ),
     );
   }

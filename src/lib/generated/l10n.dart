@@ -763,6 +763,14 @@ class S {
     );
   }
 
+  String get generalError {
+    return Intl.message(
+      'Something went wrong',
+      name: 'generalError',
+      desc: '',
+      args: [],
+    );
+
   /// `Hasn't received any achievements yet`
   String get receivedNoAchievements {
     return Intl.message(
