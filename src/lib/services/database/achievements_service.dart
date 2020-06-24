@@ -15,7 +15,6 @@ import 'package:kudosapp/models/achievement_to_send.dart';
 import 'package:kudosapp/models/image_data.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
 class AchievementsService {
@@ -25,7 +24,6 @@ class AchievementsService {
 
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
-  final _peopleService = locator<PeopleService>();
   final imageService = locator<ImageService>();
 
   Future<List<Achievement>> getAchievements() async {
@@ -190,10 +188,6 @@ class AchievementsService {
     ).toMap();
 
     batch.setData(achievementHoldersReference.document(), holderMap);
-
-    _peopleService.incrementReceivedAchievementsForUser(
-        sendAchievement.recipient.id,
-        batch: batch);
 
     await batch.commit();
   }

@@ -82,19 +82,6 @@ class PeopleService {
     return user;
   }
 
-  Future<void> incrementReceivedAchievementsForUser(String userId,
-      {WriteBatch batch}) async {
-    var docRef = _database.collection(_usersCollection).document(userId);
-
-    if (batch != null) {
-      batch.updateData(
-          docRef, {"received_achievements_count": FieldValue.increment(1)});
-    } else {
-      return docRef
-          .updateData({"received_achievements_count": FieldValue.increment(1)});
-    }
-  }
-
   Future<List<User>> _getAllUsers() {
     return Future.value(_cachedUsers);
   }
