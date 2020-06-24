@@ -32,7 +32,9 @@ class AchievementsService {
         .where("user", isNull: true)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    return snapshot.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
+    return snapshot.documents
+        .map((x) => Achievement.fromDocument(x, _authService.currentUser.id))
+        .toList();
   }
 
   Future<Achievement> createAchievement(
@@ -119,11 +121,9 @@ class AchievementsService {
       {@required String id, Team team, User user, WriteBatch batch}) async {
     UserReference userReference;
     TeamReference teamReference;
-    if (user != null && team != null)
-    {
+    if (user != null && team != null) {
       throw ArgumentError("Team and user can't be set simultaneously");
-    }
-    else if (user != null) {
+    } else if (user != null) {
       userReference = UserReference.fromUser(user);
     } else if (team != null) {
       teamReference = TeamReference(
@@ -219,7 +219,8 @@ class AchievementsService {
         .collection(_achievementsCollection)
         .document(achivementId)
         .get();
-    return Achievement.fromDocument(documentSnapshot, _authService.currentUser.id);
+    return Achievement.fromDocument(
+        documentSnapshot, _authService.currentUser.id);
   }
 
   Future<List<Achievement>> getTeamAchievements(String teamId) {
@@ -237,8 +238,9 @@ class AchievementsService {
         .where(field, isEqualTo: value)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    final result =
-        qs.documents.map((x) => Achievement.fromDocument(x, _authService.currentUser.id)).toList();
+    final result = qs.documents
+        .map((x) => Achievement.fromDocument(x, _authService.currentUser.id))
+        .toList();
     return result;
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
+import 'package:sprintf/sprintf.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
   final List<User> users;
@@ -9,6 +11,7 @@ class ListOfPeopleWidget extends StatelessWidget {
   final Function(User user) trailingSelector;
   final Widget trailingWidget;
   final Widget Function(User user) trailingWidgetFunction;
+  final EdgeInsets padding;
 
   ListOfPeopleWidget({
     this.users,
@@ -16,6 +19,7 @@ class ListOfPeopleWidget extends StatelessWidget {
     this.trailingSelector,
     this.trailingWidget,
     this.trailingWidgetFunction,
+    this.padding
   });
 
   @override
@@ -23,17 +27,28 @@ class ListOfPeopleWidget extends StatelessWidget {
     return ScrollConfiguration(
       behavior: DisableGlowingOverscrollBehavior(),
       child: ListView.builder(
+        padding: padding,
         itemCount: users.length,
         itemBuilder: (context, index) => _buildItem(context, index),
       ),
     );
   }
 
+  String getReceivedAchievementsString(int count) {
+    if (count == 0) {
+      return localizer().receivedNoAchievements;
+    } else {
+      return sprintf(localizer().receivedAchievements, [count]);
+    }
+  }
+
   Widget _buildItem(context, index) {
     var user = users[index];
+
     return SimpleListItem(
       title: user.name,
-      description: user.email,
+      description:
+          getReceivedAchievementsString(user.receivedAchievementsCount),
       onTap: () => itemSelector?.call(user),
       imageUrl: user.imageUrl,
       selectorIcon: trailingWidget ?? trailingWidgetFunction(user),

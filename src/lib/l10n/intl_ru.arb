@@ -72,5 +72,7 @@
     "noPeople": "Здесь никого нет",
     "error": "Ошибка: %s",
     "from": "От: %s",
-    "generalError": "Что-то пошло не так"
+    "generalError": "Что-то пошло не так",
+    "receivedNoAchievements": "Ещё не получил ни одной награды",
+    "receivedAchievements": "Получено наград: %i"
 }

@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "people" : MessageLookupByLibrary.simpleMessage("Люди"),
     "profile" : MessageLookupByLibrary.simpleMessage("Профиль"),
     "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Ещё нет наград"),
+    "receivedAchievements" : MessageLookupByLibrary.simpleMessage("Получено наград: %i"),
+    "receivedNoAchievements" : MessageLookupByLibrary.simpleMessage("Ещё не получил ни одной награды"),
     "requiredField" : MessageLookupByLibrary.simpleMessage("Обязательное поле"),
     "save" : MessageLookupByLibrary.simpleMessage("Сохранить"),
     "search" : MessageLookupByLibrary.simpleMessage("Поиск"),

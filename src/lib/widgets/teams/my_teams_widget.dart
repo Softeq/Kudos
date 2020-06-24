@@ -6,6 +6,8 @@ import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
+import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
+import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +81,7 @@ class MyTeamsWidget extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.only(top: 46.0),
+                  padding: EdgeInsets.only(top: TopDecorator.height, bottom: BottomDecorator.height),
                   itemCount: viewModel.items.length,
                   itemBuilder: (context, index) {
                     var item = viewModel.items[index];
