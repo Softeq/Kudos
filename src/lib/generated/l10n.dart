@@ -316,7 +316,7 @@ class S {
   /// `No one has ever received this achievement.`
   String get achievementHoldersEmptyPlaceholder {
     return Intl.message(
-      'No one has ever received this achievement.',
+      'No one has ever received this achievement',
       name: 'achievementHoldersEmptyPlaceholder',
       desc: '',
       args: [],
@@ -326,7 +326,7 @@ class S {
   /// `Haven't received any achievements yet.`
   String get profileAchievementsEmptyPlaceholder {
     return Intl.message(
-      'Haven\'t received any achievements yet.',
+      'No achievements yet',
       name: 'profileAchievementsEmptyPlaceholder',
       desc: '',
       args: [],
@@ -388,16 +388,6 @@ class S {
     return Intl.message(
       'Name',
       name: 'name',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Description (optional)`
-  String get optionalDescription {
-    return Intl.message(
-      'Description (optional)',
-      name: 'optionalDescription',
       desc: '',
       args: [],
     );
