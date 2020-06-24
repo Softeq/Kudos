@@ -15,7 +15,7 @@ class PeopleService {
     _database.collection(_usersCollection).snapshots().listen((s) {
       final users = s.documents.map<User>((x) => User.fromDocument(x)).toList();
       users.sort((x, y) => x.name.compareTo(y.name));
-      
+
       _cachedUsers.clear();
       _cachedUsers.addAll(users);
     });

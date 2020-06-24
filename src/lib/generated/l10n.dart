@@ -762,6 +762,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Hasn't received any achievements yet`
+  String get receivedNoAchievements {
+    return Intl.message(
+      'Hasn\'t received any achievements yet',
+      name: 'receivedNoAchievements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Received achievements: %i`
+  String get receivedAchievements {
+    return Intl.message(
+      'Received achievements: %i',
+      name: 'receivedAchievements',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

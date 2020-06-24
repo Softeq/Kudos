@@ -70,6 +70,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "people" : MessageLookupByLibrary.simpleMessage("People"),
     "profile" : MessageLookupByLibrary.simpleMessage("Profile"),
     "profileAchievementsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Haven\'t received any achievements yet."),
+    "receivedAchievements" : MessageLookupByLibrary.simpleMessage("Received achievements: %i"),
+    "receivedNoAchievements" : MessageLookupByLibrary.simpleMessage("Hasn\'t received any achievements yet"),
     "requiredField" : MessageLookupByLibrary.simpleMessage("Required field"),
     "save" : MessageLookupByLibrary.simpleMessage("Save"),
     "search" : MessageLookupByLibrary.simpleMessage("Search"),

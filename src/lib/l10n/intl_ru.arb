@@ -71,5 +71,7 @@
     "signOutCancelButton": "Остаться!",
     "noPeople": "Здесь никого нет",
     "error": "Ошибка: %s",
-    "from": "От: %s"
+    "from": "От: %s",
+    "receivedNoAchievements": "Ещё не получил ни одной награды",
+    "receivedAchievements": "Получено наград: %i"
 }
