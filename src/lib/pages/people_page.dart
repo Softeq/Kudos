@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
 import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
@@ -55,45 +56,53 @@ class PeoplePage extends StatelessWidget {
       appBar: GradientAppBar(title: localizer().people, elevation: 0),
       body: ChangeNotifierProvider<SearchInputViewModel>(
         create: (context) => SearchInputViewModel(),
-        child: SafeArea(
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: <Widget>[
-                _buildSearchBar(),
-                TopDecorator(constraints.maxWidth),
-                ChangeNotifierProxyProvider<SearchInputViewModel,
-                    PeopleViewModel>(
-                  create: (context) =>
-                      PeopleViewModel(excludedUserIds: _excludedUserIds)
-                        ..initialize(),
-                  update: (context, searchViewModel, peopleViewModel) {
-                    return peopleViewModel..filterByName(searchViewModel.query);
-                  },
-                  child: Expanded(
-                    child: Consumer<PeopleViewModel>(
-                        builder: (context, viewModel, child) {
-                      return StreamBuilder<List<User>>(
-                        stream: viewModel.people,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<User>> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.isEmpty) {
-                              return _buildEmpty();
-                            }
-                            return _buildList(context, snapshot.data);
-                          }
-                          if (snapshot.hasError) {
-                            return _buildError(snapshot.error);
-                          }
-                          return _buildLoading();
-                        },
-                      );
-                    }),
+        child:
+            ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
+          create: (context) =>
+              PeopleViewModel(excludedUserIds: _excludedUserIds)..initialize(),
+          update: (context, searchViewModel, peopleViewModel) =>
+              peopleViewModel..filterByName(searchViewModel.query),
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Column(
+                children: <Widget>[
+                  _buildSearchBar(),
+                  Expanded(
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: Consumer<PeopleViewModel>(
+                              builder: (context, viewModel, child) {
+                            return StreamBuilder<List<User>>(
+                              stream: viewModel.people,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<User>> snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data.isEmpty) {
+                                    return _buildEmpty();
+                                  }
+                                  return _buildList(context, snapshot.data);
+                                }
+                                if (snapshot.hasError) {
+                                  return _buildError(snapshot.error);
+                                }
+                                return _buildLoading();
+                              },
+                            );
+                          }),
+                        ),
+                        Positioned.directional(
+                          textDirection: TextDirection.ltr,
+                          top: 0,
+                          start: 0,
+                          end: 0,
+                          child: TopDecorator(constraints.maxWidth),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              );
+            }),
         ),
       ),
     );
@@ -101,15 +110,11 @@ class PeoplePage extends StatelessWidget {
 
   Widget _buildSearchBar() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            KudosTheme.mainGradientStartColor,
-            KudosTheme.mainGradientEndColor,
-          ],
-        ),
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
+      child: SearchInputWidget(
+        hintText: localizer().enterName,
+        iconSize: 82,
       ),
-      child: SearchInputWidget(hintText: localizer().enterName),
     );
   }
 
@@ -138,6 +143,7 @@ class PeoplePage extends StatelessWidget {
 
   Widget _buildList(BuildContext context, List<User> users) {
     return ListOfPeopleWidget(
+      padding: EdgeInsets.only(top: TopDecorator.height, bottom: BottomDecorator.height),
       itemSelector: (user) => _onItemSelected?.call(context, user),
       users: users,
       trailingWidget: _selectorIcon,

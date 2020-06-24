@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
 
-class BottomDecorator extends StatelessWidget
-{
+class BottomDecorator extends StatelessWidget {
+  static const double height = 26;
   final double width;
 
   BottomDecorator(this.width);
@@ -13,7 +13,7 @@ class BottomDecorator extends StatelessWidget
         child: CustomPaint(
           painter: _BottomPainter(),
         ),
-        height: 26,
+        height: height,
         width: width);
   }
 }
@@ -45,18 +45,8 @@ class _BottomPainter extends CustomPainter {
     final endColor = KudosTheme.mainGradientStartColor;
     final gradient = LinearGradient(
       colors: <Color>[
-        Color.fromARGB(
-          125,
-          startColor.red,
-          startColor.green,
-          startColor.blue,
-        ),
-        Color.fromARGB(
-          125,
-          endColor.red,
-          endColor.green,
-          endColor.blue,
-        ),
+        startColor.withAlpha(125),
+        endColor.withAlpha(125),
       ],
     );
 
@@ -98,16 +88,9 @@ class _BottomPainter extends CustomPainter {
       ..lineTo(0.0, size.height)
       ..close();
 
-    final gradient = LinearGradient(
-      colors: <Color>[
-        KudosTheme.mainGradientStartColor,
-        KudosTheme.mainGradientEndColor,
-      ],
-    );
-
     final paint = Paint()
       ..style = PaintingStyle.fill
-      ..shader = gradient.createShader(
+      ..shader = KudosTheme.mainGradient.createShader(
         Rect.fromLTWH(
           0.0,
           0.0,

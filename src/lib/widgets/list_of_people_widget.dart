@@ -11,6 +11,7 @@ class ListOfPeopleWidget extends StatelessWidget {
   final Function(User user) trailingSelector;
   final Widget trailingWidget;
   final Widget Function(User user) trailingWidgetFunction;
+  final EdgeInsets padding;
 
   ListOfPeopleWidget({
     this.users,
@@ -18,6 +19,7 @@ class ListOfPeopleWidget extends StatelessWidget {
     this.trailingSelector,
     this.trailingWidget,
     this.trailingWidgetFunction,
+    this.padding
   });
 
   @override
@@ -25,6 +27,7 @@ class ListOfPeopleWidget extends StatelessWidget {
     return ScrollConfiguration(
       behavior: DisableGlowingOverscrollBehavior(),
       child: ListView.builder(
+        padding: padding,
         itemCount: users.length,
         itemBuilder: (context, index) => _buildItem(context, index),
       ),
