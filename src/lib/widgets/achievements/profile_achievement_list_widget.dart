@@ -6,6 +6,8 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/counter_widget.dart';
+import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
+import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
@@ -103,7 +105,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       );
     }
     return ListView.builder(
-      padding: EdgeInsets.only(top: 46),
+      padding: EdgeInsets.only(top: TopDecorator.height, bottom: BottomDecorator.height),
       itemCount: achievementCollections.length,
       itemBuilder: (context, index) {
         final achievementCollection = achievementCollections[index];

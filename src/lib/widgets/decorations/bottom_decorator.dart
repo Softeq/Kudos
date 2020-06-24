@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
 
 class BottomDecorator extends StatelessWidget {
+  static const double height = 26;
   final double width;
 
   BottomDecorator(this.width);
@@ -12,7 +13,7 @@ class BottomDecorator extends StatelessWidget {
         child: CustomPaint(
           painter: _BottomPainter(),
         ),
-        height: 26,
+        height: height,
         width: width);
   }
 }
