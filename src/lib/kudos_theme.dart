@@ -97,7 +97,7 @@ class KudosTheme {
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get fancyListItemTextStyle => TextStyle(
+  static final TextStyle fancyListItemTextStyle = TextStyle(
     fontSize: 14.0,
     color: Color.fromARGB(180, 0, 0, 0),
     fontWeight: FontWeight.w500,

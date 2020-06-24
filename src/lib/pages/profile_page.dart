@@ -39,7 +39,9 @@ class ProfilePage extends StatelessWidget {
 
   Widget _addDefaultSliverPadding(Widget widget) {
     return SliverPadding(
-        padding: EdgeInsets.only(left: 16, right: 16), sliver: widget);
+      padding: EdgeInsets.only(left: 16, right: 16),
+      sliver: widget,
+    );
   }
 
   List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
@@ -112,19 +114,27 @@ class ProfilePage extends StatelessWidget {
       Container(
           height: 110,
           decoration: BoxDecoration(
-              gradient: LinearGradient(colors: <Color>[
-            Colors.black.withAlpha(60),
-            Colors.transparent,
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter))),
+              gradient: LinearGradient(
+            colors: <Color>[
+              Colors.black.withAlpha(60),
+              Colors.transparent,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ))),
       Align(
           alignment: Alignment.bottomCenter,
           child: Container(
               height: 80,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: <Color>[
-                Colors.black.withAlpha(60),
-                Colors.transparent,
-              ], begin: Alignment.bottomCenter, end: Alignment.topCenter))))
+                  gradient: LinearGradient(
+                colors: <Color>[
+                  Colors.black.withAlpha(60),
+                  Colors.transparent,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ))))
     ]);
   }
 }
