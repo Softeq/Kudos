@@ -313,7 +313,7 @@ class S {
     );
   }
 
-  /// `No one has ever received this achievement.`
+  /// `No one has ever received this achievement`
   String get achievementHoldersEmptyPlaceholder {
     return Intl.message(
       'No one has ever received this achievement',
@@ -323,7 +323,7 @@ class S {
     );
   }
 
-  /// `Haven't received any achievements yet.`
+  /// `No achievements yet`
   String get profileAchievementsEmptyPlaceholder {
     return Intl.message(
       'No achievements yet',
@@ -753,6 +753,7 @@ class S {
     );
   }
 
+  /// `Something went wrong`
   String get generalError {
     return Intl.message(
       'Something went wrong',
@@ -760,6 +761,7 @@ class S {
       desc: '',
       args: [],
     );
+  }
 
   /// `Hasn't received any achievements yet`
   String get receivedNoAchievements {
