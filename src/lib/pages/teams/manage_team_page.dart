@@ -176,13 +176,11 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
   }
 
   void _toggleAdminsExpanded() {
-    _adminsExpanded = !_adminsExpanded;
-    setState(() => {});
+    setState(() => _adminsExpanded = !_adminsExpanded);
   }
 
   void _toggleMembersExpanded() {
-    _membersExpanded = !_membersExpanded;
-    setState(() => {});
+    setState(() => _membersExpanded = !_membersExpanded);
   }
 
   void _createAchievementTapped() {
