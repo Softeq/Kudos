@@ -5,7 +5,7 @@ import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class AchievementModel extends ChangeNotifier {
-  final _imageViewModel = new ImageViewModel();
+  final _imageViewModel = ImageViewModel();
 
   Achievement _initialAchievement;
   String _title;

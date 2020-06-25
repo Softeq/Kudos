@@ -95,9 +95,11 @@ class ReceivedAchievementPage extends StatelessWidget {
             children: <Widget>[
               Row(children: <Widget>[
                 CircleAvatar(
+                  backgroundColor: Colors.transparent,
                   backgroundImage: CachedNetworkImageProvider(
-                      userAchievementModel.sender.imageUrl),
-                  radius: 25,
+                    userAchievementModel.sender.imageUrl,
+                  ),
+                  radius: 25.0,
                 ),
                 SizedBox(width: 10),
                 Column(

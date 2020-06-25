@@ -14,11 +14,11 @@ class KudosTheme {
   static final Color destructiveButtonColor = Color.fromARGB(255, 255, 59, 48);
 
   static final LinearGradient mainGradient = LinearGradient(
-          colors: <Color>[
-            KudosTheme.mainGradientStartColor,
-            KudosTheme.mainGradientEndColor,
-          ],
-        );
+    colors: <Color>[
+      KudosTheme.mainGradientStartColor,
+      KudosTheme.mainGradientEndColor,
+    ],
+  );
 
   static final TextStyle appBarTitleTextStyle = TextStyle(
     fontSize: 20.0,
@@ -39,16 +39,16 @@ class KudosTheme {
   );
 
   static final TextStyle userNameTitleTextStyle = TextStyle(
-        fontSize: 20.0,
-        color: Colors.white,
-        fontWeight: FontWeight.w500,
-      );
+    fontSize: 20.0,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
 
   static final TextStyle userNameSubTitleTextStyle = TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(160, 255, 255, 255),
-        fontWeight: FontWeight.w500,
-      );
+    fontSize: 14.0,
+    color: Color.fromARGB(160, 255, 255, 255),
+    fontWeight: FontWeight.w500,
+  );
 
   static final TextStyle sectionTitleTextStyle = TextStyle(
     fontSize: 16.0,
@@ -75,27 +75,33 @@ class KudosTheme {
   );
 
   static final TextStyle listTitleTextStyle = TextStyle(
-        fontSize: 16.0,
-        color: mainGradientEndColor,
-        fontWeight: FontWeight.w800,
-      );
+    fontSize: 16.0,
+    color: mainGradientEndColor,
+    fontWeight: FontWeight.w800,
+  );
+
+  static final TextStyle listGroupTitleTextStyle = TextStyle(
+    fontSize: 22.0,
+    color: mainGradientEndColor,
+    fontWeight: FontWeight.w800,
+  );
 
   static final TextStyle listSubTitleTextStyle = TextStyle(
-        fontSize: 14.0,
-        color: Color.fromRGBO(189, 189, 189, 1),
-      );
+    fontSize: 14.0,
+    color: Color.fromRGBO(12, 12, 12, 1),
+  );
 
   static final TextStyle screenStateTitleTextStyle = TextStyle(
-        fontSize: 20.0,
-        color: Color.fromARGB(160, 0, 0, 0),
-        fontWeight: FontWeight.w500,
-      );
+    fontSize: 20.0,
+    color: Color.fromARGB(160, 0, 0, 0),
+    fontWeight: FontWeight.w500,
+  );
 
   static final TextStyle raisedButtonTextStyle = TextStyle(
-        fontSize: 16.0,
-        color: Colors.white,
-        fontWeight: FontWeight.w500,
-      );
+    fontSize: 16.0,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
 
   static final TextStyle fancyListItemTextStyle = TextStyle(
     fontSize: 14.0,

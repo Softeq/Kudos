@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
 
 class BottomDecorator extends StatelessWidget {
-  static const double height = 26;
+  static const double height = 26.0;
   final double width;
 
   BottomDecorator(this.width);
