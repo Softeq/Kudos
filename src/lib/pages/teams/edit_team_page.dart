@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
@@ -56,35 +57,56 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                 autovalidate: false,
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 24.0),
+                    SizedBox(height: 20.0),
                     GestureDetector(
                       onTap: () => viewModel.pickFile(context),
-                      child: RoundedImageWidget.circular(
+                      child: RoundedImageWidget.square(
                         imageViewModel: viewModel.imageViewModel,
                         name: viewModel.initialName,
-                        size: 100.0,
+                        size: 112.0,
+                        borderRadius: 8,
                       ),
                     ),
-                    SizedBox(height: 24.0),
+                    SizedBox(height: 36.0),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(localizer().name),
+                      child: Text(
+                        localizer().name,
+                        style: KudosTheme.listTitleTextStyle,
+                      ),
                     ),
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
                         return x.isEmpty ? localizer().requiredField : null;
                       },
+                      style: KudosTheme.descriptionTextStyle,
+                      cursorColor: KudosTheme.accentColor,
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: KudosTheme.accentColor)),
+                      ),
                     ),
                     SizedBox(height: 36.0),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(localizer().optionalDescription),
+                      child: Text(
+                        localizer().description,
+                        style: KudosTheme.listTitleTextStyle,
+                      ),
                     ),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: null,
                       minLines: null,
+                      style: KudosTheme.descriptionTextStyle,
+                      cursorColor: KudosTheme.accentColor,
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: KudosTheme.accentColor)),
+                      ),
                     ),
                   ],
                 ),
