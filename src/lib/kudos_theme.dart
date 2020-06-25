@@ -91,6 +91,17 @@ class KudosTheme {
     color: Color.fromRGBO(12, 12, 12, 1),
   );
 
+  static final TextStyle listContentTextStyle = TextStyle(
+    fontSize: 16.0,
+    color: Color.fromRGBO(12, 12, 12, 1),
+    fontWeight: FontWeight.w500,
+  );
+
+  static final TextStyle listEmptyContentTextStyle = TextStyle(
+    fontSize: 16.0,
+    color: Color.fromARGB(100, 0, 0, 0),
+  );
+
   static final TextStyle screenStateTitleTextStyle = TextStyle(
     fontSize: 20.0,
     color: Color.fromARGB(160, 0, 0, 0),
