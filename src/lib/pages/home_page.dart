@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                 Positioned.directional(
                     textDirection: TextDirection.ltr,
                     child: BottomDecorator(constraints.maxWidth),
-                    bottom: 0),
+                    bottom: -0.5),
               ],
             );
           },

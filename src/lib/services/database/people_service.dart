@@ -39,7 +39,7 @@ class PeopleService {
     await _database
         .collection(_usersCollection)
         .document(user.id)
-        .setData(userRegistrationMap);
+        .setData(userRegistrationMap, merge: true);
 
     if (token == null) {
       return;
