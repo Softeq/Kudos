@@ -393,16 +393,6 @@ class S {
     );
   }
 
-  /// `Description (optional)`
-  String get optionalDescription {
-    return Intl.message(
-      'Description (optional)',
-      name: 'optionalDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Required field`
   String get requiredField {
     return Intl.message(

@@ -38,6 +38,9 @@ class _ManageTeamPage extends StatefulWidget {
 }
 
 class _ManageTeamPageState extends State<_ManageTeamPage> {
+  bool _adminsExpanded = false;
+  bool _membersExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ManageTeamViewModel>(
@@ -96,43 +99,16 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             style: KudosTheme.descriptionTextStyle,
           ),
           SizedBox(height: 24.0),
-          GestureDetector(
-            onTap: _adminsTapped,
-            child: Container(
-              color: Colors.transparent,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SectionHeaderWidget(localizer().admins),
-                  SizedBox(height: 10.0),
-                  FancyListWidget<TeamMember>(
-                    viewModel.admins,
-                    (TeamMember member) => member.name,
-                    localizer().addPeople,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 24.0),
-          GestureDetector(
-            onTap: _membersTapped,
-            child: Container(
-              color: Colors.transparent,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SectionHeaderWidget(localizer().members),
-                  SizedBox(height: 10.0),
-                  FancyListWidget<TeamMember>(
-                    viewModel.members,
-                    (TeamMember member) => member.name,
-                    localizer().addPeople,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          _buildUsersList(localizer().admins, viewModel.admins, _adminsExpanded,
+              _toggleAdminsExpanded, viewModel.canEdit, _editAdminsTapped),
+          SizedBox(height: 8.0),
+          _buildUsersList(
+              localizer().members,
+              viewModel.members,
+              _membersExpanded,
+              _toggleMembersExpanded,
+              viewModel.canEdit,
+              _editMembersTapped),
           SizedBox(height: 24.0),
           SectionHeaderWidget(localizer().achievements),
           SizedBox(height: 10.0),
@@ -146,6 +122,65 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             itemCount: viewModel.itemsCount,
           )
         ]));
+  }
+
+  Widget _buildUsersList(
+      String title,
+      ListNotifier<TeamMember> users,
+      bool usersExpanded,
+      void Function() toggleUsersExpanded,
+      bool canEdit,
+      void Function() editUsers) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            GestureDetector(
+              onTap: toggleUsersExpanded,
+              child: Row(children: <Widget>[
+                Text(
+                  title,
+                  style: KudosTheme.sectionTitleTextStyle,
+                ),
+                Icon(
+                  usersExpanded ? Icons.expand_less : Icons.expand_more,
+                  color: KudosTheme.mainGradientEndColor,
+                ),
+              ]),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: Icon(Icons.edit),
+                  color: KudosTheme.accentColor,
+                  disabledColor: Colors.transparent,
+                  onPressed: canEdit ? editUsers : null,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: usersExpanded ? 10.0 : 0.0),
+        usersExpanded
+            ? FancyListWidget<TeamMember>(
+                users,
+                (TeamMember member) => member.name,
+                localizer().addPeople,
+              )
+            : Container(),
+      ],
+    );
+  }
+
+  void _toggleAdminsExpanded() {
+    setState(() => _adminsExpanded = !_adminsExpanded);
+  }
+
+  void _toggleMembersExpanded() {
+    setState(() => _membersExpanded = !_membersExpanded);
   }
 
   void _createAchievementTapped() {
@@ -173,7 +208,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     }
   }
 
-  Future<void> _membersTapped() async {
+  Future<void> _editMembersTapped() async {
     var viewModel = _getViewModel();
     if (!viewModel.canEdit) {
       return;
@@ -190,7 +225,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     viewModel.replaceMembers(users);
   }
 
-  Future<void> _adminsTapped() async {
+  Future<void> _editAdminsTapped() async {
     var viewModel = _getViewModel();
     if (!viewModel.canEdit) {
       return;

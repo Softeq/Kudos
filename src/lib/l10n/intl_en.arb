@@ -35,7 +35,6 @@
     "createTeam": "Create team",
     "editTeam": "Edit team",
     "name": "Name",
-    "optionalDescription": "Description (optional)",
     "requiredField": "Required field",
     "team": "Team",
     "user": "User",
