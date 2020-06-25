@@ -88,7 +88,7 @@ class MyProfilePage extends StatelessWidget {
         SizedBox(width: 16.0),
         ClipOval(
           child: Container(
-            color: KudosTheme.textColor,
+            color: KudosTheme.contentColor,
             height: 40.0,
             width: 40.0,
             child: Center(
@@ -96,6 +96,7 @@ class MyProfilePage extends StatelessWidget {
                 height: 36.0,
                 width: 36.0,
                 child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
                   backgroundImage: CachedNetworkImageProvider(
                     viewModel.user.imageUrl,
                   ),

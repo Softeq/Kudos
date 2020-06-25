@@ -47,9 +47,10 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Positioned.fill(child: activeTab.body),
                 Positioned.directional(
-                    textDirection: TextDirection.ltr,
-                    child: BottomDecorator(constraints.maxWidth),
-                    bottom: -0.5),
+                  textDirection: TextDirection.ltr,
+                  child: BottomDecorator(constraints.maxWidth),
+                  bottom: -0.5,
+                ),
               ],
             );
           },

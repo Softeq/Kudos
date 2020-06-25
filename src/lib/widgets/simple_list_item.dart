@@ -34,15 +34,16 @@ class SimpleListItem extends StatelessWidget {
   final Widget selectorIcon;
   final ImageShape imageShape;
 
-  SimpleListItem(
-      {this.onTap,
-      this.title,
-      this.description,
-      this.imageUrl,
-      this.imageViewModel,
-      this.imageCounter,
-      this.selectorIcon,
-      this.imageShape});
+  SimpleListItem({
+    this.onTap,
+    this.title,
+    this.description,
+    this.imageUrl,
+    this.imageViewModel,
+    this.imageCounter,
+    this.selectorIcon,
+    this.imageShape,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +128,11 @@ class SimpleListItem extends StatelessWidget {
   }
 
   Widget _buildImageFromUrl() {
-    var imageProvider = CachedNetworkImageProvider(imageUrl);
+    final imageProvider = CachedNetworkImageProvider(imageUrl);
     if (imageShape.isCircle) {
       return CircleAvatar(
-        radius: imageShape.size / 2,
+        backgroundColor: Colors.transparent,
+        radius: imageShape.size / 2.0,
         backgroundImage: imageProvider,
       );
     } else {

@@ -66,6 +66,7 @@ class RoundedImageWidget extends StatelessWidget {
       child: Container(
         width: _size,
         height: _size,
+        color: KudosTheme.contentColor,
         child: Center(
           child: CircularProgressIndicator(),
         ),

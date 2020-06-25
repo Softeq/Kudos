@@ -1,55 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/extensions/list_extensions.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
 
 class AchievementListWidget extends StatelessWidget {
   final List<Widget> _items;
 
   factory AchievementListWidget.from(
     List<AchievementModel> input,
-    Function(AchievementModel) onAchievementClicked,
+    void Function(AchievementModel) onAchievementClicked,
   ) {
-    var sortedList = input.toList();
-    sortedList.sort((x, y) => x.team != null && y.team != null
-        ? x.team.name.compareTo(y.team.name)
-        : (x.team == null && y.team == null ? 0 : (x.team == null ? -1 : 1)));
-
-    String teamName;
-    var items = List<Widget>();
-    var achievements = List<AchievementModel>();
-    var addFunction = (List<Widget> x, List<AchievementModel> y) {
-      x.add(AchievementWidget(y.toList(), onAchievementClicked));
-      y.clear();
-    };
-    var myAchievementsName = localizer().myAchievements;
-
-    for (var i = 0; i < sortedList.length; i++) {
-      var item = sortedList[i];
-
-      if ((item.team == null && teamName != myAchievementsName) ||
-          (item.team != null && teamName != item.team?.name)) {
-        if (achievements.isNotEmpty) {
-          addFunction(items, achievements);
+    final sortedList = input.toList();
+    sortedList.sortThen(
+      (x, y) {
+        if (x.team == null && y.team != null) {
+          return -1;
+        } else if (x.team != null && y.team == null) {
+          return 1;
+        } else {
+          return 0;
+        }
+      },
+      (x, y) {
+        if (x.team == null && y.team == null) {
+          return 0;
         }
 
-        teamName = item.team?.name ?? myAchievementsName;
-        items.add(_GroupListItem(teamName));
-      }
+        return x.team.name.compareTo(y.team.name);
+      },
+    );
 
-      achievements.add(item);
+    final myAchievementsText = localizer().myAchievements;
+    final listItems = List<Widget>();
+    String groupName;
 
-      if (achievements.length == 2) {
-        addFunction(items, achievements);
+    for (var i = 0; i < sortedList.length; i++) {
+      final item = sortedList[i];
+      final itemGroup = item.team == null ? myAchievementsText : item.team.name;
+      if (groupName != itemGroup) {
+        groupName = itemGroup;
+        listItems.add(_GroupListItem(itemGroup));
       }
-
-      if (i == sortedList.length - 1 && achievements.isNotEmpty) {
-        addFunction(items, achievements);
-      }
+      listItems.add(_ListItem(item, onAchievementClicked));
     }
 
-    return AchievementListWidget._(items);
+    return AchievementListWidget._(listItems);
   }
 
   AchievementListWidget._(this._items);
@@ -61,7 +58,7 @@ class AchievementListWidget extends StatelessWidget {
         return _items[index];
       },
       itemCount: _items.length,
-      padding: EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.only(bottom: 28.0),
     );
   }
 }
@@ -74,14 +71,37 @@ class _GroupListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 40.0,
+      padding: EdgeInsets.only(
+        left: 16.0,
+        top: 16.0,
+        bottom: 16.0,
       ),
       child: Text(
         name,
-        style: KudosTheme.listTitleTextStyle,
-        textAlign: TextAlign.center,
+        style: KudosTheme.listGroupTitleTextStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
+    );
+  }
+}
+
+class _ListItem extends StatelessWidget {
+  final AchievementModel _achievementModel;
+  final void Function(AchievementModel) _onAchievementClicked;
+
+  _ListItem(this._achievementModel, this._onAchievementClicked);
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleListItem(
+      title: _achievementModel.title,
+      description: _achievementModel.description,
+      onTap: () {
+        _onAchievementClicked(_achievementModel);
+      },
+      imageViewModel: _achievementModel.imageViewModel,
+      imageShape: ImageShape.circle(80.0),
     );
   }
 }

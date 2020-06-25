@@ -322,6 +322,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
       message: holder.name,
       child: GestureDetector(
         child: CircleAvatar(
+          backgroundColor: Colors.transparent,
           backgroundImage: CachedNetworkImageProvider(holder.imageUrl),
         ),
         onTap: () => _navigateToProfile(context, holder),
