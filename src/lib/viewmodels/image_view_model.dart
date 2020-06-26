@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:kudosapp/helpers/disposable.dart';
 
-class ImageViewModel extends ChangeNotifier {
+class ImageViewModel extends ChangeNotifier with Disposable {
   String _imageUrl;
   File _file;
   bool _isBusy = false;
-  bool _isDisposed = false;
 
   String get imageUrl => _imageUrl;
   File get file => _file;
@@ -42,16 +42,8 @@ class ImageViewModel extends ChangeNotifier {
       var newFile = await DefaultCacheManager().getSingleFile(imageUrl);
       if (newFile != null) {
         _file = newFile;
-        if (!_isDisposed) {
-          notifyListeners();
-        }
+        notifyListeners();
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _isDisposed = true;
-    super.dispose();
   }
 }

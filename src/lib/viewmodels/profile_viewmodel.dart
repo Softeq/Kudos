@@ -26,9 +26,7 @@ class ProfileViewModel extends BaseViewModel with Disposable {
 
     final teams = await _teamsService.getTeams(_userId);
     userTeams.replace(teams);
-
-    if (!isDisposed) {
-      notifyListeners();
-    }
+    
+    notifyListeners();
   }
 }

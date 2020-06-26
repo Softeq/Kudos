@@ -3,10 +3,9 @@ import 'package:flutter_svg/svg.dart';
 
 class VectorIcon extends StatelessWidget {
   final String _assetName;
-  final double width;
-  final double height;
+  final Size size;
 
-  const VectorIcon(this._assetName, {this.width, this.height});
+  const VectorIcon(this._assetName, [this.size]);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +13,8 @@ class VectorIcon extends StatelessWidget {
     return SvgPicture.asset(
       _assetName,
       color: iconTheme.color,
-      width: width,
-      height: height,
+      width: size?.width,
+      height: size?.height,
     );
   }
 }

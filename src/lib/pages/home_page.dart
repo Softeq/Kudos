@@ -30,9 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _selectTab(int index) {
-    setState(() {
-      _selectedTabIndex = index;
-    });
+    setState(() => _selectedTabIndex = index);
   }
 
   @override
@@ -91,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   List<_TabItem> _buildTabs(BuildContext context) {
     return [
       _TabItem(
-        icon: VectorIcon("assets/icons/profile.svg", width: 16, height: 16),
+        icon: VectorIcon("assets/icons/profile.svg", Size(16, 16)),
         title: localizer().profile,
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
@@ -100,16 +98,16 @@ class _HomePageState extends State<HomePage> {
       ),
       _TabItem(
         title: localizer().teams,
-        icon: VectorIcon("assets/icons/teams.svg", width: 16, height: 16),
+        icon: VectorIcon("assets/icons/teams.svg", Size(16, 16)),
         body: TeamsPage(),
       ),
       _TabItem(
-        icon: VectorIcon("assets/icons/people.svg", width: 16, height: 16),
+        icon: VectorIcon("assets/icons/people.svg", Size(16, 16)),
         title: localizer().people,
         body: PeoplePage(),
       ),
       _TabItem(
-        icon: VectorIcon("assets/icons/cup.svg", width: 16, height: 16),
+        icon: VectorIcon("assets/icons/cup.svg", Size(16, 16)),
         title: localizer().achievements,
         body: ChangeNotifierProvider<AchievementsViewModel>(
           create: (context) => AchievementsViewModel()..initialize(),
