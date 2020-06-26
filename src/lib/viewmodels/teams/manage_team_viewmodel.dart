@@ -60,7 +60,7 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
-  int get itemsCount => (_achievements.length / 2.0).round();
+  int get itemsCount => _achievements.length;
 
   @override
   void dispose() {
@@ -165,16 +165,8 @@ class ManageTeamViewModel extends BaseViewModel {
     );
   }
 
-  List<AchievementModel> getData(int index) {
-    var index1 = index * 2;
-    var index2 = index1 + 1;
-
-    var list = List<AchievementModel>();
-    list.add(_achievements[index1]);
-    if (index2 < _achievements.length) {
-      list.add(_achievements[index2]);
-    }
-    return list;
+  AchievementModel getData(int index) {
+    return _achievements[index];
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
