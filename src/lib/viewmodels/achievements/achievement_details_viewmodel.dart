@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement_holder.dart';
-import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
@@ -12,14 +11,15 @@ import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/pages/people_page.dart';
+import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:kudosapp/widgets/teams/my_teams_widget.dart';
 import 'package:sprintf/sprintf.dart';
 
 enum OwnerType { user, team }
@@ -116,11 +116,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
       case 2:
         {
           var excludedTeamId = achievementModel.team?.id;
-          Navigator.of(context).push(MyTeamsRoute(
+          Navigator.of(context).push(TeamsPageRoute(
             excludedTeamIds: excludedTeamId == null ? null : {excludedTeamId},
             selectorIcon: Icon(Icons.transfer_within_a_station,
                 size: 24.0, color: KudosTheme.accentColor),
             onItemSelected: _onTeamSelected,
+            showAddButton: false,
           ));
           break;
         }
@@ -141,14 +142,14 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> _onTeamSelected(BuildContext context, Team team) async {
+  Future<void> _onTeamSelected(BuildContext context, TeamModel teamModel) async {
     if (await _dialogsService.showOkCancelDialog(
       context: context,
-      title: sprintf(localizer().transferAchievementToTeamTitle, [team.name]),
+      title: sprintf(localizer().transferAchievementToTeamTitle, [teamModel.team.name]),
       content: localizer().transferAchievementToTeamWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
-          id: achievementModel.achievement.id, team: team);
+          id: achievementModel.achievement.id, team: teamModel.team);
 
       Navigator.popUntil(context, ModalRoute.withName('/'));
       _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));

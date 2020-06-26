@@ -10,18 +10,24 @@ import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class MyTeamsViewModel extends BaseViewModel {
-  final items = List<TeamModel>();
+  final List<TeamModel> _teamsList = [];
   final Set<String> _excludedTeamIds;
 
   final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
 
+  StreamController<String> _streamController;
+  Stream<List<TeamModel>> _teamsStream;
+
   StreamSubscription _teamUpdatedSubscription;
   StreamSubscription _teamDeletedSubscription;
 
+  Stream<List<TeamModel>> get teamsStream => _teamsStream;
+
   MyTeamsViewModel({Set<String> excludedTeamIds})
       : _excludedTeamIds = excludedTeamIds {
-    isBusy = true;
+    isBusy = false;
+    _initFilter();
   }
 
   Future<void> initialize() async {
@@ -40,21 +46,41 @@ class MyTeamsViewModel extends BaseViewModel {
         _eventBus.on<TeamDeletedMessage>().listen(_onTeamDeleted);
   }
 
+  void filterByName(String query) => _streamController.add(query);
+
+  void _initFilter() {
+    _streamController = StreamController<String>();
+
+    _teamsStream = _streamController.stream
+        // .debounceTime(Duration(milliseconds: 100))
+        .distinct()
+        .transform(StreamTransformer<String, List<TeamModel>>.fromHandlers(
+          handleData: (query, sink) => sink.add(
+              query.isEmpty ? _teamsList : _filterByName(_teamsList, query)),
+        ));
+  }
+
+  List<TeamModel> _filterByName(List<TeamModel> teams, String query) {
+    final filteredTeams = teams
+        .where((teamModel) =>
+            teamModel.team.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return filteredTeams;
+  }
+
   Future<void> _loadTeamsList() async {
     var teams = await _teamsService.getTeams();
 
-    items.forEach((x) {
+    _teamsList.forEach((x) {
       x.dispose();
     });
-    items.clear();
-    if (_excludedTeamIds != null)
-    {
-      var localTeams = teams.where((team) => !_excludedTeamIds.contains(team.id));
-      items.addAll(localTeams.map((x) => TeamModel(x)));
-    }
-    else
-    {
-      items.addAll(teams.map((x) => TeamModel(x)));
+    _teamsList.clear();
+    if (_excludedTeamIds != null) {
+      var localTeams =
+          teams.where((team) => !_excludedTeamIds.contains(team.id));
+      _teamsList.addAll(localTeams.map((x) => TeamModel(x)));
+    } else {
+      _teamsList.addAll(teams.map((x) => TeamModel(x)));
     }
   }
 
@@ -67,7 +93,7 @@ class MyTeamsViewModel extends BaseViewModel {
   }
 
   void _onTeamDeleted(TeamDeletedMessage event) {
-    items.removeWhere((teamModel) => teamModel.team.id == event.teamId);
+    _teamsList.removeWhere((teamModel) => teamModel.team.id == event.teamId);
     notifyListeners();
   }
 
@@ -76,7 +102,7 @@ class MyTeamsViewModel extends BaseViewModel {
     _teamUpdatedSubscription?.cancel();
     _teamDeletedSubscription?.cancel();
 
-    items.forEach((x) {
+    _teamsList.forEach((x) {
       x.dispose();
     });
     super.dispose();

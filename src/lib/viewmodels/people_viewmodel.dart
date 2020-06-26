@@ -4,67 +4,59 @@ import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:rxdart/rxdart.dart';
+//import 'package:rxdart/rxdart.dart';
 
 class PeopleViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
-  final List<User> _people = [];
+  final List<User> _peopleList = [];
   final Set<String> _excludedUserIds;
 
-  final PublishSubject<String> _filterByNameSubject;
+  StreamController<String> _streamController;
+  Stream<List<User>> _peopleStream;
+
+  Stream<List<User>> get peopleStream => _peopleStream;
 
   PeopleViewModel({Set<String> excludedUserIds})
-      : _filterByNameSubject = PublishSubject<String>(),
-        _excludedUserIds = excludedUserIds;
-
-  @override
-  void dispose() {
-    _filterByNameSubject.close();
-    super.dispose();
+      : _excludedUserIds = excludedUserIds {
+    _initFilter();
   }
-
-  Stream<List<User>> get people => _filterByNameSubject.stream
-      .debounceTime(Duration(milliseconds: 100))
-      .distinct()
-      .transform(StreamTransformer<String, List<User>>.fromHandlers(
-        handleData: _filter,
-      ));
 
   Future<void> initialize() async {
     await _loadPeopleList();
     filterByName("");
   }
 
-  void filterByName(String query) {
-    _filterByNameSubject.sink.add(query);
+  void filterByName(String query) => _streamController.add(query);
+
+    void _initFilter() {
+    _streamController = StreamController<String>();
+
+    _peopleStream = _streamController.stream
+        // .debounceTime(Duration(milliseconds: 100))
+        .distinct()
+        .transform(StreamTransformer<String, List<User>>.fromHandlers(
+          handleData: (query, sink) => sink.add(query.isEmpty ? _peopleList : _filterByName(_peopleList, query)),
+        ));
   }
 
   Future<void> _loadPeopleList() async {
-    if (_people.isEmpty) {
+    if (_peopleList.isEmpty) {
       List<User> people = [];
 
       people = await _peopleService.getAllUsers();
 
-      _people.addAll(people);
+      _peopleList.addAll(people);
 
       if (_excludedUserIds != null) {
-        _people.removeWhere((user) => _excludedUserIds.contains(user.id));
+        _peopleList.removeWhere((user) => _excludedUserIds.contains(user.id));
       }
     }
   }
 
-  void _filter(query, sink) async {
-    if (query.isEmpty) {
-      sink.add(_people);
-    } else {
-      sink.add(_filterByName(_people, query));
-    }
-  }
-
   List<User> _filterByName(List<User> people, String query) {
-    final filteredPeople = people.where((user) {
-      return user.name.toLowerCase().contains(query.toLowerCase());
-    }).toList();
+    final filteredPeople = people
+        .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
     return filteredPeople;
   }
 }
