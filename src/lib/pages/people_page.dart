@@ -14,11 +14,11 @@ import 'package:kudosapp/widgets/search_input_widget.dart';
 import 'package:sprintf/sprintf.dart';
 
 class PeoplePageRoute extends MaterialPageRoute {
-  PeoplePageRoute(
-      {Set<String> excludedUserIds,
-      Icon selectorIcon,
-      void Function(BuildContext, User) onItemSelected})
-      : super(
+  PeoplePageRoute({
+    Set<String> excludedUserIds,
+    Icon selectorIcon,
+    void Function(BuildContext, User) onItemSelected,
+  }) : super(
           builder: (context) => PeoplePage(
               excludedUserIds: excludedUserIds,
               selectorIcon: selectorIcon,
@@ -62,47 +62,47 @@ class PeoplePage extends StatelessWidget {
               PeopleViewModel(excludedUserIds: _excludedUserIds)..initialize(),
           update: (context, searchViewModel, peopleViewModel) =>
               peopleViewModel..filterByName(searchViewModel.query),
-            child: LayoutBuilder(builder: (context, constraints) {
-              return Column(
-                children: <Widget>[
-                  _buildSearchBar(),
-                  Expanded(
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Consumer<PeopleViewModel>(
-                              builder: (context, viewModel, child) {
-                            return StreamBuilder<List<User>>(
-                              stream: viewModel.people,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<User>> snapshot) {
-                                if (snapshot.hasData) {
-                                  if (snapshot.data.isEmpty) {
-                                    return _buildEmpty();
-                                  }
-                                  return _buildList(context, snapshot.data);
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(
+              children: <Widget>[
+                _buildSearchBar(),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: Consumer<PeopleViewModel>(
+                            builder: (context, viewModel, child) {
+                          return StreamBuilder<List<User>>(
+                            stream: viewModel.peopleStream,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<User>> snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data.isEmpty) {
+                                  return _buildEmpty();
                                 }
-                                if (snapshot.hasError) {
-                                  return _buildError(snapshot.error);
-                                }
-                                return _buildLoading();
-                              },
-                            );
-                          }),
-                        ),
-                        Positioned.directional(
-                          textDirection: TextDirection.ltr,
-                          top: 0,
-                          start: 0,
-                          end: 0,
-                          child: TopDecorator(constraints.maxWidth),
-                        ),
-                      ],
-                    ),
+                                return _buildList(context, snapshot.data);
+                              }
+                              if (snapshot.hasError) {
+                                return _buildError(snapshot.error);
+                              }
+                              return _buildLoading();
+                            },
+                          );
+                        }),
+                      ),
+                      Positioned.directional(
+                        textDirection: TextDirection.ltr,
+                        top: 0,
+                        start: 0,
+                        end: 0,
+                        child: TopDecorator(constraints.maxWidth),
+                      ),
+                    ],
                   ),
-                ],
-              );
-            }),
+                ),
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -141,7 +141,8 @@ class PeoplePage extends StatelessWidget {
 
   Widget _buildList(BuildContext context, List<User> users) {
     return ListOfPeopleWidget(
-      padding: EdgeInsets.only(top: TopDecorator.height, bottom: BottomDecorator.height),
+      padding: EdgeInsets.only(
+          top: TopDecorator.height, bottom: BottomDecorator.height),
       itemSelector: (user) => _onItemSelected?.call(context, user),
       users: users,
       trailingWidget: _selectorIcon,

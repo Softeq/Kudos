@@ -68,11 +68,11 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 10),
               FancyListWidget<Team>(
                 viewModel.userTeams,
-                (Team team) => team.name,
+                (team) => team.name,
                 localizer().userTeamsEmptyPlaceholder,
               ),
               SizedBox(height: 30),
-              SectionHeaderWidget(localizer().allAchievements),
+              SectionHeaderWidget(localizer().achievements),
               SizedBox(height: 10),
             ],
           ),

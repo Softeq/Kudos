@@ -70,7 +70,6 @@ class _UserPickerPageState extends State<_UserPickerPage> {
     return Scaffold(
       appBar: GradientAppBar.withWidget(
         TextField(
-          autofocus: true,
           style: KudosTheme.searchTextStyle,
           cursorColor: KudosTheme.accentColor,
           controller: _textEditingController,
@@ -94,19 +93,21 @@ class _UserPickerPageState extends State<_UserPickerPage> {
             return Container();
           }
           return ListOfPeopleWidget(
-              itemSelector: (x) {
-                if (widget._allowMultipleSelection) {
-                  viewModel.toggleUserSelection(x);
-                } else {
-                  Navigator.of(context).pop([x]);
-                }
-              },
-              users: viewModel.users,
-              trailingWidgetFunction: (x) => widget._trailingBuilder != null
-                  ? widget._trailingBuilder(context)
-                  : viewModel.isUserSelected(x)
-                      ? Icon(Icons.clear, color: KudosTheme.destructiveButtonColor)
-                      : Icon(Icons.add, color: KudosTheme.accentColor));
+            itemSelector: (x) {
+              if (widget._allowMultipleSelection) {
+                viewModel.toggleUserSelection(x);
+              } else {
+                Navigator.of(context).pop([x]);
+              }
+            },
+            users: viewModel.users,
+            trailingWidgetFunction: (x) => widget._trailingBuilder != null
+                ? widget._trailingBuilder(context)
+                : viewModel.isUserSelected(x)
+                    ? Icon(Icons.clear,
+                        color: KudosTheme.destructiveButtonColor)
+                    : Icon(Icons.add, color: KudosTheme.accentColor),
+          );
         },
       ),
     );

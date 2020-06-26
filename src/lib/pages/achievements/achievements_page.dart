@@ -15,7 +15,7 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: localizer().allAchievements),
+      appBar: GradientAppBar(title: localizer().achievements),
       body: Consumer<AchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
@@ -24,8 +24,9 @@ class AchievementsPage extends StatelessWidget {
             );
           } else {
             return Container(
-                color: KudosTheme.contentColor,
-                child: Stack(children: <Widget>[
+              color: KudosTheme.contentColor,
+              child: Stack(
+                children: <Widget>[
                   Positioned.fill(
                     child: ChangeNotifierProvider.value(
                       value: viewModel.achievements,
@@ -70,7 +71,9 @@ class AchievementsPage extends StatelessWidget {
                       child: Icon(Icons.add),
                     ),
                   )
-                ]));
+                ],
+              ),
+            );
           }
         },
       ),
