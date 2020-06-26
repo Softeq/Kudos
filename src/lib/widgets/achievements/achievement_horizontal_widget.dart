@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 
@@ -37,6 +38,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
                           maxLines: 5,
                           overflow: TextOverflow.fade,
                           textAlign: TextAlign.center,
+                          style: KudosTheme.listSubTitleTextStyle,
                         ),
                       ),
                     ),

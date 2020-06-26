@@ -13,6 +13,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
+import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
@@ -60,9 +61,10 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             title: viewModel.achievementModel.title,
             actions: viewModel.canEdit
                 ? <Widget>[
-                  IconButton(
+                    IconButton(
                         icon: Icon(Icons.transfer_within_a_station),
-                        onPressed: () => viewModel.transferAchievement(context)),
+                        onPressed: () =>
+                            viewModel.transferAchievement(context)),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
@@ -101,7 +103,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           ),
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),
-          SizedBox(height: 24),
+          SizedBox(height: 40),
           ChangeNotifierProvider.value(
             value: viewModel.achievementHolders,
             child: Consumer<ListNotifier<AchievementHolder>>(
@@ -112,7 +114,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
               },
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 40),
           _AchievementOwnerWidget(
             viewModel.ownerType,
             viewModel.ownerName,
@@ -216,26 +218,24 @@ class _PopularityWidget extends StatelessWidget {
           localizer().achievementStatisticsTitle,
           localizer().achievementStatisticsTooltip,
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 12),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Container(
-                height: 16,
-                width: 144,
-                child: LinearProgressIndicator(
-                  value: _popularityPercent, // percent filled
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor,
-                  ),
-                  backgroundColor: Theme.of(context).primaryColorLight,
+        SizedBox(height: 8.0),
+        Align(
+          alignment: Alignment.topLeft,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              height: 16,
+              width: 144,
+              child: LinearProgressIndicator(
+                value: _popularityPercent, // percent filled
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  KudosTheme.mainGradientEndColor,
                 ),
+                backgroundColor: KudosTheme.mainGradientEndColor.withAlpha(120),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -252,23 +252,23 @@ class _AchievementOwnerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementOwnerTitle),
+      SizedBox(height: 8.0),
       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: RaisedButton(
-                  onPressed: () {
-                    switch (_ownerType) {
-                      case OwnerType.user:
-                        Navigator.of(context).push(ProfileRoute(_ownerId));
-                        break;
-                      case OwnerType.team:
-                        Navigator.of(context).push(ManageTeamRoute(_ownerId));
-                        break;
-                    }
-                  },
-                  child: Text(_ownerName,
-                      style: Theme.of(context).textTheme.bodyText1))))
+        alignment: Alignment.topLeft,
+        child: GestureDetector(
+          child: FancyItemWidget(_ownerName),
+          onTap: () {
+            switch (_ownerType) {
+              case OwnerType.user:
+                Navigator.of(context).push(ProfileRoute(_ownerId));
+                break;
+              case OwnerType.team:
+                Navigator.of(context).push(ManageTeamRoute(_ownerId));
+                break;
+            }
+          },
+        ),
+      ),
     ]);
   }
 }
@@ -286,24 +286,24 @@ class _AchievementHoldersWidget extends StatelessWidget {
       content = Align(
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.only(left: 16),
           child: Text(
             localizer().achievementHoldersEmptyPlaceholder,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: KudosTheme.sectionEmptyTextStyle,
           ),
         ),
       );
     } else {
-      content = Padding(
-          padding: EdgeInsets.only(left: 12),
-          child: Align(
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                  children: _buildListItems(context, _achievementHolders),
-                  spacing: 10)));
+      content = Align(
+        alignment: Alignment.topLeft,
+        child: Wrap(
+            children: _buildListItems(context, _achievementHolders),
+            spacing: 10),
+      );
     }
     return Column(children: <Widget>[
       SectionHeaderWidget(localizer().achievementHoldersTitle),
+      SizedBox(height: 8.0),
       content,
     ]);
   }
@@ -324,9 +324,13 @@ class _AchievementHoldersWidget extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           backgroundImage: CachedNetworkImageProvider(holder.imageUrl),
+          radius: 30,
         ),
         onTap: () => _navigateToProfile(context, holder),
       ),
+      decoration: KudosTheme.tooltipDecoration,
+      textStyle: KudosTheme.tooltipTextStyle,
+      verticalOffset: 33,
     );
   }
 

@@ -21,7 +21,8 @@ class SectionHeaderWidget extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Visibility(
-                  visible: _tooltipTitle?.isNotEmpty ?? false,
+                visible: _tooltipTitle?.isNotEmpty ?? false,
+                child: SizedBox(
                   child: Tooltip(
                     message: _tooltipTitle ?? "",
                     child: Icon(
@@ -29,7 +30,14 @@ class SectionHeaderWidget extends StatelessWidget {
                       size: 20,
                       color: KudosTheme.accentColor,
                     ),
-                  ))
+                    decoration: KudosTheme.tooltipDecoration,
+                    textStyle: KudosTheme.tooltipTextStyle,
+                    verticalOffset: 15,
+                    margin: EdgeInsets.only(left: 180, right: 20),
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  ),
+                ),
+              ),
             ]));
   }
 }

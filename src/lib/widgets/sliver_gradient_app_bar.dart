@@ -50,29 +50,34 @@ class SliverGradientAppBar extends SliverAppBar {
     return Stack(children: <Widget>[
       imageWidget,
       Container(
-          height: 110,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
+        height: 110,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
             colors: <Color>[
               Colors.black.withAlpha(60),
               Colors.transparent,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-          ))),
+          ),
+        ),
+      ),
       Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: <Color>[
-                  Colors.black.withAlpha(60),
-                  Colors.transparent,
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ))))
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: <Color>[
+                Colors.black.withAlpha(60),
+                Colors.transparent,
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
+      )
     ]);
   }
 }

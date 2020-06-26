@@ -20,6 +20,23 @@ class KudosTheme {
     ],
   );
 
+  static final BoxDecoration tooltipDecoration = BoxDecoration(
+    color: KudosTheme.accentColor.withAlpha(160),
+    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    boxShadow: [
+      BoxShadow(
+          color: Colors.black.withAlpha(50),
+          blurRadius: 4.0,
+          offset: Offset(0, 2))
+    ],
+  );
+
+  static final TextStyle tooltipTextStyle = TextStyle(
+    fontSize: 14.0,
+    color: mainGradientEndColor,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle appBarTitleTextStyle = TextStyle(
     fontSize: 20.0,
     color: Colors.white,
