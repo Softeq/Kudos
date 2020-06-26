@@ -62,47 +62,41 @@ class PeoplePage extends StatelessWidget {
               PeopleViewModel(excludedUserIds: _excludedUserIds)..initialize(),
           update: (context, searchViewModel, peopleViewModel) =>
               peopleViewModel..filterByName(searchViewModel.query),
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: <Widget>[
-                _buildSearchBar(),
-                Expanded(
-                  child: Stack(
+          child: Column(
+            children: <Widget>[
+              _buildSearchBar(),
+              Expanded(
+                child: TopDecorator.buildLayoutWithDecorator(
+                  Stack(
                     children: <Widget>[
                       Positioned.fill(
                         child: Consumer<PeopleViewModel>(
-                            builder: (context, viewModel, child) {
-                          return StreamBuilder<List<User>>(
-                            stream: viewModel.peopleStream,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<List<User>> snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data.isEmpty) {
-                                  return _buildEmpty();
+                          builder: (context, viewModel, child) {
+                            return StreamBuilder<List<User>>(
+                              stream: viewModel.peopleStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<User>> snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data.isEmpty) {
+                                    return _buildEmpty();
+                                  }
+                                  return _buildList(context, snapshot.data);
                                 }
-                                return _buildList(context, snapshot.data);
-                              }
-                              if (snapshot.hasError) {
-                                return _buildError(snapshot.error);
-                              }
-                              return _buildLoading();
-                            },
-                          );
-                        }),
-                      ),
-                      Positioned.directional(
-                        textDirection: TextDirection.ltr,
-                        top: 0,
-                        start: 0,
-                        end: 0,
-                        child: TopDecorator(constraints.maxWidth),
+                                if (snapshot.hasError) {
+                                  return _buildError(snapshot.error);
+                                }
+                                return _buildLoading();
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            );
-          }),
+              ),
+            ],
+          ),
         ),
       ),
     );

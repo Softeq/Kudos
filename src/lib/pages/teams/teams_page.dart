@@ -67,59 +67,52 @@ class TeamsPage extends StatelessWidget {
               MyTeamsViewModel(excludedTeamIds: _excludedTeamIds)..initialize(),
           update: (context, searchViewModel, teamsViewModel) =>
               teamsViewModel..filterByName(searchViewModel.query),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Column(
-                children: <Widget>[
-                  _buildSearchBar(),
-                  Expanded(
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Consumer<MyTeamsViewModel>(
-                            builder: (context, viewModel, child) {
-                              return StreamBuilder<List<TeamModel>>(
-                                stream: viewModel.teamsStream,
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<List<TeamModel>> snapshot) {
-                                  if (viewModel.isBusy) {
-                                    return _buildLoading();
-                                  }
-                                  if (snapshot.data.isEmpty) {
-                                    return _buildEmpty();
-                                  } else {
-                                    return _buildList(context, snapshot.data);
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        Positioned.directional(
-                          textDirection: TextDirection.ltr,
-                          top: 0,
-                          child: TopDecorator(constraints.maxWidth),
-                        ),
-                        Positioned.directional(
-                          textDirection: TextDirection.ltr,
-                          end: 16.0,
-                          bottom: 32.0,
-                          child: Visibility(
-                            visible: _showAddButton,
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                Navigator.of(context).push(EditTeamRoute());
+          child: Column(
+            children: <Widget>[
+              _buildSearchBar(),
+              Expanded(
+                child: TopDecorator.buildLayoutWithDecorator(
+                  Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: Consumer<MyTeamsViewModel>(
+                          builder: (context, viewModel, child) {
+                            return StreamBuilder<List<TeamModel>>(
+                              stream: viewModel.teamsStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<TeamModel>> snapshot) {
+                                if (viewModel.isBusy) {
+                                  return _buildLoading();
+                                }
+                                if (snapshot.data.isEmpty) {
+                                  return _buildEmpty();
+                                } else {
+                                  return _buildList(context, snapshot.data);
+                                }
                               },
-                              child: Icon(Icons.add),
-                            ),
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned.directional(
+                        textDirection: TextDirection.ltr,
+                        end: 16.0,
+                        bottom: 32.0,
+                        child: Visibility(
+                          visible: _showAddButton,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              Navigator.of(context).push(EditTeamRoute());
+                            },
+                            child: Icon(Icons.add),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              );
-            },
+                ),
+              ),
+            ],
           ),
         ),
       ),

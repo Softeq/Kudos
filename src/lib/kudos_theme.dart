@@ -98,9 +98,16 @@ class KudosTheme {
   );
 
   static final TextStyle listGroupTitleTextStyle = TextStyle(
-    fontSize: 22.0,
+    fontSize: 19.0,
     color: mainGradientEndColor,
-    fontWeight: FontWeight.w800,
+    shadows: [
+      Shadow(
+        color: accentColor.withAlpha(100),
+        blurRadius: 4,
+        offset: Offset(0, 2),
+      )
+    ],
+    fontWeight: FontWeight.w600,
   );
 
   static final TextStyle listSubTitleTextStyle = TextStyle(
