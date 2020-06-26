@@ -8,6 +8,7 @@ import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MyTeamsViewModel extends BaseViewModel {
   final List<TeamModel> _teamsList = [];
@@ -52,7 +53,7 @@ class MyTeamsViewModel extends BaseViewModel {
     _streamController = StreamController<String>();
 
     _teamsStream = _streamController.stream
-        // .debounceTime(Duration(milliseconds: 100))
+        .debounceTime(Duration(milliseconds: 100))
         .distinct()
         .transform(StreamTransformer<String, List<TeamModel>>.fromHandlers(
           handleData: (query, sink) => sink.add(

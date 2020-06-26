@@ -4,7 +4,7 @@ import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-//import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart';
 
 class PeopleViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
@@ -32,7 +32,7 @@ class PeopleViewModel extends BaseViewModel {
     _streamController = StreamController<String>();
 
     _peopleStream = _streamController.stream
-        // .debounceTime(Duration(milliseconds: 100))
+        .debounceTime(Duration(milliseconds: 100))
         .distinct()
         .transform(StreamTransformer<String, List<User>>.fromHandlers(
           handleData: (query, sink) => sink.add(query.isEmpty ? _peopleList : _filterByName(_peopleList, query)),
