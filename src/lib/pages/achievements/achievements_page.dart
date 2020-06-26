@@ -8,6 +8,8 @@ import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_list_item_widget.dart';
+import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
+import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -15,17 +17,19 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(title: localizer().achievements),
-      body: Consumer<AchievementsViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isBusy) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Container(
-              color: KudosTheme.contentColor,
-              child: Stack(
+      appBar: GradientAppBar(
+        title: localizer().achievements,
+        elevation: 0,
+      ),
+      body: TopDecorator.buildLayoutWithDecorator(
+        Consumer<AchievementsViewModel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.isBusy) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Stack(
                 children: <Widget>[
                   Positioned.fill(
                     child: ChangeNotifierProvider.value(
@@ -72,10 +76,10 @@ class AchievementsPage extends StatelessWidget {
                     ),
                   )
                 ],
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -134,7 +138,10 @@ class _AchievementListWidget extends StatelessWidget {
         return _items[index];
       },
       itemCount: _items.length,
-      padding: EdgeInsets.only(bottom: 28.0),
+      padding: EdgeInsets.only(
+        top: TopDecorator.height,
+        bottom: BottomDecorator.height,
+      ),
     );
   }
 }

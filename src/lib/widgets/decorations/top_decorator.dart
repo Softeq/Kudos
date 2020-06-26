@@ -16,6 +16,23 @@ class TopDecorator extends StatelessWidget {
         height: height,
         width: width);
   }
+
+  static Widget buildLayoutWithDecorator(Widget layout) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Stack(
+          children: <Widget>[
+            Positioned.fill(child: layout),
+            Positioned.directional(
+              textDirection: TextDirection.ltr,
+              top: 0,
+              child: TopDecorator(constraints.maxWidth),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class _TopPainter extends CustomPainter {

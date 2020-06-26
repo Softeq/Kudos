@@ -14,38 +14,32 @@ class MyProfilePage extends StatelessWidget {
     final user = viewModel.user;
 
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(height: 5.0),
-              _buildTopBar(context, viewModel),
-              SizedBox(height: 12.0),
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.topLeft,
-                  children: <Widget>[
-                    Positioned.fill(
-                      top: -.5,
-                      child: Container(
-                        color: KudosTheme.contentColor,
-                        child: ProfileAchievementsListWidget(
-                          user.id,
-                          false,
-                        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(height: 5.0),
+          _buildTopBar(context, viewModel),
+          SizedBox(height: 12.0),
+          Expanded(
+            child: TopDecorator.buildLayoutWithDecorator(
+              Stack(
+                alignment: Alignment.topLeft,
+                children: <Widget>[
+                  Positioned.fill(
+                    top: -.5,
+                    child: Container(
+                      color: KudosTheme.contentColor,
+                      child: ProfileAchievementsListWidget(
+                        user.id,
+                        false,
                       ),
                     ),
-                    Positioned.directional(
-                        textDirection: TextDirection.ltr,
-                        top: 0,
-                        child: TopDecorator(constraints.maxWidth)),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
