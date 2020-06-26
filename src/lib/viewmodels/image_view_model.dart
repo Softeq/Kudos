@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:kudosapp/helpers/disposable.dart';
 
-class ImageViewModel extends ChangeNotifier {
+class ImageViewModel extends ChangeNotifier with Disposable {
   String _imageUrl;
   File _file;
   bool _isBusy = false;
 
   String get imageUrl => _imageUrl;
-
   File get file => _file;
-
   bool get isBusy => _isBusy;
 
   void initialize(String imageUrl, File file, bool isBusy) {

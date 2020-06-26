@@ -44,6 +44,7 @@ class ColoredPlaceholderBuilder {
       return "";
     } else {
       return data
+          .trim()
           .split(new RegExp('\\s+'))
           .take(2)
           .map((e) => e[0].toUpperCase())

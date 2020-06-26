@@ -7,8 +7,8 @@ import 'package:sprintf/sprintf.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
   final List<User> users;
-  final Function(User user) itemSelector;
-  final Function(User user) trailingSelector;
+  final void Function(User user) itemSelector;
+  final void Function(User user) trailingSelector;
   final Widget trailingWidget;
   final Widget Function(User user) trailingWidgetFunction;
   final EdgeInsets padding;

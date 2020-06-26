@@ -63,46 +63,6 @@ class S {
     );
   }
 
-  /// `All achievements`
-  String get allAchievements {
-    return Intl.message(
-      'All achievements',
-      name: 'allAchievements',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `From Chris`
-  String get fromCris {
-    return Intl.message(
-      'From Chris',
-      name: 'fromCris',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Official`
-  String get official {
-    return Intl.message(
-      'Official',
-      name: 'official',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Others`
-  String get others {
-    return Intl.message(
-      'Others',
-      name: 'others',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `People`
   String get people {
     return Intl.message(

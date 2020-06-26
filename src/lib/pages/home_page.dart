@@ -3,6 +3,7 @@ import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/pages/achievements/achievements_page.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile/my_profile_page.dart';
+import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_profile_viewmodel.dart';
@@ -29,9 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _selectTab(int index) {
-    setState(() {
-      _selectedTabIndex = index;
-    });
+    setState(() => _selectedTabIndex = index);
   }
 
   @override
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                 Positioned.directional(
                   textDirection: TextDirection.ltr,
                   child: BottomDecorator(constraints.maxWidth),
-                  bottom: -0.5,
+                  bottom: 0,
                 ),
               ],
             );
@@ -90,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   List<_TabItem> _buildTabs(BuildContext context) {
     return [
       _TabItem(
-        icon: VectorIcon("assets/icons/profile.svg"),
+        icon: VectorIcon("assets/icons/profile.svg", Size(16, 16)),
         title: localizer().profile,
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
@@ -98,13 +97,18 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       _TabItem(
-        icon: VectorIcon("assets/icons/people.svg"),
+        title: localizer().teams,
+        icon: VectorIcon("assets/icons/teams.svg", Size(16, 16)),
+        body: TeamsPage(),
+      ),
+      _TabItem(
+        icon: VectorIcon("assets/icons/people.svg", Size(16, 16)),
         title: localizer().people,
         body: PeoplePage(),
       ),
       _TabItem(
-        icon: VectorIcon("assets/icons/cup.svg"),
-        title: localizer().allAchievements,
+        icon: VectorIcon("assets/icons/cup.svg", Size(16, 16)),
+        title: localizer().achievements,
         body: ChangeNotifierProvider<AchievementsViewModel>(
           create: (context) => AchievementsViewModel()..initialize(),
           child: AchievementsPage(),

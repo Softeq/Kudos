@@ -61,7 +61,8 @@ class LoginPage extends StatelessWidget {
                           style: KudosTheme.raisedButtonTextStyle,
                         ),
                         onPressed: () async =>
-                            await viewModel.signIn(_onAuthError)),
+                            await viewModel.signIn(_onAuthError),
+                      ),
               )
             ],
           );
