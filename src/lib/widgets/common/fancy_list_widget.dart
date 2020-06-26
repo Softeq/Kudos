@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/widgets.dart';
-import 'package:kudosapp/helpers/colored_placeholder_builder.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:provider/provider.dart';
 
 class FancyListWidget<T> extends StatelessWidget {
@@ -36,28 +34,6 @@ class FancyListWidget<T> extends StatelessWidget {
   }
 
   Widget _buildMember(T itemViewModel) {
-    var color =
-        ColoredPlaceholderBuilder.build(_getItemTitle(itemViewModel)).color;
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 6.0,
-        horizontal: 9.0,
-      ),
-      margin: EdgeInsets.only(bottom: 4.0),
-      decoration: BoxDecoration(
-        color: color.withAlpha(40),
-        border: Border(
-          bottom: BorderSide(
-            color: color,
-            width: 2.0,
-            style: BorderStyle.solid,
-          ),
-        ),
-      ),
-      child: Text(
-        _getItemTitle(itemViewModel),
-        style: KudosTheme.fancyListItemTextStyle,
-      ),
-    );
+    return FancyItemWidget(_getItemTitle(itemViewModel));
   }
 }
