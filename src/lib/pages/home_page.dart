@@ -90,25 +90,25 @@ class _HomePageState extends State<HomePage> {
     return [
       _TabItem(
         icon: VectorIcon("assets/icons/profile.svg", Size(16, 16)),
-        title: localizer().profile,
+        title: localizer().profileTabName,
         body: ChangeNotifierProvider<MyProfileViewModel>(
           create: (context) => MyProfileViewModel(),
           child: MyProfilePage(),
         ),
       ),
       _TabItem(
-        title: localizer().teams,
+        title: localizer().teamsTabName,
         icon: VectorIcon("assets/icons/teams.svg", Size(16, 16)),
         body: TeamsPage(),
       ),
       _TabItem(
         icon: VectorIcon("assets/icons/people.svg", Size(16, 16)),
-        title: localizer().people,
+        title: localizer().peopleTabName,
         body: PeoplePage(),
       ),
       _TabItem(
         icon: VectorIcon("assets/icons/cup.svg", Size(16, 16)),
-        title: localizer().achievements,
+        title: localizer().achievementsTabName,
         body: ChangeNotifierProvider<AchievementsViewModel>(
           create: (context) => AchievementsViewModel()..initialize(),
           child: AchievementsPage(),

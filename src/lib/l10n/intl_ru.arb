@@ -69,5 +69,10 @@
     "from": "От: %s",
     "generalError": "Что-то пошло не так",
     "receivedNoAchievements": "Ещё не получил ни одной награды",
-    "receivedAchievements": "Получено наград: %i"
+    "receivedAchievements": "Получено наград: %i",
+
+    "profileTabName": "Кабинет",
+    "teamsTabName": "Команды",
+    "peopleTabName": "Люди",
+    "achievementsTabName": "Награды"
 }

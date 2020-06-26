@@ -69,5 +69,10 @@
     "from": "From: %s",
     "generalError": "Something went wrong",
     "receivedNoAchievements": "Hasn't received any achievements yet",
-    "receivedAchievements": "Received achievements: %i"
+    "receivedAchievements": "Received achievements: %i",
+
+    "profileTabName": "Profile",
+    "teamsTabName": "Teams",
+    "peopleTabName": "People",
+    "achievementsTabName": "Library"
 }

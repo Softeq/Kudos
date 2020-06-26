@@ -742,6 +742,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Profile`
+  String get profileTabName {
+    return Intl.message(
+      'Profile',
+      name: 'profileTabName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teams`
+  String get teamsTabName {
+    return Intl.message(
+      'Teams',
+      name: 'teamsTabName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `People`
+  String get peopleTabName {
+    return Intl.message(
+      'People',
+      name: 'peopleTabName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Library`
+  String get achievementsTabName {
+    return Intl.message(
+      'Library',
+      name: 'achievementsTabName',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
