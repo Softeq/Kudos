@@ -9,7 +9,7 @@ import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
-import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
+import 'package:kudosapp/widgets/achievements/achievement_list_item_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
@@ -60,10 +60,15 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
-                        icon: Icon(Icons.edit), onPressed: _editTeamTapped),
+                      icon: Icon(Icons.edit),
+                      onPressed: _editTeamTapped,
+                    ),
                     IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () => viewModel.deleteTeam(context)),
+                      icon: Icon(Icons.delete_forever),
+                      onPressed: () {
+                        viewModel.deleteTeam(context);
+                      },
+                    ),
                   ]
                 : null,
           ),
@@ -81,8 +86,9 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
 
   Widget _buildBody(ManageTeamViewModel viewModel) {
     return SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
-        child: Column(children: <Widget>[
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      child: Column(
+        children: <Widget>[
           viewModel.imageViewModel.file == null &&
                   (viewModel.imageViewModel.imageUrl == null ||
                       viewModel.imageViewModel.imageUrl.isEmpty)
@@ -99,29 +105,47 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
             style: KudosTheme.descriptionTextStyle,
           ),
           SizedBox(height: 24.0),
-          _buildUsersList(localizer().admins, viewModel.admins, _adminsExpanded,
-              _toggleAdminsExpanded, viewModel.canEdit, _editAdminsTapped),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 8.0),
+            child: _buildUsersList(
+              localizer().admins,
+              viewModel.admins,
+              _adminsExpanded,
+              _toggleAdminsExpanded,
+              viewModel.canEdit,
+              _editAdminsTapped,
+            ),
+          ),
           SizedBox(height: 8.0),
-          _buildUsersList(
+          Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 8.0),
+            child: _buildUsersList(
               localizer().members,
               viewModel.members,
               _membersExpanded,
               _toggleMembersExpanded,
               viewModel.canEdit,
-              _editMembersTapped),
+              _editMembersTapped,
+            ),
+          ),
           SizedBox(height: 24.0),
-          SectionHeaderWidget(localizer().achievements),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 8.0),
+            child: SectionHeaderWidget(localizer().achievements),
+          ),
           SizedBox(height: 10.0),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              var lineData = viewModel.getData(index);
-              return AchievementWidget(lineData, _achievementTapped);
+              final data = viewModel.getData(index);
+              return AchievementListItemWidget(data, _achievementTapped);
             },
             itemCount: viewModel.itemsCount,
-          )
-        ]));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildUsersList(
@@ -139,16 +163,18 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           children: <Widget>[
             GestureDetector(
               onTap: toggleUsersExpanded,
-              child: Row(children: <Widget>[
-                Text(
-                  title,
-                  style: KudosTheme.sectionTitleTextStyle,
-                ),
-                Icon(
-                  usersExpanded ? Icons.expand_less : Icons.expand_more,
-                  color: KudosTheme.mainGradientEndColor,
-                ),
-              ]),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: KudosTheme.sectionTitleTextStyle,
+                  ),
+                  Icon(
+                    usersExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: KudosTheme.mainGradientEndColor,
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Align(
