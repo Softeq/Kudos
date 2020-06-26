@@ -33,6 +33,7 @@ class SimpleListItem extends StatelessWidget {
   final int imageCounter;
   final Widget selectorIcon;
   final ImageShape imageShape;
+  final Widget contentWidget;
 
   SimpleListItem({
     this.onTap,
@@ -43,6 +44,7 @@ class SimpleListItem extends StatelessWidget {
     this.imageCounter,
     this.selectorIcon,
     this.imageShape,
+    this.contentWidget
   });
 
   @override
@@ -59,6 +61,7 @@ class SimpleListItem extends StatelessWidget {
               _buildSelectorWidget(),
             ],
           ),
+          _buildContentWidget(),
           _buildSeparator(),
         ],
       ),
@@ -75,11 +78,20 @@ class SimpleListItem extends StatelessWidget {
     return item;
   }
 
+  Widget _buildContentWidget() {
+    return contentWidget != null ? Container(
+      margin: EdgeInsets.only(
+        top: 8.0,
+        left: imageShape == null ? 0 : (imageShape.size + _imagePadding * 2),
+      ),
+      child: contentWidget,
+    ) : Container();
+  }
+
   Widget _buildSeparator() {
     return Container(
       margin: EdgeInsets.only(
         top: 8.0,
-        // bottom: 8.0,
         left: imageShape == null ? 0 : (imageShape.size + _imagePadding * 2),
       ),
       height: 1.0,

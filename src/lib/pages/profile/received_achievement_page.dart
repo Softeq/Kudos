@@ -1,14 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kudosapp/dto/user_achievement.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
-import 'package:kudosapp/widgets/gradient_app_bar.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
+import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class ReceivedAchievementRoute extends MaterialPageRoute {
@@ -28,106 +30,99 @@ class ReceivedAchievementRoute extends MaterialPageRoute {
 class ReceivedAchievementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        Provider.of<ReceivedAchievementViewModel>(context, listen: false);
-
     return Scaffold(
-      appBar: GradientAppBar(title: viewModel.relatedAchievement.name),
       body: Consumer<ReceivedAchievementViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.isBusy) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return _buildBody(viewModel, context);
-          }
+          return CustomScrollView(
+            slivers: _buildSlivers(context, viewModel),
+          );
         },
       ),
     );
   }
 
-  Widget _buildBody(
-      ReceivedAchievementViewModel viewModel, BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Column(
-        children: <Widget>[
-          GestureDetector(
-            child: RoundedImageWidget.circular(
-              imageViewModel: viewModel.achievementCollection.imageViewModel,
-              size: 100.0,
-            ),
-            onTap: () {
+  List<Widget> _buildSlivers(
+      BuildContext context, ReceivedAchievementViewModel viewModel) {
+    if (viewModel.isBusy) {
+      return [
+        SliverFillRemaining(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ];
+    }
+
+    return [
+      _buildAppBar(context, viewModel),
+      SliverToBoxAdapter(
+        child: _buildBody(context, viewModel),
+      ),
+    ];
+  }
+
+  Widget _buildAppBar(
+      BuildContext context, ReceivedAchievementViewModel viewModel) {
+    return SliverGradientAppBar(
+        title: viewModel.relatedAchievement.name,
+        imageWidget: _buildAppBarImage(
+            context, viewModel.achievementCollection.imageViewModel),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            onPressed: () {
               Navigator.of(context).push(
                 AchievementDetailsRoute(viewModel.relatedAchievement.id),
               );
             },
-          ),
-          SizedBox(height: 20),
-          ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              color: Colors.black54,
-            ),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: viewModel.achievementCollection.count,
-            itemBuilder: (context, index) => _buildUserAchievementView(
-                viewModel.achievementCollection.userAchievements[index],
-                context),
-          ),
-        ],
-      ),
+          )
+        ]);
+  }
+
+  Widget _buildAppBarImage(
+      BuildContext context, ImageViewModel imageViewModel) {
+    return Center(
+      child: RoundedImageWidget.square(
+          imageViewModel: imageViewModel,
+          size: MediaQuery.of(context).size.width,
+          borderRadius: 0),
+    );
+  }
+
+  Widget _buildBody(
+      BuildContext context, ReceivedAchievementViewModel viewModel) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: viewModel.achievementCollection.count,
+      itemBuilder: (context, index) => _buildUserAchievementView(
+          context, viewModel.achievementCollection.userAchievements[index]),
     );
   }
 
   Widget _buildUserAchievementView(
-      UserAchievement userAchievementModel, BuildContext context) {
-    return InkWell(
-        onTap: () {
-          Navigator.of(context)
-              .push(ProfileRoute(userAchievementModel.sender.id));
-        },
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(children: <Widget>[
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: CachedNetworkImageProvider(
-                    userAchievementModel.sender.imageUrl,
-                  ),
-                  radius: 25.0,
-                ),
-                SizedBox(width: 10),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(userAchievementModel.sender.name,
-                          style: TextStyle(fontSize: 14)),
-                      Text(
-                          DateFormat.yMd()
-                              .add_jm()
-                              .format(userAchievementModel.date.toDate()),
-                          style:
-                              TextStyle(fontSize: 12, color: Colors.black38)),
-                    ])
-              ]),
-              SizedBox(height: 10),
-              _buildCommentView(userAchievementModel.comment),
-            ],
-          ),
-        ));
+      BuildContext context, UserAchievement userAchievementModel) {
+    return SimpleListItem(
+      imageShape: ImageShape.circle(56),
+      imageUrl: userAchievementModel.sender.imageUrl,
+      title: userAchievementModel.sender.name,
+      description:
+          DateFormat.yMd().add_jm().format(userAchievementModel.date.toDate()),
+      contentWidget: _buildCommentView(userAchievementModel.comment),
+      onTap: () {
+        Navigator.of(context)
+            .push(ProfileRoute(userAchievementModel.sender.id));
+      },
+    );
   }
 
   Widget _buildCommentView(String comment) {
-    if (comment.isNotEmpty) {
-      return Text(comment, style: TextStyle(fontSize: 16));
-    } else {
-      return Text(localizer().noComment,
-          style: TextStyle(fontSize: 16, color: Colors.black26));
-    }
+    return Align(
+        alignment: Alignment.centerLeft,
+        child: comment.isNotEmpty
+            ? Text(comment, style: KudosTheme.listContentTextStyle)
+            : Text(localizer().noComment,
+                style: KudosTheme.listEmptyContentTextStyle));
   }
 }

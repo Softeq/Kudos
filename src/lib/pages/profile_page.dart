@@ -2,14 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kudosapp/dto/team.dart';
-import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
-import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
+import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class ProfileRoute extends MaterialPageRoute {
   ProfileRoute(String userId)
@@ -56,7 +55,9 @@ class ProfilePage extends StatelessWidget {
     }
 
     return [
-      _buildHeader(viewModel.user),
+      SliverGradientAppBar(
+          title: viewModel.user.name,
+          imageWidget: _buildAppBarImage(viewModel.user.imageUrl)),
       _addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(
@@ -83,58 +84,17 @@ class ProfilePage extends StatelessWidget {
     ];
   }
 
-  Widget _buildHeader(User user) {
-    return SliverAppBar(
-      expandedHeight: 350.0,
-      floating: false,
-      pinned: true,
-      flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
-          child: FlexibleSpaceBar(
-            centerTitle: true,
-            title: Text(user.name, style: KudosTheme.userNameTitleTextStyle),
-            background: _buildHeaderBackground(user.imageUrl),
-          )),
-    );
-  }
-
-  Widget _buildHeaderBackground(String imageUrl) {
-    return Stack(children: <Widget>[
-      CachedNetworkImage(
-        imageUrl: imageUrl,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
+  Widget _buildAppBarImage(String imageUrl) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.cover,
           ),
         ),
       ),
-      Container(
-          height: 110,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: <Color>[
-              Colors.black.withAlpha(60),
-              Colors.transparent,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ))),
-      Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: <Color>[
-                  Colors.black.withAlpha(60),
-                  Colors.transparent,
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ))))
-    ]);
+    );
   }
 }
