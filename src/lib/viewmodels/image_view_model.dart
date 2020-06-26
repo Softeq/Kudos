@@ -7,11 +7,10 @@ class ImageViewModel extends ChangeNotifier {
   String _imageUrl;
   File _file;
   bool _isBusy = false;
+  bool _isDisposed = false;
 
   String get imageUrl => _imageUrl;
-
   File get file => _file;
-
   bool get isBusy => _isBusy;
 
   void initialize(String imageUrl, File file, bool isBusy) {
@@ -43,8 +42,16 @@ class ImageViewModel extends ChangeNotifier {
       var newFile = await DefaultCacheManager().getSingleFile(imageUrl);
       if (newFile != null) {
         _file = newFile;
-        notifyListeners();
+        if (!_isDisposed) {
+          notifyListeners();
+        }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
   }
 }
