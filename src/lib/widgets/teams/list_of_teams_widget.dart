@@ -42,6 +42,7 @@ class ListOfTeamsWidget extends StatelessWidget {
           selectorIcon: _selectorIcon,
           imageShape: ImageShape.square(56, 4),
           imageViewModel: teamModel.imageViewModel,
+          addHeroAnimation: true,
         );
       },
     );

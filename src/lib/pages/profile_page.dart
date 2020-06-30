@@ -56,8 +56,9 @@ class ProfilePage extends StatelessWidget {
 
     return [
       SliverGradientAppBar(
-          title: viewModel.user.name,
-          imageWidget: _buildAppBarImage(viewModel.user.imageUrl)),
+        title: viewModel.user.name,
+        imageWidget: _buildAppBarImage(viewModel.user.imageUrl),
+      ),
       _addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(

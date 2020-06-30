@@ -12,29 +12,35 @@ class RoundedImageWidget extends StatelessWidget {
   final double _size;
   final double _borderRadius;
   final ColoredPlaceholder _imagePlaceholder;
+  final bool _addHeroAnimation;
 
   RoundedImageWidget._(
     this._imageViewModel,
     this._size,
     this._borderRadius,
     String _name,
+    this._addHeroAnimation,
   ) : _imagePlaceholder = ColoredPlaceholderBuilder.build(_name);
 
   factory RoundedImageWidget.circular({
     @required ImageViewModel imageViewModel,
     @required double size,
+    bool addHeroAnimation,
     String name = "",
   }) {
-    return RoundedImageWidget._(imageViewModel, size, size / 2.0, name);
+    return RoundedImageWidget._(
+        imageViewModel, size, size / 2.0, name, addHeroAnimation ?? false);
   }
 
   factory RoundedImageWidget.square({
     @required ImageViewModel imageViewModel,
     @required double size,
     @required double borderRadius,
+    bool addHeroAnimation,
     String name = "",
   }) {
-    return RoundedImageWidget._(imageViewModel, size, borderRadius, name);
+    return RoundedImageWidget._(
+        imageViewModel, size, borderRadius, name, addHeroAnimation ?? false);
   }
 
   @override
@@ -45,8 +51,8 @@ class RoundedImageWidget extends StatelessWidget {
         builder: (context, viewModel, child) {
           if (viewModel.isBusy) {
             return _buildBusyWidget();
-          } else if (_imageViewModel.file == null &&
-              (_imageViewModel.imageUrl == null ||
+          } else if (_imageViewModel?.file == null &&
+              (_imageViewModel?.imageUrl == null ||
                   _imageViewModel.imageUrl.isEmpty)) {
             return _buildPlaceholderWidget();
           } else if (viewModel.file != null) {
@@ -97,9 +103,11 @@ class RoundedImageWidget extends StatelessWidget {
 
   Widget _buildImageWidget() {
     var fileExtension = path.extension(_imageViewModel.file.path);
+
+    Widget imageWidget;
     switch (fileExtension) {
       case ".svg":
-        return ClipRRect(
+        imageWidget = ClipRRect(
           borderRadius: BorderRadius.circular(_borderRadius),
           child: Container(
             child: SvgPicture.file(
@@ -110,8 +118,9 @@ class RoundedImageWidget extends StatelessWidget {
             ),
           ),
         );
+        break;
       default:
-        return ClipRRect(
+        imageWidget = ClipRRect(
           borderRadius: BorderRadius.circular(_borderRadius),
           child: Container(
             child: Image.file(
@@ -123,5 +132,9 @@ class RoundedImageWidget extends StatelessWidget {
           ),
         );
     }
+
+    return _addHeroAnimation
+        ? Hero(child: imageWidget, tag: _imageViewModel.imageUrl)
+        : imageWidget;
   }
 }
