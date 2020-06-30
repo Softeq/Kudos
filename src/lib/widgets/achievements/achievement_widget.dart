@@ -103,6 +103,7 @@ class AchievementWidget extends StatelessWidget {
                     child: RoundedImageWidget.circular(
                       imageViewModel: achievement.imageViewModel,
                       size: radius * 2,
+                      addHeroAnimation: true,
                     ),
                   ),
                 ),

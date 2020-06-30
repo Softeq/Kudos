@@ -98,6 +98,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                   size: 112.0,
                   borderRadius: 8,
                   name: viewModel.name,
+                  addHeroAnimation: true,
                 ),
           SizedBox(height: 24),
           Text(

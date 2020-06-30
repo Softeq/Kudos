@@ -53,6 +53,7 @@ class ListOfPeopleWidget extends StatelessWidget {
       imageUrl: user.imageUrl,
       selectorIcon: trailingWidget ?? trailingWidgetFunction(user),
       imageShape: ImageShape.circle(50),
+      addHeroAnimation: true,
     );
   }
 }

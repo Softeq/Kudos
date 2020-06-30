@@ -18,6 +18,7 @@ class AchievementListItemWidget extends StatelessWidget {
       },
       imageViewModel: _achievementModel.imageViewModel,
       imageShape: ImageShape.circle(80.0),
+      addHeroAnimation: true,
     );
   }
 }

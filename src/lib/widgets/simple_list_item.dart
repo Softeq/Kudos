@@ -15,6 +15,7 @@ class ImageShape {
   ImageShape.square(this.size, this.cornerRadius)
       : isSquare = true,
         isCircle = false;
+
   ImageShape.circle(this.size)
       : cornerRadius = 0,
         isSquare = false,
@@ -34,6 +35,7 @@ class SimpleListItem extends StatelessWidget {
   final Widget selectorIcon;
   final ImageShape imageShape;
   final Widget contentWidget;
+  final bool addHeroAnimation;
 
   SimpleListItem({
     this.onTap,
@@ -44,7 +46,8 @@ class SimpleListItem extends StatelessWidget {
     this.imageCounter,
     this.selectorIcon,
     this.imageShape,
-    this.contentWidget
+    this.contentWidget,
+    this.addHeroAnimation,
   });
 
   @override
@@ -69,23 +72,28 @@ class SimpleListItem extends StatelessWidget {
 
     if (onTap != null) {
       item = Material(
-          color: Colors.transparent,
-          child: InkWell(
-            child: item,
-            onTap: onTap,
-          ));
+        color: Colors.transparent,
+        child: InkWell(
+          child: item,
+          onTap: onTap,
+        ),
+      );
     }
     return item;
   }
 
   Widget _buildContentWidget() {
-    return contentWidget != null ? Container(
-      margin: EdgeInsets.only(
-        top: 8.0,
-        left: imageShape == null ? 0 : (imageShape.size + _imagePadding * 2),
-      ),
-      child: contentWidget,
-    ) : Container();
+    return contentWidget != null
+        ? Container(
+            margin: EdgeInsets.only(
+              top: 8.0,
+              left: imageShape == null
+                  ? 0
+                  : (imageShape.size + _imagePadding * 2),
+            ),
+            child: contentWidget,
+          )
+        : Container();
   }
 
   Widget _buildSeparator() {
@@ -141,19 +149,25 @@ class SimpleListItem extends StatelessWidget {
 
   Widget _buildImageFromUrl() {
     final imageProvider = CachedNetworkImageProvider(imageUrl);
+
+    Widget imageWidget;
     if (imageShape.isCircle) {
-      return CircleAvatar(
+      imageWidget = CircleAvatar(
         backgroundColor: Colors.transparent,
         radius: imageShape.size / 2.0,
         backgroundImage: imageProvider,
       );
     } else {
-      return Image(
+      imageWidget = Image(
         width: imageShape.size,
         height: imageShape.size,
         image: imageProvider,
       );
     }
+
+    return (addHeroAnimation != null && addHeroAnimation)
+        ? Hero(child: imageWidget, tag: imageUrl)
+        : imageWidget;
   }
 
   Widget _buildImageFromViewModel() {
@@ -162,6 +176,7 @@ class SimpleListItem extends StatelessWidget {
         imageViewModel: imageViewModel,
         size: imageShape.size,
         name: title,
+        addHeroAnimation: addHeroAnimation,
       );
     } else {
       return RoundedImageWidget.square(
@@ -169,6 +184,7 @@ class SimpleListItem extends StatelessWidget {
         name: title,
         size: imageShape.size,
         borderRadius: imageShape.cornerRadius,
+        addHeroAnimation: addHeroAnimation,
       );
     }
   }
