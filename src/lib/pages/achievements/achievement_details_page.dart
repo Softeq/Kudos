@@ -12,6 +12,7 @@ import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
@@ -19,12 +20,12 @@ import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
-  AchievementDetailsRoute(String achievementId)
+  AchievementDetailsRoute(String achievementId, ImageViewModel imageViewModel)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel(achievementId)..initialize();
+                return AchievementDetailsViewModel(achievementId, imageViewModel)..initialize();
               },
               child: _AchievementDetailsPage(),
             );
@@ -46,19 +47,20 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   Widget build(BuildContext context) {
     return Consumer<AchievementDetailsViewModel>(
       builder: (context, viewModel, child) {
-        if (viewModel.isBusy) {
-          return Scaffold(
-            appBar: GradientAppBar(title: viewModel?.achievementModel?.title),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
+        // TODO: Fix
+        // if (viewModel.isBusy) {
+        //   return Scaffold(
+        //     appBar: GradientAppBar(title: viewModel?.achievementModel?.title),
+        //     body: Center(
+        //       child: CircularProgressIndicator(),
+        //     ),
+        //   );
+        // }
 
         return Scaffold(
           key: _scaffoldKey,
           appBar: GradientAppBar(
-            title: viewModel.achievementModel.title,
+            title: viewModel.achievementModel?.title,
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
@@ -70,7 +72,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           EditAchievementRoute.editAchievement(
-                              viewModel.achievementModel.achievement),
+                              viewModel.achievementModel?.achievement),
                         );
                       },
                     ),
@@ -99,7 +101,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         children: <Widget>[
           Container(
             height: 140,
-            child: AchievementHorizontalWidget(viewModel.achievementModel),
+            child: AchievementHorizontalWidget(viewModel.imageViewModel, viewModel.achievementModel?.description),
           ),
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),

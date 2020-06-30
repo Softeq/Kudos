@@ -20,6 +20,7 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:sprintf/sprintf.dart';
 
 enum OwnerType { user, team }
@@ -31,6 +32,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _authService = locator<BaseAuthService>();
   final _dialogsService = locator<DialogService>();
   final String _achievementId;
+  final ImageViewModel _imageViewModel;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
   AchievementModel _achievementModel;
@@ -42,20 +44,18 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final achievementHolders = new ListNotifier<AchievementHolder>();
 
   AchievementModel get achievementModel => _achievementModel;
+  ImageViewModel get imageViewModel => _imageViewModel;
 
   double get statisticsValue => _statisticsValue;
 
   String get ownerName => _ownerName;
-
   String get ownerId => _ownerId;
-
   OwnerType get ownerType => _ownerType;
 
-  bool get canEdit => achievementModel.achievement.canBeModifiedByCurrentUser;
+  bool get canEdit => achievementModel?.achievement?.canBeModifiedByCurrentUser ?? false;
+  bool get canSend => achievementModel?.achievement?.canBeSentByCurrentUser ?? false;
 
-  bool get canSend => achievementModel.achievement.canBeSentByCurrentUser;
-
-  AchievementDetailsViewModel(this._achievementId) {
+  AchievementDetailsViewModel(this._achievementId, this._imageViewModel) {
     isBusy = true;
   }
 

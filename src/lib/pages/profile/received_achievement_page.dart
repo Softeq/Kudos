@@ -43,27 +43,29 @@ class ReceivedAchievementPage extends StatelessWidget {
 
   List<Widget> _buildSlivers(
       BuildContext context, ReceivedAchievementViewModel viewModel) {
+    Widget bottomArea;
     if (viewModel.isBusy) {
-      return [
-        SliverFillRemaining(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+      bottomArea = SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
         ),
-      ];
+      );
+    } else {
+      bottomArea = SliverToBoxAdapter(
+        child: _buildBody(context, viewModel),
+      );
     }
 
     return [
       _buildAppBar(context, viewModel),
-      SliverToBoxAdapter(
-        child: _buildBody(context, viewModel),
-      ),
+      bottomArea,
     ];
   }
 
   Widget _buildAppBar(
       BuildContext context, ReceivedAchievementViewModel viewModel) {
     return SliverGradientAppBar(
+        heroTag: viewModel.achievementCollection.imageViewModel.imageUrl,
         title: viewModel.relatedAchievement.name,
         imageWidget: _buildAppBarImage(
             context, viewModel.achievementCollection.imageViewModel),
@@ -72,7 +74,8 @@ class ReceivedAchievementPage extends StatelessWidget {
             icon: Icon(Icons.info_outline),
             onPressed: () {
               Navigator.of(context).push(
-                AchievementDetailsRoute(viewModel.relatedAchievement.id),
+                AchievementDetailsRoute(viewModel.relatedAchievement.id,
+                    viewModel.achievementCollection.imageViewModel),
               );
             },
           )
@@ -83,9 +86,10 @@ class ReceivedAchievementPage extends StatelessWidget {
       BuildContext context, ImageViewModel imageViewModel) {
     return Center(
       child: RoundedImageWidget.square(
-          imageViewModel: imageViewModel,
-          size: MediaQuery.of(context).size.width,
-          borderRadius: 0),
+        imageViewModel: imageViewModel,
+        size: MediaQuery.of(context).size.width,
+        borderRadius: 0,
+      ),
     );
   }
 
@@ -119,10 +123,11 @@ class ReceivedAchievementPage extends StatelessWidget {
 
   Widget _buildCommentView(String comment) {
     return Align(
-        alignment: Alignment.centerLeft,
-        child: comment.isNotEmpty
-            ? Text(comment, style: KudosTheme.listContentTextStyle)
-            : Text(localizer().noComment,
-                style: KudosTheme.listEmptyContentTextStyle));
+      alignment: Alignment.centerLeft,
+      child: comment.isNotEmpty
+          ? Text(comment, style: KudosTheme.listContentTextStyle)
+          : Text(localizer().noComment,
+              style: KudosTheme.listEmptyContentTextStyle),
+    );
   }
 }
