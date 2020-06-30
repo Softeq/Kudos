@@ -84,7 +84,7 @@ class TeamsPage extends StatelessWidget {
                                 if (viewModel.isBusy) {
                                   return _buildLoading();
                                 }
-                                if (snapshot.data.isEmpty) {
+                                if (snapshot.data?.isEmpty ?? true) {
                                   return _buildEmpty();
                                 } else {
                                   return _buildList(context, snapshot.data);
