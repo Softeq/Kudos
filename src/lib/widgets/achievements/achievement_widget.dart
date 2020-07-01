@@ -7,9 +7,16 @@ import 'package:provider/provider.dart';
 
 class AchievementWidget extends StatelessWidget {
   final AchievementModel achievement;
-  final Function(AchievementModel) onAchievementClicked;
+  final Function(AchievementModel) onAchievementTitleClicked;
+  final Function(AchievementModel) onAchievementDescriptionClicked;
+  final Function(AchievementModel) onAchievementImageClicked;
 
-  AchievementWidget(this.achievement, [this.onAchievementClicked]);
+  AchievementWidget(
+    this.achievement, {
+    this.onAchievementTitleClicked,
+    this.onAchievementDescriptionClicked,
+    this.onAchievementImageClicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +64,40 @@ class AchievementWidget extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(borderRadius),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(contentPadding),
-                        child: Text(
-                          achievement.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                      GestureDetector(
+                        onTap: () {
+                          onAchievementTitleClicked(achievement);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(contentPadding),
+                          child: Text(
+                            achievement.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                       Divider(
                         height: 0,
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(contentPadding),
-                        child: Text(
-                          achievement.description,
-                          maxLines: 5,
-                          overflow: TextOverflow.fade,
-                          textAlign: TextAlign.center,
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            onAchievementDescriptionClicked(achievement);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(contentPadding),
+                            child: Text(
+                              achievement.description,
+                              maxLines: 5,
+                              overflow: TextOverflow.fade,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -91,7 +111,7 @@ class AchievementWidget extends StatelessWidget {
                   elevation: 2,
                   child: GestureDetector(
                     onTap: () {
-                      onAchievementClicked(achievement);
+                      onAchievementImageClicked(achievement);
                     },
                     child: _EditableRoundedImage(
                       achievement.imageViewModel,
