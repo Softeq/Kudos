@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/dialog_service.dart';
@@ -161,6 +162,8 @@ class _EditAchievementPage extends StatelessWidget {
                         child: _TextInputWidget(
                           title: localizer().achievementName,
                           initialValue: viewModel.achievementModel.title,
+                          height: 180.0,
+                          maxLines: 1,
                         ),
                       );
                     },
@@ -388,11 +391,14 @@ class _OverlayPainter extends CustomPainter {
 class _TextInputWidget extends StatefulWidget {
   final String title;
   final String initialValue;
+  final double height;
+  final int maxLines;
 
-  _TextInputWidget({
-    @required this.title,
-    @required this.initialValue,
-  });
+  _TextInputWidget(
+      {@required this.title,
+      @required this.initialValue,
+      this.height = 250,
+      this.maxLines});
 
   @override
   State<StatefulWidget> createState() {
@@ -418,54 +424,79 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-                SizedBox(height: 16.0),
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    maxLines: null,
-                    minLines: null,
-                    controller: _textEditingController,
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 16.0, right: 16.0, bottom: 16.0, top: 32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.title,
+                    style: KudosTheme.listTitleTextStyle,
                   ),
-                ),
-              ],
+                  SizedBox(height: 16.0),
+                  Expanded(
+                    child: TextField(
+                      autofocus: true,
+                      maxLines: widget.maxLines,
+                      minLines: null,
+                      controller: _textEditingController,
+                      style: KudosTheme.descriptionTextStyle,
+                      cursorColor: KudosTheme.accentColor,
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: KudosTheme.accentColor)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop(null);
-              },
-              child: Text(localizer().cancel),
-            ),
-            FlatButton(
-              onPressed: () {
-                String value;
-                if (_textEditingController.text != null &&
-                    _textEditingController.text != "") {
-                  value = _textEditingController.text;
-                }
-                Navigator.of(context).pop(value);
-              },
-              child: Text(localizer().ok),
-            ),
-          ],
-        ),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(null);
+                },
+                highlightColor: Colors.transparent,
+                splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
+                child: Text(
+                  localizer().cancel,
+                  style: TextStyle(
+                    color: KudosTheme.mainGradientStartColor,
+                  ),
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  String value;
+                  if (_textEditingController.text != null &&
+                      _textEditingController.text != "") {
+                    value = _textEditingController.text;
+                  }
+                  Navigator.of(context).pop(value);
+                },
+                highlightColor: Colors.transparent,
+                splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
+                child: Text(
+                  localizer().ok,
+                  style: TextStyle(
+                    color: KudosTheme.mainGradientStartColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -102,7 +102,7 @@ class KudosTheme {
     color: mainGradientEndColor,
     shadows: [
       Shadow(
-        color: accentColor.withAlpha(100),
+        color: Colors.black.withAlpha(60),
         blurRadius: 4,
         offset: Offset(0, 2),
       )

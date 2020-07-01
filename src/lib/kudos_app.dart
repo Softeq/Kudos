@@ -29,6 +29,7 @@ class KudosApp extends StatelessWidget {
             accentColor: KudosTheme.accentColor,
             highlightColor: KudosTheme.highlightColor,
             splashColor: KudosTheme.splashColor,
+            textSelectionColor: KudosTheme.accentColor.withAlpha(50),
             buttonTheme: ButtonThemeData(
               splashColor:  KudosTheme.buttonSplashColor),
             floatingActionButtonTheme: FloatingActionButtonThemeData(
