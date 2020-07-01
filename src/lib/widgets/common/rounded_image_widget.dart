@@ -1,123 +1,176 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kudosapp/helpers/colored_placeholder_builder.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:path/path.dart' as path;
-import 'package:provider/provider.dart';
 
-class RoundedImageWidget extends StatelessWidget {
-  final ImageViewModel _imageViewModel;
-  final double _size;
+class RoundedImage extends StatefulWidget {
+  final String _imageUrl;
+  final String _title;
   final double _borderRadius;
-  final ColoredPlaceholder _imagePlaceholder;
+  final double _size;
+  final File _file;
+  final Color _placeholderColor;
 
-  RoundedImageWidget._(
-    this._imageViewModel,
-    this._size,
+  RoundedImage._(
+    this._imageUrl,
+    this._title,
     this._borderRadius,
-    String _name,
-  ) : _imagePlaceholder = ColoredPlaceholderBuilder.build(_name);
+    this._size,
+    this._file,
+    this._placeholderColor,
+  );
 
-  factory RoundedImageWidget.circular({
-    @required ImageViewModel imageViewModel,
+  factory RoundedImage.circular({
     @required double size,
-    String name = "",
+    String imageUrl,
+    String title,
+    File file,
+    Color placeholderColor,
   }) {
-    return RoundedImageWidget._(imageViewModel, size, size / 2.0, name);
+    return RoundedImage._(
+      imageUrl,
+      title,
+      size / 2.0,
+      size,
+      file,
+      placeholderColor,
+    );
   }
 
-  factory RoundedImageWidget.square({
-    @required ImageViewModel imageViewModel,
+  factory RoundedImage.square({
     @required double size,
     @required double borderRadius,
-    String name = "",
+    String imageUrl,
+    String title,
+    File file,
   }) {
-    return RoundedImageWidget._(imageViewModel, size, borderRadius, name);
+    return RoundedImage._(
+      imageUrl,
+      title,
+      borderRadius,
+      size,
+      file,
+      null,
+    );
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _RoundedImageState();
+  }
+}
+
+class _RoundedImageState extends State<RoundedImage> {
+  String _url;
+  File _file;
+  ColoredPlaceholder _coloredPlaceholder;
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ImageViewModel>.value(
-      value: _imageViewModel,
-      child: Consumer<ImageViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isBusy) {
-            return _buildBusyWidget();
-          } else if (_imageViewModel.file == null &&
-              (_imageViewModel.imageUrl == null ||
-                  _imageViewModel.imageUrl.isEmpty)) {
-            return _buildPlaceholderWidget();
-          } else if (viewModel.file != null) {
-            return _buildImageWidget();
-          } else {
-            viewModel.loadImageFileIfNeeded();
-            return _buildPlaceholderWidget();
-          }
-        },
-      ),
-    );
+    if (_url != widget._imageUrl) {
+      _file = null;
+      _url = widget._imageUrl;
+    }
+
+    if (widget._file != null) {
+      _file = widget._file;
+    }
+
+    if (_file != null) {
+      return _buildImageWidget();
+    } else {
+      _loadImage();
+      return _buildPlaceholderWidget();
+    }
   }
 
-  Widget _buildBusyWidget() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(_borderRadius),
-      child: Container(
-        width: _size,
-        height: _size,
-        color: KudosTheme.contentColor,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
+  Future<void> _loadImage() async {
+    if (_url != null) {
+      var newFile = await DefaultCacheManager().getSingleFile(_url);
+      if (newFile != null) {
+        if (!_isDisposed) {
+          setState(() {
+            _file = newFile;
+          });
+        }
+      }
+    }
   }
 
   Widget _buildPlaceholderWidget() {
+    if (widget._title != null) {
+      _coloredPlaceholder = ColoredPlaceholderBuilder.build(widget._title);
+    }
+
     return ClipRRect(
-      borderRadius: BorderRadius.circular(_borderRadius),
-      child: Container(
-        width: _size,
-        height: _size,
-        color: _imagePlaceholder.color,
-        child: Center(
-          child: Text(
-            _imagePlaceholder.abbreviation,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: KudosTheme.textColor,
-              fontSize: _size / 3.0,
+      borderRadius: BorderRadius.circular(widget._borderRadius),
+      child: _coloredPlaceholder == null
+          ? Container(
+              width: widget._size,
+              height: widget._size,
+              color: widget._placeholderColor ??
+                  Color.fromRGBO(238, 238, 238, 1.0),
+              child: Center(
+                child: Container(
+                  width: widget._size * 0.6,
+                  height: widget._size * 0.6,
+                  child: SvgPicture.asset("assets/icons/image_placeholder.svg"),
+                ),
+              ),
+            )
+          : Container(
+              width: widget._size,
+              height: widget._size,
+              color: _coloredPlaceholder.color,
+              child: Center(
+                child: Text(
+                  _coloredPlaceholder.abbreviation,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: KudosTheme.textColor,
+                    fontSize: widget._size / 3.0,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
   Widget _buildImageWidget() {
-    var fileExtension = path.extension(_imageViewModel.file.path);
+    var fileExtension = path.extension(_file.path);
     switch (fileExtension) {
       case ".svg":
         return ClipRRect(
-          borderRadius: BorderRadius.circular(_borderRadius),
+          borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
             child: SvgPicture.file(
-              _imageViewModel.file,
-              width: _size,
-              height: _size,
+              _file,
+              width: widget._size,
+              height: widget._size,
               fit: BoxFit.cover,
             ),
           ),
         );
       default:
         return ClipRRect(
-          borderRadius: BorderRadius.circular(_borderRadius),
+          borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
             child: Image.file(
-              _imageViewModel.file,
-              width: _size,
-              height: _size,
+              _file,
+              width: widget._size,
+              height: widget._size,
               fit: BoxFit.cover,
             ),
           ),

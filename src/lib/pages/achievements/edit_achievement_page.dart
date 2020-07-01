@@ -119,7 +119,7 @@ class _EditAchievementPage extends StatelessWidget {
                 value: viewModel.achievementModel,
                 child: Consumer<AchievementModel>(
                   builder: (context, viewModel, child) {
-                    return AchievementWidget([viewModel]);
+                    return AchievementWidget(viewModel);
                   },
                 ),
               ),

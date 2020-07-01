@@ -1,36 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
+import 'package:provider/provider.dart';
 
 class AchievementWidget extends StatelessWidget {
-  final List<AchievementModel> achievements;
+  final AchievementModel achievement;
   final Function(AchievementModel) onAchievementClicked;
 
-  AchievementWidget(this.achievements, [this.onAchievementClicked]);
+  AchievementWidget(this.achievement, [this.onAchievementClicked]);
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets;
-    var space = 20.0;
-    var halfSpace = space / 2.0;
-    if (achievements.length == 1) {
-      widgets = [
-        SizedBox(width: halfSpace),
-        Expanded(child: Container()),
-        Expanded(
-          flex: 2,
-          child: _buildItem(achievements[0]),
-        ),
-        Expanded(child: Container()),
-        SizedBox(width: halfSpace),
-      ];
-    } else {
-      widgets = [
-        Expanded(child: _buildItem(achievements[0])),
-        SizedBox(width: space),
-        Expanded(child: _buildItem(achievements[1])),
-      ];
-    }
+    final space = 20.0;
+    final halfSpace = space / 2.0;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -39,19 +23,28 @@ class AchievementWidget extends StatelessWidget {
         bottom: 20,
       ),
       child: Row(
-        children: widgets,
+        children: <Widget>[
+          SizedBox(width: halfSpace),
+          Expanded(child: Container()),
+          Expanded(
+            flex: 2,
+            child: _buildItem(achievement),
+          ),
+          Expanded(child: Container()),
+          SizedBox(width: halfSpace),
+        ],
       ),
     );
   }
 
   Widget _buildItem(AchievementModel achievement) {
-    var borderRadius = 8.0;
-    var contentPadding = 8.0;
+    final borderRadius = 8.0;
+    final contentPadding = 8.0;
     return AspectRatio(
       aspectRatio: 0.54,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          var radius = constraints.maxWidth / 2.0;
+          final radius = constraints.maxWidth / 2.0;
           return Stack(
             alignment: Alignment.topCenter,
             children: <Widget>[
@@ -100,14 +93,55 @@ class AchievementWidget extends StatelessWidget {
                     onTap: () {
                       onAchievementClicked(achievement);
                     },
-                    child: RoundedImageWidget.circular(
-                      imageViewModel: achievement.imageViewModel,
-                      size: radius * 2,
+                    child: _EditableRoundedImage(
+                      achievement.imageViewModel,
+                      radius * 2.0,
                     ),
                   ),
                 ),
               ),
             ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _EditableRoundedImage extends StatelessWidget {
+  final ImageViewModel _imageViewModel;
+  final double _size;
+
+  _EditableRoundedImage(this._imageViewModel, this._size);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: _imageViewModel,
+      child: Consumer<ImageViewModel>(
+        builder: (context, viewModel, child) {
+          Widget child;
+
+          if (viewModel.isBusy) {
+            child = Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            child = RoundedImage.circular(
+              size: _size,
+              imageUrl: viewModel.imageUrl,
+              file: viewModel.file,
+              placeholderColor: KudosTheme.contentColor,
+            );
+          }
+
+          return ClipOval(
+            child: Container(
+              width: _size,
+              height: _size,
+              color: KudosTheme.contentColor,
+              child: child,
+            ),
           );
         },
       ),

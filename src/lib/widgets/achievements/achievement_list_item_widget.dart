@@ -16,8 +16,9 @@ class AchievementListItemWidget extends StatelessWidget {
       onTap: () {
         _onAchievementClicked(_achievementModel);
       },
-      imageViewModel: _achievementModel.imageViewModel,
+      imageUrl: _achievementModel.imageViewModel.imageUrl,
       imageShape: ImageShape.circle(80.0),
+      useTextPlaceholder: false,
     );
   }
 }

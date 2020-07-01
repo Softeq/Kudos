@@ -124,7 +124,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           title: relatedAchievement.name,
           description:
               sprintf(localizer().from, [achievementCollection.senders]),
-          imageViewModel: achievementCollection.imageViewModel,
+          imageUrl: achievementCollection.imageUrl,
           imageCounter: achievementCollection.count,
           onTap: () {
             if (isMyProfile) {
@@ -138,6 +138,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
             }
           },
           imageShape: ImageShape.circle(60),
+          useTextPlaceholder: false,
         );
       },
     );
@@ -153,8 +154,8 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final children = <Widget>[
-          RoundedImageWidget.circular(
-            imageViewModel: achievementCollection.imageViewModel,
+          RoundedImage.circular(
+            imageUrl: achievementCollection.imageUrl,
             size: constraints.maxWidth,
           ),
         ];

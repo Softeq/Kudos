@@ -89,15 +89,13 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
         children: <Widget>[
-          viewModel.imageViewModel.file == null &&
-                  (viewModel.imageViewModel.imageUrl == null ||
-                      viewModel.imageViewModel.imageUrl.isEmpty)
+          viewModel.imageUrl == null
               ? Container()
-              : RoundedImageWidget.square(
-                  imageViewModel: viewModel.imageViewModel,
+              : RoundedImage.square(
+                  imageUrl: viewModel.imageUrl,
                   size: 112.0,
                   borderRadius: 8,
-                  name: viewModel.name,
+                  title: viewModel.name,
                 ),
           SizedBox(height: 24),
           Text(

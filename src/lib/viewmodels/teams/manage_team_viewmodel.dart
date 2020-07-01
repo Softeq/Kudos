@@ -16,12 +16,10 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
   final members = ListNotifier<TeamMember>();
   final admins = ListNotifier<TeamMember>();
-  final imageViewModel = ImageViewModel();
 
   final _achievements = List<AchievementModel>();
   final _achievementsService = locator<AchievementsService>();
@@ -72,7 +70,6 @@ class ManageTeamViewModel extends BaseViewModel {
     _achievementUpdatedSubscription?.cancel();
     _achievementDeletedSubscription?.cancel();
     _achievementTransferredSubscription?.cancel();
-    imageViewModel.dispose();
     super.dispose();
   }
 
@@ -97,7 +94,6 @@ class ManageTeamViewModel extends BaseViewModel {
         .on<AchievementTransferredMessage>()
         .listen(_onAchievementTransferred);
 
-    imageViewModel.initialize(team.imageUrl, null, false);
     isBusy = false;
   }
 
@@ -113,7 +109,6 @@ class ManageTeamViewModel extends BaseViewModel {
       imageUrl: imageUrl,
       imageName: imageName,
     );
-    imageViewModel.initialize(_initialTeam.imageUrl, null, false);
     notifyListeners();
   }
 

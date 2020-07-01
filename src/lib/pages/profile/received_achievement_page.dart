@@ -6,7 +6,6 @@ import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
@@ -66,7 +65,9 @@ class ReceivedAchievementPage extends StatelessWidget {
     return SliverGradientAppBar(
         title: viewModel.relatedAchievement.name,
         imageWidget: _buildAppBarImage(
-            context, viewModel.achievementCollection.imageViewModel),
+          context,
+          viewModel.achievementCollection.imageUrl,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.info_outline),
@@ -79,13 +80,13 @@ class ReceivedAchievementPage extends StatelessWidget {
         ]);
   }
 
-  Widget _buildAppBarImage(
-      BuildContext context, ImageViewModel imageViewModel) {
+  Widget _buildAppBarImage(BuildContext context, String imageUrl) {
     return Center(
-      child: RoundedImageWidget.square(
-          imageViewModel: imageViewModel,
-          size: MediaQuery.of(context).size.width,
-          borderRadius: 0),
+      child: RoundedImage.square(
+        imageUrl: imageUrl,
+        size: MediaQuery.of(context).size.width,
+        borderRadius: 0,
+      ),
     );
   }
 
@@ -96,8 +97,12 @@ class ReceivedAchievementPage extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: viewModel.achievementCollection.count,
-      itemBuilder: (context, index) => _buildUserAchievementView(
-          context, viewModel.achievementCollection.userAchievements[index]),
+      itemBuilder: (context, index) {
+        return _buildUserAchievementView(
+          context,
+          viewModel.achievementCollection.userAchievements[index],
+        );
+      },
     );
   }
 
@@ -114,15 +119,19 @@ class ReceivedAchievementPage extends StatelessWidget {
         Navigator.of(context)
             .push(ProfileRoute(userAchievementModel.sender.id));
       },
+      useTextPlaceholder: true,
     );
   }
 
   Widget _buildCommentView(String comment) {
     return Align(
-        alignment: Alignment.centerLeft,
-        child: comment.isNotEmpty
-            ? Text(comment, style: KudosTheme.listContentTextStyle)
-            : Text(localizer().noComment,
-                style: KudosTheme.listEmptyContentTextStyle));
+      alignment: Alignment.centerLeft,
+      child: comment.isNotEmpty
+          ? Text(comment, style: KudosTheme.listContentTextStyle)
+          : Text(
+              localizer().noComment,
+              style: KudosTheme.listEmptyContentTextStyle,
+            ),
+    );
   }
 }

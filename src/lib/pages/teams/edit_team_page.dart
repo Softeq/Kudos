@@ -3,6 +3,7 @@ import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/service_locator.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
@@ -60,11 +61,19 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                     SizedBox(height: 20.0),
                     GestureDetector(
                       onTap: () => viewModel.pickFile(context),
-                      child: RoundedImageWidget.square(
-                        imageViewModel: viewModel.imageViewModel,
-                        name: viewModel.initialName,
-                        size: 112.0,
-                        borderRadius: 8,
+                      child: ChangeNotifierProvider.value(
+                        value: viewModel.imageViewModel,
+                        child: Consumer<ImageViewModel>(
+                          builder: (context, vm, child) {
+                            return RoundedImage.square(
+                              imageUrl: vm.imageUrl,
+                              title: viewModel.initialName,
+                              size: 112.0,
+                              borderRadius: 8,
+                              file: vm.file,
+                            );
+                          },
+                        ),
                       ),
                     ),
                     SizedBox(height: 36.0),

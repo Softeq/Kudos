@@ -34,7 +34,9 @@ class AchievementModel extends ChangeNotifier {
   }
 
   ImageViewModel get imageViewModel => _imageViewModel;
+
   TeamReference get team => _initialAchievement?.teamReference;
+
   UserReference get user => _initialAchievement?.userReference;
 
   void initialize(Achievement achievement) {

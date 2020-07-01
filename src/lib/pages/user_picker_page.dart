@@ -69,21 +69,24 @@ class _UserPickerPageState extends State<_UserPickerPage> {
 
     return Scaffold(
       appBar: GradientAppBar.withWidget(
-        TextField(
-          style: KudosTheme.searchTextStyle,
-          cursorColor: KudosTheme.accentColor,
-          controller: _textEditingController,
-          decoration: InputDecoration.collapsed(
-            hintText: widget._searchHint,
-            hintStyle: KudosTheme.searchHintStyle,
+        Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: TextField(
+            style: KudosTheme.searchTextStyle,
+            cursorColor: KudosTheme.accentColor,
+            controller: _textEditingController,
+            decoration: InputDecoration.collapsed(
+              hintText: widget._searchHint,
+              hintStyle: KudosTheme.searchHintStyle,
+            ),
+            onChanged: (x) {
+              var viewModel = Provider.of<UserPickerViewModel>(
+                context,
+                listen: false,
+              );
+              viewModel.requestSearch(x);
+            },
           ),
-          onChanged: (x) {
-            var viewModel = Provider.of<UserPickerViewModel>(
-              context,
-              listen: false,
-            );
-            viewModel.requestSearch(x);
-          },
         ),
         actions: actions,
       ),
