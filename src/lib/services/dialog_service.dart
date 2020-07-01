@@ -10,6 +10,7 @@ class DialogService {
     @required String buttonTitle,
     Color buttonColor,
   }) {
+    buttonColor = buttonColor ?? KudosTheme.mainGradientStartColor;
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -22,6 +23,7 @@ class DialogService {
                       style: TextStyle(
                         color: buttonColor,
                       )),
+                  splashColor: buttonColor.withAlpha(30),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -40,6 +42,8 @@ class DialogService {
     Color secondButtonColor,
   }) async {
     bool firstButton = false;
+    firstButtonColor = firstButtonColor ?? KudosTheme.mainGradientStartColor;
+    secondButtonColor = secondButtonColor ?? KudosTheme.mainGradientStartColor;
     await showDialog(
         context: context,
         barrierDismissible: false,
@@ -52,6 +56,7 @@ class DialogService {
                         style: TextStyle(
                           color: firstButtonColor,
                         )),
+                    splashColor: firstButtonColor.withAlpha(30),
                     onPressed: () {
                       Navigator.of(context).pop();
                       firstButton = true;
@@ -63,6 +68,7 @@ class DialogService {
                         color: secondButtonColor,
                       ),
                     ),
+                    splashColor: secondButtonColor.withAlpha(30),
                     onPressed: () {
                       Navigator.of(context).pop();
                       firstButton = false;
@@ -84,6 +90,9 @@ class DialogService {
     Color thirdButtonColor,
   }) async {
     int result = 0;
+    firstButtonColor = firstButtonColor ?? KudosTheme.mainGradientStartColor;
+    secondButtonColor = secondButtonColor ?? KudosTheme.mainGradientStartColor;
+    thirdButtonColor = thirdButtonColor ?? KudosTheme.mainGradientStartColor;
     await showDialog(
         context: context,
         barrierDismissible: false,
@@ -97,6 +106,7 @@ class DialogService {
                         style: TextStyle(
                           color: firstButtonColor,
                         )),
+                    splashColor: firstButtonColor.withAlpha(30),
                     onPressed: () {
                       Navigator.of(context).pop();
                       result = 1;
@@ -108,6 +118,7 @@ class DialogService {
                         color: secondButtonColor,
                       ),
                     ),
+                    splashColor: secondButtonColor.withAlpha(30),
                     onPressed: () {
                       Navigator.of(context).pop();
                       result = 2;
@@ -119,6 +130,7 @@ class DialogService {
                         color: thirdButtonColor,
                       ),
                     ),
+                    splashColor: thirdButtonColor.withAlpha(30),
                     onPressed: () {
                       Navigator.of(context).pop();
                       result = 3;

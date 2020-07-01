@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/dialog_service.dart';
@@ -79,7 +80,7 @@ class _EditAchievementPage extends StatelessWidget {
     );
   }
 
-  static Widget _buildNormalLayout(EditAchievementViewModel viewModel) {
+  Widget _buildNormalLayout(EditAchievementViewModel viewModel) {
     return LayoutBuilder(
       builder: (context, constraints) {
         var canvasWidth = constraints.maxWidth;
@@ -118,24 +119,34 @@ class _EditAchievementPage extends StatelessWidget {
               child: ChangeNotifierProvider<AchievementModel>.value(
                 value: viewModel.achievementModel,
                 child: Consumer<AchievementModel>(
-                  builder: (context, viewModel, child) {
-                    return AchievementWidget([viewModel]);
+                  builder: (context, model, child) {
+                    return AchievementWidget(
+                      [model],
+                      onAchievementTitleClicked: (achievementModel) =>
+                          _editAchievementTitle(viewModel, context),
+                      onAchievementDescriptionClicked: (achievementModel) =>
+                          _editAchievementDescription(viewModel, context),
+                      onAchievementImageClicked: (achievementModel) =>
+                          _editAchievementImage(viewModel, context),
+                    );
                   },
                 ),
               ),
             ),
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _OverlayPainter(
-                  canvasHeight: canvasHeight,
-                  canvasWidth: canvasWidth,
-                  widgetHeight: widgetHeight,
-                  widgetWidth: widgetWidth,
-                  nameAnchor: nameAnchor,
-                  descriptionAnchor: descriptionAnchor,
-                  imageAnchor: imageAnchor,
-                  horizontalOffset: horizontalOffset,
-                  color: Colors.grey[300],
+            IgnorePointer(
+              child: Positioned.fill(
+                child: CustomPaint(
+                  painter: _OverlayPainter(
+                    canvasHeight: canvasHeight,
+                    canvasWidth: canvasWidth,
+                    widgetHeight: widgetHeight,
+                    widgetWidth: widgetWidth,
+                    nameAnchor: nameAnchor,
+                    descriptionAnchor: descriptionAnchor,
+                    imageAnchor: imageAnchor,
+                    horizontalOffset: horizontalOffset,
+                    color: Colors.grey[300],
+                  ),
                 ),
               ),
             ),
@@ -152,23 +163,10 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editName,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () async {
-                  var result = await showDialog<String>(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: _TextInputWidget(
-                          title: localizer().achievementName,
-                          initialValue: viewModel.achievementModel.title,
-                        ),
-                      );
-                    },
-                  );
-                  if (result != null) {
-                    viewModel.achievementModel.title = result;
-                  }
-                },
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () => _editAchievementTitle(viewModel, context),
               ),
             ),
             Positioned.fromRect(
@@ -184,23 +182,11 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editDescription,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () async {
-                  var result = await showDialog<String>(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: _TextInputWidget(
-                          title: localizer().description,
-                          initialValue: viewModel.achievementModel.description,
-                        ),
-                      );
-                    },
-                  );
-                  if (result != null) {
-                    viewModel.achievementModel.description = result;
-                  }
-                },
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () =>
+                    _editAchievementDescription(viewModel, context),
               ),
             ),
             Positioned.fromRect(
@@ -216,14 +202,59 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editImage,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () => viewModel.pickFile(context),
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () => _editAchievementImage(viewModel, context),
               ),
             ),
           ],
         );
       },
     );
+  }
+
+  void _editAchievementTitle(
+      EditAchievementViewModel viewModel, BuildContext context) async {
+    var result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: _TextInputWidget(
+            title: localizer().achievementName,
+            initialValue: viewModel.achievementModel.title,
+            height: 180.0,
+            maxLines: 1,
+          ),
+        );
+      },
+    );
+    if (result != null) {
+      viewModel.achievementModel.title = result;
+    }
+  }
+
+  void _editAchievementDescription(
+      EditAchievementViewModel viewModel, BuildContext context) async {
+    var result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: _TextInputWidget(
+            title: localizer().description,
+            initialValue: viewModel.achievementModel.description,
+          ),
+        );
+      },
+    );
+    if (result != null) {
+      viewModel.achievementModel.description = result;
+    }
+  }
+
+  void _editAchievementImage(
+      EditAchievementViewModel viewModel, BuildContext context) {
+    viewModel.pickFile(context);
   }
 
   void _onSavePressed(BuildContext context) async {
@@ -388,10 +419,14 @@ class _OverlayPainter extends CustomPainter {
 class _TextInputWidget extends StatefulWidget {
   final String title;
   final String initialValue;
+  final double height;
+  final int maxLines;
 
   _TextInputWidget({
     @required this.title,
     @required this.initialValue,
+    this.height = 250,
+    this.maxLines,
   });
 
   @override
@@ -418,54 +453,77 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-                SizedBox(height: 16.0),
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    maxLines: null,
-                    minLines: null,
-                    controller: _textEditingController,
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 16.0, right: 16.0, bottom: 16.0, top: 32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.title,
+                    style: KudosTheme.listTitleTextStyle,
                   ),
-                ),
-              ],
+                  SizedBox(height: 16.0),
+                  Expanded(
+                    child: TextField(
+                      autofocus: true,
+                      maxLines: widget.maxLines,
+                      minLines: null,
+                      controller: _textEditingController,
+                      style: KudosTheme.descriptionTextStyle,
+                      cursorColor: KudosTheme.accentColor,
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: KudosTheme.accentColor)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop(null);
-              },
-              child: Text(localizer().cancel),
-            ),
-            FlatButton(
-              onPressed: () {
-                String value;
-                if (_textEditingController.text != null &&
-                    _textEditingController.text != "") {
-                  value = _textEditingController.text;
-                }
-                Navigator.of(context).pop(value);
-              },
-              child: Text(localizer().ok),
-            ),
-          ],
-        ),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(null);
+                },
+                splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
+                child: Text(
+                  localizer().cancel,
+                  style: TextStyle(
+                    color: KudosTheme.mainGradientStartColor,
+                  ),
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  String value;
+                  if (_textEditingController.text != null &&
+                      _textEditingController.text != "") {
+                    value = _textEditingController.text;
+                  }
+                  Navigator.of(context).pop(value);
+                },
+                splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
+                child: Text(
+                  localizer().ok,
+                  style: TextStyle(
+                    color: KudosTheme.mainGradientStartColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
