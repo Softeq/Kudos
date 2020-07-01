@@ -80,7 +80,7 @@ class _EditAchievementPage extends StatelessWidget {
     );
   }
 
-  static Widget _buildNormalLayout(EditAchievementViewModel viewModel) {
+  Widget _buildNormalLayout(EditAchievementViewModel viewModel) {
     return LayoutBuilder(
       builder: (context, constraints) {
         var canvasWidth = constraints.maxWidth;
@@ -119,24 +119,34 @@ class _EditAchievementPage extends StatelessWidget {
               child: ChangeNotifierProvider<AchievementModel>.value(
                 value: viewModel.achievementModel,
                 child: Consumer<AchievementModel>(
-                  builder: (context, viewModel, child) {
-                    return AchievementWidget([viewModel]);
+                  builder: (context, model, child) {
+                    return AchievementWidget(
+                      [model],
+                      onAchievementTitleClicked: (achievementModel) =>
+                          _editAchievementTitle(viewModel, context),
+                      onAchievementDescriptionClicked: (achievementModel) =>
+                          _editAchievementDescription(viewModel, context),
+                      onAchievementImageClicked: (achievementModel) =>
+                          _editAchievementImage(viewModel, context),
+                    );
                   },
                 ),
               ),
             ),
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _OverlayPainter(
-                  canvasHeight: canvasHeight,
-                  canvasWidth: canvasWidth,
-                  widgetHeight: widgetHeight,
-                  widgetWidth: widgetWidth,
-                  nameAnchor: nameAnchor,
-                  descriptionAnchor: descriptionAnchor,
-                  imageAnchor: imageAnchor,
-                  horizontalOffset: horizontalOffset,
-                  color: Colors.grey[300],
+            IgnorePointer(
+              child: Positioned.fill(
+                child: CustomPaint(
+                  painter: _OverlayPainter(
+                    canvasHeight: canvasHeight,
+                    canvasWidth: canvasWidth,
+                    widgetHeight: widgetHeight,
+                    widgetWidth: widgetWidth,
+                    nameAnchor: nameAnchor,
+                    descriptionAnchor: descriptionAnchor,
+                    imageAnchor: imageAnchor,
+                    horizontalOffset: horizontalOffset,
+                    color: Colors.grey[300],
+                  ),
                 ),
               ),
             ),
@@ -153,25 +163,10 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editName,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () async {
-                  var result = await showDialog<String>(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: _TextInputWidget(
-                          title: localizer().achievementName,
-                          initialValue: viewModel.achievementModel.title,
-                          height: 180.0,
-                          maxLines: 1,
-                        ),
-                      );
-                    },
-                  );
-                  if (result != null) {
-                    viewModel.achievementModel.title = result;
-                  }
-                },
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () => _editAchievementTitle(viewModel, context),
               ),
             ),
             Positioned.fromRect(
@@ -187,23 +182,11 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editDescription,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () async {
-                  var result = await showDialog<String>(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: _TextInputWidget(
-                          title: localizer().description,
-                          initialValue: viewModel.achievementModel.description,
-                        ),
-                      );
-                    },
-                  );
-                  if (result != null) {
-                    viewModel.achievementModel.description = result;
-                  }
-                },
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () =>
+                    _editAchievementDescription(viewModel, context),
               ),
             ),
             Positioned.fromRect(
@@ -219,14 +202,59 @@ class _EditAchievementPage extends StatelessWidget {
                 child: Text(
                   localizer().editImage,
                   textAlign: TextAlign.center,
+                  style: KudosTheme.editHintTextStyle,
                 ),
-                onPressed: () => viewModel.pickFile(context),
+                splashColor: KudosTheme.accentColor.withAlpha(80),
+                onPressed: () => _editAchievementImage(viewModel, context),
               ),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> _editAchievementTitle(
+      EditAchievementViewModel viewModel, BuildContext context) async {
+    var result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: _TextInputWidget(
+            title: localizer().achievementName,
+            initialValue: viewModel.achievementModel.title,
+            height: 180.0,
+            maxLines: 1,
+          ),
+        );
+      },
+    );
+    if (result != null) {
+      viewModel.achievementModel.title = result;
+    }
+  }
+
+  Future<void> _editAchievementDescription(
+      EditAchievementViewModel viewModel, BuildContext context) async {
+    var result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: _TextInputWidget(
+            title: localizer().description,
+            initialValue: viewModel.achievementModel.description,
+          ),
+        );
+      },
+    );
+    if (result != null) {
+      viewModel.achievementModel.description = result;
+    }
+  }
+
+  Future<void> _editAchievementImage(
+      EditAchievementViewModel viewModel, BuildContext context) async {
+    viewModel.pickFile(context);
   }
 
   void _onSavePressed(BuildContext context) async {
@@ -466,7 +494,6 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 },
-                highlightColor: Colors.transparent,
                 splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
                 child: Text(
                   localizer().cancel,
@@ -484,7 +511,6 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
                   }
                   Navigator.of(context).pop(value);
                 },
-                highlightColor: Colors.transparent,
                 splashColor: KudosTheme.mainGradientStartColor.withAlpha(30),
                 child: Text(
                   localizer().ok,

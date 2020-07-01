@@ -79,6 +79,12 @@ class KudosTheme {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle editHintTextStyle = TextStyle(
+    fontSize: 14.0,
+    color: Color.fromARGB(160, 0, 0, 0),
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle descriptionTextStyle = TextStyle(
     fontSize: 17.0,
     color: Color.fromARGB(160, 0, 0, 0),
