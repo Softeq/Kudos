@@ -214,7 +214,7 @@ class _EditAchievementPage extends StatelessWidget {
     );
   }
 
-  Future<void> _editAchievementTitle(
+  void _editAchievementTitle(
       EditAchievementViewModel viewModel, BuildContext context) async {
     var result = await showDialog<String>(
       context: context,
@@ -234,7 +234,7 @@ class _EditAchievementPage extends StatelessWidget {
     }
   }
 
-  Future<void> _editAchievementDescription(
+  void _editAchievementDescription(
       EditAchievementViewModel viewModel, BuildContext context) async {
     var result = await showDialog<String>(
       context: context,
@@ -252,8 +252,8 @@ class _EditAchievementPage extends StatelessWidget {
     }
   }
 
-  Future<void> _editAchievementImage(
-      EditAchievementViewModel viewModel, BuildContext context) async {
+  void _editAchievementImage(
+      EditAchievementViewModel viewModel, BuildContext context) {
     viewModel.pickFile(context);
   }
 
@@ -422,11 +422,12 @@ class _TextInputWidget extends StatefulWidget {
   final double height;
   final int maxLines;
 
-  _TextInputWidget(
-      {@required this.title,
-      @required this.initialValue,
-      this.height = 250,
-      this.maxLines});
+  _TextInputWidget({
+    @required this.title,
+    @required this.initialValue,
+    this.height = 250,
+    this.maxLines,
+  });
 
   @override
   State<StatefulWidget> createState() {
