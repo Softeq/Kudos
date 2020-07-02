@@ -65,7 +65,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                         value: viewModel.imageViewModel,
                         child: Consumer<ImageViewModel>(
                           builder: (context, vm, child) {
-                            return RoundedImage.square(
+                            return RoundedImageWidget.square(
                               imageUrl: vm.imageUrl,
                               title: viewModel.initialName,
                               size: 112.0,

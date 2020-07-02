@@ -143,13 +143,13 @@ class SimpleListItem extends StatelessWidget {
 
   Widget _buildImageFromUrl() {
     if (imageShape.isCircle) {
-      return RoundedImage.circular(
+      return RoundedImageWidget.circular(
         imageUrl: imageUrl,
         size: imageShape.size,
         title: useTextPlaceholder ? title : null,
       );
     } else {
-      return RoundedImage.square(
+      return RoundedImageWidget.square(
         imageUrl: imageUrl,
         size: imageShape.size,
         borderRadius: imageShape.cornerRadius,

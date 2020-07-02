@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team_member.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
@@ -91,7 +91,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         children: <Widget>[
           viewModel.imageUrl == null
               ? Container()
-              : RoundedImage.square(
+              : RoundedImageWidget.square(
                   imageUrl: viewModel.imageUrl,
                   size: 112.0,
                   borderRadius: 8,
@@ -213,8 +213,8 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         EditAchievementRoute.createTeamAchievement(viewModel.modifiedTeam));
   }
 
-  void _achievementTapped(AchievementModel x) {
-    Navigator.of(context).push(AchievementDetailsRoute(x.achievement.id));
+  void _achievementTapped(Achievement x) {
+    Navigator.of(context).push(AchievementDetailsRoute(x.id));
   }
 
   Future<void> _editTeamTapped() async {

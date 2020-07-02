@@ -8,7 +8,7 @@ import 'package:kudosapp/helpers/colored_placeholder_builder.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:path/path.dart' as path;
 
-class RoundedImage extends StatefulWidget {
+class RoundedImageWidget extends StatefulWidget {
   final String _imageUrl;
   final String _title;
   final double _borderRadius;
@@ -16,7 +16,7 @@ class RoundedImage extends StatefulWidget {
   final File _file;
   final Color _placeholderColor;
 
-  RoundedImage._(
+  RoundedImageWidget._(
     this._imageUrl,
     this._title,
     this._borderRadius,
@@ -25,14 +25,14 @@ class RoundedImage extends StatefulWidget {
     this._placeholderColor,
   );
 
-  factory RoundedImage.circular({
+  factory RoundedImageWidget.circular({
     @required double size,
     String imageUrl,
     String title,
     File file,
     Color placeholderColor,
   }) {
-    return RoundedImage._(
+    return RoundedImageWidget._(
       imageUrl,
       title,
       size / 2.0,
@@ -42,14 +42,14 @@ class RoundedImage extends StatefulWidget {
     );
   }
 
-  factory RoundedImage.square({
+  factory RoundedImageWidget.square({
     @required double size,
     @required double borderRadius,
     String imageUrl,
     String title,
     File file,
   }) {
-    return RoundedImage._(
+    return RoundedImageWidget._(
       imageUrl,
       title,
       borderRadius,
@@ -61,11 +61,11 @@ class RoundedImage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _RoundedImageState();
+    return _RoundedImageWidgetState();
   }
 }
 
-class _RoundedImageState extends State<RoundedImage> {
+class _RoundedImageWidgetState extends State<RoundedImageWidget> {
   String _url;
   File _file;
   ColoredPlaceholder _coloredPlaceholder;

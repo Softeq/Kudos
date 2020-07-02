@@ -49,7 +49,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
             Material(
               borderRadius: BorderRadius.circular(imageRadius),
               elevation: 2,
-              child: RoundedImage.circular(
+              child: RoundedImageWidget.circular(
                 imageUrl: _achievement.imageUrl,
                 size: imageRadius * 2,
               ),

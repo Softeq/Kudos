@@ -154,7 +154,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final children = <Widget>[
-          RoundedImage.circular(
+          RoundedImageWidget.circular(
             imageUrl: achievementCollection.imageUrl,
             size: constraints.maxWidth,
           ),

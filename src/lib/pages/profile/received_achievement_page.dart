@@ -82,7 +82,7 @@ class ReceivedAchievementPage extends StatelessWidget {
 
   Widget _buildAppBarImage(BuildContext context, String imageUrl) {
     return Center(
-      child: RoundedImage.square(
+      child: RoundedImageWidget.square(
         imageUrl: imageUrl,
         size: MediaQuery.of(context).size.width,
         borderRadius: 0,
