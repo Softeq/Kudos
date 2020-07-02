@@ -9,6 +9,7 @@ import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/counter_widget.dart';
 import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
 import 'package:kudosapp/widgets/decorations/top_decorator.dart';
+import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -90,6 +91,68 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     }
   }
 
+  Widget _buildList(
+    List<UserAchievementCollection> achievementCollections,
+    bool isMyProfile,
+  ) {
+    return ListView.builder(
+      padding: EdgeInsets.only(
+          top: TopDecorator.height, bottom: BottomDecorator.height),
+      itemCount: achievementCollections.length,
+      itemBuilder: (context, index) {
+        final achievementCollection = achievementCollections[index];
+        final relatedAchievement =
+            achievementCollection.userAchievements[0].achievement;
+
+        return SimpleListItem(
+          title: relatedAchievement.name,
+          description:
+              sprintf(localizer().from, [achievementCollection.senders]),
+          imageUrl: achievementCollection.imageUrl,
+          imageCounter: achievementCollection.count,
+          onTap: () {
+            if (isMyProfile) {
+              Navigator.of(context).push(
+                ReceivedAchievementRoute(achievementCollection),
+              );
+            } else {
+              Navigator.of(context).push(
+                AchievementDetailsRoute(relatedAchievement.id,
+                    achievementCollection.name, achievementCollection.imageUrl),
+              );
+            }
+          },
+          imageShape: ImageShape.circle(60),
+        );
+      },
+    );
+  }
+
+  Widget _buildFancyGrid(
+    List<UserAchievementCollection> achievementCollections,
+    bool isMyProfile,
+  ) {
+    return GridView.builder(
+        padding: EdgeInsets.only(
+          top: TopDecorator.height + 10,
+          bottom: BottomDecorator.height,
+          left: 8,
+          right: 8,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 30,
+          childAspectRatio: 0.86,
+          mainAxisSpacing: 20,
+        ),
+        itemBuilder: (context, index) => _buildGridItem(
+              context,
+              achievementCollections[index],
+              isMyProfile,
+            ),
+        itemCount: achievementCollections.length);
+  }
+
   Widget _buildView(
     List<UserAchievementCollection> achievementCollections,
     bool isMyProfile,
@@ -112,25 +175,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       );
     }
 
-    return GridView.builder(
-        padding: EdgeInsets.only(
-          top: TopDecorator.height + 10,
-          bottom: BottomDecorator.height,
-          left: 8,
-          right: 8,
-        ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 30,
-          childAspectRatio: 0.86,
-          mainAxisSpacing: 20,
-        ),
-        itemBuilder: (context, index) => _buildGridItem(
-              context,
-              achievementCollections[index],
-              isMyProfile,
-            ),
-        itemCount: achievementCollections.length);
+    return _buildList(achievementCollections, isMyProfile);
   }
 
   Widget _buildGridItem(
