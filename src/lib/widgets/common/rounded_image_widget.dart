@@ -48,6 +48,7 @@ class RoundedImageWidget extends StatefulWidget {
     String imageUrl,
     String title,
     File file,
+    Color placeholderColor,
   }) {
     return RoundedImageWidget._(
       imageUrl,
@@ -55,7 +56,7 @@ class RoundedImageWidget extends StatefulWidget {
       borderRadius,
       size,
       file,
-      null,
+      placeholderColor,
     );
   }
 
