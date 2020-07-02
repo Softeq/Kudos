@@ -20,7 +20,7 @@
     "send": "Отправить",
     "writeAComment": "Ваш комментарий",
     "sentSuccessfully": "Награда успешно отправлена!",
-    "achievementStatisticsTitle": "Статистика",
+    "achievementStatisticsTitle": "Общий прогресс",
     "achievementStatisticsTooltip": "Как много людей уже получили эту награду",
     "achievementHoldersTitle": "Обладатели",
     "achievementHoldersEmptyPlaceholder": "Никто ещё не получал эту награду",
@@ -70,9 +70,10 @@
     "generalError": "Что-то пошло не так",
     "receivedNoAchievements": "Ещё не получил ни одной награды",
     "receivedAchievements": "Получено наград: %i",
-
     "profileTabName": "Кабинет",
     "teamsTabName": "Команды",
     "peopleTabName": "Люди",
-    "achievementsTabName": "Награды"
+    "achievementsTabName": "Награды",
+    "softeq": "Softeq",
+    "people_progress": "%i из %i людей"
 }

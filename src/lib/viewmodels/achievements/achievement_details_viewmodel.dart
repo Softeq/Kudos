@@ -12,6 +12,7 @@ import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
+import 'package:kudosapp/models/statistics_model.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -34,7 +35,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
   Achievement _achievement;
-  double _statisticsValue = 0;
+  StatisticsModel _allUsersStatistics =
+      StatisticsModel.empty(localizer().softeq);
   String _ownerName = "";
   String _ownerId = "";
   OwnerType _ownerType;
@@ -43,7 +45,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
   Achievement get achievement => _achievement;
 
-  double get statisticsValue => _statisticsValue;
+  StatisticsModel get allUsersStatistics => _allUsersStatistics;
 
   String get ownerName => _ownerName;
 
@@ -141,12 +143,10 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> _onTeamSelected(
-      BuildContext context, Team team) async {
+  Future<void> _onTeamSelected(BuildContext context, Team team) async {
     if (await _dialogsService.showOkCancelDialog(
       context: context,
-      title: sprintf(
-          localizer().transferAchievementToTeamTitle, [team.name]),
+      title: sprintf(localizer().transferAchievementToTeamTitle, [team.name]),
       content: localizer().transferAchievementToTeamWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
@@ -201,8 +201,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
         await _achievementsService.getAchievementHolders(achievement.id));
 
     var allUsersCount = await _peopleService.getUsersCount();
-    _statisticsValue =
-        allUsersCount == 0 ? 0 : achievementHolders.length / allUsersCount;
+    _allUsersStatistics = StatisticsModel(
+        localizer().softeq, allUsersCount, achievementHolders.length);
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
