@@ -243,7 +243,7 @@ class S {
     );
   }
 
-  /// `Statistics`
+  /// `Global Progress`
   String get achievementStatisticsTitle {
     return Intl.message(
       'Global Progress',
@@ -783,6 +783,7 @@ class S {
     );
   }
 
+  /// `Softeq`
   String get softeq {
     return Intl.message(
       'Softeq',
@@ -792,6 +793,7 @@ class S {
     );
   }
 
+  /// `%i of %i people`
   String get people_progress {
     return Intl.message(
       '%i of %i people',
