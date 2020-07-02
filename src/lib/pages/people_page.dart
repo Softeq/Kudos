@@ -35,7 +35,7 @@ class PeoplePage extends StatelessWidget {
   );
   static final void Function(BuildContext, User) defaultItemSelector =
       (context, user) => Navigator.of(context).push(
-            ProfileRoute(user.id),
+            ProfileRoute(user.id, user.name, user.imageUrl),
           );
 
   final Set<String> _excludedUserIds;

@@ -215,7 +215,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
   }
 
   void _achievementTapped(Achievement x) {
-    Navigator.of(context).push(AchievementDetailsRoute(x.id, x.imageUrl));
+    Navigator.of(context).push(AchievementDetailsRoute(x.id, x.name, x.imageUrl));
   }
 
   Future<void> _editTeamTapped() async {

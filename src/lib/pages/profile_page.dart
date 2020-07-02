@@ -11,11 +11,12 @@ import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class ProfileRoute extends MaterialPageRoute {
-  ProfileRoute(String userId)
+  ProfileRoute(String userId, String userName, String imageUrl)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ProfileViewModel>(
-              create: (context) => ProfileViewModel(userId)..initialize(),
+              create: (context) =>
+                  ProfileViewModel(userId, userName, imageUrl)..initialize(),
               child: ProfilePage(),
             );
           },
@@ -44,22 +45,22 @@ class ProfilePage extends StatelessWidget {
   }
 
   List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
-    if (viewModel.user == null) {
-      return [
-        SliverFillRemaining(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      ];
-    }
-
-    return [
+    List<Widget> result = [
       SliverGradientAppBar(
-        title: viewModel.user.name,
-        imageWidget: _buildAppBarImage(viewModel.user.imageUrl),
+        title: viewModel.userName,
+        imageWidget: _buildAppBarImage(viewModel.imageUrl),
+        heroTag: viewModel.imageUrl,
       ),
-      _addDefaultSliverPadding(
+    ];
+
+    if (viewModel.user == null) {
+      result.add(SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ));
+    } else {
+      result.add(_addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,24 +79,25 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      _addDefaultSliverPadding(
+      ));
+      result.add(_addDefaultSliverPadding(
         ProfileAchievementsListWidget(viewModel.user.id, true, false),
-      ),
-    ];
+      ));
+    }
+    return result;
   }
 
   Widget _buildAppBarImage(String imageUrl) {
     return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
+        imageUrl: imageUrl,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-      ),
     );
   }
 }

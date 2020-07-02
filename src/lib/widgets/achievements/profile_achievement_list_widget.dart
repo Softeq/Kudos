@@ -196,7 +196,8 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             } else {
               Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id, achievementCollection.imageUrl),
+                AchievementDetailsRoute(relatedAchievement.id,
+                    achievementCollection.name, achievementCollection.imageUrl),
               );
             }
           },

@@ -11,11 +11,15 @@ class ProfileViewModel extends BaseViewModel with Disposable {
   final PeopleService _peopleService = locator<PeopleService>();
   final TeamsService _teamsService = locator<TeamsService>();
   final String _userId;
+  final String _userName;
+  final String _imageUrl;
 
   User _user;
 
-  ProfileViewModel(this._userId);
+  ProfileViewModel(this._userId, this._userName, this._imageUrl);
 
+  String get imageUrl => _imageUrl ?? _user?.imageUrl;
+  String get userName => _userName ?? _user?.name ?? "";
   User get user => _user;
 
   final ListNotifier<Team> userTeams = new ListNotifier<Team>();

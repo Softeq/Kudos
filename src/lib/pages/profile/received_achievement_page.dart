@@ -75,7 +75,9 @@ class ReceivedAchievementPage extends StatelessWidget {
             icon: Icon(Icons.info_outline),
             onPressed: () {
               Navigator.of(context).push(
-                AchievementDetailsRoute(viewModel.relatedAchievement.id,
+                AchievementDetailsRoute(
+                    viewModel.relatedAchievement.id,
+                    viewModel.relatedAchievement.name,
                     viewModel.achievementCollection.imageUrl),
               );
             },
@@ -119,8 +121,11 @@ class ReceivedAchievementPage extends StatelessWidget {
           DateFormat.yMd().add_jm().format(userAchievementModel.date.toDate()),
       contentWidget: _buildCommentView(userAchievementModel.comment),
       onTap: () {
-        Navigator.of(context)
-            .push(ProfileRoute(userAchievementModel.sender.id));
+        Navigator.of(context).push(ProfileRoute(
+          userAchievementModel.sender.id,
+          userAchievementModel.sender.name,
+          userAchievementModel.sender.imageUrl,
+        ));
       },
       useTextPlaceholder: true,
     );

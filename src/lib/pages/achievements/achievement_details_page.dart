@@ -13,7 +13,6 @@ import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
@@ -22,12 +21,15 @@ import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
-  AchievementDetailsRoute(String achievementId, String imageUrl)
+  AchievementDetailsRoute(
+      String achievementId, String achievementName, String imageUrl)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel(achievementId, imageUrl)..initialize();
+                return AchievementDetailsViewModel(
+                    achievementId, achievementName, imageUrl)
+                  ..initialize();
               },
               child: _AchievementDetailsPage(),
             );
@@ -49,20 +51,10 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   Widget build(BuildContext context) {
     return Consumer<AchievementDetailsViewModel>(
       builder: (context, viewModel, child) {
-        // TODO: Fix
-        // if (viewModel.isBusy) {
-        //   return Scaffold(
-        //     appBar: GradientAppBar(title: viewModel?.achievementModel?.title),
-        //     body: Center(
-        //       child: CircularProgressIndicator(),
-        //     ),
-        //   );
-        // }
-
         return Scaffold(
           key: _scaffoldKey,
           appBar: GradientAppBar(
-            title: viewModel.achievement?.name,
+            title: viewModel.achievementName,
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
@@ -98,19 +90,39 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
   }
 
   Widget _buildBody(AchievementDetailsViewModel viewModel) {
+    if (viewModel.isBusy) {
+      return SingleChildScrollView(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 140,
+              child: AchievementHorizontalWidget(
+                  viewModel.imageUrl, viewModel.achievement?.description),
+            ),
+            SizedBox(height: 100),
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    }
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Column(
         children: <Widget>[
           Container(
             height: 140,
-            child: AchievementHorizontalWidget(viewModel.achievement),
+            child: AchievementHorizontalWidget(
+                viewModel.imageUrl, viewModel.achievement?.description),
           ),
           SizedBox(height: 24),
           _AchievementOwnerWidget(
             viewModel.ownerType,
             viewModel.ownerName,
             viewModel.ownerId,
+            viewModel.ownerImageUrl,
           ),
           SizedBox(height: 24),
           SectionHeaderWidget(localizer().achievementStatisticsTitle),
@@ -269,8 +281,10 @@ class _AchievementOwnerWidget extends StatelessWidget {
   final String _ownerName;
   final String _ownerId;
   final OwnerType _ownerType;
+  final String _ownerImageUrl;
 
-  _AchievementOwnerWidget(this._ownerType, this._ownerName, this._ownerId);
+  _AchievementOwnerWidget(
+      this._ownerType, this._ownerName, this._ownerId, this._ownerImageUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +298,8 @@ class _AchievementOwnerWidget extends StatelessWidget {
           onTap: () {
             switch (_ownerType) {
               case OwnerType.user:
-                Navigator.of(context).push(ProfileRoute(_ownerId));
+                Navigator.of(context)
+                    .push(ProfileRoute(_ownerId, _ownerName, _ownerImageUrl));
                 break;
               case OwnerType.team:
                 Navigator.of(context).push(ManageTeamRoute(_ownerId));
@@ -362,6 +377,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
     BuildContext context,
     UserReference holder,
   ) {
-    Navigator.of(context).push(ProfileRoute(holder.id));
+    Navigator.of(context)
+        .push(ProfileRoute(holder.id, holder.name, holder.imageUrl));
   }
 }

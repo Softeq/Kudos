@@ -52,7 +52,7 @@ class AchievementsPage extends StatelessWidget {
                             notifier.items,
                             (x) {
                               Navigator.of(context).push(
-                                AchievementDetailsRoute(x.id, x.imageUrl),
+                                AchievementDetailsRoute(x.id, x.name, x.imageUrl),
                               );
                             },
                           );

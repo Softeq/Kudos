@@ -21,7 +21,6 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:sprintf/sprintf.dart';
 
 enum OwnerType { user, team }
@@ -34,6 +33,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final _dialogsService = locator<DialogService>();
   final String _achievementId;
   final String _imageUrl;
+  final String _achievementName;
 
   StreamSubscription<AchievementUpdatedMessage> _subscription;
   Achievement _achievement;
@@ -41,22 +41,27 @@ class AchievementDetailsViewModel extends BaseViewModel {
       StatisticsModel.empty(localizer().softeq);
   String _ownerName = "";
   String _ownerId = "";
+  String _ownerImageUrl;
+
   OwnerType _ownerType;
 
   final achievementHolders = new ListNotifier<AchievementHolder>();
 
   Achievement get achievement => _achievement;
+  String get achievementName => _achievementName;
+  String get imageUrl => _imageUrl;
 
   StatisticsModel get allUsersStatistics => _allUsersStatistics;
 
   String get ownerName => _ownerName;
   String get ownerId => _ownerId;
   OwnerType get ownerType => _ownerType;
+  String get ownerImageUrl => _ownerImageUrl;
 
   bool get canEdit => achievement?.canBeModifiedByCurrentUser ?? false;
   bool get canSend => achievement?.canBeSentByCurrentUser ?? false;
 
-  AchievementDetailsViewModel(this._achievementId, this._imageUrl) {
+  AchievementDetailsViewModel(this._achievementId, this._achievementName, this._imageUrl) {
     isBusy = true;
   }
 
@@ -187,10 +192,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
       _ownerName = _achievement.teamReference.name;
       _ownerId = _achievement.teamReference.id;
       _ownerType = OwnerType.team;
+      _ownerImageUrl = null;
     } else {
       _ownerName = _achievement.userReference.name;
       _ownerId = _achievement.userReference.id;
       _ownerType = OwnerType.user;
+      _ownerImageUrl = _achievement.userReference.imageUrl;
     }
   }
 
