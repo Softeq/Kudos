@@ -246,7 +246,7 @@ class S {
   /// `Statistics`
   String get achievementStatisticsTitle {
     return Intl.message(
-      'Statistics',
+      'Global Progress',
       name: 'achievementStatisticsTitle',
       desc: '',
       args: [],
@@ -778,6 +778,24 @@ class S {
     return Intl.message(
       'Library',
       name: 'achievementsTabName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get softeq {
+    return Intl.message(
+      'Softeq',
+      name: 'softeq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get people_progress {
+    return Intl.message(
+      '%i of %i people',
+      name: 'people_progress',
       desc: '',
       args: [],
     );

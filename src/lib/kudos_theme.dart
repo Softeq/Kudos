@@ -37,6 +37,18 @@ class KudosTheme {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle statisticsTitleTextStyle = TextStyle(
+    fontSize: 14.0,
+    color: textColor,
+    fontWeight: FontWeight.w500,
+  );
+
+  static final TextStyle statisticsTextStyle = TextStyle(
+    fontSize: 12.0,
+    color: textColor,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle appBarTitleTextStyle = TextStyle(
     fontSize: 20.0,
     color: Colors.white,

@@ -20,7 +20,7 @@
     "send": "Send",
     "writeAComment": "Your comment",
     "sentSuccessfully": "The award has been successfully sent!",
-    "achievementStatisticsTitle": "Statistics",
+    "achievementStatisticsTitle": "Global Progress",
     "achievementStatisticsTooltip": "How many people have already received this award",
     "achievementHoldersTitle": "Holders",
     "achievementHoldersEmptyPlaceholder": "No one has ever received this achievement",
@@ -70,9 +70,10 @@
     "generalError": "Something went wrong",
     "receivedNoAchievements": "Hasn't received any achievements yet",
     "receivedAchievements": "Received achievements: %i",
-
     "profileTabName": "Profile",
     "teamsTabName": "Teams",
     "peopleTabName": "People",
-    "achievementsTabName": "Library"
+    "achievementsTabName": "Library",
+    "softeq": "Softeq",
+    "people_progress": "%i of %i people"
 }

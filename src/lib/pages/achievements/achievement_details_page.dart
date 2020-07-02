@@ -5,6 +5,7 @@ import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/statistics_model.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
@@ -17,6 +18,7 @@ import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sprintf/sprintf.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
   AchievementDetailsRoute(String achievementId)
@@ -103,8 +105,16 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             child: AchievementHorizontalWidget(viewModel.achievement),
           ),
           SizedBox(height: 24),
-          _PopularityWidget(viewModel.statisticsValue),
-          SizedBox(height: 40),
+          _AchievementOwnerWidget(
+            viewModel.ownerType,
+            viewModel.ownerName,
+            viewModel.ownerId,
+          ),
+          SizedBox(height: 24),
+          SectionHeaderWidget(localizer().achievementStatisticsTitle),
+          SizedBox(height: 8.0),
+          _PopularityWidget(viewModel.allUsersStatistics),
+          SizedBox(height: 24),
           ChangeNotifierProvider.value(
             value: viewModel.achievementHolders,
             child: Consumer<ListNotifier<AchievementHolder>>(
@@ -115,12 +125,6 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
               },
             ),
           ),
-          SizedBox(height: 40),
-          _AchievementOwnerWidget(
-            viewModel.ownerType,
-            viewModel.ownerName,
-            viewModel.ownerId,
-          )
         ],
       ),
     );
@@ -148,9 +152,6 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         var viewModel =
             Provider.of<AchievementDetailsViewModel>(context, listen: false);
         await viewModel.sendTo(user, commentText);
-
-        // _snackBarNotifier.showSuccessMessage(_scaffoldKey.currentContext,
-        //     _scaffoldKey.currentState, localizer().sentSuccessfully);
       }
     } catch (error) {
       _snackBarNotifier.showGeneralErrorMessage(
@@ -206,34 +207,54 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
 }
 
 class _PopularityWidget extends StatelessWidget {
-  final double _popularityPercent;
+  final StatisticsModel _popularityStatistics;
 
-  _PopularityWidget(this._popularityPercent);
+  _PopularityWidget(this._popularityStatistics);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      alignment: Alignment.center,
       children: <Widget>[
-        SectionHeaderWidget(
-          localizer().achievementStatisticsTitle,
-          localizer().achievementStatisticsTooltip,
-        ),
-        SizedBox(height: 8.0),
-        Align(
-          alignment: Alignment.topLeft,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Container(
-              height: 16,
-              width: 144,
-              child: LinearProgressIndicator(
-                value: _popularityPercent, // percent filled
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  KudosTheme.mainGradientEndColor,
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Container(
+                height: 32,
+                width: constraints.maxWidth,
+                child: LinearProgressIndicator(
+                  value: _popularityStatistics.ratioValue, // percent filled
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    KudosTheme.mainGradientEndColor,
+                  ),
+                  backgroundColor:
+                      KudosTheme.mainGradientEndColor.withAlpha(120),
                 ),
-                backgroundColor: KudosTheme.mainGradientEndColor.withAlpha(120),
               ),
+            );
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 16.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _popularityStatistics.title,
+              style: KudosTheme.statisticsTitleTextStyle,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 16.0),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              sprintf(localizer().people_progress, [
+                _popularityStatistics.positiveUsersCount,
+                _popularityStatistics.allUsersCount
+              ]),
+              style: KudosTheme.statisticsTextStyle,
             ),
           ),
         ),
