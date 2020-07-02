@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
   # core
-  provider: ^4.0.5+1
+  provider: ^4.1.3
 
   get: ^2.5.7
 

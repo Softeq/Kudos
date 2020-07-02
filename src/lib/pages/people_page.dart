@@ -136,7 +136,9 @@ class PeoplePage extends StatelessWidget {
   Widget _buildList(BuildContext context, List<User> users) {
     return ListOfPeopleWidget(
       padding: EdgeInsets.only(
-          top: TopDecorator.height, bottom: BottomDecorator.height),
+        top: TopDecorator.height,
+        bottom: BottomDecorator.height,
+      ),
       itemSelector: (user) => _onItemSelected?.call(context, user),
       users: users,
       trailingWidget: _selectorIcon,

@@ -19,7 +19,7 @@ class ListOfPeopleWidget extends StatelessWidget {
     this.trailingSelector,
     this.trailingWidget,
     this.trailingWidgetFunction,
-    this.padding
+    this.padding,
   });
 
   @override
@@ -43,16 +43,17 @@ class ListOfPeopleWidget extends StatelessWidget {
   }
 
   Widget _buildItem(context, index) {
-    var user = users[index];
+    final user = users[index];
 
     return SimpleListItem(
       title: user.name,
-      description:
-          getReceivedAchievementsString(user.receivedAchievementsCount),
+      description: getReceivedAchievementsString(
+          user.receivedAchievementsCount),
       onTap: () => itemSelector?.call(user),
       imageUrl: user.imageUrl,
       selectorIcon: trailingWidget ?? trailingWidgetFunction(user),
       imageShape: ImageShape.circle(50),
+      useTextPlaceholder: true,
     );
   }
 }

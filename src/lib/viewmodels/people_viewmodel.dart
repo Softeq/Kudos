@@ -28,14 +28,15 @@ class PeopleViewModel extends BaseViewModel {
 
   void filterByName(String query) => _streamController.add(query);
 
-    void _initFilter() {
+  void _initFilter() {
     _streamController = StreamController<String>();
 
     _peopleStream = _streamController.stream
         .debounceTime(Duration(milliseconds: 100))
         .distinct()
         .transform(StreamTransformer<String, List<User>>.fromHandlers(
-          handleData: (query, sink) => sink.add(query.isEmpty ? _peopleList : _filterByName(_peopleList, query)),
+          handleData: (query, sink) => sink.add(
+              query.isEmpty ? _peopleList : _filterByName(_peopleList, query)),
         ));
   }
 
@@ -48,14 +49,14 @@ class PeopleViewModel extends BaseViewModel {
       _peopleList.addAll(people);
 
       if (_excludedUserIds != null) {
-        _peopleList.removeWhere((user) => _excludedUserIds.contains(user.id));
+        _peopleList.removeWhere((x) => _excludedUserIds.contains(x.id));
       }
     }
   }
 
   List<User> _filterByName(List<User> people, String query) {
     final filteredPeople = people
-        .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
+        .where((x) => x.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
     return filteredPeople;
   }

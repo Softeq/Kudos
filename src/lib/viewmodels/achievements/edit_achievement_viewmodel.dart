@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/viewmodels/achievements/editable_achievement_viewmodel.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
@@ -11,7 +11,7 @@ import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class EditAchievementViewModel extends BaseViewModel {
-  final AchievementModel achievementModel;
+  final EditableAchievementViewModel achievementViewModel;
   final Team _team;
   final User _user;
   final _achievementsService = locator<AchievementsService>();
@@ -20,7 +20,7 @@ class EditAchievementViewModel extends BaseViewModel {
   final bool _create;
 
   EditAchievementViewModel._(Achievement achievement, Team team, User user)
-      : achievementModel = AchievementModel(achievement),
+      : achievementViewModel = EditableAchievementViewModel(achievement),
         _team = team,
         _user = user,
         _create = achievement == null;
@@ -39,36 +39,37 @@ class EditAchievementViewModel extends BaseViewModel {
 
   @override
   void dispose() {
-    achievementModel.dispose();
+    achievementViewModel.dispose();
     super.dispose();
   }
 
   void pickFile(BuildContext context) async {
-    if (achievementModel.imageViewModel.isBusy) {
+    if (achievementViewModel.imageViewModel.isBusy) {
       return;
     }
-    achievementModel.imageViewModel.update(isBusy: true);
 
-    var file = await _imageService.pickImage(context);
+    achievementViewModel.imageViewModel.update(isBusy: true);
 
-    achievementModel.imageViewModel.update(isBusy: false, file: file);
+    final file = await _imageService.pickImage(context);
+
+    achievementViewModel.imageViewModel.update(isBusy: false, file: file);
   }
 
   Future<void> save() async {
     Achievement result;
     if (_create) {
       result = await _achievementsService.createAchievement(
-          name: achievementModel.title,
-          description: achievementModel.description,
-          file: achievementModel.imageViewModel.file,
+          name: achievementViewModel.title,
+          description: achievementViewModel.description,
+          file: achievementViewModel.imageViewModel.file,
           user: _user,
           team: _team);
     } else {
       result = await _achievementsService.updateAchievement(
-          id: achievementModel.achievement.id,
-          name: achievementModel.title,
-          description: achievementModel.description,
-          file: achievementModel.imageViewModel.file);
+          id: achievementViewModel.achievement.id,
+          name: achievementViewModel.title,
+          description: achievementViewModel.description,
+          file: achievementViewModel.imageViewModel.file);
     }
     _eventBus.fire(AchievementUpdatedMessage(result));
   }

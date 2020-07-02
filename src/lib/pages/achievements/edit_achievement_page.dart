@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/viewmodels/achievements/editable_achievement_viewmodel.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
-import 'package:kudosapp/widgets/achievements/achievement_widget.dart';
+import 'package:kudosapp/viewmodels/image_view_model.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 
 class EditAchievementRoute extends MaterialPageRoute {
   EditAchievementRoute.createTeamAchievement(Team team)
@@ -66,7 +67,7 @@ class _EditAchievementPage extends StatelessWidget {
       ),
       body: Consumer<EditAchievementViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.achievementModel == null) {
+          if (viewModel.achievementViewModel == null) {
             return Container();
           } else if (viewModel.isBusy) {
             return Center(
@@ -116,12 +117,12 @@ class _EditAchievementPage extends StatelessWidget {
         return Stack(
           children: <Widget>[
             Center(
-              child: ChangeNotifierProvider<AchievementModel>.value(
-                value: viewModel.achievementModel,
-                child: Consumer<AchievementModel>(
+              child: ChangeNotifierProvider<EditableAchievementViewModel>.value(
+                value: viewModel.achievementViewModel,
+                child: Consumer<EditableAchievementViewModel>(
                   builder: (context, model, child) {
-                    return AchievementWidget(
-                      [model],
+                    return _EditableAchievementWidget(
+                      model,
                       onAchievementTitleClicked: (achievementModel) =>
                           _editAchievementTitle(viewModel, context),
                       onAchievementDescriptionClicked: (achievementModel) =>
@@ -133,8 +134,8 @@ class _EditAchievementPage extends StatelessWidget {
                 ),
               ),
             ),
-            IgnorePointer(
-              child: Positioned.fill(
+            Positioned.fill(
+              child: IgnorePointer(
                 child: CustomPaint(
                   painter: _OverlayPainter(
                     canvasHeight: canvasHeight,
@@ -222,7 +223,7 @@ class _EditAchievementPage extends StatelessWidget {
         return Dialog(
           child: _TextInputWidget(
             title: localizer().achievementName,
-            initialValue: viewModel.achievementModel.title,
+            initialValue: viewModel.achievementViewModel.title,
             height: 180.0,
             maxLines: 1,
           ),
@@ -230,7 +231,7 @@ class _EditAchievementPage extends StatelessWidget {
       },
     );
     if (result != null) {
-      viewModel.achievementModel.title = result;
+      viewModel.achievementViewModel.title = result;
     }
   }
 
@@ -242,13 +243,13 @@ class _EditAchievementPage extends StatelessWidget {
         return Dialog(
           child: _TextInputWidget(
             title: localizer().description,
-            initialValue: viewModel.achievementModel.description,
+            initialValue: viewModel.achievementViewModel.description,
           ),
         );
       },
     );
     if (result != null) {
-      viewModel.achievementModel.description = result;
+      viewModel.achievementViewModel.description = result;
     }
   }
 
@@ -523,6 +524,171 @@ class _TextInputWidgetState extends State<_TextInputWidget> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _EditableAchievementWidget extends StatelessWidget {
+  final EditableAchievementViewModel achievementViewModel;
+  final Function(EditableAchievementViewModel) onAchievementTitleClicked;
+  final Function(EditableAchievementViewModel) onAchievementDescriptionClicked;
+  final Function(EditableAchievementViewModel) onAchievementImageClicked;
+
+  _EditableAchievementWidget(
+    this.achievementViewModel, {
+    this.onAchievementTitleClicked,
+    this.onAchievementDescriptionClicked,
+    this.onAchievementImageClicked,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final space = 20.0;
+    final halfSpace = space / 2.0;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: 20,
+      ),
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: halfSpace),
+          Expanded(child: Container()),
+          Expanded(
+            flex: 2,
+            child: _buildItem(achievementViewModel),
+          ),
+          Expanded(child: Container()),
+          SizedBox(width: halfSpace),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItem(EditableAchievementViewModel achievementViewModel) {
+    final borderRadius = 8.0;
+    final contentPadding = 8.0;
+    return AspectRatio(
+      aspectRatio: 0.54,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final radius = constraints.maxWidth / 2.0;
+          return Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: radius,
+                ),
+                child: Material(
+                  elevation: 2,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          onAchievementTitleClicked(achievementViewModel);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(contentPadding),
+                          child: Text(
+                            achievementViewModel.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: 0,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            onAchievementDescriptionClicked(
+                                achievementViewModel);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(contentPadding),
+                            child: Text(
+                              achievementViewModel.description,
+                              maxLines: 5,
+                              overflow: TextOverflow.fade,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Material(
+                  borderRadius: BorderRadius.circular(radius),
+                  elevation: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      onAchievementImageClicked(achievementViewModel);
+                    },
+                    child: _EditableRoundedImage(
+                      achievementViewModel.imageViewModel,
+                      radius * 2.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _EditableRoundedImage extends StatelessWidget {
+  final ImageViewModel _imageViewModel;
+  final double _size;
+
+  _EditableRoundedImage(this._imageViewModel, this._size);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: _imageViewModel,
+      child: Consumer<ImageViewModel>(
+        builder: (context, viewModel, child) {
+          Widget child;
+
+          if (viewModel.isBusy) {
+            child = Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            child = RoundedImageWidget.circular(
+              size: _size,
+              imageUrl: viewModel.imageUrl,
+              file: viewModel.file,
+              placeholderColor: KudosTheme.contentColor,
+            );
+          }
+
+          return ClipOval(
+            child: Container(
+              width: _size,
+              height: _size,
+              color: KudosTheme.contentColor,
+              child: child,
+            ),
+          );
+        },
       ),
     );
   }

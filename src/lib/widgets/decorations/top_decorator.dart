@@ -135,13 +135,11 @@ class _TopPainter extends CustomPainter {
   }
 
   void _drawThirdPart(Canvas canvas, Size size) {
-    final x1 = size.width * 36.7 / 254.0;
     final x2 = size.width * 50.7 / 254.0;
     final x3 = size.width * 115.0 / 254.0;
     final x4 = size.width * 189.1 / 254.0;
     final x5 = size.width * 254.0 / 254.0;
 
-    final y1 = size.height * 0.0 / 27.0;
     final y2 = size.height * 1.4 / 27.0;
     final y3 = size.height * 14.5 / 27.0;
     final y4 = size.height * 25.6 / 27.0;
@@ -149,7 +147,6 @@ class _TopPainter extends CustomPainter {
 
     final path = Path()
       ..moveTo(0, 0)
-      //..lineTo(x1, y1)
       ..quadraticBezierTo(x2, y2, x3, y3)
       ..quadraticBezierTo(x4, y4, x5, y5)
       ..lineTo(size.width, 0.0)

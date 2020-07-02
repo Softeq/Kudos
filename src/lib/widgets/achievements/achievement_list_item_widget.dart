@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 
 class AchievementListItemWidget extends StatelessWidget {
-  final AchievementModel _achievementModel;
-  final void Function(AchievementModel) _onAchievementClicked;
+  final Achievement _achievement;
+  final void Function(Achievement) _onAchievementClicked;
 
-  AchievementListItemWidget(this._achievementModel, this._onAchievementClicked);
+  AchievementListItemWidget(this._achievement, this._onAchievementClicked);
 
   @override
   Widget build(BuildContext context) {
     return SimpleListItem(
-      title: _achievementModel.title,
-      description: _achievementModel.description,
+      title: _achievement.name,
+      description: _achievement.description,
       onTap: () {
-        _onAchievementClicked(_achievementModel);
+        _onAchievementClicked(_achievement);
       },
-      imageViewModel: _achievementModel.imageViewModel,
+      imageUrl: _achievement.imageUrl,
       imageShape: ImageShape.circle(80.0),
+      useTextPlaceholder: false,
     );
   }
 }

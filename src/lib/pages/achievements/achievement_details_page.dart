@@ -48,7 +48,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
       builder: (context, viewModel, child) {
         if (viewModel.isBusy) {
           return Scaffold(
-            appBar: GradientAppBar(title: viewModel?.achievementModel?.title),
+            appBar: GradientAppBar(title: viewModel?.achievement?.name),
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -58,7 +58,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         return Scaffold(
           key: _scaffoldKey,
           appBar: GradientAppBar(
-            title: viewModel.achievementModel.title,
+            title: viewModel.achievement.name,
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
@@ -70,7 +70,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           EditAchievementRoute.editAchievement(
-                              viewModel.achievementModel.achievement),
+                            viewModel.achievement,
+                          ),
                         );
                       },
                     ),
@@ -99,7 +100,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         children: <Widget>[
           Container(
             height: 140,
-            child: AchievementHorizontalWidget(viewModel.achievementModel),
+            child: AchievementHorizontalWidget(viewModel.achievement),
           ),
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),

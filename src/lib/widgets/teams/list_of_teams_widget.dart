@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 
@@ -11,21 +11,21 @@ class ListOfTeamsWidget extends StatelessWidget {
     size: 16.0,
     color: KudosTheme.accentColor,
   );
-  static final void Function(BuildContext, TeamModel) defaultItemSelector =
-      (context, teamModel) => Navigator.of(context).push(
-            ManageTeamRoute(teamModel.team.id),
+  static final void Function(BuildContext, Team) defaultItemSelector =
+      (context, team) => Navigator.of(context).push(
+            ManageTeamRoute(team.id),
           );
 
-  final void Function(TeamModel) _onItemSelected;
+  final void Function(Team) _onItemSelected;
   final Icon _selectorIcon;
-  final List<TeamModel> teams;
+  final List<Team> teams;
   final EdgeInsets padding;
 
   ListOfTeamsWidget({
     this.padding,
     this.teams,
     Icon selectorIcon,
-    Function(TeamModel) onItemSelected,
+    Function(Team) onItemSelected,
   })  : _selectorIcon = selectorIcon ?? defaultSelectorIcon,
         _onItemSelected = onItemSelected ?? defaultItemSelector;
 
@@ -35,13 +35,14 @@ class ListOfTeamsWidget extends StatelessWidget {
       padding: padding,
       itemCount: teams.length,
       itemBuilder: (context, index) {
-        var teamModel = teams[index];
+        var team = teams[index];
         return SimpleListItem(
-          title: teamModel.team.name,
-          onTap: () => _onItemSelected?.call(teamModel),
+          title: team.name,
+          onTap: () => _onItemSelected?.call(team),
           selectorIcon: _selectorIcon,
           imageShape: ImageShape.square(56, 4),
-          imageViewModel: teamModel.imageViewModel,
+          imageUrl: team.imageUrl,
+          useTextPlaceholder: true,
         );
       },
     );

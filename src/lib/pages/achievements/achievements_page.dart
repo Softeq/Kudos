@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/extensions/list_extensions.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
@@ -32,9 +32,9 @@ class AchievementsPage extends StatelessWidget {
               return Stack(
                 children: <Widget>[
                   Positioned.fill(
-                    child: ChangeNotifierProvider.value(
+                    child: ChangeNotifierProvider<ListNotifier<Achievement>>.value(
                       value: viewModel.achievements,
-                      child: Consumer<ListNotifier<AchievementModel>>(
+                      child: Consumer<ListNotifier<Achievement>>(
                         builder: (context, notifier, child) {
                           if (notifier.isEmpty) {
                             return Center(
@@ -52,7 +52,7 @@ class AchievementsPage extends StatelessWidget {
                             notifier.items,
                             (x) {
                               Navigator.of(context).push(
-                                AchievementDetailsRoute(x.achievement.id),
+                                AchievementDetailsRoute(x.id),
                               );
                             },
                           );
@@ -89,26 +89,26 @@ class _AchievementListWidget extends StatelessWidget {
   final List<Widget> _items;
 
   factory _AchievementListWidget.from(
-    List<AchievementModel> input,
-    void Function(AchievementModel) onAchievementClicked,
+    List<Achievement> input,
+    void Function(Achievement) onAchievementClicked,
   ) {
     final sortedList = input.toList();
     sortedList.sortThen(
       (x, y) {
-        if (x.team == null && y.team != null) {
+        if (x.teamReference == null && y.teamReference != null) {
           return -1;
-        } else if (x.team != null && y.team == null) {
+        } else if (x.teamReference != null && y.teamReference == null) {
           return 1;
         } else {
           return 0;
         }
       },
       (x, y) {
-        if (x.team == null && y.team == null) {
+        if (x.teamReference == null && y.teamReference == null) {
           return 0;
         }
 
-        return x.team.name.compareTo(y.team.name);
+        return x.teamReference.name.compareTo(y.teamReference.name);
       },
     );
 
@@ -118,7 +118,7 @@ class _AchievementListWidget extends StatelessWidget {
 
     for (var i = 0; i < sortedList.length; i++) {
       final item = sortedList[i];
-      final itemGroup = item.team == null ? myAchievementsText : item.team.name;
+      final itemGroup = item.teamReference == null ? myAchievementsText : item.teamReference.name;
       if (groupName != itemGroup) {
         groupName = itemGroup;
         listItems.add(_GroupListItem(itemGroup));

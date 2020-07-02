@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
@@ -21,22 +21,21 @@ class AchievementsViewModel extends BaseViewModel {
   StreamSubscription _achievementDeletedSubscription;
   StreamSubscription _achievementTransferredSubscription;
 
-  final _achievements = ListNotifier<AchievementModel>();
+  final _achievements = ListNotifier<Achievement>();
 
-  ListNotifier<AchievementModel> get achievements => _achievements;
+  ListNotifier<Achievement> get achievements => _achievements;
 
   User get currentUser => _authService.currentUser;
 
   Future<void> initialize() async {
     isBusy = true;
 
-    var myAchievements = await _achievementsService.getMyAchievements();
-    var teamsAchievements = await _achievementsService.getAchievements();
-    _achievements.items.forEach((x) => x.dispose());
+    final myAchievements = await _achievementsService.getMyAchievements();
+    final teamsAchievements = await _achievementsService.getAchievements();
+
     _achievements.items.clear();
-    _achievements.items.addAll(myAchievements.map((x) => AchievementModel(x)));
-    _achievements.items
-        .addAll(teamsAchievements.map((x) => AchievementModel(x)));
+    _achievements.items.addAll(myAchievements);
+    _achievements.items.addAll(teamsAchievements);
     _achievements.notifyListeners();
 
     _achievementUpdatedSubscription?.cancel();
@@ -61,33 +60,31 @@ class AchievementsViewModel extends BaseViewModel {
       return;
     }
 
-    var achievementModel = _achievements.items.firstWhere(
-      (x) => x.achievement.id == event.achievement.id,
-      orElse: () => null,
+    final index = _achievements.items.indexWhere(
+      (x) => x.id == event.achievement.id,
     );
-    if (achievementModel != null) {
-      achievementModel.initialize(event.achievement);
+    if (index != -1) {
+      _achievements.items.removeAt(index);
+      _achievements.items.insert(index, event.achievement);
       _achievements.notifyListeners();
     } else {
-      _achievements.add(AchievementModel(event.achievement));
+      _achievements.add(event.achievement);
     }
   }
 
   void _onAchievementDeleted(AchievementDeletedMessage event) {
-    _achievements.items
-        .removeWhere((element) => event.ids.contains(element.achievement.id));
+    _achievements.items.removeWhere((x) => event.ids.contains(x.id));
     _achievements.notifyListeners();
   }
 
   void _onAchievementTransferred(AchievementTransferredMessage event) {
     var achievementIds = event.achievements.map((a) => a.id).toSet();
-    _achievements.items.removeWhere(
-        (element) => achievementIds.contains(element.achievement.id));
+    _achievements.items.removeWhere((x) => achievementIds.contains(x.id));
 
     if (event.achievements.first.userReference?.id == currentUser.id ||
         event.achievements.first.teamReference != null) {
       for (var achievement in event.achievements) {
-        _achievements.items.add(AchievementModel(achievement));
+        _achievements.items.add(achievement);
       }
     }
 
@@ -100,8 +97,7 @@ class AchievementsViewModel extends BaseViewModel {
     _achievementDeletedSubscription?.cancel();
     _achievementTransferredSubscription?.cancel();
 
-    _achievements.items.forEach((x) => x.dispose());
-    _achievements.items.clear();
+    _achievements.dispose();
     super.dispose();
   }
 }
