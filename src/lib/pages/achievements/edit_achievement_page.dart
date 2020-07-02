@@ -134,8 +134,8 @@ class _EditAchievementPage extends StatelessWidget {
                 ),
               ),
             ),
-            IgnorePointer(
-              child: Positioned.fill(
+            Positioned.fill(
+              child: IgnorePointer(
                 child: CustomPaint(
                   painter: _OverlayPainter(
                     canvasHeight: canvasHeight,

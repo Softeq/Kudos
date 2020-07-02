@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/extensions/list_extensions.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/viewmodels/achievements/editable_achievement_viewmodel.dart';
 import 'package:kudosapp/models/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
