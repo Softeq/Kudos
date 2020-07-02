@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/counter_widget.dart';
 
@@ -29,12 +27,12 @@ class SimpleListItem extends StatelessWidget {
   final void Function() onTap;
   final String title;
   final String description;
-  final ImageViewModel imageViewModel;
   final String imageUrl;
   final int imageCounter;
   final Widget selectorIcon;
   final ImageShape imageShape;
   final Widget contentWidget;
+  final bool useTextPlaceholder;
   final bool addHeroAnimation;
 
   SimpleListItem({
@@ -42,11 +40,11 @@ class SimpleListItem extends StatelessWidget {
     this.title,
     this.description,
     this.imageUrl,
-    this.imageViewModel,
     this.imageCounter,
     this.selectorIcon,
     this.imageShape,
     this.contentWidget,
+    this.useTextPlaceholder,
     this.addHeroAnimation,
   });
 
@@ -148,82 +146,60 @@ class SimpleListItem extends StatelessWidget {
   }
 
   Widget _buildImageFromUrl() {
-    final imageProvider = CachedNetworkImageProvider(imageUrl);
 
-    Widget imageWidget;
-    if (imageShape.isCircle) {
-      imageWidget = CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: imageShape.size / 2.0,
-        backgroundImage: imageProvider,
-      );
-    } else {
-      imageWidget = Image(
-        width: imageShape.size,
-        height: imageShape.size,
-        image: imageProvider,
-      );
-    }
-
-    return (addHeroAnimation != null && addHeroAnimation)
-        ? Hero(child: imageWidget, tag: imageUrl)
-        : imageWidget;
-  }
-
-  Widget _buildImageFromViewModel() {
     if (imageShape.isCircle) {
       return RoundedImageWidget.circular(
-        imageViewModel: imageViewModel,
+        imageUrl: imageUrl,
         size: imageShape.size,
-        name: title,
+        title: useTextPlaceholder ? title : null,
         addHeroAnimation: addHeroAnimation,
       );
     } else {
       return RoundedImageWidget.square(
-        imageViewModel: imageViewModel,
-        name: title,
+        imageUrl: imageUrl,
         size: imageShape.size,
         borderRadius: imageShape.cornerRadius,
+        title: useTextPlaceholder ? title : null,
         addHeroAnimation: addHeroAnimation,
       );
     }
   }
 
   Widget _buildImageWidget() {
-    if (imageUrl != null || imageViewModel != null) {
-      Widget imageContent;
-      if (imageUrl != null) {
-        imageContent = Center(child: _buildImageFromUrl());
-      } else if (imageViewModel != null) {
-        imageContent = Center(child: _buildImageFromViewModel());
-
-        if (imageCounter != null && imageCounter > 1) {
-          return Container(
-            width: imageShape.size + _imagePadding * 2,
-            child: Stack(
-              children: <Widget>[
-                imageContent,
-                Positioned(
-                  bottom: 0.0,
-                  right: 8.0,
-                  child: CounterWidget(
-                    count: imageCounter,
-                    height: 40.0,
-                  ),
+    if (imageUrl != null || useTextPlaceholder) {
+      final imageContent = Center(
+        child: _buildImageFromUrl(),
+      );
+      if (imageCounter != null && imageCounter > 1) {
+        return Container(
+          width: imageShape.size + _imagePadding * 2,
+          child: Stack(
+            children: <Widget>[
+              imageContent,
+              Positioned(
+                bottom: 0.0,
+                right: 8.0,
+                child: CounterWidget(
+                  count: imageCounter,
+                  height: 40.0,
                 ),
-              ],
-            ),
-          );
-        }
-      }
-      return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: _imagePadding,
+              ),
+            ],
           ),
-          child: imageContent);
+        );
+      }
+
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: _imagePadding,
+        ),
+        child: imageContent,
+      );
     } else {
       return SizedBox(
-          height: imageShape?.size ?? 0, width: imageShape?.size ?? 0);
+        height: imageShape?.size ?? 0,
+        width: imageShape?.size ?? 0,
+      );
     }
   }
 }

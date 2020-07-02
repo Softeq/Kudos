@@ -20,12 +20,12 @@ import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
-  AchievementDetailsRoute(String achievementId, ImageViewModel imageViewModel)
+  AchievementDetailsRoute(String achievementId, String imageUrl)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel(achievementId, imageViewModel)..initialize();
+                return AchievementDetailsViewModel(achievementId, imageUrl)..initialize();
               },
               child: _AchievementDetailsPage(),
             );
@@ -60,7 +60,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         return Scaffold(
           key: _scaffoldKey,
           appBar: GradientAppBar(
-            title: viewModel.achievementModel?.title,
+            title: viewModel.achievement?.name,
             actions: viewModel.canEdit
                 ? <Widget>[
                     IconButton(
@@ -72,7 +72,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           EditAchievementRoute.editAchievement(
-                              viewModel.achievementModel?.achievement),
+                            viewModel.achievement,
+                          ),
                         );
                       },
                     ),
@@ -101,7 +102,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         children: <Widget>[
           Container(
             height: 140,
-            child: AchievementHorizontalWidget(viewModel.imageViewModel, viewModel.achievementModel?.description),
+            child: AchievementHorizontalWidget(viewModel.achievement),
           ),
           SizedBox(height: 24),
           _PopularityWidget(viewModel.statisticsValue),

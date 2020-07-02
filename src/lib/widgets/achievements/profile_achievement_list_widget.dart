@@ -154,7 +154,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
             start: 0,
             end: 0,
             child: RoundedImageWidget.circular(
-              imageViewModel: achievementCollection.imageViewModel,
+              imageUrl: achievementCollection.imageUrl,
               size: width - 5,
               addHeroAnimation: true,
             ),
@@ -196,8 +196,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             } else {
               Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id,
-                    achievementCollection.imageViewModel),
+                AchievementDetailsRoute(relatedAchievement.id, achievementCollection.imageUrl),
               );
             }
           },
