@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kudosapp/dto/team.dart';
@@ -6,6 +5,7 @@ import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +48,7 @@ class ProfilePage extends StatelessWidget {
     List<Widget> result = [
       SliverGradientAppBar(
         title: viewModel.userName,
-        imageWidget: _buildAppBarImage(viewModel.imageUrl),
+        imageWidget: _buildAppBarImage(context, viewModel.imageUrl),
         heroTag: viewModel.imageUrl,
       ),
     ];
@@ -87,17 +87,13 @@ class ProfilePage extends StatelessWidget {
     return result;
   }
 
-  Widget _buildAppBarImage(String imageUrl) {
-    return CachedNetworkImage(
+  Widget _buildAppBarImage(BuildContext context, String imageUrl) {
+    return Center(
+      child: RoundedImageWidget.square(
         imageUrl: imageUrl,
-        imageBuilder: (context, imageProvider) => Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+        size: MediaQuery.of(context).size.width,
+        borderRadius: 0,
+      ),
     );
   }
 }
