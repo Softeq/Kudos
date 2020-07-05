@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/extensions/list_extensions.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/models/achievement_owner_model.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -32,9 +34,10 @@ class AchievementsPage extends StatelessWidget {
               return Stack(
                 children: <Widget>[
                   Positioned.fill(
-                    child: ChangeNotifierProvider<ListNotifier<Achievement>>.value(
+                    child: ChangeNotifierProvider<
+                        ListNotifier<AchievementModel>>.value(
                       value: viewModel.achievements,
-                      child: Consumer<ListNotifier<Achievement>>(
+                      child: Consumer<ListNotifier<AchievementModel>>(
                         builder: (context, notifier, child) {
                           if (notifier.isEmpty) {
                             return Center(
@@ -52,7 +55,7 @@ class AchievementsPage extends StatelessWidget {
                             notifier.items,
                             (x) {
                               Navigator.of(context).push(
-                                AchievementDetailsRoute(x.id, x.name, x.imageUrl),
+                                AchievementDetailsRoute(x),
                               );
                             },
                           );
@@ -89,26 +92,29 @@ class _AchievementListWidget extends StatelessWidget {
   final List<Widget> _items;
 
   factory _AchievementListWidget.from(
-    List<Achievement> input,
-    void Function(Achievement) onAchievementClicked,
+    List<AchievementModel> input,
+    void Function(AchievementModel) onAchievementClicked,
   ) {
     final sortedList = input.toList();
     sortedList.sortThen(
       (x, y) {
-        if (x.teamReference == null && y.teamReference != null) {
+        if (x.owner.type != AchievementOwnerType.team &&
+            y.owner.type == AchievementOwnerType.team) {
           return -1;
-        } else if (x.teamReference != null && y.teamReference == null) {
+        } else if (x.owner.type == AchievementOwnerType.team &&
+            y.owner.type != AchievementOwnerType.team) {
           return 1;
         } else {
           return 0;
         }
       },
       (x, y) {
-        if (x.teamReference == null && y.teamReference == null) {
+        if (x.owner.type != AchievementOwnerType.team &&
+            y.owner.type != AchievementOwnerType.team) {
           return 0;
         }
 
-        return x.teamReference.name.compareTo(y.teamReference.name);
+        return x.owner.name.compareTo(y.owner.name);
       },
     );
 
@@ -118,7 +124,9 @@ class _AchievementListWidget extends StatelessWidget {
 
     for (var i = 0; i < sortedList.length; i++) {
       final item = sortedList[i];
-      final itemGroup = item.teamReference == null ? myAchievementsText : item.teamReference.name;
+      final itemGroup = item.owner.type != AchievementOwnerType.team
+          ? myAchievementsText
+          : item.owner.name;
       if (groupName != itemGroup) {
         groupName = itemGroup;
         listItems.add(_GroupListItem(itemGroup));

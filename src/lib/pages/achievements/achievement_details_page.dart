@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/achievement_holder.dart';
-import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/dto/user_reference.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/models/achievement_owner_model.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/models/statistics_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
@@ -21,15 +21,12 @@ import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
 class AchievementDetailsRoute extends MaterialPageRoute {
-  AchievementDetailsRoute(
-      String achievementId, String achievementName, String imageUrl)
+  AchievementDetailsRoute(AchievementModel achievementModel)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<AchievementDetailsViewModel>(
               create: (context) {
-                return AchievementDetailsViewModel(
-                    achievementId, achievementName, imageUrl)
-                  ..initialize();
+                return AchievementDetailsViewModel(achievementModel);
               },
               child: _AchievementDetailsPage(),
             );
@@ -54,8 +51,8 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         return Scaffold(
           key: _scaffoldKey,
           appBar: GradientAppBar(
-            title: viewModel.achievementName,
-            actions: viewModel.canEdit
+            title: viewModel.achievement.name,
+            actions: viewModel.achievement.canBeModifiedByCurrentUser
                 ? <Widget>[
                     IconButton(
                         icon: Icon(Icons.transfer_within_a_station),
@@ -78,12 +75,13 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                 : null,
           ),
           body: _buildBody(viewModel),
-          floatingActionButton: viewModel.canSend
-              ? FloatingActionButton(
-                  child: Icon(Icons.send),
-                  onPressed: _sendTapped,
-                )
-              : null,
+          floatingActionButton:
+              viewModel.achievement.canBeSentByCurrentUser
+                  ? FloatingActionButton(
+                      child: Icon(Icons.send),
+                      onPressed: _sendTapped,
+                    )
+                  : null,
         );
       },
     );
@@ -98,7 +96,9 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
             Container(
               height: 140,
               child: AchievementHorizontalWidget(
-                  viewModel.imageUrl, viewModel.achievement?.description),
+                viewModel.achievement.imageUrl,
+                viewModel.achievement.description,
+              ),
             ),
             SizedBox(height: 100),
             Center(
@@ -115,15 +115,12 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           Container(
             height: 140,
             child: AchievementHorizontalWidget(
-                viewModel.imageUrl, viewModel.achievement?.description),
+              viewModel.achievement.imageUrl,
+              viewModel.achievement.description,
+            ),
           ),
           SizedBox(height: 24),
-          _AchievementOwnerWidget(
-            viewModel.ownerType,
-            viewModel.ownerName,
-            viewModel.ownerId,
-            viewModel.ownerImageUrl,
-          ),
+          _AchievementOwnerWidget(viewModel.achievement.owner),
           SizedBox(height: 24),
           SectionHeaderWidget(localizer().achievementStatisticsTitle),
           SizedBox(height: 8.0),
@@ -131,7 +128,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           SizedBox(height: 24),
           ChangeNotifierProvider.value(
             value: viewModel.achievementHolders,
-            child: Consumer<ListNotifier<AchievementHolder>>(
+            child: Consumer<ListNotifier<UserModel>>(
               builder: (context, notifier, child) {
                 return _AchievementHoldersWidget(
                   viewModel.achievementHolders,
@@ -159,7 +156,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
     }
   }
 
-  Future<void> _sendAchievementToUser(User user) async {
+  Future<void> _sendAchievementToUser(UserModel user) async {
     try {
       var commentText = await _putCommentDialog();
       if (commentText != null) {
@@ -238,7 +235,7 @@ class _PopularityWidget extends StatelessWidget {
                 height: 32,
                 width: constraints.maxWidth,
                 child: LinearProgressIndicator(
-                  value: _popularityStatistics.ratioValue, // percent filled
+                  value: _popularityStatistics.ratio, // percent filled
                   valueColor: AlwaysStoppedAnimation<Color>(
                     KudosTheme.mainGradientEndColor,
                   ),
@@ -278,13 +275,9 @@ class _PopularityWidget extends StatelessWidget {
 }
 
 class _AchievementOwnerWidget extends StatelessWidget {
-  final String _ownerName;
-  final String _ownerId;
-  final OwnerType _ownerType;
-  final String _ownerImageUrl;
+  final AchievementOwnerModel _ownerModel;
 
-  _AchievementOwnerWidget(
-      this._ownerType, this._ownerName, this._ownerId, this._ownerImageUrl);
+  _AchievementOwnerWidget(this._ownerModel);
 
   @override
   Widget build(BuildContext context) {
@@ -293,16 +286,13 @@ class _AchievementOwnerWidget extends StatelessWidget {
       SizedBox(height: 8.0),
       Align(
         alignment: Alignment.topLeft,
-        child: GestureDetector(
-          child: FancyItemWidget(_ownerName),
-          onTap: () {
-            switch (_ownerType) {
-              case OwnerType.user:
-                Navigator.of(context)
-                    .push(ProfileRoute(_ownerId, _ownerName, _ownerImageUrl));
+        child: FancyItemWidget(_ownerModel.name, () {
+            switch (_ownerModel.type) {
+              case AchievementOwnerType.user:
+                Navigator.of(context).push(ProfileRoute(_ownerModel.user));
                 break;
-              case OwnerType.team:
-                Navigator.of(context).push(ManageTeamRoute(_ownerId));
+              case AchievementOwnerType.team:
+                Navigator.of(context).push(ManageTeamRoute(_ownerModel.team));
                 break;
             }
           },
@@ -313,7 +303,7 @@ class _AchievementOwnerWidget extends StatelessWidget {
 }
 
 class _AchievementHoldersWidget extends StatelessWidget {
-  final ListNotifier<AchievementHolder> _achievementHolders;
+  final ListNotifier<UserModel> _achievementHolders;
 
   _AchievementHoldersWidget(this._achievementHolders);
 
@@ -348,24 +338,24 @@ class _AchievementHoldersWidget extends StatelessWidget {
   }
 
   List<Widget> _buildListItems(BuildContext context,
-      ListNotifier<AchievementHolder> achievementHolders) {
+      ListNotifier<UserModel> achievementHolders) {
     return achievementHolders == null
         ? new List<Widget>()
         : achievementHolders.items
-            .map((u) => _buildUserAvatar(context, u.recipient))
+            .map((user) => _buildUserAvatar(context, user))
             .toList();
   }
 
-  Widget _buildUserAvatar(BuildContext context, UserReference holder) {
+  Widget _buildUserAvatar(BuildContext context, UserModel user) {
     return Tooltip(
-      message: holder.name,
+      message: user.name,
       child: GestureDetector(
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
-          backgroundImage: CachedNetworkImageProvider(holder.imageUrl),
+          backgroundImage: CachedNetworkImageProvider(user.imageUrl),
           radius: 30,
         ),
-        onTap: () => _navigateToProfile(context, holder),
+        onTap: () => _navigateToProfile(context, user),
       ),
       decoration: KudosTheme.tooltipDecoration,
       textStyle: KudosTheme.tooltipTextStyle,
@@ -375,9 +365,9 @@ class _AchievementHoldersWidget extends StatelessWidget {
 
   void _navigateToProfile(
     BuildContext context,
-    UserReference holder,
+    UserModel user,
   ) {
     Navigator.of(context)
-        .push(ProfileRoute(holder.id, holder.name, holder.imageUrl));
+        .push(ProfileRoute(user));
   }
 }

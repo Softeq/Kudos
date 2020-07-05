@@ -1,19 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_registration.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/push_notifications_service.dart';
 
 class PeopleService {
+  static const _usersCollection = "users";
+  static const _pushTokenCollection = "push_tokens";
+
   final _database = Firestore.instance;
   final _authService = locator<BaseAuthService>();
   final _pushNotificationsService = locator<PushNotificationsService>();
-  final _cachedUsers = List<User>();
+  final _cachedUsers = List<UserModel>();
 
   PeopleService() {
     _database.collection(_usersCollection).snapshots().listen((s) {
-      final users = s.documents.map<User>((x) => User.fromDocument(x)).toList();
+      final users = s.documents
+          .map<UserModel>((x) => UserModel.fromUser(User.fromDocument(x)))
+          .toList();
       users.sort((x, y) => x.name.compareTo(y.name));
 
       _cachedUsers.clear();
@@ -21,14 +27,11 @@ class PeopleService {
     });
   }
 
-  static const _usersCollection = "users";
-  static const _pushTokenCollection = "push_tokens";
-
   Future<int> getUsersCount() {
     return Future.value(_cachedUsers.length);
   }
 
-  Future<List<User>> getAllUsers() {
+  Future<List<UserModel>> getAllUsers() {
     return _getAllUsers();
   }
 
@@ -56,7 +59,7 @@ class PeopleService {
     return _pushNotificationsService.unSubscribeFromNotifications();
   }
 
-  Future<List<User>> find(String request, bool _allowCurrentUser) async {
+  Future<List<UserModel>> find(String request, bool _allowCurrentUser) async {
     final allUsers = await _getAllUsers();
     final userFilter = _UserFilter(
       _authService.currentUser.id,
@@ -67,13 +70,13 @@ class PeopleService {
     return users;
   }
 
-  Future<List<User>> getUsersByIds(List<String> userIds) async {
+  Future<List<UserModel>> getUsersByIds(List<String> userIds) async {
     final allUsers = await _getAllUsers();
     final users = allUsers.where((x) => userIds.contains(x.id)).toList();
     return users;
   }
 
-  Future<User> getUserById(String userId) async {
+  Future<UserModel> getUserById(String userId) async {
     final users = await _getAllUsers();
     final user = users.firstWhere((x) => x.id == userId, orElse: () => null);
     if (user == null) {
@@ -82,7 +85,7 @@ class PeopleService {
     return user;
   }
 
-  Future<List<User>> _getAllUsers() {
+  Future<List<UserModel>> _getAllUsers() {
     return Future.value(_cachedUsers);
   }
 }
@@ -94,7 +97,7 @@ class _UserFilter {
 
   _UserFilter(this._currentUserId, this._allowCurrentUser, this._request);
 
-  bool _filter(User x) {
+  bool _filter(UserModel x) {
     if (_allowCurrentUser == false && x.id == _currentUserId) {
       return false;
     }

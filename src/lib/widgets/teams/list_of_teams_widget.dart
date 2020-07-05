@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 
@@ -11,21 +11,21 @@ class ListOfTeamsWidget extends StatelessWidget {
     size: 16.0,
     color: KudosTheme.accentColor,
   );
-  static final void Function(BuildContext, Team) defaultItemSelector =
+  static final void Function(BuildContext, TeamModel) defaultItemSelector =
       (context, team) => Navigator.of(context).push(
-            ManageTeamRoute(team.id),
+            ManageTeamRoute(team),
           );
 
-  final void Function(Team) _onItemSelected;
+  final void Function(TeamModel) _onItemSelected;
   final Icon _selectorIcon;
-  final List<Team> teams;
+  final List<TeamModel> teams;
   final EdgeInsets padding;
 
   ListOfTeamsWidget({
     this.padding,
     this.teams,
     Icon selectorIcon,
-    Function(Team) onItemSelected,
+    Function(TeamModel) onItemSelected,
   })  : _selectorIcon = selectorIcon ?? defaultSelectorIcon,
         _onItemSelected = onItemSelected ?? defaultItemSelector;
 

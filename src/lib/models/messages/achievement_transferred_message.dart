@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 
 @immutable
 class AchievementTransferredMessage {
-  final Set<Achievement> achievements;
+  final Set<AchievementModel> achievements;
 
   AchievementTransferredMessage.multiple(this.achievements);
 
-  AchievementTransferredMessage.single(Achievement achievement)
+  AchievementTransferredMessage.single(AchievementModel achievement)
       : achievements = {achievement};
 }

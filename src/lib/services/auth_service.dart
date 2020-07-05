@@ -3,22 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/errors/auth_error.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
 class AuthService extends BaseAuthService {
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
   final _firebaseAuth = FirebaseAuth.instance;
 
-  User _currentUser;
+  UserModel _currentUser;
 
   @override
-  User get currentUser => _currentUser;
+  UserModel get currentUser => _currentUser;
 
   @override
-  void silentInit(Function(User) userChangedHandler) {
+  void silentInit(Function(UserModel) userChangedHandler) {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
       _currentUser =
-          firebaseUser == null ? null : User.fromFirebase(firebaseUser);
+          firebaseUser == null ? null :UserModel.fromUser(User.fromFirebase(firebaseUser));
       userChangedHandler(_currentUser);
     });
   }

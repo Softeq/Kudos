@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/team_member.dart';
+import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 
 /// Teams collection
 @immutable
@@ -38,27 +40,6 @@ class Team {
     this.isActive,
   });
 
-  Team copy({
-    String name,
-    String imageUrl,
-    String imageName,
-    String description,
-    List<TeamMember> owners,
-    List<TeamMember> members,
-    bool isActive,
-  }) {
-    return Team._(
-      id: this.id,
-      name: name ?? this.name,
-      imageUrl: imageUrl ?? this.imageUrl,
-      imageName: imageName ?? this.imageName,
-      description: description ?? this.description,
-      owners: owners ?? this.owners.toList(),
-      members: members ?? this.members.toList(),
-      isActive: isActive ?? this.isActive,
-    );
-  }
-
   static List<TeamMember> getMembers(List<dynamic> x) {
     if (x == null) {
       return List<TeamMember>();
@@ -73,8 +54,8 @@ class Team {
     String imageUrl,
     String imageName,
     String description,
-    List<TeamMember> members,
-    List<TeamMember> owners,
+    List<UserModel> members,
+    List<UserModel> owners,
     bool isActive,
   }) {
     var map = Map<String, dynamic>();
@@ -102,12 +83,12 @@ class Team {
     var visibleFor = List<String>();
 
     if (members != null) {
-      map["team_members"] = members.map((x) => x.toMap()).toList();
+      map["team_members"] = members.map((x) => User.fromModel(x).toMap()).toList();
       visibleFor.addAll(members.map((x) => x.id));
     }
 
     if (owners != null) {
-      map["team_owners"] = owners.map((x) => x.toMap()).toList();
+      map["team_owners"] = owners.map((x) => User.fromModel(x).toMap()).toList();
       visibleFor.addAll(owners.map((x) => x.id));
     }
 

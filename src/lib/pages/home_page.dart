@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         icon: VectorIcon("assets/icons/cup.svg", Size(16, 16)),
         title: localizer().achievementsTabName,
         body: ChangeNotifierProvider<AchievementsViewModel>(
-          create: (context) => AchievementsViewModel()..initialize(),
+          create: (context) => AchievementsViewModel(),
           child: AchievementsPage(),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/dto/team_reference.dart';
 import 'package:kudosapp/dto/user_reference.dart';
+import 'package:kudosapp/models/team_model.dart';
 
 /// Achievements collection
 @immutable
@@ -91,7 +92,7 @@ class Achievement {
     TeamReference teamReference,
     UserReference userReference,
     bool isActive,
-    Team team,
+    TeamModel team,
   }) {
     var map = Map<String, dynamic>();
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
@@ -11,12 +12,12 @@ import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class ProfileRoute extends MaterialPageRoute {
-  ProfileRoute(String userId, String userName, String imageUrl)
+  ProfileRoute(UserModel userModel)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ProfileViewModel>(
               create: (context) =>
-                  ProfileViewModel(userId, userName, imageUrl)..initialize(),
+                  ProfileViewModel(userModel),
               child: ProfilePage(),
             );
           },
@@ -68,7 +69,7 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 16),
               SectionHeaderWidget(localizer().teams),
               SizedBox(height: 10),
-              FancyListWidget<Team>(
+              FancyListWidget<TeamModel>(
                 viewModel.userTeams,
                 (team) => team.name,
                 localizer().userTeamsEmptyPlaceholder,

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/achievement.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 
 /// User [Achievement] model
 /// Users collection -> achievement_references subcollection -> achievement field
@@ -15,7 +16,7 @@ class RelatedAchievement {
     @required this.imageUrl,
   });
 
-  factory RelatedAchievement.fromAchievement(Achievement x) {
+  factory RelatedAchievement.fromAchievementModel(AchievementModel x) {
     return RelatedAchievement(
       id: x.id,
       name: x.name,

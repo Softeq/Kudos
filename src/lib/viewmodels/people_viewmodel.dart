@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
@@ -8,20 +8,21 @@ import 'package:rxdart/rxdart.dart';
 
 class PeopleViewModel extends BaseViewModel {
   final PeopleService _peopleService = locator<PeopleService>();
-  final List<User> _peopleList = [];
+  final List<UserModel> _peopleList = [];
   final Set<String> _excludedUserIds;
 
   StreamController<String> _streamController;
-  Stream<List<User>> _peopleStream;
+  Stream<List<UserModel>> _peopleStream;
 
-  Stream<List<User>> get peopleStream => _peopleStream;
+  Stream<List<UserModel>> get peopleStream => _peopleStream;
 
   PeopleViewModel({Set<String> excludedUserIds})
       : _excludedUserIds = excludedUserIds {
     _initFilter();
+    _initialize();
   }
 
-  Future<void> initialize() async {
+  void _initialize() async {
     await _loadPeopleList();
     filterByName("");
   }
@@ -34,7 +35,7 @@ class PeopleViewModel extends BaseViewModel {
     _peopleStream = _streamController.stream
         .debounceTime(Duration(milliseconds: 100))
         .distinct()
-        .transform(StreamTransformer<String, List<User>>.fromHandlers(
+        .transform(StreamTransformer<String, List<UserModel>>.fromHandlers(
           handleData: (query, sink) => sink.add(
               query.isEmpty ? _peopleList : _filterByName(_peopleList, query)),
         ));
@@ -42,7 +43,7 @@ class PeopleViewModel extends BaseViewModel {
 
   Future<void> _loadPeopleList() async {
     if (_peopleList.isEmpty) {
-      List<User> people = [];
+      List<UserModel> people = [];
 
       people = await _peopleService.getAllUsers();
 
@@ -54,7 +55,7 @@ class PeopleViewModel extends BaseViewModel {
     }
   }
 
-  List<User> _filterByName(List<User> people, String query) {
+  List<UserModel> _filterByName(List<UserModel> people, String query) {
     final filteredPeople = people
         .where((x) => x.name.toLowerCase().contains(query.toLowerCase()))
         .toList();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kudosapp/dto/user_achievement.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
+import 'package:kudosapp/models/user_achievement_model.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -75,10 +75,7 @@ class ReceivedAchievementPage extends StatelessWidget {
             icon: Icon(Icons.info_outline),
             onPressed: () {
               Navigator.of(context).push(
-                AchievementDetailsRoute(
-                    viewModel.relatedAchievement.id,
-                    viewModel.relatedAchievement.name,
-                    viewModel.achievementCollection.imageUrl),
+                AchievementDetailsRoute(viewModel.relatedAchievement),
               );
             },
           )
@@ -112,7 +109,7 @@ class ReceivedAchievementPage extends StatelessWidget {
   }
 
   Widget _buildUserAchievementView(
-      BuildContext context, UserAchievement userAchievementModel) {
+      BuildContext context, UserAchievementModel userAchievementModel) {
     return SimpleListItem(
       imageShape: ImageShape.circle(56),
       imageUrl: userAchievementModel.sender.imageUrl,
@@ -121,11 +118,7 @@ class ReceivedAchievementPage extends StatelessWidget {
           DateFormat.yMd().add_jm().format(userAchievementModel.date.toDate()),
       contentWidget: _buildCommentView(userAchievementModel.comment),
       onTap: () {
-        Navigator.of(context).push(ProfileRoute(
-          userAchievementModel.sender.id,
-          userAchievementModel.sender.name,
-          userAchievementModel.sender.imageUrl,
-        ));
+        Navigator.of(context).push(ProfileRoute(userAchievementModel.sender));
       },
       useTextPlaceholder: true,
     );

@@ -95,7 +95,10 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
       _file = widget._file;
     }
 
-    _loadImageFromMemory();
+    if (_file == null) {
+      _loadImageFromMemory();
+    }
+
     if (_file != null) {
       return _buildImageWidget();
     } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 
 /// Sender / Recipient [User] model
 /// Achievements collection -> user field
@@ -15,7 +16,7 @@ class UserReference {
     @required this.imageUrl,
   });
 
-  factory UserReference.fromUser(User x) {
+  factory UserReference.fromUser(UserModel x) {
     return UserReference._(
       id: x.id,
       name: x.name,

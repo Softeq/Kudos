@@ -1,15 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
 import 'package:provider/provider.dart';
 
 class FancyListWidget<T> extends StatelessWidget {
   final ListNotifier<T> _items;
   final String Function(T) _getItemTitle;
+  final Function(T) _onItemClicked;
   final String _emptyPlaceholder;
 
-  FancyListWidget(this._items, this._getItemTitle, this._emptyPlaceholder);
+  FancyListWidget(this._items, this._getItemTitle, this._emptyPlaceholder, [this._onItemClicked]);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class FancyListWidget<T> extends StatelessWidget {
     );
   }
 
-  Widget _buildMember(T itemViewModel) {
-    return FancyItemWidget(_getItemTitle(itemViewModel));
+  Widget _buildMember(T item) {
+    return FancyItemWidget(_getItemTitle(item), () => _onItemClicked?.call(item));
   }
 }

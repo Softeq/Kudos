@@ -26,7 +26,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProfileAchievementsViewModel>(
       create: (context) {
-        return ProfileAchievementsViewModel(_userId)..initialize();
+        return ProfileAchievementsViewModel(_userId);
       },
       child: Consumer<ProfileAchievementsViewModel>(
         builder: (context, viewModel, child) {
@@ -117,8 +117,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             } else {
               Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id,
-                    achievementCollection.name, achievementCollection.imageUrl),
+                AchievementDetailsRoute(relatedAchievement),
               );
             }
           },
@@ -206,18 +205,18 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           ),
         );
 
-        children.add(
-          Positioned.fill(
-            child: Image(
-              image: AssetImage(
-                  'assets/icons/medal_cropped_placeholder_blured_white.png'),
-              width: width,
-              height: height,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.bottomCenter,
-            ),
-          ),
-        );
+        // children.add(
+        //   Positioned.fill(
+        //     child: Image(
+        //       image: AssetImage(
+        //           'assets/icons/medal_cropped_placeholder_blured_white.png'),
+        //       width: width,
+        //       height: height,
+        //       fit: BoxFit.fitWidth,
+        //       alignment: Alignment.bottomCenter,
+        //     ),
+        //   ),
+        // );
 
         if (achievementCollection.count > 1) {
           children.add(
@@ -241,8 +240,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             } else {
               Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id,
-                    achievementCollection.name, achievementCollection.imageUrl),
+                AchievementDetailsRoute(relatedAchievement),
               );
             }
           },

@@ -1,76 +1,104 @@
+import 'dart:io';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kudosapp/dto/achievement.dart';
-import 'package:kudosapp/dto/team.dart';
-import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/viewmodels/achievements/editable_achievement_viewmodel.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class EditAchievementViewModel extends BaseViewModel {
-  final EditableAchievementViewModel achievementViewModel;
-  final Team _team;
-  final User _user;
-  final _achievementsService = locator<AchievementsService>();
-  final _imageService = locator<ImageService>();
   final _eventBus = locator<EventBus>();
-  final bool _create;
+  final _imageService = locator<ImageService>();
+  final _achievementsService = locator<AchievementsService>();
 
-  EditAchievementViewModel._(Achievement achievement, Team team, User user)
-      : achievementViewModel = EditableAchievementViewModel(achievement),
-        _team = team,
-        _user = user,
-        _create = achievement == null;
+  final AchievementModel _initialAchievement;
+  final AchievementModel _achievement = new AchievementModel();
+  final TeamModel _team;
+  final UserModel _user;
 
-  factory EditAchievementViewModel.createTeamAchievement(Team team) {
-    return EditAchievementViewModel._(null, team, null);
+  bool _isImageLoading;
+
+  bool get isImageLoading => _isImageLoading;
+  set isImageLoading(bool value) {
+    if (_isImageLoading != value) {
+      _isImageLoading = value;
+      notifyListeners();
+    }
   }
 
-  factory EditAchievementViewModel.createUserAchievement(User user) {
-    return EditAchievementViewModel._(null, null, user);
+  String get pageTitle =>
+      _achievement.id == null ? localizer().create : localizer().edit;
+
+  String get name => _achievement.name ?? "";
+
+  set name(String value) {
+    _achievement.name = value;
+    notifyListeners();
   }
 
-  factory EditAchievementViewModel.editAchievement(Achievement achievement) {
-    return EditAchievementViewModel._(achievement, null, null);
+  String get description => _achievement.description ?? "";
+
+  set description(String value) {
+    _achievement.description = value;
+    notifyListeners();
   }
 
-  @override
-  void dispose() {
-    achievementViewModel.dispose();
-    super.dispose();
+  File get imageFile => _achievement.imageFile;
+  String get imageUrl => _achievement.imageUrl;
+
+  EditAchievementViewModel._(this._initialAchievement, this._team, this._user) {
+    _isImageLoading = false;
+    _achievement.updateWithModel(_initialAchievement);
   }
+
+  factory EditAchievementViewModel.createTeamAchievement(TeamModel team) =>
+      EditAchievementViewModel._(null, team, null);
+
+  factory EditAchievementViewModel.createUserAchievement(UserModel user) =>
+      EditAchievementViewModel._(null, null, user);
+
+  factory EditAchievementViewModel.editAchievement(
+          AchievementModel achievementModel) =>
+      EditAchievementViewModel._(achievementModel, null, null);
 
   void pickFile(BuildContext context) async {
-    if (achievementViewModel.imageViewModel.isBusy) {
+    if (isImageLoading) {
       return;
     }
 
-    achievementViewModel.imageViewModel.update(isBusy: true);
-
-    final file = await _imageService.pickImage(context);
-
-    achievementViewModel.imageViewModel.update(isBusy: false, file: file);
+    isImageLoading = true;
+    _achievement.imageFile =
+        await _imageService.pickImage(context) ?? _achievement.imageFile;
+    isImageLoading = false;
   }
 
   Future<void> save() async {
-    Achievement result;
-    if (_create) {
-      result = await _achievementsService.createAchievement(
-          name: achievementViewModel.title,
-          description: achievementViewModel.description,
-          file: achievementViewModel.imageViewModel.file,
+    AchievementModel updatedAchievement;
+
+    try {
+      isBusy = true;
+      if (_achievement.id == null) {
+        updatedAchievement = await _achievementsService.createAchievement(
+          achievement: _achievement,
           user: _user,
-          team: _team);
-    } else {
-      result = await _achievementsService.updateAchievement(
-          id: achievementViewModel.achievement.id,
-          name: achievementViewModel.title,
-          description: achievementViewModel.description,
-          file: achievementViewModel.imageViewModel.file);
+          team: _team,
+        );
+      } else {
+        updatedAchievement = await _achievementsService.updateAchievement(
+            achievement: _achievement);
+      }
+    } finally {
+      isBusy = false;
     }
-    _eventBus.fire(AchievementUpdatedMessage(result));
+
+    if (updatedAchievement != null) {
+      _initialAchievement?.updateWithModel(updatedAchievement);
+      _eventBus.fire(AchievementUpdatedMessage(updatedAchievement));
+    }
   }
 }
