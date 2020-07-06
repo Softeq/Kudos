@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
           return CustomScrollView(
-            slivers: _buildSlivers(context, viewModel),
+            slivers: _buildSlivers(context, viewModel).toList(),
           );
         },
       ),
