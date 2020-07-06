@@ -215,9 +215,9 @@ class AchievementsService {
         .collection("$_achievementsCollection/$achivementId/holders")
         .getDocuments();
     final achievementHolders = queryResult.documents
-        .map((x) => UserModel.fromUserReference(
-            AchievementHolder.fromDocument(x).recipient))
+        .map((x) => AchievementHolder.fromDocument(x))
         .toSet()
+        .map((ah) => UserModel.fromUserReference(ah.recipient))
         .toList();
     return achievementHolders;
   }
