@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kudosapp/viewmodels/user_picker_viewmodel.dart';
 import 'package:kudosapp/widgets/list_of_people_widget.dart';
 
-class UserPickerRoute extends MaterialPageRoute<List<User>> {
+class UserPickerRoute extends MaterialPageRoute<List<UserModel>> {
   UserPickerRoute({
     @required bool allowMultipleSelection,
     @required bool allowCurrentUser,
@@ -18,11 +18,10 @@ class UserPickerRoute extends MaterialPageRoute<List<User>> {
           builder: (context) {
             return ChangeNotifierProvider<UserPickerViewModel>(
               create: (context) {
-                return UserPickerViewModel()
-                  ..initialize(
-                    selectedUserIds,
-                    allowCurrentUser,
-                  );
+                return UserPickerViewModel(
+                  selectedUserIds,
+                  allowCurrentUser,
+                );
               },
               child: _UserPickerPage(allowMultipleSelection, trailingBuilder,
                   searchHint ?? localizer().search),

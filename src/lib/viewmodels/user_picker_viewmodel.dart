@@ -1,38 +1,36 @@
 import 'dart:async';
 
-import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/models/queue_handler.dart';
+import 'package:kudosapp/helpers/queue_handler.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class UserPickerViewModel extends BaseViewModel {
   final _peopleService = locator<PeopleService>();
-  final _users = List<User>();
-  final _selectedUsers = List<User>();
 
-  bool _allowCurrentUser;
+  final List<String> _selectedUserIds;
+  final bool _allowCurrentUser;
+
+  final users = List<UserModel>();
+  final selectedUsers = List<UserModel>();
+
   bool _searchPerformed;
+  QueueHandler<List<UserModel>, String> _searchQueueHandler;
+  StreamSubscription<List<UserModel>> _searchStreamSubscription;
 
-  QueueHandler<List<User>, String> _searchQueueHandler;
-  StreamSubscription<List<User>> _searchStreamSubscription;
+  UserPickerViewModel(this._selectedUserIds, this._allowCurrentUser){
+      _initialize();
+    }
 
-  List<User> get users => _users;
-
-  List<User> get selectedUsers => _selectedUsers;
-
-  Future<void> initialize(
-    List<String> selectedUserIds,
-    bool allowCurrentUser,
-  ) async {
-    _allowCurrentUser = allowCurrentUser;
+  void _initialize() async {
     _searchPerformed = false;
-    _searchQueueHandler = QueueHandler<List<User>, String>(_findPeople);
+    _searchQueueHandler = QueueHandler<List<UserModel>, String>(_findPeople);
     _searchStreamSubscription =
         _searchQueueHandler.responseStream.listen(_updateSearchResults);
-    if (selectedUserIds != null && selectedUserIds.isNotEmpty) {
-      var users = await _peopleService.getUsersByIds(selectedUserIds);
-      _selectedUsers.addAll(users);
+    if (_selectedUserIds != null && _selectedUserIds.isNotEmpty) {
+      var users = await _peopleService.getUsersByIds(_selectedUserIds);
+      selectedUsers.addAll(users);
     }
     requestSearch("");
   }
@@ -42,19 +40,19 @@ class UserPickerViewModel extends BaseViewModel {
     _searchQueueHandler.addRequest(x);
   }
 
-  bool isUserSelected(User x) {
-    return _selectedUsers.contains(x);
+  bool isUserSelected(UserModel x) {
+    return selectedUsers.contains(x);
   }
 
-  void toggleUserSelection(User x) {
-    isUserSelected(x) ? _selectedUsers.remove(x) : _selectedUsers.add(x);
+  void toggleUserSelection(UserModel x) {
+    isUserSelected(x) ? selectedUsers.remove(x) : selectedUsers.add(x);
     notifyListeners();
   }
 
-  Future<List<User>> _findPeople(String request) async {
+  Future<List<UserModel>> _findPeople(String request) async {
     var result = await _peopleService.find(request, _allowCurrentUser);
-    if (_selectedUsers.isNotEmpty) {
-      var addedIds = _selectedUsers.map((x) => x.id);
+    if (selectedUsers.isNotEmpty) {
+      var addedIds = selectedUsers.map((x) => x.id);
       result.sort((x, y) {
         var xSelected = addedIds.contains(x.id);
         var ySelected = addedIds.contains(y.id);
@@ -67,14 +65,14 @@ class UserPickerViewModel extends BaseViewModel {
     return result;
   }
 
-  void _updateSearchResults(List<User> users) {
+  void _updateSearchResults(List<UserModel> users) {
     if (!_searchPerformed) {
       return;
     }
     _searchPerformed = false;
 
-    _users.clear();
-    _users.addAll(users);
+    users.clear();
+    users.addAll(users);
 
     notifyListeners();
   }

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/helpers/text_editing_value_helper.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/viewmodels/image_view_model.dart';
 import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
-class EditTeamRoute extends MaterialPageRoute<Team> {
-  EditTeamRoute([Team team])
+class EditTeamRoute extends MaterialPageRoute {
+  EditTeamRoute([TeamModel team])
       : super(
           builder: (context) {
             return ChangeNotifierProvider<EditTeamViewModel>(
               create: (context) {
-                return EditTeamViewModel.fromTeam(team);
+                return EditTeamViewModel(team);
               },
               child: _EditTeamPage(),
             );
@@ -61,19 +60,13 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                     SizedBox(height: 20.0),
                     GestureDetector(
                       onTap: () => viewModel.pickFile(context),
-                      child: ChangeNotifierProvider.value(
-                        value: viewModel.imageViewModel,
-                        child: Consumer<ImageViewModel>(
-                          builder: (context, vm, child) {
-                            return RoundedImageWidget.square(
-                              imageUrl: vm.imageUrl,
-                              title: viewModel.initialName,
-                              size: 112.0,
-                              borderRadius: 8,
-                              file: vm.file,
-                            );
-                          },
-                        ),
+                      child: RoundedImageWidget.square(
+                        imageUrl: viewModel.imageUrl,
+                        title: viewModel.name,
+                        size: 112.0,
+                        borderRadius: 8,
+                        file: viewModel.imageFile,
+                        addHeroAnimation: true,
                       ),
                     ),
                     SizedBox(height: 36.0),
@@ -132,11 +125,11 @@ class _EditTeamPageState extends State<_EditTeamPage> {
             if (viewModel.isBusy) {
               return;
             }
-            var team = await viewModel.save(
+            await viewModel.save(
               _nameController.text,
               _descriptionController.text,
             );
-            Navigator.of(context).pop(team);
+            Navigator.of(context).pop();
           }
         },
         label: Text(localizer().save),
@@ -148,10 +141,9 @@ class _EditTeamPageState extends State<_EditTeamPage> {
   @override
   void initState() {
     var viewModel = Provider.of<EditTeamViewModel>(context, listen: false);
-    _nameController.value =
-        TextEditingValueHelper.buildForText(viewModel.initialName);
+    _nameController.value = TextEditingValueHelper.buildForText(viewModel.name);
     _descriptionController.value =
-        TextEditingValueHelper.buildForText(viewModel.initialDescription);
+        TextEditingValueHelper.buildForText(viewModel.description);
     super.initState();
   }
 

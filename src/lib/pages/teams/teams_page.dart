@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/team.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -17,7 +17,7 @@ class TeamsPageRoute extends MaterialPageRoute {
   TeamsPageRoute({
     Set<String> excludedTeamIds,
     Icon selectorIcon,
-    void Function(BuildContext, Team) onItemSelected,
+    void Function(BuildContext, TeamModel) onItemSelected,
     bool showAddButton,
   }) : super(
           builder: (context) => TeamsPage(
@@ -35,20 +35,20 @@ class TeamsPage extends StatelessWidget {
     size: 16.0,
     color: KudosTheme.accentColor,
   );
-  static final void Function(BuildContext, Team) defaultItemSelector =
+  static final void Function(BuildContext, TeamModel) defaultItemSelector =
       (context, team) => Navigator.of(context).push(
-            ManageTeamRoute(team.id),
+            ManageTeamRoute(team),
           );
 
   final Set<String> _excludedTeamIds;
-  final void Function(BuildContext, Team) _onItemSelected;
+  final void Function(BuildContext, TeamModel) _onItemSelected;
   final Icon _selectorIcon;
   final bool _showAddButton;
 
   TeamsPage({
     Set<String> excludedTeamIds,
     Icon selectorIcon,
-    Function(BuildContext, Team) onItemSelected,
+    Function(BuildContext, TeamModel) onItemSelected,
     bool showAddButton,
   })  : _excludedTeamIds = excludedTeamIds,
         _selectorIcon = selectorIcon ?? defaultSelectorIcon,
@@ -64,7 +64,7 @@ class TeamsPage extends StatelessWidget {
         child:
             ChangeNotifierProxyProvider<SearchInputViewModel, MyTeamsViewModel>(
           create: (context) =>
-              MyTeamsViewModel(excludedTeamIds: _excludedTeamIds)..initialize(),
+              MyTeamsViewModel(excludedTeamIds: _excludedTeamIds),
           update: (context, searchViewModel, teamsViewModel) =>
               teamsViewModel..filterByName(searchViewModel.query),
           child: Column(
@@ -77,14 +77,14 @@ class TeamsPage extends StatelessWidget {
                       Positioned.fill(
                         child: Consumer<MyTeamsViewModel>(
                           builder: (context, viewModel, child) {
-                            return StreamBuilder<List<Team>>(
+                            return StreamBuilder<List<TeamModel>>(
                               stream: viewModel.teamsStream,
                               builder: (BuildContext context,
-                                  AsyncSnapshot<List<Team>> snapshot) {
+                                  AsyncSnapshot<List<TeamModel>> snapshot) {
                                 if (viewModel.isBusy || snapshot.data == null) {
                                   return _buildLoading();
                                 }
-                                if (snapshot.data.isEmpty) {
+                                if (snapshot.data?.isEmpty ?? true) {
                                   return _buildEmpty();
                                 } else {
                                   return _buildList(context, snapshot.data);
@@ -146,7 +146,7 @@ class TeamsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildList(BuildContext context, List<Team> teams) {
+  Widget _buildList(BuildContext context, List<TeamModel> teams) {
     return ListOfTeamsWidget(
       padding: EdgeInsets.only(
           top: TopDecorator.height, bottom: BottomDecorator.height),

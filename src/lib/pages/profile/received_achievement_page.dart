@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kudosapp/dto/user_achievement.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/user_achievement_collection.dart';
+import 'package:kudosapp/models/user_achievement_model.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -42,27 +42,29 @@ class ReceivedAchievementPage extends StatelessWidget {
 
   List<Widget> _buildSlivers(
       BuildContext context, ReceivedAchievementViewModel viewModel) {
+    Widget bottomArea;
     if (viewModel.isBusy) {
-      return [
-        SliverFillRemaining(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+      bottomArea = SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
         ),
-      ];
+      );
+    } else {
+      bottomArea = SliverToBoxAdapter(
+        child: _buildBody(context, viewModel),
+      );
     }
 
     return [
       _buildAppBar(context, viewModel),
-      SliverToBoxAdapter(
-        child: _buildBody(context, viewModel),
-      ),
+      bottomArea,
     ];
   }
 
   Widget _buildAppBar(
       BuildContext context, ReceivedAchievementViewModel viewModel) {
     return SliverGradientAppBar(
+        heroTag: viewModel.achievementCollection.imageUrl,
         title: viewModel.relatedAchievement.name,
         imageWidget: _buildAppBarImage(
           context,
@@ -73,7 +75,7 @@ class ReceivedAchievementPage extends StatelessWidget {
             icon: Icon(Icons.info_outline),
             onPressed: () {
               Navigator.of(context).push(
-                AchievementDetailsRoute(viewModel.relatedAchievement.id),
+                AchievementDetailsRoute(viewModel.relatedAchievement),
               );
             },
           )
@@ -107,7 +109,7 @@ class ReceivedAchievementPage extends StatelessWidget {
   }
 
   Widget _buildUserAchievementView(
-      BuildContext context, UserAchievement userAchievementModel) {
+      BuildContext context, UserAchievementModel userAchievementModel) {
     return SimpleListItem(
       imageShape: ImageShape.circle(56),
       imageUrl: userAchievementModel.sender.imageUrl,
@@ -116,8 +118,7 @@ class ReceivedAchievementPage extends StatelessWidget {
           DateFormat.yMd().add_jm().format(userAchievementModel.date.toDate()),
       contentWidget: _buildCommentView(userAchievementModel.comment),
       onTap: () {
-        Navigator.of(context)
-            .push(ProfileRoute(userAchievementModel.sender.id));
+        Navigator.of(context).push(ProfileRoute(userAchievementModel.sender));
       },
       useTextPlaceholder: true,
     );

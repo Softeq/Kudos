@@ -3,12 +3,17 @@ import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class UserTeamsViewModel extends BaseViewModel {
-  final teamNames = List<String>();
-
   final _teamsService = locator<TeamsService>();
 
-  void initialize(String userId) async {
-    var teams = await _teamsService.getTeams(userId);
+  final String _userId;
+  final teamNames = List<String>();
+
+  UserTeamsViewModel(this._userId){
+    _initialize();
+  }
+
+  void _initialize() async {
+    var teams = await _teamsService.getTeams(_userId);
     teamNames.addAll(teams.map((x) => x.name));
     notifyListeners();
   }

@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 
 class MockAuthService extends BaseAuthService {
-  Function(User) _handler;
+  Function(UserModel) _handler;
 
   @override
-  User get currentUser => User.mock();
+  UserModel get currentUser => UserModel.mock();
 
   @override
   Future<void> signIn() async {
@@ -22,7 +22,7 @@ class MockAuthService extends BaseAuthService {
   }
 
   @override
-  void silentInit(Function(User) userChangedHandler) async {
+  void silentInit(Function(UserModel) userChangedHandler) async {
     _handler = userChangedHandler;
 
     await Future.delayed(Duration(seconds: 1));

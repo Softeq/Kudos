@@ -15,6 +15,7 @@ class RoundedImageWidget extends StatefulWidget {
   final double _size;
   final File _file;
   final Color _placeholderColor;
+  final bool _addHeroAnimation;
 
   RoundedImageWidget._(
     this._imageUrl,
@@ -23,6 +24,7 @@ class RoundedImageWidget extends StatefulWidget {
     this._size,
     this._file,
     this._placeholderColor,
+    this._addHeroAnimation,
   );
 
   factory RoundedImageWidget.circular({
@@ -31,6 +33,7 @@ class RoundedImageWidget extends StatefulWidget {
     String title,
     File file,
     Color placeholderColor,
+    bool addHeroAnimation,
   }) {
     return RoundedImageWidget._(
       imageUrl,
@@ -39,6 +42,7 @@ class RoundedImageWidget extends StatefulWidget {
       size,
       file,
       placeholderColor,
+      addHeroAnimation,
     );
   }
 
@@ -49,6 +53,7 @@ class RoundedImageWidget extends StatefulWidget {
     String title,
     File file,
     Color placeholderColor,
+    bool addHeroAnimation,
   }) {
     return RoundedImageWidget._(
       imageUrl,
@@ -57,6 +62,7 @@ class RoundedImageWidget extends StatefulWidget {
       size,
       file,
       placeholderColor,
+      addHeroAnimation,
     );
   }
 
@@ -89,11 +95,26 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
       _file = widget._file;
     }
 
+    if (_file == null) {
+      _loadImageFromMemory();
+    }
+
     if (_file != null) {
       return _buildImageWidget();
     } else {
       _loadImage();
       return _buildPlaceholderWidget();
+    }
+  }
+
+  void _loadImageFromMemory() {
+    if (_url != null) {
+      var fileInfo = DefaultCacheManager().getFileFromMemory(_url);
+      if (fileInfo?.file != null) {
+        if (!_isDisposed) {
+          _file = fileInfo.file;
+        }
+      }
     }
   }
 
@@ -151,9 +172,11 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
 
   Widget _buildImageWidget() {
     var fileExtension = path.extension(_file.path);
+
+    Widget imageWidget;
     switch (fileExtension) {
       case ".svg":
-        return ClipRRect(
+        imageWidget = ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
             child: SvgPicture.file(
@@ -164,8 +187,9 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
             ),
           ),
         );
+        break;
       default:
-        return ClipRRect(
+        imageWidget = ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
             child: Image.file(
@@ -177,5 +201,9 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
           ),
         );
     }
+
+    return (widget._addHeroAnimation ?? false)
+        ? Hero(child: imageWidget, tag: widget._imageUrl)
+        : imageWidget;
   }
 }

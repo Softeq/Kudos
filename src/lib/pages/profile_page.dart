@@ -1,21 +1,22 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class ProfileRoute extends MaterialPageRoute {
-  ProfileRoute(String userId)
+  ProfileRoute(UserModel userModel)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ProfileViewModel>(
-              create: (context) => ProfileViewModel(userId)..initialize(),
+              create: (context) => ProfileViewModel(userModel),
               child: ProfilePage(),
             );
           },
@@ -29,7 +30,7 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
           return CustomScrollView(
-            slivers: _buildSlivers(context, viewModel),
+            slivers: _buildSlivers(context, viewModel).toList(),
           );
         },
       ),
@@ -43,22 +44,22 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
-    if (viewModel.user == null) {
-      return [
-        SliverFillRemaining(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      ];
-    }
+  Iterable<Widget> _buildSlivers(
+      BuildContext context, ProfileViewModel viewModel) sync* {
+    yield SliverGradientAppBar(
+      title: viewModel.userName,
+      imageWidget: _buildAppBarImage(context, viewModel.imageUrl),
+      heroTag: viewModel.imageUrl,
+    );
 
-    return [
-      SliverGradientAppBar(
-          title: viewModel.user.name,
-          imageWidget: _buildAppBarImage(viewModel.user.imageUrl)),
-      _addDefaultSliverPadding(
+    if (viewModel.user == null) {
+      yield SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else {
+      yield _addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +67,7 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 16),
               SectionHeaderWidget(localizer().teams),
               SizedBox(height: 10),
-              FancyListWidget<Team>(
+              FancyListWidget<TeamModel>(
                 viewModel.userTeams,
                 (team) => team.name,
                 localizer().userTeamsEmptyPlaceholder,
@@ -77,23 +78,19 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      _addDefaultSliverPadding(
+      );
+      yield _addDefaultSliverPadding(
         ProfileAchievementsListWidget(viewModel.user.id, true, false),
-      ),
-    ];
+      );
+    }
   }
 
-  Widget _buildAppBarImage(String imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-          ),
-        ),
+  Widget _buildAppBarImage(BuildContext context, String imageUrl) {
+    return Center(
+      child: RoundedImageWidget.square(
+        imageUrl: imageUrl,
+        size: MediaQuery.of(context).size.width,
+        borderRadius: 0,
       ),
     );
   }

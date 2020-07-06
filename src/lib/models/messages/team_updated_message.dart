@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/models/team_model.dart';
 
 @immutable
 class TeamUpdatedMessage {
-  final Team team;
+  final TeamModel team;
 
   TeamUpdatedMessage(this.team);
 }

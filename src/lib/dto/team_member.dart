@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 
 /// Teams collection -> team_members array
 @immutable
@@ -8,7 +8,7 @@ class TeamMember {
   final String id;
   final String name;
 
-  factory TeamMember.fromUser(User user) {
+  factory TeamMember.fromModel(UserModel user) {
     return TeamMember._(user.id, user.name);
   }
 

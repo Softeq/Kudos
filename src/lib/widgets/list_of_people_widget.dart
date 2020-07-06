@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:sprintf/sprintf.dart';
 
 class ListOfPeopleWidget extends StatelessWidget {
-  final List<User> users;
-  final void Function(User user) itemSelector;
-  final void Function(User user) trailingSelector;
+  final List<UserModel> users;
+  final void Function(UserModel user) itemSelector;
+  final void Function(UserModel user) trailingSelector;
   final Widget trailingWidget;
-  final Widget Function(User user) trailingWidgetFunction;
+  final Widget Function(UserModel user) trailingWidgetFunction;
   final EdgeInsets padding;
 
   ListOfPeopleWidget({
@@ -54,6 +54,7 @@ class ListOfPeopleWidget extends StatelessWidget {
       selectorIcon: trailingWidget ?? trailingWidgetFunction(user),
       imageShape: ImageShape.circle(50),
       useTextPlaceholder: true,
+      addHeroAnimation: true,
     );
   }
 }

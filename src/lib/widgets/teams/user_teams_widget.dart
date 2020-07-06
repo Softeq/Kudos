@@ -12,7 +12,7 @@ class UserTeamsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UserTeamsViewModel>(
-      create: (context) => UserTeamsViewModel()..initialize(_userId),
+      create: (context) => UserTeamsViewModel(_userId),
       child: Consumer<UserTeamsViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.teamNames.isEmpty) {

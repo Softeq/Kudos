@@ -26,7 +26,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProfileAchievementsViewModel>(
       create: (context) {
-        return ProfileAchievementsViewModel(_userId)..initialize();
+        return ProfileAchievementsViewModel(_userId);
       },
       child: Consumer<ProfileAchievementsViewModel>(
         builder: (context, viewModel, child) {
@@ -91,6 +91,67 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     }
   }
 
+  Widget _buildList(
+    List<UserAchievementCollection> achievementCollections,
+    bool isMyProfile,
+  ) {
+    return ListView.builder(
+      padding: EdgeInsets.only(
+          top: TopDecorator.height, bottom: BottomDecorator.height),
+      itemCount: achievementCollections.length,
+      itemBuilder: (context, index) {
+        final achievementCollection = achievementCollections[index];
+        final relatedAchievement =
+            achievementCollection.userAchievements[0].achievement;
+
+        return SimpleListItem(
+          title: relatedAchievement.name,
+          description:
+              sprintf(localizer().from, [achievementCollection.senders]),
+          imageUrl: achievementCollection.imageUrl,
+          imageCounter: achievementCollection.count,
+          onTap: () {
+            if (isMyProfile) {
+              Navigator.of(context).push(
+                ReceivedAchievementRoute(achievementCollection),
+              );
+            } else {
+              Navigator.of(context).push(
+                AchievementDetailsRoute(relatedAchievement),
+              );
+            }
+          },
+          imageShape: ImageShape.circle(60),
+        );
+      },
+    );
+  }
+
+  Widget _buildFancyGrid(
+    List<UserAchievementCollection> achievementCollections,
+    bool isMyProfile,
+  ) {
+    return GridView.builder(
+        padding: EdgeInsets.only(
+          top: TopDecorator.height + 10,
+          bottom: BottomDecorator.height,
+          left: 8,
+          right: 8,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 30,
+          childAspectRatio: 0.86,
+          mainAxisSpacing: 20,
+        ),
+        itemBuilder: (context, index) => _buildGridItem(
+              context,
+              achievementCollections[index],
+              isMyProfile,
+            ),
+        itemCount: achievementCollections.length);
+  }
+
   Widget _buildView(
     List<UserAchievementCollection> achievementCollections,
     bool isMyProfile,
@@ -112,36 +173,8 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         ),
       );
     }
-    return ListView.builder(
-      padding: EdgeInsets.only(top: TopDecorator.height, bottom: BottomDecorator.height),
-      itemCount: achievementCollections.length,
-      itemBuilder: (context, index) {
-        final achievementCollection = achievementCollections[index];
-        final relatedAchievement =
-            achievementCollection.userAchievements[0].achievement;
 
-        return SimpleListItem(
-          title: relatedAchievement.name,
-          description:
-              sprintf(localizer().from, [achievementCollection.senders]),
-          imageUrl: achievementCollection.imageUrl,
-          imageCounter: achievementCollection.count,
-          onTap: () {
-            if (isMyProfile) {
-              Navigator.of(context).push(
-                ReceivedAchievementRoute(achievementCollection),
-              );
-            } else {
-              Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id),
-              );
-            }
-          },
-          imageShape: ImageShape.circle(60),
-          useTextPlaceholder: false,
-        );
-      },
-    );
+    return _buildList(achievementCollections, isMyProfile);
   }
 
   Widget _buildGridItem(
@@ -153,12 +186,37 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         achievementCollection.userAchievements[0].achievement;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final children = <Widget>[
-          RoundedImageWidget.circular(
-            imageUrl: achievementCollection.imageUrl,
-            size: constraints.maxWidth,
+        var width = constraints.maxWidth;
+        var height = constraints.maxHeight;
+
+        var children = <Widget>[];
+
+        children.add(
+          Positioned.directional(
+            textDirection: TextDirection.ltr,
+            bottom: 0,
+            start: 0,
+            end: 0,
+            child: RoundedImageWidget.circular(
+              imageUrl: achievementCollection.imageUrl,
+              size: width - 5,
+              addHeroAnimation: true,
+            ),
           ),
-        ];
+        );
+
+        // children.add(
+        //   Positioned.fill(
+        //     child: Image(
+        //       image: AssetImage(
+        //           'assets/icons/medal_cropped_placeholder_blured_white.png'),
+        //       width: width,
+        //       height: height,
+        //       fit: BoxFit.fitWidth,
+        //       alignment: Alignment.bottomCenter,
+        //     ),
+        //   ),
+        // );
 
         if (achievementCollection.count > 1) {
           children.add(
@@ -166,8 +224,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               bottom: 5.0,
               right: 2.0,
               child: CounterWidget(
-                  count: achievementCollection.count,
-                  height: constraints.maxWidth / 3.0),
+                  count: achievementCollection.count, height: width / 3.0),
             ),
           );
         }
@@ -183,7 +240,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               );
             } else {
               Navigator.of(context).push(
-                AchievementDetailsRoute(relatedAchievement.id),
+                AchievementDetailsRoute(relatedAchievement),
               );
             }
           },

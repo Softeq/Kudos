@@ -1,32 +1,33 @@
-import 'package:kudosapp/dto/team.dart';
-import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/helpers/disposable.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ProfileViewModel extends BaseViewModel with Disposable {
-  final PeopleService _peopleService = locator<PeopleService>();
   final TeamsService _teamsService = locator<TeamsService>();
-  final String _userId;
+  final PeopleService _peopleService = locator<PeopleService>();
 
-  User _user;
+  final UserModel user;
+  final ListNotifier<TeamModel> userTeams = new ListNotifier<TeamModel>();
 
-  ProfileViewModel(this._userId);
+  String get imageUrl => user.imageUrl;
+  String get userName => user.name ?? "";
 
-  User get user => _user;
+  ProfileViewModel(this.user) {
+    _initialize();
+  }
 
-  final ListNotifier<Team> userTeams = new ListNotifier<Team>();
+  void _initialize() async {
+    final loadedUser = await _peopleService.getUserById(user.id);
+    user.updateWithModel(loadedUser);
 
-  Future<void> initialize() async {
-    final user = await _peopleService.getUserById(_userId);
-    _user = user;
-
-    final teams = await _teamsService.getTeams(_userId);
+    final teams = await _teamsService.getTeams(user.id);
     userTeams.replace(teams);
-    
+
     notifyListeners();
   }
 }

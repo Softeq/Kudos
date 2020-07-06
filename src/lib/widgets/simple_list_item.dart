@@ -13,6 +13,7 @@ class ImageShape {
   ImageShape.square(this.size, this.cornerRadius)
       : isSquare = true,
         isCircle = false;
+
   ImageShape.circle(this.size)
       : cornerRadius = 0,
         isSquare = false,
@@ -32,6 +33,7 @@ class SimpleListItem extends StatelessWidget {
   final ImageShape imageShape;
   final Widget contentWidget;
   final bool useTextPlaceholder;
+  final bool addHeroAnimation;
 
   SimpleListItem({
     this.onTap,
@@ -43,6 +45,7 @@ class SimpleListItem extends StatelessWidget {
     this.imageShape,
     this.contentWidget,
     this.useTextPlaceholder,
+    this.addHeroAnimation,
   });
 
   @override
@@ -67,11 +70,12 @@ class SimpleListItem extends StatelessWidget {
 
     if (onTap != null) {
       item = Material(
-          color: Colors.transparent,
-          child: InkWell(
-            child: item,
-            onTap: onTap,
-          ));
+        color: Colors.transparent,
+        child: InkWell(
+          child: item,
+          onTap: onTap,
+        ),
+      );
     }
     return item;
   }
@@ -147,6 +151,7 @@ class SimpleListItem extends StatelessWidget {
         imageUrl: imageUrl,
         size: imageShape.size,
         title: useTextPlaceholder ? title : null,
+        addHeroAnimation: addHeroAnimation,
       );
     } else {
       return RoundedImageWidget.square(
@@ -154,6 +159,7 @@ class SimpleListItem extends StatelessWidget {
         size: imageShape.size,
         borderRadius: imageShape.cornerRadius,
         title: useTextPlaceholder ? title : null,
+        addHeroAnimation: addHeroAnimation,
       );
     }
   }

@@ -1,88 +1,84 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/dto/team.dart';
-import 'package:kudosapp/dto/team_member.dart';
-import 'package:kudosapp/models/image_data.dart';
+import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 
 class TeamsService {
-  static const String _teamsCollection = "teams";
+  static const _teamsCollection = "teams";
 
   final _database = Firestore.instance;
+  final _imageService = locator<ImageService>();
   final _authService = locator<BaseAuthService>();
   final _achievementsService = locator<AchievementsService>();
 
-  Future<Team> createTeam(String name, String description, [File file]) async {
-    if (name == null || name.isEmpty) {
-      throw ArgumentError.notNull(name);
+  Future<TeamModel> createTeam(TeamModel team) async {
+    if (team.name == null || team.name.isEmpty) {
+      throw ArgumentError.notNull(team.name);
     }
 
-    ImageData imageData;
-
-    if (file != null) {
-      final imageService = locator<ImageService>();
-      imageData = await imageService.uploadImage(file);
+    if (team.imageFile != null) {
+      var imageData = await _imageService.uploadImage(team.imageFile);
+      team.imageUrl = imageData.url;
+      team.imageName = imageData.name;
     }
 
-    var firstMember = TeamMember.fromUser(_authService.currentUser);
+    team.members = [_authService.currentUser];
+    team.owners = [_authService.currentUser];
 
-    var docRef = await _database.collection(_teamsCollection).add(
-          Team.createMap(
-            name: name,
-            imageUrl: imageData?.url,
-            imageName: imageData?.name,
-            description: description,
-            members: [firstMember],
-            owners: [firstMember],
-            isActive: true,
-          ),
-        );
+    var map = Team.createMap(
+      name: team.name,
+      imageUrl: team.imageUrl,
+      imageName: team.imageName,
+      description: team.description,
+      members: team.members,
+      owners: team.owners,
+      isActive: true,
+    );
+
+    var docRef = await _database.collection(_teamsCollection).add(map);
 
     var document = await docRef.get();
-    return Team.fromDocument(document);
+    return TeamModel.fromTeam(Team.fromDocument(document));
   }
 
-  Future<Team> editTeam(String id, String name, String description,
-      [File file]) async {
-    if (name == null || name.isEmpty) {
-      throw ArgumentError.notNull(name);
+  Future<TeamModel> editTeam(TeamModel team) async {
+    if (team.name == null || team.name.isEmpty) {
+      throw ArgumentError.notNull(team.name);
     }
 
-    final docRef = _database.collection(_teamsCollection).document(id);
-    Map<String, dynamic> map;
+    final docRef = _database.collection(_teamsCollection).document(team.id);
 
-    if (file != null) {
-      final imageService = locator<ImageService>();
-      final imageData = await imageService.uploadImage(file);
-      map = Team.createMap(
-        name: name,
-        description: description,
-        imageUrl: imageData?.url,
-        imageName: imageData?.name,
-      );
+    if (team.imageFile != null) {
+      var imageData = await _imageService.uploadImage(team.imageFile);
+      team.imageUrl = imageData.url;
+      team.imageName = imageData.name;
     } else {
-      map = Team.createMap(
-        name: name,
-        description: description,
-      );
+      team.imageUrl = null;
+      team.imageName = null;
     }
+    var map = Team.createMap(
+      name: team.name,
+      description: team.description,
+      imageUrl: team.imageUrl,
+      imageName: team.imageName,
+    );
 
     await docRef.setData(map, merge: true);
 
     final document = await docRef.get();
-    return Team.fromDocument(document);
+    return TeamModel.fromTeam(Team.fromDocument(document));
   }
 
   Future<void> updateTeamMembers({
     @required String teamId,
-    @required List<TeamMember> newMembers,
-    @required List<TeamMember> newAdmins,
+    @required List<UserModel> newMembers,
+    @required List<UserModel> newAdmins,
   }) {
     return _database.collection(_teamsCollection).document(teamId).setData(
           Team.createMap(
@@ -93,7 +89,7 @@ class TeamsService {
         );
   }
 
-  Future<List<Team>> getTeams([String id]) async {
+  Future<List<TeamModel>> getTeams([String id]) async {
     var userId = id;
     if (userId == null) {
       userId = _authService.currentUser.id;
@@ -104,16 +100,19 @@ class TeamsService {
         .where("visible_for", arrayContains: userId)
         .where("is_active", isEqualTo: true)
         .getDocuments();
-    return qs.documents.map((x) => Team.fromDocument(x)).toList();
+    return qs.documents
+        .map((x) => TeamModel.fromTeam(Team.fromDocument(x)))
+        .toList();
   }
 
-  Future<Team> getTeam(String id) async {
+  Future<TeamModel> getTeam(String id) async {
     final document =
         await _database.collection(_teamsCollection).document(id).get();
-    return Team.fromDocument(document);
+    return TeamModel.fromTeam(Team.fromDocument(document));
   }
 
-  Future<void> deleteTeam(Team team, List<Achievement> achievements) async {
+  Future<void> deleteTeam(
+      TeamModel team, List<AchievementModel> achievements) async {
     final docRef = _database.collection(_teamsCollection).document(team.id);
 
     var batch = _database.batch();
@@ -129,7 +128,7 @@ class TeamsService {
     await batch.commit();
   }
 
-  bool canBeModifiedByCurrentUser(Team team) {
+  bool canBeModifiedByCurrentUser(TeamModel team) {
     final userId = _authService.currentUser.id;
     final admin =
         team.owners.firstWhere((x) => x.id == userId, orElse: () => null);

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kudosapp/models/user_model.dart';
 
 /// Users collection
 @immutable
@@ -29,6 +30,16 @@ class User {
     );
   }
 
+  factory User.fromModel(UserModel userModel) {
+    return User._(
+      id: userModel.id,
+      name: userModel.name,
+      email: userModel.email,
+      imageUrl: userModel.imageUrl,
+      receivedAchievementsCount: userModel.receivedAchievementsCount,
+    );
+  }
+
   factory User.fromFirebase(FirebaseUser x) {
     final uid = x.email.split("@").first;
 
@@ -37,16 +48,6 @@ class User {
       name: x.displayName,
       email: x.email,
       imageUrl: x.photoUrl,
-      receivedAchievementsCount: 0,
-    );
-  }
-
-  factory User.mock({int index = 0}) {
-    return User._(
-      id: "test_id #{$index}",
-      name: "Test Name #$index",
-      email: "test.name@softeq.com",
-      imageUrl: "https://picsum.photos/200?random=$index",
       receivedAchievementsCount: 0,
     );
   }

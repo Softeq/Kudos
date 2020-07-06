@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/user_model.dart';
 
 /// [User] model that used for update user profile after auth.
 /// Users collection
@@ -15,7 +16,7 @@ class UserRegistration {
     @required this.imageUrl,
   });
 
-  factory UserRegistration.fromUser(User x) {
+  factory UserRegistration.fromUser(UserModel x) {
     return UserRegistration._(
       name: x.name,
       email: x.email,

@@ -2,15 +2,17 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kudosapp/dto/achievement.dart';
-import 'package:kudosapp/dto/team.dart';
-import 'package:kudosapp/dto/team_member.dart';
-import 'package:kudosapp/dto/user.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/messages/team_deleted_message.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
+import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
+import 'package:kudosapp/pages/teams/edit_team_page.dart';
+import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/teams_service.dart';
@@ -18,65 +20,46 @@ import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
-  final members = ListNotifier<TeamMember>();
-  final admins = ListNotifier<TeamMember>();
-
-  final _achievements = List<Achievement>();
-  final _achievementsService = locator<AchievementsService>();
-  final _teamsService = locator<TeamsService>();
   final _eventBus = locator<EventBus>();
+  final _teamsService = locator<TeamsService>();
   final _dialogService = locator<DialogService>();
+  final _achievementsService = locator<AchievementsService>();
 
+  final TeamModel _team;
   bool _canEdit;
 
-  Team _initialTeam;
+  List<AchievementModel> achievements;
+  ListNotifier<UserModel> members;
+  ListNotifier<UserModel> admins;
 
   StreamSubscription _achievementUpdatedSubscription;
   StreamSubscription _achievementDeletedSubscription;
   StreamSubscription _achievementTransferredSubscription;
 
-  String get name => _initialTeam?.name;
-
-  String get description => _initialTeam.description;
-
-  String get imageUrl => _initialTeam.imageUrl;
-
+  String get name => _team.name;
+  String get description => _team.description;
+  String get imageUrl => _team.imageUrl;
   String get owners => admins.items.map((x) => x.name).join(", ");
 
-  bool get canEdit {
-    if (_canEdit == null) {
-      _canEdit = _teamsService.canBeModifiedByCurrentUser(_initialTeam);
-    }
+  bool get canEdit => _team.owners == null
+      ? false
+      : _canEdit ??
+          (_canEdit = _teamsService.canBeModifiedByCurrentUser(_team));
 
-    return _canEdit;
+  ManageTeamViewModel(this._team) {
+    _initialize();
   }
 
-  Team get modifiedTeam {
-    return _initialTeam.copy(
-      members: members.items,
-      owners: admins.items,
-    );
-  }
-
-  int get itemsCount => _achievements.length;
-
-  @override
-  void dispose() {
-    members.dispose();
-    admins.dispose();
-    _achievementUpdatedSubscription?.cancel();
-    _achievementDeletedSubscription?.cancel();
-    _achievementTransferredSubscription?.cancel();
-    super.dispose();
-  }
-
-  Future<void> initialize(String teamId) async {
+  void _initialize() async {
     isBusy = true;
-    final team = await _teamsService.getTeam(teamId);
-    _initialTeam = team;
-    members.replace(_initialTeam.members);
-    admins.replace(_initialTeam.owners);
-    _loadAchievements();
+
+    final loadedTeam = await _teamsService.getTeam(_team.id);
+    _team.updateWithModel(loadedTeam);
+    members = new ListNotifier<UserModel>.wrap(loadedTeam.members);
+    admins = new ListNotifier<UserModel>.wrap(_team.owners);
+
+    achievements = await _achievementsService.getTeamAchievements(_team.id) ??
+        new List<AchievementModel>();
 
     _achievementUpdatedSubscription?.cancel();
     _achievementUpdatedSubscription =
@@ -94,103 +77,124 @@ class ManageTeamViewModel extends BaseViewModel {
     isBusy = false;
   }
 
-  void updateTeamMetadata(
-    String name,
-    String description,
-    String imageUrl,
-    String imageName,
-  ) {
-    _initialTeam = _initialTeam.copy(
-      name: name,
-      description: description,
-      imageUrl: imageUrl,
-      imageName: imageName,
-    );
-    notifyListeners();
-  }
-
-  void replaceMembers(Iterable<User> users) {
-    if (users == null) {
+  void editAdmins(BuildContext context) async {
+    if (canEdit) {
       return;
     }
 
-    var teamMembers = users.map((x) => TeamMember.fromUser(x)).toList();
-    members.replace(teamMembers);
-
-    _teamsService.updateTeamMembers(
-      teamId: _initialTeam.id,
-      newMembers: teamMembers,
-      newAdmins: admins.items,
+    var users = await Navigator.of(context).push(
+      UserPickerRoute(
+        allowMultipleSelection: true,
+        allowCurrentUser: true,
+        searchHint: localizer().searchAdmins,
+        selectedUserIds: admins.items.map((x) => x.id).toList(),
+      ),
     );
+    _replaceAdmins(users);
   }
 
-  Future<void> deleteTeam(BuildContext context) async {
+  void editMembers(BuildContext context) async {
+    if (!canEdit) {
+      return;
+    }
+
+    var users = await Navigator.of(context).push(
+      UserPickerRoute(
+        allowMultipleSelection: true,
+        allowCurrentUser: true,
+        searchHint: localizer().searchMembers,
+        selectedUserIds: members.items.map((x) => x.id).toList(),
+      ),
+    );
+    _replaceMembers(users);
+  }
+
+  void editTeam(BuildContext context) async {
+    await Navigator.of(context).push(EditTeamRoute(_team));
+    notifyListeners();
+  }
+
+  void createAchievement(BuildContext context) {
+    Navigator.of(context)
+        .push(EditAchievementRoute.createTeamAchievement(_team));
+  }
+
+  void deleteTeam(BuildContext context) async {
     if (await _dialogService.showDeleteCancelDialog(
         context: context,
         title: localizer().warning,
         content: localizer().deleteTeamWarning)) {
       isBusy = true;
 
-      await _teamsService.deleteTeam(_initialTeam, _achievements.toList());
+      await _teamsService.deleteTeam(_team, achievements);
 
       isBusy = false;
-      _eventBus.fire(TeamDeletedMessage(_initialTeam.id));
+      _eventBus.fire(TeamDeletedMessage(_team.id));
       _eventBus.fire(AchievementDeletedMessage.multiple(
-          _achievements.map((x) => x.id).toSet()));
+          achievements.map((x) => x.id).toSet()));
       Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 
-  void replaceAdmins(Iterable<User> users) {
+  void _replaceMembers(Iterable<UserModel> users) {
+    if (users == null) {
+      return;
+    }
+
+    members.replace(users);
+
+    _teamsService.updateTeamMembers(
+      teamId: _team.id,
+      newMembers: users,
+      newAdmins: admins.items,
+    );
+  }
+
+  void _replaceAdmins(Iterable<UserModel> users) {
     if (users == null || users.isEmpty) {
       return;
     }
 
-    var owners = users.map((x) => TeamMember.fromUser(x)).toList();
-    admins.replace(owners);
+    admins.replace(users);
 
     _teamsService.updateTeamMembers(
-      teamId: _initialTeam.id,
+      teamId: _team.id,
       newMembers: members.items,
-      newAdmins: owners,
+      newAdmins: users,
     );
-  }
-
-  Achievement getData(int index) {
-    return _achievements[index];
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
-    if (event.achievement.teamReference?.id != _initialTeam.id) {
+    if (event.achievement.owner.id != _team.id) {
       return;
     }
 
-    final index = _achievements.indexWhere(
+    final index = achievements.indexWhere(
       (x) => x.id == event.achievement.id,
     );
     if (index != -1) {
-      _achievements.removeAt(index);
-      _achievements.insert(index, event.achievement);
+      achievements.removeAt(index);
+      achievements.insert(index, event.achievement);
     } else {
-      _achievements.add(event.achievement);
+      achievements.add(event.achievement);
     }
     notifyListeners();
   }
 
   void _onAchievementDeleted(AchievementDeletedMessage event) {
-    _achievements.removeWhere((x) => event.ids.contains(x.id));
+    achievements.removeWhere((x) => event.ids.contains(x.id));
     notifyListeners();
   }
 
   void _onAchievementTransferred(AchievementTransferredMessage event) {
-    if (event.achievements.first.userReference?.id != _initialTeam.id) {
+    if (event.achievements.first.owner.id != _team.id) {
       var achievementIds = event.achievements.map((a) => a.id).toSet();
-      _achievements.removeWhere((x) => achievementIds.contains(x.id));
+      achievements.removeWhere((x) => achievementIds.contains(x.id));
     } else {
-      var achievementIds = _achievements.map((x) => x.id).toSet();
+      var achievementIds = achievements.map((x) => x.id).toSet();
       for (var achievement in event.achievements) {
         if (!achievementIds.contains(achievement.id)) {
-          _achievements.add(achievement);
+          achievements.add(achievement);
         }
       }
     }
@@ -198,11 +202,13 @@ class ManageTeamViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> _loadAchievements() async {
-    final result =
-        await _achievementsService.getTeamAchievements(_initialTeam.id);
-    _achievements.clear();
-    _achievements.addAll(result);
-    notifyListeners();
+  @override
+  void dispose() {
+    members.dispose();
+    admins.dispose();
+    _achievementUpdatedSubscription?.cancel();
+    _achievementDeletedSubscription?.cancel();
+    _achievementTransferredSubscription?.cancel();
+    super.dispose();
   }
 }

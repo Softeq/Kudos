@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
@@ -9,20 +9,15 @@ import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:kudosapp/viewmodels/profile/my_teams_viewmodel.dart';
 
 class MyProfileViewModel extends BaseViewModel {
-  final myTeamsViewModel = MyTeamsViewModel();
   final _peopleService = locator<PeopleService>();
   final _authService = locator<BaseAuthService>();
   final _dialogService = locator<DialogService>();
 
-  User get user => _authService.currentUser;
+  final myTeamsViewModel = MyTeamsViewModel();
 
-  @override
-  void dispose() {
-    myTeamsViewModel.dispose();
-    super.dispose();
-  }
+  UserModel get user => _authService.currentUser;
 
-  Future<void> signOut(BuildContext context) async {
+  void signOut(BuildContext context) async {
     if (await _dialogService.showTwoButtonsDialog(
         context: context,
         title: localizer().signOutConfirmationTitle,
@@ -33,5 +28,11 @@ class MyProfileViewModel extends BaseViewModel {
       await _peopleService.unsubscribeFromNotifications();
       await _authService.signOut();
     }
+  }
+
+  @override
+  void dispose() {
+    myTeamsViewModel.dispose();
+    super.dispose();
   }
 }

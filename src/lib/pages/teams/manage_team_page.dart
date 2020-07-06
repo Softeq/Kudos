@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/achievement.dart';
-import 'package:kudosapp/dto/team_member.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/list_notifier.dart';
+import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/helpers/list_notifier.dart';
+import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
-import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
-import 'package:kudosapp/pages/teams/edit_team_page.dart';
-import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/teams/manage_team_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_list_item_widget.dart';
@@ -17,12 +15,12 @@ import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class ManageTeamRoute extends MaterialPageRoute {
-  ManageTeamRoute(String teamId)
+  ManageTeamRoute(TeamModel teamModel)
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ManageTeamViewModel>(
               create: (context) {
-                return ManageTeamViewModel()..initialize(teamId);
+                return ManageTeamViewModel(teamModel);
               },
               child: _ManageTeamPage(),
             );
@@ -32,9 +30,7 @@ class ManageTeamRoute extends MaterialPageRoute {
 
 class _ManageTeamPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return _ManageTeamPageState();
-  }
+  State<StatefulWidget> createState() => _ManageTeamPageState();
 }
 
 class _ManageTeamPageState extends State<_ManageTeamPage> {
@@ -45,15 +41,6 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
   Widget build(BuildContext context) {
     return Consumer<ManageTeamViewModel>(
       builder: (context, viewModel, child) {
-        if (viewModel.isBusy) {
-          return Scaffold(
-            appBar: GradientAppBar(title: viewModel?.name),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-
         return Scaffold(
           appBar: GradientAppBar(
             title: viewModel.name,
@@ -61,7 +48,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
                 ? <Widget>[
                     IconButton(
                       icon: Icon(Icons.edit),
-                      onPressed: _editTeamTapped,
+                      onPressed: () => viewModel.editTeam(context),
                     ),
                     IconButton(
                       icon: Icon(Icons.delete_forever),
@@ -75,7 +62,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           body: _buildBody(viewModel),
           floatingActionButton: viewModel.canEdit
               ? FloatingActionButton(
-                  onPressed: _createAchievementTapped,
+                  onPressed: () => viewModel.createAchievement(context),
                   child: Icon(Icons.add),
                 )
               : null,
@@ -85,70 +72,88 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
   }
 
   Widget _buildBody(ManageTeamViewModel viewModel) {
+    var children = <Widget>[
+      viewModel.imageUrl == null
+          ? Container()
+          : RoundedImageWidget.square(
+              imageUrl: viewModel.imageUrl,
+              size: 112.0,
+              borderRadius: 8,
+              title: viewModel.name,
+              addHeroAnimation: true,
+            ),
+      SizedBox(height: 24),
+    ];
+
+    if (viewModel.isBusy) {
+      children.add(Center(
+        child: CircularProgressIndicator(),
+      ));
+    } else {
+      children.add(Text(
+        viewModel.description,
+        style: KudosTheme.descriptionTextStyle,
+      ));
+      children.add(SizedBox(height: 24.0));
+      children.add(
+        Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          child: _buildUsersList(
+            localizer().admins,
+            viewModel.admins,
+            _adminsExpanded,
+            _toggleAdminsExpanded,
+            viewModel.canEdit,
+            () => viewModel.editAdmins(context),
+          ),
+        ),
+      );
+      children.add(SizedBox(height: 8.0));
+      children.add(
+        Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          child: _buildUsersList(
+            localizer().members,
+            viewModel.members,
+            _membersExpanded,
+            _toggleMembersExpanded,
+            viewModel.canEdit,
+            () => viewModel.editMembers(context),
+          ),
+        ),
+      );
+      children.add(SizedBox(height: 24.0));
+      children.add(
+        Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          child: SectionHeaderWidget(localizer().achievements),
+        ),
+      );
+      children.add(SizedBox(height: 10.0));
+      children.add(
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final data = viewModel.achievements[index];
+            return AchievementListItemWidget(data, _achievementTapped);
+          },
+          itemCount: viewModel.achievements?.length ?? 0,
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
-        children: <Widget>[
-          viewModel.imageUrl == null
-              ? Container()
-              : RoundedImageWidget.square(
-                  imageUrl: viewModel.imageUrl,
-                  size: 112.0,
-                  borderRadius: 8,
-                  title: viewModel.name,
-                ),
-          SizedBox(height: 24),
-          Text(
-            viewModel.description,
-            style: KudosTheme.descriptionTextStyle,
-          ),
-          SizedBox(height: 24.0),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 8.0),
-            child: _buildUsersList(
-              localizer().admins,
-              viewModel.admins,
-              _adminsExpanded,
-              _toggleAdminsExpanded,
-              viewModel.canEdit,
-              _editAdminsTapped,
-            ),
-          ),
-          SizedBox(height: 8.0),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 8.0),
-            child: _buildUsersList(
-              localizer().members,
-              viewModel.members,
-              _membersExpanded,
-              _toggleMembersExpanded,
-              viewModel.canEdit,
-              _editMembersTapped,
-            ),
-          ),
-          SizedBox(height: 24.0),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 8.0),
-            child: SectionHeaderWidget(localizer().achievements),
-          ),
-          SizedBox(height: 10.0),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final data = viewModel.getData(index);
-              return AchievementListItemWidget(data, _achievementTapped);
-            },
-            itemCount: viewModel.itemsCount,
-          ),
-        ],
+        children: children,
       ),
     );
   }
 
   Widget _buildUsersList(
       String title,
-      ListNotifier<TeamMember> users,
+      ListNotifier<UserModel> users,
       bool usersExpanded,
       void Function() toggleUsersExpanded,
       bool canEdit,
@@ -189,9 +194,9 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
         ),
         SizedBox(height: usersExpanded ? 10.0 : 0.0),
         usersExpanded
-            ? FancyListWidget<TeamMember>(
+            ? FancyListWidget<UserModel>(
                 users,
-                (TeamMember member) => member.name,
+                (user) => user.name,
                 localizer().addPeople,
               )
             : Container(),
@@ -207,66 +212,7 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
     setState(() => _membersExpanded = !_membersExpanded);
   }
 
-  void _createAchievementTapped() {
-    var viewModel = _getViewModel();
-    Navigator.of(context).push(
-        EditAchievementRoute.createTeamAchievement(viewModel.modifiedTeam));
-  }
-
-  void _achievementTapped(Achievement x) {
-    Navigator.of(context).push(AchievementDetailsRoute(x.id));
-  }
-
-  Future<void> _editTeamTapped() async {
-    var viewModel = _getViewModel();
-    var team = await Navigator.of(context).push(
-      EditTeamRoute(viewModel.modifiedTeam),
-    );
-    if (team != null) {
-      viewModel.updateTeamMetadata(
-        team.name,
-        team.description,
-        team.imageUrl,
-        team.imageName,
-      );
-    }
-  }
-
-  Future<void> _editMembersTapped() async {
-    var viewModel = _getViewModel();
-    if (!viewModel.canEdit) {
-      return;
-    }
-
-    var users = await Navigator.of(context).push(
-      UserPickerRoute(
-        allowMultipleSelection: true,
-        allowCurrentUser: true,
-        searchHint: localizer().searchMembers,
-        selectedUserIds: viewModel.members.items.map((x) => x.id).toList(),
-      ),
-    );
-    viewModel.replaceMembers(users);
-  }
-
-  Future<void> _editAdminsTapped() async {
-    var viewModel = _getViewModel();
-    if (!viewModel.canEdit) {
-      return;
-    }
-
-    var users = await Navigator.of(context).push(
-      UserPickerRoute(
-        allowMultipleSelection: true,
-        allowCurrentUser: true,
-        searchHint: localizer().searchAdmins,
-        selectedUserIds: viewModel.admins.items.map((x) => x.id).toList(),
-      ),
-    );
-    viewModel.replaceAdmins(users);
-  }
-
-  ManageTeamViewModel _getViewModel() {
-    return Provider.of<ManageTeamViewModel>(context, listen: false);
+  void _achievementTapped(AchievementModel achievement) {
+    Navigator.of(context).push(AchievementDetailsRoute(achievement));
   }
 }

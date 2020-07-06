@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/widgets/decorations/bottom_decorator.dart';
 import 'package:kudosapp/widgets/decorations/top_decorator.dart';
@@ -17,7 +17,7 @@ class PeoplePageRoute extends MaterialPageRoute {
   PeoplePageRoute({
     Set<String> excludedUserIds,
     Icon selectorIcon,
-    void Function(BuildContext, User) onItemSelected,
+    void Function(BuildContext, UserModel) onItemSelected,
   }) : super(
           builder: (context) => PeoplePage(
               excludedUserIds: excludedUserIds,
@@ -33,19 +33,19 @@ class PeoplePage extends StatelessWidget {
     size: 16.0,
     color: KudosTheme.accentColor,
   );
-  static final void Function(BuildContext, User) defaultItemSelector =
+  static final void Function(BuildContext, UserModel) defaultItemSelector =
       (context, user) => Navigator.of(context).push(
-            ProfileRoute(user.id),
+            ProfileRoute(user),
           );
 
   final Set<String> _excludedUserIds;
-  final void Function(BuildContext, User) _onItemSelected;
+  final void Function(BuildContext, UserModel) _onItemSelected;
   final Icon _selectorIcon;
 
   PeoplePage({
     Set<String> excludedUserIds,
     Icon selectorIcon,
-    Function(BuildContext, User) onItemSelected,
+    Function(BuildContext, UserModel) onItemSelected,
   })  : _excludedUserIds = excludedUserIds,
         _selectorIcon = selectorIcon ?? defaultSelectorIcon,
         _onItemSelected = onItemSelected ?? defaultItemSelector;
@@ -59,7 +59,7 @@ class PeoplePage extends StatelessWidget {
         child:
             ChangeNotifierProxyProvider<SearchInputViewModel, PeopleViewModel>(
           create: (context) =>
-              PeopleViewModel(excludedUserIds: _excludedUserIds)..initialize(),
+              PeopleViewModel(excludedUserIds: _excludedUserIds),
           update: (context, searchViewModel, peopleViewModel) =>
               peopleViewModel..filterByName(searchViewModel.query),
           child: Column(
@@ -72,10 +72,10 @@ class PeoplePage extends StatelessWidget {
                       Positioned.fill(
                         child: Consumer<PeopleViewModel>(
                           builder: (context, viewModel, child) {
-                            return StreamBuilder<List<User>>(
+                            return StreamBuilder<List<UserModel>>(
                               stream: viewModel.peopleStream,
                               builder: (BuildContext context,
-                                  AsyncSnapshot<List<User>> snapshot) {
+                                  AsyncSnapshot<List<UserModel>> snapshot) {
                                 if (snapshot.hasData) {
                                   if (snapshot.data.isEmpty) {
                                     return _buildEmpty();
@@ -133,7 +133,7 @@ class PeoplePage extends StatelessWidget {
     );
   }
 
-  Widget _buildList(BuildContext context, List<User> users) {
+  Widget _buildList(BuildContext context, List<UserModel> users) {
     return ListOfPeopleWidget(
       padding: EdgeInsets.only(
         top: TopDecorator.height,
