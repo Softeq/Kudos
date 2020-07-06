@@ -13,6 +13,8 @@ import 'package:kudosapp/models/statistics_model.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/people_page.dart';
+import 'package:kudosapp/pages/profile_page.dart';
+import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
@@ -157,10 +159,19 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
+  void onOwnerClicked(BuildContext context) {
+    switch (achievement.owner.type) {
+      case AchievementOwnerType.user:
+        Navigator.of(context)
+            .push(ProfileRoute(achievement.owner.user))
+            .whenComplete(() => notifyListeners());
+        break;
+      case AchievementOwnerType.team:
+        Navigator.of(context)
+            .push(ManageTeamRoute(achievement.owner.team))
+            .whenComplete(() => notifyListeners());
+        break;
+    }
   }
 
   Future<void> _loadStatistics() async {
@@ -180,5 +191,11 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
     achievement.updateWithModel(event.achievement);
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

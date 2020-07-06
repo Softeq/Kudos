@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_owner_model.dart';
 import 'package:kudosapp/helpers/list_notifier.dart';
@@ -8,6 +9,7 @@ import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/user_model.dart';
+import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
@@ -55,6 +57,13 @@ class AchievementsViewModel extends BaseViewModel {
         .listen(_onAchievementTransferred);
 
     isBusy = false;
+  }
+
+  void onAchievementClicked(
+      BuildContext context, AchievementModel achievement) {
+    Navigator.of(context)
+        .push(AchievementDetailsRoute(achievement))
+        .whenComplete(() => notifyListeners());
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {

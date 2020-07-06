@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kudosapp/dto/achievement.dart';
 import 'package:kudosapp/extensions/list_extensions.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_owner_model.dart';
 import 'package:kudosapp/helpers/list_notifier.dart';
-import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
@@ -53,11 +51,7 @@ class AchievementsPage extends StatelessWidget {
 
                           return _AchievementListWidget.from(
                             notifier.items,
-                            (x) {
-                              Navigator.of(context).push(
-                                AchievementDetailsRoute(x),
-                              );
-                            },
+                            (x) => viewModel.onAchievementClicked(context, x),
                           );
                         },
                       ),

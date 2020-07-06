@@ -2,13 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
-import 'package:kudosapp/models/achievement_owner_model.dart';
 import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/models/statistics_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
-import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/snack_bar_notifier_service.dart';
@@ -115,7 +113,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         children: <Widget>[
           horizontalAchievement,
           SizedBox(height: 24),
-          _AchievementOwnerWidget(viewModel.achievement.owner),
+          _AchievementOwnerWidget(viewModel),
           SizedBox(height: 24),
           SectionHeaderWidget(localizer().achievementStatisticsTitle),
           SizedBox(height: 8.0),
@@ -270,9 +268,9 @@ class _PopularityWidget extends StatelessWidget {
 }
 
 class _AchievementOwnerWidget extends StatelessWidget {
-  final AchievementOwnerModel _ownerModel;
+  final AchievementDetailsViewModel _viewModel;
 
-  _AchievementOwnerWidget(this._ownerModel);
+  _AchievementOwnerWidget(this._viewModel);
 
   @override
   Widget build(BuildContext context) {
@@ -283,17 +281,8 @@ class _AchievementOwnerWidget extends StatelessWidget {
         Align(
           alignment: Alignment.topLeft,
           child: FancyItemWidget(
-            _ownerModel.name,
-            () {
-              switch (_ownerModel.type) {
-                case AchievementOwnerType.user:
-                  Navigator.of(context).push(ProfileRoute(_ownerModel.user));
-                  break;
-                case AchievementOwnerType.team:
-                  Navigator.of(context).push(ManageTeamRoute(_ownerModel.team));
-                  break;
-              }
-            },
+            _viewModel.achievement.owner.name,
+            () => _viewModel.onOwnerClicked(context),
           ),
         ),
       ],
