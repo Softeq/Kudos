@@ -146,7 +146,6 @@ class SimpleListItem extends StatelessWidget {
   }
 
   Widget _buildImageFromUrl() {
-
     if (imageShape.isCircle) {
       return RoundedImageWidget.circular(
         imageUrl: imageUrl,

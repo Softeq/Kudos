@@ -9,7 +9,7 @@ class UserModel {
   String email;
   int receivedAchievementsCount;
 
-  UserModel({
+  UserModel._({
     this.id,
     this.name,
     this.imageUrl,
@@ -18,7 +18,7 @@ class UserModel {
   });
 
   factory UserModel.mock({int index = 0}) {
-    return UserModel(
+    return UserModel._(
       id: "test_id #{$index}",
       name: "Test Name #$index",
       email: "test.name@softeq.com",
@@ -27,27 +27,29 @@ class UserModel {
     );
   }
 
-  UserModel.fromUserReference(UserReference userReference) {
-    id = userReference.id;
-    name = userReference.name;
-    imageUrl = userReference.imageUrl;
+  factory UserModel.fromUserReference(UserReference userReference) {
+    return UserModel._(
+      id: userReference.id,
+      name: userReference.name,
+      imageUrl: userReference.imageUrl,
+    );
   }
 
-  UserModel.fromTeamMember(TeamMember teamMember) {
-    id = teamMember.id;
-    name = teamMember.name;
+  factory UserModel.fromTeamMember(TeamMember teamMember) {
+    return UserModel._(
+      id: teamMember.id,
+      name: teamMember.name,
+    );
   }
 
-  UserModel.fromUser(User user) {
-    _updateWithUser(user);
-  }
-
-  void _updateWithUser(User user) {
-    id = user.id;
-    name = user.name;
-    imageUrl = user.imageUrl;
-    email = user.email;
-    receivedAchievementsCount = user.receivedAchievementsCount;
+  factory UserModel.fromUser(User user) {
+    return UserModel._(
+      id: user.id,
+      name: user.name,
+      imageUrl: user.imageUrl,
+      email: user.email,
+      receivedAchievementsCount: user.receivedAchievementsCount,
+    );
   }
 
   void updateWithModel(UserModel user) {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kudosapp/helpers/image_loading.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/team_model.dart';
@@ -11,25 +12,15 @@ import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
-class EditAchievementViewModel extends BaseViewModel {
+class EditAchievementViewModel extends BaseViewModel with ImageLoading {
   final _eventBus = locator<EventBus>();
   final _imageService = locator<ImageService>();
   final _achievementsService = locator<AchievementsService>();
 
   final AchievementModel _initialAchievement;
-  final AchievementModel _achievement = new AchievementModel();
+  final AchievementModel _achievement = AchievementModel.empty();
   final TeamModel _team;
   final UserModel _user;
-
-  bool _isImageLoading;
-
-  bool get isImageLoading => _isImageLoading;
-  set isImageLoading(bool value) {
-    if (_isImageLoading != value) {
-      _isImageLoading = value;
-      notifyListeners();
-    }
-  }
 
   String get pageTitle =>
       _achievement.id == null ? localizer().create : localizer().edit;
@@ -52,7 +43,6 @@ class EditAchievementViewModel extends BaseViewModel {
   String get imageUrl => _achievement.imageUrl;
 
   EditAchievementViewModel._(this._initialAchievement, this._team, this._user) {
-    _isImageLoading = false;
     _achievement.updateWithModel(_initialAchievement);
   }
 

@@ -18,18 +18,7 @@ class AchievementModel {
   bool canBeModifiedByCurrentUser = false;
   bool canBeSentByCurrentUser = false;
 
-  AchievementModel.fromAchievement(Achievement achievement) {
-    _updateWithAchievement(achievement);
-  }
-
-  AchievementModel.fromRelatedAchievement(
-      RelatedAchievement relatedAchievement) {
-    id = relatedAchievement.id;
-    name = relatedAchievement.name;
-    imageUrl = relatedAchievement.imageUrl;
-  }
-
-  AchievementModel({
+  AchievementModel._({
     this.id,
     this.name,
     this.description,
@@ -37,23 +26,36 @@ class AchievementModel {
     this.imageName,
     this.canBeModifiedByCurrentUser,
     this.canBeSentByCurrentUser,
+    this.owner,
   });
 
-  void _updateWithAchievement(Achievement achievement) {
-    id = achievement.id;
-    name = achievement.name;
-    description = achievement.description;
-    imageUrl = achievement.imageUrl;
-    imageName = achievement.imageName;
-    canBeModifiedByCurrentUser = achievement.canBeModifiedByCurrentUser;
-    canBeSentByCurrentUser = achievement.canBeSentByCurrentUser;
-    if (achievement.teamReference != null) {
-      owner = AchievementOwnerModel.fromTeam(
-          TeamModel.fromTeamReference(achievement.teamReference));
-    } else {
-      owner = AchievementOwnerModel.fromUser(
-          UserModel.fromUserReference(achievement.userReference));
-    }
+  factory AchievementModel.empty() {
+    return AchievementModel._();
+  }
+
+  factory AchievementModel.fromAchievement(Achievement achievement) {
+    return AchievementModel._(
+      id: achievement.id,
+      name: achievement.name,
+      description: achievement.description,
+      imageUrl: achievement.imageUrl,
+      imageName: achievement.imageName,
+      canBeModifiedByCurrentUser: achievement.canBeModifiedByCurrentUser,
+      canBeSentByCurrentUser: achievement.canBeSentByCurrentUser,
+      owner: achievement.teamReference != null
+          ? AchievementOwnerModel.fromTeam(
+              TeamModel.fromTeamReference(achievement.teamReference))
+          : AchievementOwnerModel.fromUser(
+              UserModel.fromUserReference(achievement.userReference)),
+    );
+  }
+
+  factory AchievementModel.fromRelatedAchievement(
+      RelatedAchievement relatedAchievement) {
+    return AchievementModel._(
+        id: relatedAchievement.id,
+        name: relatedAchievement.name,
+        imageUrl: relatedAchievement.imageUrl);
   }
 
   void updateWithModel(AchievementModel achievement) {

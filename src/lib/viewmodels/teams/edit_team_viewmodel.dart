@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:kudosapp/helpers/image_loading.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -9,27 +10,16 @@ import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
-class EditTeamViewModel extends BaseViewModel {
+class EditTeamViewModel extends BaseViewModel with ImageLoading {
   final _eventBus = locator<EventBus>();
   final _teamsService = locator<TeamsService>();
   final _imageService = locator<ImageService>();
 
   final TeamModel _initialTeam;
-  final TeamModel _team = new TeamModel();
-
-  bool _isImageLoading;
+  final TeamModel _team = TeamModel.empty();
 
   EditTeamViewModel(this._initialTeam) {
-    _isImageLoading = false;
     _team.updateWithModel(_initialTeam);
-  }
-
-  bool get isImageLoading => _isImageLoading;
-  set isImageLoading(bool value) {
-    if (_isImageLoading != value) {
-      _isImageLoading = value;
-      notifyListeners();
-    }
   }
 
   String get pageTitle =>
@@ -42,7 +32,7 @@ class EditTeamViewModel extends BaseViewModel {
   String get imageUrl => _team.imageUrl;
 
   void pickFile(BuildContext context) async {
-    if (_isImageLoading) {
+    if (isImageLoading) {
       return;
     }
 

@@ -6,22 +6,19 @@ enum AchievementOwnerType { user, team }
 
 @immutable
 class AchievementOwnerModel {
-  final TeamModel _team;
-  final UserModel _user;
-  final AchievementOwnerType _type;
+  final TeamModel team;
+  final UserModel user;
+  final AchievementOwnerType type;
 
-  TeamModel get team => _team;
-  UserModel get user => _user;
+  String get id => type == AchievementOwnerType.user ? user?.id : team?.id;
+  String get name =>
+      type == AchievementOwnerType.user ? user?.name : team?.name;
+  String get imageUrl =>
+      type == AchievementOwnerType.user ? user?.imageUrl : team?.imageUrl;
 
-  String get id => _type == AchievementOwnerType.user ? user?.id : team?.id;
-  String get name => _type == AchievementOwnerType.user ? user?.name : team?.name;
-  String get imageUrl => _type == AchievementOwnerType.user ? user?.imageUrl : team?.imageUrl;
+  AchievementOwnerModel._(this.team, this.user, this.type);
 
-  AchievementOwnerType get type => _type;
-
-  AchievementOwnerModel._(this._team, this._user, this._type);
-
-  factory AchievementOwnerModel.fromTeam(TeamModel team){
+  factory AchievementOwnerModel.fromTeam(TeamModel team) {
     return AchievementOwnerModel._(
       team,
       null,

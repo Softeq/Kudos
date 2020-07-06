@@ -11,17 +11,20 @@ class UserAchievementModel {
   String comment;
   Timestamp date;
 
-  UserAchievementModel.fromUserAchievement(UserAchievement userAchievement) {
-    sender = UserModel.fromUserReference(userAchievement.sender);
-    achievement = AchievementModel.fromRelatedAchievement(userAchievement.achievement);
-    comment = userAchievement.comment;
-    date = userAchievement.date;
-  }
-
-  UserAchievementModel({
+  UserAchievementModel._({
     this.sender,
     this.comment,
     this.date,
     this.achievement,
   });
+
+  factory UserAchievementModel.fromUserAchievement(
+      UserAchievement userAchievement) {
+    return UserAchievementModel._(
+        sender: UserModel.fromUserReference(userAchievement.sender),
+        achievement: AchievementModel.fromRelatedAchievement(
+            userAchievement.achievement),
+        comment: userAchievement.comment,
+        date: userAchievement.date);
+  }
 }

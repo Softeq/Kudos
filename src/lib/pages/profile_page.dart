@@ -16,8 +16,7 @@ class ProfileRoute extends MaterialPageRoute {
       : super(
           builder: (context) {
             return ChangeNotifierProvider<ProfileViewModel>(
-              create: (context) =>
-                  ProfileViewModel(userModel),
+              create: (context) => ProfileViewModel(userModel),
               child: ProfilePage(),
             );
           },
@@ -45,23 +44,22 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSlivers(BuildContext context, ProfileViewModel viewModel) {
-    List<Widget> result = [
-      SliverGradientAppBar(
-        title: viewModel.userName,
-        imageWidget: _buildAppBarImage(context, viewModel.imageUrl),
-        heroTag: viewModel.imageUrl,
-      ),
-    ];
+  Iterable<Widget> _buildSlivers(
+      BuildContext context, ProfileViewModel viewModel) sync* {
+    yield SliverGradientAppBar(
+      title: viewModel.userName,
+      imageWidget: _buildAppBarImage(context, viewModel.imageUrl),
+      heroTag: viewModel.imageUrl,
+    );
 
     if (viewModel.user == null) {
-      result.add(SliverFillRemaining(
+      yield SliverFillRemaining(
         child: Center(
           child: CircularProgressIndicator(),
         ),
-      ));
+      );
     } else {
-      result.add(_addDefaultSliverPadding(
+      yield _addDefaultSliverPadding(
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,12 +78,11 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ),
-      ));
-      result.add(_addDefaultSliverPadding(
+      );
+      yield _addDefaultSliverPadding(
         ProfileAchievementsListWidget(viewModel.user.id, true, false),
-      ));
+      );
     }
-    return result;
   }
 
   Widget _buildAppBarImage(BuildContext context, String imageUrl) {

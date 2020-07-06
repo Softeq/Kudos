@@ -75,31 +75,32 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                 : null,
           ),
           body: _buildBody(viewModel),
-          floatingActionButton:
-              viewModel.achievement.canBeSentByCurrentUser
-                  ? FloatingActionButton(
-                      child: Icon(Icons.send),
-                      onPressed: _sendTapped,
-                    )
-                  : null,
+          floatingActionButton: viewModel.achievement.canBeSentByCurrentUser
+              ? FloatingActionButton(
+                  child: Icon(Icons.send),
+                  onPressed: _sendTapped,
+                )
+              : null,
         );
       },
     );
   }
 
   Widget _buildBody(AchievementDetailsViewModel viewModel) {
+    var horizontalAchievement = Container(
+      height: 140,
+      child: AchievementHorizontalWidget(
+        viewModel.achievement.imageUrl,
+        viewModel.achievement.description,
+      ),
+    );
+
     if (viewModel.isBusy) {
       return SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Column(
           children: <Widget>[
-            Container(
-              height: 140,
-              child: AchievementHorizontalWidget(
-                viewModel.achievement.imageUrl,
-                viewModel.achievement.description,
-              ),
-            ),
+            horizontalAchievement,
             SizedBox(height: 100),
             Center(
               child: CircularProgressIndicator(),
@@ -112,13 +113,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
       padding: EdgeInsets.all(20.0),
       child: Column(
         children: <Widget>[
-          Container(
-            height: 140,
-            child: AchievementHorizontalWidget(
-              viewModel.achievement.imageUrl,
-              viewModel.achievement.description,
-            ),
-          ),
+          horizontalAchievement,
           SizedBox(height: 24),
           _AchievementOwnerWidget(viewModel.achievement.owner),
           SizedBox(height: 24),
@@ -281,24 +276,28 @@ class _AchievementOwnerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      SectionHeaderWidget(localizer().achievementOwnerTitle),
-      SizedBox(height: 8.0),
-      Align(
-        alignment: Alignment.topLeft,
-        child: FancyItemWidget(_ownerModel.name, () {
-            switch (_ownerModel.type) {
-              case AchievementOwnerType.user:
-                Navigator.of(context).push(ProfileRoute(_ownerModel.user));
-                break;
-              case AchievementOwnerType.team:
-                Navigator.of(context).push(ManageTeamRoute(_ownerModel.team));
-                break;
-            }
-          },
+    return Column(
+      children: <Widget>[
+        SectionHeaderWidget(localizer().achievementOwnerTitle),
+        SizedBox(height: 8.0),
+        Align(
+          alignment: Alignment.topLeft,
+          child: FancyItemWidget(
+            _ownerModel.name,
+            () {
+              switch (_ownerModel.type) {
+                case AchievementOwnerType.user:
+                  Navigator.of(context).push(ProfileRoute(_ownerModel.user));
+                  break;
+                case AchievementOwnerType.team:
+                  Navigator.of(context).push(ManageTeamRoute(_ownerModel.team));
+                  break;
+              }
+            },
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
@@ -337,8 +336,8 @@ class _AchievementHoldersWidget extends StatelessWidget {
     ]);
   }
 
-  List<Widget> _buildListItems(BuildContext context,
-      ListNotifier<UserModel> achievementHolders) {
+  List<Widget> _buildListItems(
+      BuildContext context, ListNotifier<UserModel> achievementHolders) {
     return achievementHolders == null
         ? new List<Widget>()
         : achievementHolders.items
@@ -355,19 +354,11 @@ class _AchievementHoldersWidget extends StatelessWidget {
           backgroundImage: CachedNetworkImageProvider(user.imageUrl),
           radius: 30,
         ),
-        onTap: () => _navigateToProfile(context, user),
+        onTap: () => Navigator.of(context).push(ProfileRoute(user)),
       ),
       decoration: KudosTheme.tooltipDecoration,
       textStyle: KudosTheme.tooltipTextStyle,
       verticalOffset: 33,
     );
-  }
-
-  void _navigateToProfile(
-    BuildContext context,
-    UserModel user,
-  ) {
-    Navigator.of(context)
-        .push(ProfileRoute(user));
   }
 }

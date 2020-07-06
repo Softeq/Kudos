@@ -15,7 +15,6 @@ import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/base_auth_service.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
@@ -25,7 +24,6 @@ import 'package:sprintf/sprintf.dart';
 class AchievementDetailsViewModel extends BaseViewModel {
   final _eventBus = locator<EventBus>();
   final _peopleService = locator<PeopleService>();
-  final _authService = locator<BaseAuthService>();
   final _dialogsService = locator<DialogService>();
   final _achievementsService = locator<AchievementsService>();
 
@@ -61,7 +59,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
 
     await _achievementsService.sendAchievement(recipient, achievement, comment);
 
-    // TODO: fix
+    // TODO PS: try not to reload everything here
     await _loadStatistics();
 
     isBusy = false;
@@ -80,12 +78,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
     switch (result) {
       case 1:
         {
-          var excludedUserId =
+          var excludedUserIds =
               achievement.owner.type == AchievementOwnerType.user
-                  ? achievement.owner.id
+                  ? {achievement.owner.id}
                   : null;
           Navigator.of(context).push(PeoplePageRoute(
-              excludedUserIds: excludedUserId == null ? null : {excludedUserId},
+              excludedUserIds: excludedUserIds,
               selectorIcon: Icon(Icons.transfer_within_a_station,
                   size: 24.0, color: KudosTheme.accentColor),
               onItemSelected: _onUserSelected));
@@ -93,12 +91,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
         }
       case 2:
         {
-          var excludedTeamId =
+          var excludedTeamIds =
               achievement.owner.type == AchievementOwnerType.team
-                  ? achievement.owner.id
+                  ? {achievement.owner.id}
                   : null;
           Navigator.of(context).push(TeamsPageRoute(
-            excludedTeamIds: excludedTeamId == null ? null : {excludedTeamId},
+            excludedTeamIds: excludedTeamIds,
             selectorIcon: Icon(Icons.transfer_within_a_station,
                 size: 24.0, color: KudosTheme.accentColor),
             onItemSelected: _onTeamSelected,

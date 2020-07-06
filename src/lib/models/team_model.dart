@@ -15,31 +15,37 @@ class TeamModel {
   List<UserModel> owners;
   List<UserModel> members;
 
-  TeamModel.fromTeam(Team team) {
-    _updateWithTeam(team);
-  }
-
-  TeamModel.fromTeamReference(TeamReference teamReference) {
-    id = teamReference.id;
-    name = teamReference.name;
-  }
-
-  TeamModel({
+  TeamModel._({
     this.id,
     this.name,
     this.description,
     this.imageUrl,
     this.imageName,
+    this.members,
+    this.owners,
   });
 
-  void _updateWithTeam(Team team) {
-    id = team.id;
-    name = team.name;
-    description = team.description;
-    imageUrl = team.imageUrl;
-    imageName = team.imageName;
-    members = team.members.map((tm) => UserModel.fromTeamMember(tm));
-    owners = team.owners.map((tm) => UserModel.fromTeamMember(tm));
+  factory TeamModel.empty() {
+    return TeamModel._();
+  }
+
+  factory TeamModel.fromTeam(Team team) {
+    return TeamModel._(
+      id: team.id,
+      name: team.name,
+      description: team.description,
+      imageUrl: team.imageUrl,
+      imageName: team.imageName,
+      members: team.members.map((tm) => UserModel.fromTeamMember(tm)),
+      owners: team.owners.map((tm) => UserModel.fromTeamMember(tm)),
+    );
+  }
+
+  factory TeamModel.fromTeamReference(TeamReference teamReference) {
+    return TeamModel._(
+      id: teamReference.id,
+      name: teamReference.name,
+    );
   }
 
   void updateWithModel(TeamModel team) {

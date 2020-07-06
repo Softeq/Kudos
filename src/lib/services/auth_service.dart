@@ -18,8 +18,9 @@ class AuthService extends BaseAuthService {
   @override
   void silentInit(Function(UserModel) userChangedHandler) {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
-      _currentUser =
-          firebaseUser == null ? null :UserModel.fromUser(User.fromFirebase(firebaseUser));
+      _currentUser = firebaseUser == null
+          ? null
+          : UserModel.fromUser(User.fromFirebase(firebaseUser));
       userChangedHandler(_currentUser);
     });
   }
