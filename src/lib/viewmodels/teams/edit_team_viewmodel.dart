@@ -44,6 +44,9 @@ class EditTeamViewModel extends BaseViewModel with ImageLoading {
   Future<void> save(String name, String description) async {
     TeamModel updatedTeam;
 
+    _team.name = name;
+    _team.description = description;
+
     try {
       isBusy = true;
 

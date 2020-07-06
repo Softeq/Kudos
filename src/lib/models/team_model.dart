@@ -36,8 +36,8 @@ class TeamModel {
       description: team.description,
       imageUrl: team.imageUrl,
       imageName: team.imageName,
-      members: team.members.map((tm) => UserModel.fromTeamMember(tm)),
-      owners: team.owners.map((tm) => UserModel.fromTeamMember(tm)),
+      members: team.members.map((tm) => UserModel.fromTeamMember(tm)).toList(),
+      owners: team.owners.map((tm) => UserModel.fromTeamMember(tm)).toList(),
     );
   }
 
