@@ -78,7 +78,7 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   void editAdmins(BuildContext context) async {
-    if (canEdit) {
+    if (!canEdit) {
       return;
     }
 

@@ -82,14 +82,14 @@ class UserPickerViewModel extends BaseViewModel {
     return result;
   }
 
-  void _updateSearchResults(List<UserModel> users) {
+  void _updateSearchResults(List<UserModel> results) {
     if (!_searchPerformed) {
       return;
     }
     _searchPerformed = false;
 
     users.clear();
-    users.addAll(users);
+    users.addAll(results);
 
     notifyListeners();
   }
