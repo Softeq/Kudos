@@ -44,13 +44,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteTeamWarning" : MessageLookupByLibrary.simpleMessage("Do you really want to delete this team? All the team achievements will be removed as well"),
     "description" : MessageLookupByLibrary.simpleMessage("Description"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Add a description"),
+    "detailedError" : MessageLookupByLibrary.simpleMessage("Error: %s"),
     "edit" : MessageLookupByLibrary.simpleMessage("Edit"),
     "editDescription" : MessageLookupByLibrary.simpleMessage("Make the description meaningful"),
     "editImage" : MessageLookupByLibrary.simpleMessage("Make the image recognizable"),
     "editName" : MessageLookupByLibrary.simpleMessage("Make the name unique"),
     "editTeam" : MessageLookupByLibrary.simpleMessage("Edit team"),
     "enterName" : MessageLookupByLibrary.simpleMessage("Enter name"),
-    "error" : MessageLookupByLibrary.simpleMessage("Error: %s"),
+    "error" : MessageLookupByLibrary.simpleMessage("Error"),
     "fileIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Add a picture"),
     "fileSizeTooBig" : MessageLookupByLibrary.simpleMessage("Image size is too big. Please select another file"),
     "from" : MessageLookupByLibrary.simpleMessage("From: %s"),
@@ -96,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("You will not have access to this achievement after the operation is complete"),
     "user" : MessageLookupByLibrary.simpleMessage("User"),
     "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("This user is not yet part of any team"),
+    "user_picker_empty_message" : MessageLookupByLibrary.simpleMessage("Please select at least one user"),
     "warning" : MessageLookupByLibrary.simpleMessage("Warning"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Your comment")
   };

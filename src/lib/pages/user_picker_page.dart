@@ -11,6 +11,7 @@ class UserPickerRoute extends MaterialPageRoute<List<UserModel>> {
   UserPickerRoute({
     @required bool allowMultipleSelection,
     @required bool allowCurrentUser,
+    bool allowEmptyResult,
     String searchHint,
     List<String> selectedUserIds,
     WidgetBuilder trailingBuilder,
@@ -21,6 +22,7 @@ class UserPickerRoute extends MaterialPageRoute<List<UserModel>> {
                 return UserPickerViewModel(
                   selectedUserIds,
                   allowCurrentUser,
+                  allowEmptyResult ?? true
                 );
               },
               child: _UserPickerPage(allowMultipleSelection, trailingBuilder,
@@ -59,7 +61,7 @@ class _UserPickerPageState extends State<_UserPickerPage> {
               context,
               listen: false,
             );
-            Navigator.of(context).pop(viewModel.selectedUsers);
+            viewModel.trySaveResult(context);
           },
           icon: Icon(Icons.done),
         ),

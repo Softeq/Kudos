@@ -65,7 +65,8 @@
     "signOutConfirmButton": "Sign Out",
     "signOutCancelButton": "Stay!",
     "noPeople": "Nobody is here",
-    "error": "Error: %s",
+    "error": "Error",
+    "detailedError": "Error: %s",
     "from": "From: %s",
     "generalError": "Something went wrong",
     "receivedNoAchievements": "Hasn't received any achievements yet",
@@ -75,5 +76,6 @@
     "peopleTabName": "People",
     "achievementsTabName": "Library",
     "softeq": "Softeq",
-    "people_progress": "%i of %i people"
+    "people_progress": "%i of %i people",
+    "user_picker_empty_message": "Please select at least one user"
 }

@@ -121,7 +121,7 @@ class PeoplePage extends StatelessWidget {
   Widget _buildError(Object error) {
     return Center(
       child: Text(
-        sprintf(localizer().error, [error]),
+        sprintf(localizer().detailedError, [error]),
         style: KudosTheme.errorTextStyle,
       ),
     );

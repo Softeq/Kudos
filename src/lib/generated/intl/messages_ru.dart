@@ -44,13 +44,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteTeamWarning" : MessageLookupByLibrary.simpleMessage("Вы действительно хотите удалить эту команду? Все награды этой команды будут также удалены"),
     "description" : MessageLookupByLibrary.simpleMessage("Описание"),
     "descriptionIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте описание"),
+    "detailedError" : MessageLookupByLibrary.simpleMessage("Ошибка: %s"),
     "edit" : MessageLookupByLibrary.simpleMessage("Редактировать"),
     "editDescription" : MessageLookupByLibrary.simpleMessage("Сделай описание значимым"),
     "editImage" : MessageLookupByLibrary.simpleMessage("Сделай изображение узнаваемым"),
     "editName" : MessageLookupByLibrary.simpleMessage("Сделай название уникальным"),
     "editTeam" : MessageLookupByLibrary.simpleMessage("Редактирование команды"),
     "enterName" : MessageLookupByLibrary.simpleMessage("Введите имя"),
-    "error" : MessageLookupByLibrary.simpleMessage("Ошибка: %s"),
+    "error" : MessageLookupByLibrary.simpleMessage("Ошибка"),
     "fileIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте картинку"),
     "fileSizeTooBig" : MessageLookupByLibrary.simpleMessage("Размер изображения слишком большой. Выберите другой файл"),
     "from" : MessageLookupByLibrary.simpleMessage("От: %s"),
@@ -96,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("Вы потеряете доступ к этой награде после завершения данной операции"),
     "user" : MessageLookupByLibrary.simpleMessage("Пользователь"),
     "userTeamsEmptyPlaceholder" : MessageLookupByLibrary.simpleMessage("Этот пользователь пока не состоит ни в одной команде"),
+    "user_picker_empty_message" : MessageLookupByLibrary.simpleMessage("Пожалуйста, выберите хотя бы одного пользователя"),
     "warning" : MessageLookupByLibrary.simpleMessage("Внимание"),
     "writeAComment" : MessageLookupByLibrary.simpleMessage("Ваш комментарий")
   };

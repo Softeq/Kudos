@@ -69,7 +69,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildError(Object error) {
-    return _buildMessage(Text(sprintf(localizer().error, [error]),
+    return _buildMessage(Text(sprintf(localizer().detailedError, [error]),
         style: KudosTheme.errorTextStyle));
   }
 

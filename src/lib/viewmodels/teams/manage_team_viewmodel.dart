@@ -86,6 +86,7 @@ class ManageTeamViewModel extends BaseViewModel {
       UserPickerRoute(
         allowMultipleSelection: true,
         allowCurrentUser: true,
+        allowEmptyResult: false,
         searchHint: localizer().searchAdmins,
         selectedUserIds: admins.items.map((x) => x.id).toList(),
       ),
