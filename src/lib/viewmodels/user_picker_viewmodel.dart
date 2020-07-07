@@ -54,16 +54,16 @@ class UserPickerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void trySaveResult(BuildContext context) {
+  bool trySaveResult(BuildContext context) {
     if (!_allowEmptyResult && selectedUsers.isEmpty) {
       _dialogService.showOkDialog(
           context: context,
           title: localizer().error,
           content: localizer().user_picker_empty_message);
-      return;
+      return false;
     }
 
-    Navigator.of(context).pop(selectedUsers);
+    return true;
   }
 
   Future<List<UserModel>> _findPeople(String request) async {

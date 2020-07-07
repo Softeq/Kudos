@@ -202,7 +202,7 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
         );
     }
 
-    return (widget._addHeroAnimation ?? false)
+    return ((widget._addHeroAnimation ?? false) && (widget._imageUrl != null))
         ? Hero(child: imageWidget, tag: widget._imageUrl)
         : imageWidget;
   }
