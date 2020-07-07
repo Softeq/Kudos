@@ -19,6 +19,7 @@ import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/achievements_service.dart';
 import 'package:kudosapp/services/database/people_service.dart';
+import 'package:kudosapp/services/database/teams_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:sprintf/sprintf.dart';
@@ -26,6 +27,7 @@ import 'package:sprintf/sprintf.dart';
 class AchievementDetailsViewModel extends BaseViewModel {
   final _eventBus = locator<EventBus>();
   final _peopleService = locator<PeopleService>();
+  final _teamsService = locator<TeamsService>();
   final _dialogsService = locator<DialogService>();
   final _achievementsService = locator<AchievementsService>();
 
@@ -34,6 +36,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
   final AchievementModel achievement;
   final achievementHolders = new ListNotifier<UserModel>();
   final allUsersStatistics = StatisticsModel.empty(localizer().softeq);
+
+  StatisticsModel _teamUsersStatistics;
+  StatisticsModel get teamUsersStatistics => _teamUsersStatistics;
 
   AchievementDetailsViewModel(this.achievement) {
     _initialize();
@@ -175,13 +180,28 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> _loadStatistics() async {
-    // Number of users with this badge divided by the total number of users
     achievementHolders.replace(
         await _achievementsService.getAchievementHolders(achievement.id));
 
     var allUsersCount = await _peopleService.getUsersCount();
     allUsersStatistics.allUsersCount = allUsersCount;
     allUsersStatistics.positiveUsersCount = achievementHolders.length;
+
+    if (achievement.owner.type == AchievementOwnerType.team &&
+        achievement.owner.name != localizer().softeq) {
+      if (achievement.owner.team.members == null) {
+        final loadedTeam =
+            await _teamsService.getTeam(achievement.owner.team.id);
+        achievement.owner.team.updateWithModel(loadedTeam);
+      }
+      var membersIds = achievement.owner.team.members.map((x) => x.id);
+      var teamHolders =
+          achievementHolders.items.where((x) => membersIds.contains(x.id));
+      _teamUsersStatistics = StatisticsModel(achievement.owner.name,
+          achievement.owner.team.members.length, teamHolders.length);
+    } else {
+      _teamUsersStatistics = null;
+    }
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {
