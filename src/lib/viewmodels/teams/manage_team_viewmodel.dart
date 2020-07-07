@@ -78,7 +78,7 @@ class ManageTeamViewModel extends BaseViewModel {
   }
 
   void editAdmins(BuildContext context) async {
-    if (canEdit) {
+    if (!canEdit) {
       return;
     }
 
@@ -86,6 +86,7 @@ class ManageTeamViewModel extends BaseViewModel {
       UserPickerRoute(
         allowMultipleSelection: true,
         allowCurrentUser: true,
+        allowEmptyResult: false,
         searchHint: localizer().searchAdmins,
         selectedUserIds: admins.items.map((x) => x.id).toList(),
       ),

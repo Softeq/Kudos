@@ -683,27 +683,25 @@ class S {
     );
   }
 
-  /// `Nobody is here`
-  String get noPeople {
-    return Intl.message(
-      'Nobody is here',
-      name: 'noPeople',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Error: %s`
   String get error {
     return Intl.message(
-      'Error: %s',
+      'Error',
       name: 'error',
       desc: '',
       args: [],
     );
   }
 
-  /// `From: %s`
+  String get detailedError {
+    return Intl.message(
+      'Error: %s',
+      name: 'detailedError',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get from {
     return Intl.message(
       'From: %s',
@@ -798,6 +796,24 @@ class S {
     return Intl.message(
       '%i of %i people',
       name: 'people_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get user_picker_empty_message {
+    return Intl.message(
+      'Please select at least one user',
+      name: 'user_picker_empty_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get searchEmptyPlaceholder {
+    return Intl.message(
+      'No search results',
+      name: 'searchEmptyPlaceholder',
       desc: '',
       args: [],
     );

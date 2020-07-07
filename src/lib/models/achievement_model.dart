@@ -40,8 +40,9 @@ class AchievementModel {
       description: achievement.description,
       imageUrl: achievement.imageUrl,
       imageName: achievement.imageName,
-      canBeModifiedByCurrentUser: achievement.canBeModifiedByCurrentUser,
-      canBeSentByCurrentUser: achievement.canBeSentByCurrentUser,
+      canBeModifiedByCurrentUser:
+          achievement.canBeModifiedByCurrentUser ?? false,
+      canBeSentByCurrentUser: achievement.canBeSentByCurrentUser ?? false,
       owner: achievement.teamReference != null
           ? AchievementOwnerModel.fromTeam(
               TeamModel.fromTeamReference(achievement.teamReference))
@@ -55,7 +56,9 @@ class AchievementModel {
     return AchievementModel._(
         id: relatedAchievement.id,
         name: relatedAchievement.name,
-        imageUrl: relatedAchievement.imageUrl);
+        imageUrl: relatedAchievement.imageUrl,
+        canBeModifiedByCurrentUser: false,
+        canBeSentByCurrentUser: false);
   }
 
   void updateWithModel(AchievementModel achievement) {

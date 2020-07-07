@@ -64,8 +64,8 @@
     "signOutConfirmationMessage": "Подтвердите, что вы действительно хотите выйти из этого превосходного приложения",
     "signOutConfirmButton": "Выйти",
     "signOutCancelButton": "Остаться!",
-    "noPeople": "Здесь никого нет",
-    "error": "Ошибка: %s",
+    "error": "Ошибка",
+    "detailedError": "Ошибка: %s",
     "from": "От: %s",
     "generalError": "Что-то пошло не так",
     "receivedNoAchievements": "Ещё не получил ни одной награды",
@@ -75,5 +75,7 @@
     "peopleTabName": "Люди",
     "achievementsTabName": "Награды",
     "softeq": "Softeq",
-    "people_progress": "%i из %i людей"
+    "people_progress": "%i из %i людей",
+    "user_picker_empty_message": "Пожалуйста, выберите хотя бы одного пользователя",
+    "searchEmptyPlaceholder": "Нет результатов поиска"
 }

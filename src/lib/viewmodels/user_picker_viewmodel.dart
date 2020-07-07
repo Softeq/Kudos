@@ -1,16 +1,20 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:kudosapp/helpers/queue_handler.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/database/people_service.dart';
+import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class UserPickerViewModel extends BaseViewModel {
   final _peopleService = locator<PeopleService>();
+  final _dialogService = locator<DialogService>();
 
   final List<String> _selectedUserIds;
   final bool _allowCurrentUser;
+  final bool _allowEmptyResult;
 
   final users = List<UserModel>();
   final selectedUsers = List<UserModel>();
@@ -19,9 +23,10 @@ class UserPickerViewModel extends BaseViewModel {
   QueueHandler<List<UserModel>, String> _searchQueueHandler;
   StreamSubscription<List<UserModel>> _searchStreamSubscription;
 
-  UserPickerViewModel(this._selectedUserIds, this._allowCurrentUser){
-      _initialize();
-    }
+  UserPickerViewModel(
+      this._selectedUserIds, this._allowCurrentUser, this._allowEmptyResult) {
+    _initialize();
+  }
 
   void _initialize() async {
     _searchPerformed = false;
@@ -49,6 +54,18 @@ class UserPickerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool trySaveResult(BuildContext context) {
+    if (!_allowEmptyResult && selectedUsers.isEmpty) {
+      _dialogService.showOkDialog(
+          context: context,
+          title: localizer().error,
+          content: localizer().user_picker_empty_message);
+      return false;
+    }
+
+    return true;
+  }
+
   Future<List<UserModel>> _findPeople(String request) async {
     var result = await _peopleService.find(request, _allowCurrentUser);
     if (selectedUsers.isNotEmpty) {
@@ -65,14 +82,14 @@ class UserPickerViewModel extends BaseViewModel {
     return result;
   }
 
-  void _updateSearchResults(List<UserModel> users) {
+  void _updateSearchResults(List<UserModel> results) {
     if (!_searchPerformed) {
       return;
     }
     _searchPerformed = false;
 
     users.clear();
-    users.addAll(users);
+    users.addAll(results);
 
     notifyListeners();
   }

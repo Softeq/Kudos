@@ -85,7 +85,8 @@ class TeamsPage extends StatelessWidget {
                                   return _buildLoading();
                                 }
                                 if (snapshot.data?.isEmpty ?? true) {
-                                  return _buildEmpty();
+                                  return _buildEmpty(
+                                      viewModel.isAllTeamsListEmpty);
                                 } else {
                                   return _buildList(context, snapshot.data);
                                 }
@@ -135,11 +136,14 @@ class TeamsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(bool isAllTeamsListEmpty) {
     return Center(
       child: FractionallySizedBox(
         widthFactor: 0.7,
-        child: Text(localizer().createYourOwnTeams,
+        child: Text(
+            isAllTeamsListEmpty
+                ? localizer().createYourOwnTeams
+                : localizer().searchEmptyPlaceholder,
             textAlign: TextAlign.center,
             style: KudosTheme.sectionEmptyTextStyle),
       ),

@@ -19,16 +19,20 @@ class EditTeamViewModel extends BaseViewModel with ImageLoading {
   final TeamModel _team = TeamModel.empty();
 
   EditTeamViewModel(this._initialTeam) {
-    _team.updateWithModel(_initialTeam);
+    if (_initialTeam != null) {
+      _team.updateWithModel(_initialTeam);
+    }
   }
 
   String get pageTitle =>
       _team.id == null ? localizer().createTeam : localizer().editTeam;
 
   String get name => _team.name ?? "";
+
   String get description => _team.description ?? "";
 
   File get imageFile => _team.imageFile;
+
   String get imageUrl => _team.imageUrl;
 
   void pickFile(BuildContext context) async {

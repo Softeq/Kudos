@@ -43,7 +43,9 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
   String get imageUrl => _achievement.imageUrl;
 
   EditAchievementViewModel._(this._initialAchievement, this._team, this._user) {
-    _achievement.updateWithModel(_initialAchievement);
+    if(_initialAchievement != null) {
+      _achievement.updateWithModel(_initialAchievement);
+    }
   }
 
   factory EditAchievementViewModel.createTeamAchievement(TeamModel team) =>
