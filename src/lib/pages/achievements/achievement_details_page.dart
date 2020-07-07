@@ -107,6 +107,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
         ),
       );
     }
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Column(
@@ -115,9 +116,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           SizedBox(height: 24),
           _AchievementOwnerWidget(viewModel),
           SizedBox(height: 24),
-          SectionHeaderWidget(localizer().achievementStatisticsTitle),
-          SizedBox(height: 8.0),
-          _PopularityWidget(viewModel.allUsersStatistics),
+          _buildStatisticsWidgets(viewModel),
           SizedBox(height: 24),
           ChangeNotifierProvider.value(
             value: viewModel.achievementHolders,
@@ -131,6 +130,25 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatisticsWidgets(AchievementDetailsViewModel viewModel) {
+    var children = <Widget>[
+      SectionHeaderWidget(localizer().achievementStatisticsTitle),
+      SizedBox(height: 8.0),
+      _PopularityWidget(viewModel.allUsersStatistics),
+    ];
+
+    if (viewModel.teamUsersStatistics != null) {
+      children.add(SizedBox(
+        height: 8.0,
+      ));
+      children.add(_PopularityWidget(viewModel.teamUsersStatistics));
+    }
+
+    return Column(
+      children: children,
     );
   }
 
