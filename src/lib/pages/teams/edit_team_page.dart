@@ -66,7 +66,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                         size: 112.0,
                         borderRadius: 8,
                         file: viewModel.imageFile,
-                        addHeroAnimation: true,
+                        addHeroAnimation: viewModel.imageUrl != null,
                       ),
                     ),
                     SizedBox(height: 36.0),

@@ -122,6 +122,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
             }
           },
           imageShape: ImageShape.circle(60),
+          addHeroAnimation: true,
         );
       },
     );

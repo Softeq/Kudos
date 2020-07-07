@@ -44,7 +44,7 @@ class SimpleListItem extends StatelessWidget {
     this.selectorIcon,
     this.imageShape,
     this.contentWidget,
-    this.useTextPlaceholder,
+    this.useTextPlaceholder = false,
     this.addHeroAnimation,
   });
 
