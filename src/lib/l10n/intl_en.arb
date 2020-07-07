@@ -64,7 +64,6 @@
     "signOutConfirmationMessage": "Confirm that you really want to leave this super awesome app",
     "signOutConfirmButton": "Sign Out",
     "signOutCancelButton": "Stay!",
-    "noPeople": "Nobody is here",
     "error": "Error",
     "detailedError": "Error: %s",
     "from": "From: %s",
@@ -77,5 +76,6 @@
     "achievementsTabName": "Library",
     "softeq": "Softeq",
     "people_progress": "%i of %i people",
-    "user_picker_empty_message": "Please select at least one user"
+    "user_picker_empty_message": "Please select at least one user",
+    "searchEmptyPlaceholder": "No search results"
 }

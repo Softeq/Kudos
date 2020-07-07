@@ -24,6 +24,8 @@ class MyTeamsViewModel extends BaseViewModel {
 
   Stream<List<TeamModel>> get teamsStream => _teamsStream;
 
+  bool get isAllTeamsListEmpty => _teamsList.isEmpty;
+
   MyTeamsViewModel({Set<String> excludedTeamIds})
       : _excludedTeamIds = excludedTeamIds {
     _initFilter();

@@ -683,16 +683,6 @@ class S {
     );
   }
 
-  /// `Nobody is here`
-  String get noPeople {
-    return Intl.message(
-      'Nobody is here',
-      name: 'noPeople',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Error: %s`
   String get error {
     return Intl.message(
@@ -815,6 +805,15 @@ class S {
     return Intl.message(
       'Please select at least one user',
       name: 'user_picker_empty_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get searchEmptyPlaceholder {
+    return Intl.message(
+      'No search results',
+      name: 'searchEmptyPlaceholder',
       desc: '',
       args: [],
     );

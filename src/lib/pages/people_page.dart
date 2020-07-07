@@ -129,7 +129,8 @@ class PeoplePage extends StatelessWidget {
 
   Widget _buildEmpty() {
     return Center(
-      child: Text(localizer().noPeople),
+      child: Text(localizer().searchEmptyPlaceholder,
+          style: KudosTheme.sectionEmptyTextStyle),
     );
   }
 
