@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kudosapp/models/user_achievement_model.dart';
 
 class UserAchievementCollection {
   final List<UserAchievementModel> userAchievements;
   final String imageUrl;
   final String name;
-  final Timestamp latestDateTime;
+  final DateTime latestDateTime;
 
   int get count => userAchievements.length;
 
