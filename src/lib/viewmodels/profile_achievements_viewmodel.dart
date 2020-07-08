@@ -26,6 +26,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
 
     achievements.clear();
     achievements.addAll(_merge(allUserAchievements));
+    achievements.sort((x, y) => y.latestDateTime.compareTo(x.latestDateTime));
 
     isBusy = false;
   }

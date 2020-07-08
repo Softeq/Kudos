@@ -4,7 +4,7 @@
 
 This is a Flutter-based mobile application (iOS, Android) for stimulating and congratulating on various achievements among co-workers.
 
-[App Idea](https://docs.google.com/presentation/d/1zkroY85H8VL4Qw5z4ouWKBvY8_Swb0W6tr88GxVn45k/edit#slide=id.p)
+[App Idea](https://docs.google.com/presentation/d/1hFj7JDeOQ3kJ9RrAA1FjXpzsJbJj0erUM0CxSCStAac/edit?usp=sharing)
 
 ## Database
 
