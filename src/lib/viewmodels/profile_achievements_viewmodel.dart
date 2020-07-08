@@ -14,7 +14,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
 
   bool get isMyProfile => _userId == _authService.currentUser.id;
 
-  ProfileAchievementsViewModel(this._userId){
+  ProfileAchievementsViewModel(this._userId) {
     _initialize();
   }
 
@@ -26,6 +26,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
 
     achievements.clear();
     achievements.addAll(_merge(allUserAchievements));
+    achievements.sort((x, y) => y.latestDateTime.compareTo(x.latestDateTime));
 
     isBusy = false;
   }
