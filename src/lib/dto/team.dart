@@ -101,12 +101,12 @@ class Team extends Equatable {
     return map;
   }
 
-  static List<TeamMember> getMembers(List<dynamic> x) {
-    if (x == null) {
+  static List<TeamMember> getMembers(List<dynamic> members) {
+    if (members == null) {
       return List<TeamMember>();
     }
 
-    var mapList = x.cast<Map<String, dynamic>>();
+    var mapList = members.cast<Map<String, dynamic>>();
     return mapList.map((y) => TeamMember.fromMap(y)).toList();
   }
 
