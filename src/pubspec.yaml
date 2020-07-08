@@ -60,6 +60,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.5
 
 flutter:
 
@@ -71,3 +72,8 @@ flutter:
 # https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl
 flutter_intl:
   enabled: true
+
+flutter_icons:
+  image_path: "assets/icons/app_icon.png" 
+  android: true
+  ios: true
