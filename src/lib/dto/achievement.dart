@@ -99,17 +99,17 @@ class Achievement extends Equatable {
   }) {
     final map = new Map<String, Object>();
 
-    if (metadata) {
+    if (all || metadata) {
       map.putIfAbsent("name", () => this.name);
       map.putIfAbsent("description", () => this.description);
     }
 
-    if (image) {
+    if (all || image) {
       map.putIfAbsent("image_url", () => this.imageUrl);
       map.putIfAbsent("image_name", () => this.imageName);
     }
 
-    if (owner) {
+    if (all || owner) {
       map.putIfAbsent(
           "team", () => teamReference == null ? null : teamReference.toMap());
       map.putIfAbsent(
@@ -118,7 +118,7 @@ class Achievement extends Equatable {
       map.putIfAbsent("owners", () => this.owners);
     }
 
-    if (isActive) {
+    if (all || isActive) {
       map.putIfAbsent("is_active", () => this.isActive);
     }
 

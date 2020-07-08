@@ -67,24 +67,24 @@ class Team extends Equatable {
   }) {
     final map = new Map<String, Object>();
 
-    if (metadata) {
+    if (all || metadata) {
       map["name"] = this.name;
       map["description"] = this.description;
     }
 
-    if (image) {
+    if (all || image) {
       map["image_url"] = this.imageUrl;
       map["image_name"] = this.imageName;
     }
 
     var visibleFor = List<String>();
 
-    if (members) {
+    if (all || members) {
       map["team_members"] = this.members;
       visibleFor.addAll(this.members.map((x) => x.id));
     }
 
-    if (owners) {
+    if (all || owners) {
       map["team_owners"] = this.owners;
       visibleFor.addAll(this.owners.map((x) => x.id));
     }
@@ -94,7 +94,7 @@ class Team extends Equatable {
       map["visible_for"] = visibleFor;
     }
 
-    if (isActive) {
+    if (all || isActive) {
       map.putIfAbsent("is_active", () => this.isActive);
     }
 
