@@ -6,7 +6,7 @@ import 'package:kudosapp/helpers/image_loading.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 

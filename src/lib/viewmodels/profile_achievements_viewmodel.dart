@@ -2,7 +2,7 @@ import 'package:kudosapp/models/user_achievement_collection.dart';
 import 'package:kudosapp/models/user_achievement_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ProfileAchievementsViewModel extends BaseViewModel {
@@ -14,7 +14,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
 
   bool get isMyProfile => _userId == _authService.currentUser.id;
 
-  ProfileAchievementsViewModel(this._userId){
+  ProfileAchievementsViewModel(this._userId) {
     _initialize();
   }
 
@@ -22,7 +22,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
     isBusy = true;
 
     final allUserAchievements =
-        await _achievementsService.getUserAchievements(_userId);
+        await _achievementsService.getReceivedAchievements(_userId);
 
     achievements.clear();
     achievements.addAll(_merge(allUserAchievements));

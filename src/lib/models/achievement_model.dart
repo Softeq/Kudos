@@ -15,8 +15,8 @@ class AchievementModel {
   String imageName;
   File imageFile;
   AchievementOwnerModel owner;
-  bool canBeModifiedByCurrentUser = false;
-  bool canBeSentByCurrentUser = false;
+  Set<String> admins;
+  Set<String> members;
 
   AchievementModel._({
     this.id,
@@ -24,9 +24,9 @@ class AchievementModel {
     this.description,
     this.imageUrl,
     this.imageName,
-    this.canBeModifiedByCurrentUser,
-    this.canBeSentByCurrentUser,
     this.owner,
+    this.admins,
+    this.members,
   });
 
   factory AchievementModel.empty() {
@@ -40,9 +40,8 @@ class AchievementModel {
       description: achievement.description,
       imageUrl: achievement.imageUrl,
       imageName: achievement.imageName,
-      canBeModifiedByCurrentUser:
-          achievement.canBeModifiedByCurrentUser ?? false,
-      canBeSentByCurrentUser: achievement.canBeSentByCurrentUser ?? false,
+      admins: achievement.owners,
+      members: achievement.members,
       owner: achievement.teamReference != null
           ? AchievementOwnerModel.fromTeam(
               TeamModel.fromTeamReference(achievement.teamReference))
@@ -56,9 +55,7 @@ class AchievementModel {
     return AchievementModel._(
         id: relatedAchievement.id,
         name: relatedAchievement.name,
-        imageUrl: relatedAchievement.imageUrl,
-        canBeModifiedByCurrentUser: false,
-        canBeSentByCurrentUser: false);
+        imageUrl: relatedAchievement.imageUrl);
   }
 
   void updateWithModel(AchievementModel achievement) {
@@ -69,7 +66,8 @@ class AchievementModel {
     imageName = achievement.imageName;
     imageFile = achievement.imageFile;
     owner = achievement.owner;
-    canBeModifiedByCurrentUser = achievement.canBeModifiedByCurrentUser;
-    canBeSentByCurrentUser = achievement.canBeSentByCurrentUser;
   }
+
+  bool canBeModifiedByUser(String userId) => admins?.contains(userId) ?? false;
+  bool canBeSentByUser(String userId) => members?.contains(userId) ?? false;
 }

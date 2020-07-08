@@ -1,5 +1,5 @@
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class UserTeamsViewModel extends BaseViewModel {
@@ -8,7 +8,7 @@ class UserTeamsViewModel extends BaseViewModel {
   final String _userId;
   final teamNames = List<String>();
 
-  UserTeamsViewModel(this._userId){
+  UserTeamsViewModel(this._userId) {
     _initialize();
   }
 

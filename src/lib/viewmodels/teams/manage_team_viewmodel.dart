@@ -14,13 +14,15 @@ import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/teams/edit_team_page.dart';
 import 'package:kudosapp/pages/user_picker_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/achievements_service.dart';
-import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ManageTeamViewModel extends BaseViewModel {
   final _eventBus = locator<EventBus>();
+  final _authService = locator<BaseAuthService>();
   final _teamsService = locator<TeamsService>();
   final _dialogService = locator<DialogService>();
   final _achievementsService = locator<AchievementsService>();
@@ -44,7 +46,7 @@ class ManageTeamViewModel extends BaseViewModel {
   bool get canEdit => _team.owners == null
       ? false
       : _canEdit ??
-          (_canEdit = _teamsService.canBeModifiedByCurrentUser(_team));
+          (_canEdit = _team.canBeModifiedByUser(_authService.currentUser.id));
 
   ManageTeamViewModel(this._team) {
     _initialize();
@@ -144,11 +146,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
     members.replace(users);
 
-    _teamsService.updateTeamMembers(
-      teamId: _team.id,
-      newMembers: users,
-      newAdmins: admins.items,
-    );
+    _teamsService.updateTeamMembers(_team, admins.items, users);
   }
 
   void _replaceAdmins(Iterable<UserModel> users) {
@@ -158,11 +156,7 @@ class ManageTeamViewModel extends BaseViewModel {
 
     admins.replace(users);
 
-    _teamsService.updateTeamMembers(
-      teamId: _team.id,
-      newMembers: members.items,
-      newAdmins: users,
-    );
+    _teamsService.updateTeamMembers(_team, users, members.items);
   }
 
   void _onAchievementUpdated(AchievementUpdatedMessage event) {

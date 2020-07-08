@@ -50,7 +50,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
           key: _scaffoldKey,
           appBar: GradientAppBar(
             title: viewModel.achievement.name,
-            actions: viewModel.achievement.canBeModifiedByCurrentUser
+            actions: viewModel.canEdit()
                 ? <Widget>[
                     IconButton(
                         icon: Icon(Icons.transfer_within_a_station),
@@ -73,7 +73,7 @@ class _AchievementDetailsPageState extends State<_AchievementDetailsPage> {
                 : null,
           ),
           body: _buildBody(viewModel),
-          floatingActionButton: viewModel.achievement.canBeSentByCurrentUser
+          floatingActionButton: viewModel.canSend()
               ? FloatingActionButton(
                   child: Icon(Icons.send),
                   onPressed: _sendTapped,

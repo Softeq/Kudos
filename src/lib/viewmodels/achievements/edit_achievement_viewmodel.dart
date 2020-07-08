@@ -4,11 +4,12 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kudosapp/helpers/image_loading.dart';
 import 'package:kudosapp/models/achievement_model.dart';
+import 'package:kudosapp/models/achievement_owner_model.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/services/image_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
@@ -19,8 +20,6 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
 
   final AchievementModel _initialAchievement;
   final AchievementModel _achievement = AchievementModel.empty();
-  final TeamModel _team;
-  final UserModel _user;
 
   String get pageTitle =>
       _achievement.id == null ? localizer().create : localizer().edit;
@@ -42,9 +41,15 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
   File get imageFile => _achievement.imageFile;
   String get imageUrl => _achievement.imageUrl;
 
-  EditAchievementViewModel._(this._initialAchievement, this._team, this._user) {
-    if(_initialAchievement != null) {
+  EditAchievementViewModel._(
+      this._initialAchievement, TeamModel team, UserModel user) {
+    if (_initialAchievement != null) {
       _achievement.updateWithModel(_initialAchievement);
+    }
+    if (team != null) {
+      _achievement.owner = AchievementOwnerModel.fromTeam(team);
+    } else if (user != null) {
+      _achievement.owner = AchievementOwnerModel.fromUser(user);
     }
   }
 
@@ -75,14 +80,11 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
     try {
       isBusy = true;
       if (_achievement.id == null) {
-        updatedAchievement = await _achievementsService.createAchievement(
-          achievement: _achievement,
-          user: _user,
-          team: _team,
-        );
+        updatedAchievement =
+            await _achievementsService.createAchievement(_achievement);
       } else {
-        updatedAchievement = await _achievementsService.updateAchievement(
-            achievement: _achievement);
+        updatedAchievement =
+            await _achievementsService.updateAchievement(_achievement);
       }
     } finally {
       isBusy = false;

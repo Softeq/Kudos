@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/user_model.dart';
@@ -5,7 +6,7 @@ import 'package:kudosapp/models/user_model.dart';
 /// Sender / Recipient [User] model
 /// Achievements collection -> user field
 @immutable
-class UserReference {
+class UserReference extends Equatable {
   final String id;
   final String name;
   final String imageUrl;
@@ -16,24 +17,22 @@ class UserReference {
     @required this.imageUrl,
   });
 
-  factory UserReference.fromUser(UserModel x) {
+  factory UserReference.fromModel(UserModel model) {
     return UserReference._(
-      id: x.id,
-      name: x.name,
-      imageUrl: x.imageUrl,
+      id: model.id,
+      name: model.name,
+      imageUrl: model.imageUrl,
     );
   }
 
-  factory UserReference.fromMap(Map<String, dynamic> x) {
-    if (x == null) {
-      return null;
-    }
-
-    return UserReference._(
-      id: x["id"],
-      name: x["name"],
-      imageUrl: x["image_url"],
-    );
+  factory UserReference.fromMap(Map<String, dynamic> map) {
+    return map == null
+        ? null
+        : UserReference._(
+            id: map["id"],
+            name: map["name"],
+            imageUrl: map["image_url"],
+          );
   }
 
   Map<String, dynamic> toMap() {
@@ -43,4 +42,7 @@ class UserReference {
       "image_url": imageUrl,
     };
   }
+
+  @override
+  List<Object> get props => [id];
 }

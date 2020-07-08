@@ -683,7 +683,7 @@ class S {
     );
   }
 
-  /// `Error: %s`
+  /// `Error`
   String get error {
     return Intl.message(
       'Error',
@@ -693,6 +693,7 @@ class S {
     );
   }
 
+  /// `Error: %s`
   String get detailedError {
     return Intl.message(
       'Error: %s',
@@ -702,6 +703,7 @@ class S {
     );
   }
 
+  /// `From: %s`
   String get from {
     return Intl.message(
       'From: %s',
@@ -801,6 +803,7 @@ class S {
     );
   }
 
+  /// `Please select at least one user`
   String get user_picker_empty_message {
     return Intl.message(
       'Please select at least one user',
@@ -810,6 +813,7 @@ class S {
     );
   }
 
+  /// `No search results`
   String get searchEmptyPlaceholder {
     return Intl.message(
       'No search results',

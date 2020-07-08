@@ -114,8 +114,7 @@ class ReceivedAchievementPage extends StatelessWidget {
       imageShape: ImageShape.circle(56),
       imageUrl: userAchievementModel.sender.imageUrl,
       title: userAchievementModel.sender.name,
-      description:
-          DateFormat.yMd().add_jm().format(userAchievementModel.date.toDate()),
+      description: DateFormat.yMd().add_jm().format(userAchievementModel.date),
       contentWidget: _buildCommentView(userAchievementModel.comment),
       onTap: () {
         Navigator.of(context).push(ProfileRoute(userAchievementModel.sender));

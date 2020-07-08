@@ -14,8 +14,8 @@ class PushNotificationsService {
     final token = await firebaseMessaging.getToken();
     return token;
   }
-  
-  Future<void> unSubscribeFromNotifications() async {
+
+  Future<void> unsubscribeFromNotifications() async {
     final firebaseMessaging = FirebaseMessaging();
     await firebaseMessaging.deleteInstanceID();
   }

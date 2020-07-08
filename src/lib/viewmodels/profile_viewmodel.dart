@@ -3,8 +3,8 @@ import 'package:kudosapp/helpers/list_notifier.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/people_service.dart';
-import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/people_service.dart';
+import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class ProfileViewModel extends BaseViewModel with Disposable {

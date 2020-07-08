@@ -12,7 +12,7 @@ import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/database/achievements_service.dart';
+import 'package:kudosapp/services/achievements_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 class AchievementsViewModel extends BaseViewModel {

@@ -11,21 +11,24 @@ import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
 import 'package:kudosapp/models/statistics_model.dart';
 import 'package:kudosapp/models/team_model.dart';
+import 'package:kudosapp/models/user_achievement_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/pages/people_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/pages/teams/manage_team_page.dart';
 import 'package:kudosapp/pages/teams/teams_page.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/services/database/achievements_service.dart';
-import 'package:kudosapp/services/database/people_service.dart';
-import 'package:kudosapp/services/database/teams_service.dart';
+import 'package:kudosapp/services/base_auth_service.dart';
+import 'package:kudosapp/services/achievements_service.dart';
+import 'package:kudosapp/services/people_service.dart';
+import 'package:kudosapp/services/teams_service.dart';
 import 'package:kudosapp/services/dialog_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 import 'package:sprintf/sprintf.dart';
 
 class AchievementDetailsViewModel extends BaseViewModel {
   final _eventBus = locator<EventBus>();
+  final _authService = locator<BaseAuthService>();
   final _peopleService = locator<PeopleService>();
   final _teamsService = locator<TeamsService>();
   final _dialogsService = locator<DialogService>();
@@ -61,10 +64,17 @@ class AchievementDetailsViewModel extends BaseViewModel {
     isBusy = false;
   }
 
+  bool canEdit() =>
+      achievement.canBeModifiedByUser(_authService.currentUser.id);
+  bool canSend() => achievement.canBeSentByUser(_authService.currentUser.id);
+
   Future<void> sendTo(UserModel recipient, String comment) async {
     isBusy = true;
 
-    await _achievementsService.sendAchievement(recipient, achievement, comment);
+    var userAchievement = UserAchievementModel.createNew(
+        _authService.currentUser, achievement, comment);
+
+    await _achievementsService.sendAchievement(recipient, userAchievement);
 
     // TODO PS: try not to reload everything here
     await _loadStatistics();
@@ -121,9 +131,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
       content: localizer().transferAchievementToUserWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
-        id: achievement.id,
-        user: user,
-      );
+          achievement, AchievementOwnerModel.fromUser(user));
 
       Navigator.popUntil(context, ModalRoute.withName('/'));
       _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
@@ -137,9 +145,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
       content: localizer().transferAchievementToTeamWarning,
     )) {
       var updatedAchievement = await _achievementsService.transferAchievement(
-        id: achievement.id,
-        team: team,
-      );
+          achievement, AchievementOwnerModel.fromTeam(team));
 
       Navigator.popUntil(context, ModalRoute.withName('/'));
       _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
@@ -154,7 +160,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
       isBusy = true;
 
       await _achievementsService.deleteAchievement(
-        achievement.id,
+        achievement,
         holdersCount: achievementHolders.length,
       );
 

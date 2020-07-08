@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/team_member.dart';
-import 'package:kudosapp/dto/user.dart';
+import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/models/user_model.dart';
 
 /// Teams collection
 @immutable
-class Team {
+class Team extends Equatable {
   final String id;
   final String name;
   final String imageUrl;
@@ -15,6 +16,33 @@ class Team {
   final List<TeamMember> owners;
   final List<TeamMember> members;
   final bool isActive;
+
+  Team._({
+    this.id,
+    this.name,
+    this.imageUrl,
+    this.imageName,
+    this.description,
+    this.owners,
+    this.members,
+    this.isActive,
+  });
+
+  factory Team.fromModel(TeamModel model,
+      {bool isActive, List<UserModel> newMembers, List<UserModel> newOwners}) {
+    return Team._(
+      id: model.id,
+      name: model.name,
+      imageUrl: model.imageUrl,
+      imageName: model.imageName,
+      description: model.description,
+      members:
+          (newMembers ?? model.members)?.map((um) => TeamMember.fromModel(um)),
+      owners:
+          (newOwners ?? model.owners)?.map((um) => TeamMember.fromModel(um)),
+      isActive: isActive ?? true,
+    );
+  }
 
   factory Team.fromDocument(DocumentSnapshot x) {
     return Team._(
@@ -29,16 +57,49 @@ class Team {
     );
   }
 
-  Team._({
-    this.id,
-    this.name,
-    this.imageUrl,
-    this.imageName,
-    this.description,
-    this.owners,
-    this.members,
-    this.isActive,
-  });
+  Map<String, dynamic> toMap({
+    @required bool all,
+    bool metadata,
+    bool image,
+    bool members,
+    bool owners,
+    bool isActive,
+  }) {
+    final map = new Map<String, Object>();
+
+    if (metadata) {
+      map["name"] = this.name;
+      map["description"] = this.description;
+    }
+
+    if (image) {
+      map["image_url"] = this.imageUrl;
+      map["image_name"] = this.imageName;
+    }
+
+    var visibleFor = List<String>();
+
+    if (members) {
+      map["team_members"] = this.members;
+      visibleFor.addAll(this.members.map((x) => x.id));
+    }
+
+    if (owners) {
+      map["team_owners"] = this.owners;
+      visibleFor.addAll(this.owners.map((x) => x.id));
+    }
+
+    if (visibleFor.isNotEmpty) {
+      visibleFor = visibleFor.toSet().toList();
+      map["visible_for"] = visibleFor;
+    }
+
+    if (isActive) {
+      map.putIfAbsent("is_active", () => this.isActive);
+    }
+
+    return map;
+  }
 
   static List<TeamMember> getMembers(List<dynamic> x) {
     if (x == null) {
@@ -49,54 +110,6 @@ class Team {
     return mapList.map((y) => TeamMember.fromMap(y)).toList();
   }
 
-  static Map<String, dynamic> createMap({
-    String name,
-    String imageUrl,
-    String imageName,
-    String description,
-    List<UserModel> members,
-    List<UserModel> owners,
-    bool isActive,
-  }) {
-    var map = Map<String, dynamic>();
-
-    if (name != null) {
-      map["name"] = name;
-    }
-
-    if (imageUrl != null) {
-      map["image_url"] = imageUrl;
-    }
-
-    if (imageName != null) {
-      map["image_name"] = imageName;
-    }
-
-    if (description != null) {
-      map["description"] = description;
-    }
-
-    if (isActive != null) {
-      map["is_active"] = isActive;
-    }
-
-    var visibleFor = List<String>();
-
-    if (members != null) {
-      map["team_members"] = members.map((x) => User.fromModel(x).toMap()).toList();
-      visibleFor.addAll(members.map((x) => x.id));
-    }
-
-    if (owners != null) {
-      map["team_owners"] = owners.map((x) => User.fromModel(x).toMap()).toList();
-      visibleFor.addAll(owners.map((x) => x.id));
-    }
-
-    if (visibleFor.isNotEmpty) {
-      visibleFor = visibleFor.toSet().toList();
-      map["visible_for"] = visibleFor;
-    }
-
-    return map;
-  }
+  @override
+  List<Object> get props => [id];
 }

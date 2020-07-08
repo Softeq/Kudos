@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,7 +6,7 @@ import 'package:kudosapp/models/user_model.dart';
 
 /// Users collection
 @immutable
-class User {
+class User extends Equatable {
   final String id;
   final String name;
   final String email;
@@ -30,13 +31,13 @@ class User {
     );
   }
 
-  factory User.fromModel(UserModel userModel) {
+  factory User.fromModel(UserModel model) {
     return User._(
-      id: userModel.id,
-      name: userModel.name,
-      email: userModel.email,
-      imageUrl: userModel.imageUrl,
-      receivedAchievementsCount: userModel.receivedAchievementsCount,
+      id: model.id,
+      name: model.name,
+      email: model.email,
+      imageUrl: model.imageUrl,
+      receivedAchievementsCount: model.receivedAchievementsCount,
     );
   }
 
@@ -61,4 +62,7 @@ class User {
       "received_achievements_count": receivedAchievementsCount,
     };
   }
+
+  @override
+  List<Object> get props => [id];
 }

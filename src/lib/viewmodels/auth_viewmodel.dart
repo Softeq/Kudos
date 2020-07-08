@@ -1,7 +1,7 @@
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
-import 'package:kudosapp/services/database/people_service.dart';
+import 'package:kudosapp/services/people_service.dart';
 import 'package:kudosapp/viewmodels/base_viewmodel.dart';
 
 enum AuthViewModelState {

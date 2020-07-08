@@ -58,4 +58,7 @@ class TeamModel {
     members = team.members;
     owners = team.owners;
   }
+
+  bool canBeModifiedByUser(String userId) =>
+      owners.firstWhere((x) => x.id == userId, orElse: () => null) != null;
 }
