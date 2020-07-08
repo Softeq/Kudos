@@ -74,6 +74,6 @@ flutter_intl:
   enabled: true
 
 flutter_icons:
-  image_path: "assets/icons/app_icon_blue.png" 
+  image_path: "assets/icons/app_icon.png" 
   android: true
   ios: true
