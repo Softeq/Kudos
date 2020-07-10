@@ -40,10 +40,11 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
   }
 
   File get imageFile => _achievement.imageFile;
+
   String get imageUrl => _achievement.imageUrl;
 
   EditAchievementViewModel._(this._initialAchievement, this._team, this._user) {
-    if(_initialAchievement != null) {
+    if (_initialAchievement != null) {
       _achievement.updateWithModel(_initialAchievement);
     }
   }
@@ -74,6 +75,15 @@ class EditAchievementViewModel extends BaseViewModel with ImageLoading {
 
     try {
       isBusy = true;
+
+      if (name.isEmpty) {
+        throw ArgumentError.notNull("name");
+      }
+
+      if (description.isEmpty) {
+        throw ArgumentError.notNull("description");
+      }
+
       if (_achievement.id == null) {
         updatedAchievement = await _achievementsService.createAchievement(
           achievement: _achievement,
