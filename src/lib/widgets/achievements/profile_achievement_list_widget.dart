@@ -59,7 +59,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     if (viewModel.achievements.isEmpty) {
       return _buildEmpty();
     }
-    return _buildError(localizer().generalError);
+    return _buildError(localizer().generalErrorMessage);
   }
 
   Widget _buildLoading() {
