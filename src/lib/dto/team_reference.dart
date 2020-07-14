@@ -13,11 +13,11 @@ class TeamReference extends Equatable {
     @required this.name,
   });
 
-  factory TeamReference.fromMap(Map<String, dynamic> map) {
+  factory TeamReference.fromJson(Map<String, dynamic> map, String id) {
     return map == null
         ? null
         : TeamReference._(
-            id: map["id"],
+            id: id ?? map["id"],
             name: map["name"],
           );
   }
@@ -29,7 +29,7 @@ class TeamReference extends Equatable {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "name": name,

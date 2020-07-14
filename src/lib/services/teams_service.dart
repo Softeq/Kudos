@@ -35,17 +35,17 @@ class TeamsService {
   }
 
   Future<TeamModel> editTeam(TeamModel teamModel) async {
+    bool uploadImage = false;
     if (teamModel.imageFile != null) {
       var imageData = await _imageService.uploadImage(teamModel.imageFile);
       teamModel.imageUrl = imageData.url;
       teamModel.imageName = imageData.name;
-    } else {
-      teamModel.imageUrl = null;
-      teamModel.imageName = null;
+      uploadImage = true;
     }
 
     return _teamsDatabaseService
-        .updateTeam(Team.fromModel(teamModel), metadata: true, image: true)
+        .updateTeam(Team.fromModel(teamModel),
+            metadata: true, image: uploadImage)
         .then((t) => TeamModel.fromTeam(t));
   }
 
@@ -55,7 +55,7 @@ class TeamsService {
         Team.fromModel(teamModel, newOwners: newOwners, newMembers: newMembers);
 
     return _teamsDatabaseService
-        .updateTeam(team)
+        .updateTeam(team, owners: true, members: true)
         .then((t) => TeamModel.fromTeam(t));
   }
 

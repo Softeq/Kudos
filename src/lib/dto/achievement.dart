@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/team_reference.dart';
@@ -14,8 +13,8 @@ class Achievement extends Equatable {
   final String description;
   final String imageUrl;
   final String imageName;
-  final TeamReference teamReference;
-  final UserReference userReference;
+  final TeamReference team;
+  final UserReference user;
   final Set<String> members;
   final Set<String> owners;
   final bool isActive;
@@ -25,27 +24,32 @@ class Achievement extends Equatable {
     @required this.name,
     @required this.description,
     @required this.imageUrl,
-    @required this.teamReference,
-    @required this.userReference,
+    @required this.team,
+    @required this.user,
     @required this.imageName,
     @required this.isActive,
     @required this.members,
     @required this.owners,
   });
 
-  factory Achievement.fromDocument(DocumentSnapshot x) {
-    return Achievement._(
-      id: x.documentID,
-      name: x.data["name"],
-      description: x.data["description"],
-      imageUrl: x.data["image_url"],
-      imageName: x.data["image_name"],
-      teamReference: TeamReference.fromMap(x.data["team"]),
-      userReference: UserReference.fromMap(x.data["user"]),
-      owners: Set<String>.from(x.data["owners"]),
-      members: Set<String>.from(x.data["members"]),
-      isActive: x.data["is_active"],
-    );
+  factory Achievement.fromJson(Map<String, dynamic> map, String id) {
+    return map == null
+        ? null
+        : Achievement._(
+            id: id ?? map["id"],
+            name: map["name"],
+            description: map["description"],
+            imageUrl: map["image_url"],
+            imageName: map["image_name"],
+            team: TeamReference.fromJson(map["team"], null),
+            user: UserReference.fromJson(map["user"], null),
+            owners:
+                map["owners"] == null ? null : Set<String>.from(map["owners"]),
+            members: map["members"] == null
+                ? null
+                : Set<String>.from(map["members"]),
+            isActive: map["is_active"],
+          );
   }
 
   factory Achievement.fromModel(
@@ -82,15 +86,15 @@ class Achievement extends Equatable {
       description: model.description,
       imageUrl: model.imageUrl,
       imageName: model.imageName,
-      teamReference: teamReference,
-      userReference: userReference,
+      team: teamReference,
+      user: userReference,
       members: members,
       owners: owners,
       isActive: isActive ?? true,
     );
   }
 
-  Map<String, dynamic> toMap({
+  Map<String, dynamic> toJson({
     @required bool all,
     bool metadata = false,
     bool image = false,
@@ -110,12 +114,10 @@ class Achievement extends Equatable {
     }
 
     if (all || owner) {
-      map.putIfAbsent(
-          "team", () => teamReference == null ? null : teamReference.toMap());
-      map.putIfAbsent(
-          "user", () => userReference == null ? null : userReference.toMap());
-      map.putIfAbsent("members", () => this.members);
-      map.putIfAbsent("owners", () => this.owners);
+      map.putIfAbsent("team", () => team == null ? null : team.toJson());
+      map.putIfAbsent("user", () => user == null ? null : user.toJson());
+      map.putIfAbsent("members", () => this.members?.toList());
+      map.putIfAbsent("owners", () => this.owners?.toList());
     }
 
     if (all || isActive) {

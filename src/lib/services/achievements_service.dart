@@ -45,10 +45,6 @@ class AchievementsService {
       achievementModel.imageUrl = imageData.url;
       uploadImage = true;
     }
-    // else {
-    //   achievementModel.imageName = null;
-    //   achievementModel.imageUrl = null;
-    // }
 
     return _achievementsDatabaseService
         .updateAchievement(Achievement.fromModel(achievementModel),
@@ -126,7 +122,7 @@ class AchievementsService {
 
   Future<List<AchievementModel>> getMyAchievements() {
     return _achievementsDatabaseService
-        .getTeamAchievements(_authService.currentUser.id)
+        .getUserAchievements(_authService.currentUser.id)
         .then((list) =>
             list.map((a) => AchievementModel.fromAchievement(a)).toList());
   }

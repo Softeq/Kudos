@@ -48,7 +48,7 @@ dependencies:
 
   intl: ^0.16.1
 
-  sprintf: "^4.0.0"
+  sprintf: ^4.0.0
 
   # auth
   google_sign_in: ^4.4.4

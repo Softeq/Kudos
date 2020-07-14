@@ -17,6 +17,17 @@ class UserModel {
     this.receivedAchievementsCount,
   });
 
+  factory UserModel.createNew(String name, String email, String imageUrl) {
+    final id = email.split("@").first;
+    return UserModel._(
+      id: id,
+      name: name,
+      email: email,
+      imageUrl: imageUrl,
+      receivedAchievementsCount: 0,
+    );
+  }
+
   factory UserModel.mock({int index = 0}) {
     return UserModel._(
       id: "test_id #{$index}",

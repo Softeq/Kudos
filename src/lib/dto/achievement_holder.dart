@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/user_reference.dart';
@@ -22,17 +21,19 @@ class AchievementHolder extends Equatable {
     );
   }
 
-  factory AchievementHolder.fromDocument(DocumentSnapshot x) {
-    return AchievementHolder._(
-      date: x.data["date"].toDate(),
-      recipient: UserReference.fromMap(x.data["recipient"]),
-    );
+  factory AchievementHolder.fromJson(Map<String, dynamic> map) {
+    return map == null
+        ? null
+        : AchievementHolder._(
+            date: map["date"].toDate(),
+            recipient: UserReference.fromJson(map["recipient"], null),
+          );
   }
 
   Map<String, dynamic> toMap() {
     return {
       "date": date,
-      "recipient": recipient.toMap(),
+      "recipient": recipient.toJson(),
     };
   }
 

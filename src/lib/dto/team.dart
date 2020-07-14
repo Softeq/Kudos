@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/team_member.dart';
@@ -13,8 +12,8 @@ class Team extends Equatable {
   final String imageUrl;
   final String imageName;
   final String description;
-  final List<TeamMember> owners;
-  final List<TeamMember> members;
+  final List<TeamMember> teamOwners;
+  final List<TeamMember> teamMembers;
   final bool isActive;
 
   Team._({
@@ -23,41 +22,52 @@ class Team extends Equatable {
     this.imageUrl,
     this.imageName,
     this.description,
-    this.owners,
-    this.members,
+    this.teamOwners,
+    this.teamMembers,
     this.isActive,
   });
 
-  factory Team.fromModel(TeamModel model,
-      {bool isActive, List<UserModel> newMembers, List<UserModel> newOwners}) {
+  factory Team.fromModel(
+    TeamModel model, {
+    bool isActive,
+    List<UserModel> newMembers,
+    List<UserModel> newOwners,
+  }) {
     return Team._(
       id: model.id,
       name: model.name,
       imageUrl: model.imageUrl,
       imageName: model.imageName,
       description: model.description,
-      members:
-          (newMembers ?? model.members)?.map((um) => TeamMember.fromModel(um)),
-      owners:
-          (newOwners ?? model.owners)?.map((um) => TeamMember.fromModel(um)),
+      teamMembers: (newMembers ?? model.members)
+          ?.map((um) => TeamMember.fromModel(um))
+          ?.toList(),
+      teamOwners: (newOwners ?? model.owners)
+          ?.map((um) => TeamMember.fromModel(um))
+          ?.toList(),
       isActive: isActive ?? true,
     );
   }
 
-  factory Team.fromDocument(DocumentSnapshot x) {
-    return Team._(
-      id: x.documentID,
-      name: x.data["name"],
-      imageUrl: x.data["image_url"],
-      imageName: x.data["image_name"],
-      description: x.data["description"],
-      owners: getMembers(x.data["team_owners"]),
-      members: getMembers(x.data["team_members"]),
-      isActive: x.data["is_active"],
-    );
+  factory Team.fromJson(
+    Map<String, dynamic> map,
+    String id,
+  ) {
+    return map == null
+        ? null
+        : Team._(
+            id: id ?? map["id"],
+            name: map["name"],
+            imageUrl: map["image_url"],
+            imageName: map["image_name"],
+            description: map["description"],
+            teamOwners: getMembers(map["team_owners"]),
+            teamMembers: getMembers(map["team_members"]),
+            isActive: map["is_active"],
+          );
   }
 
-  Map<String, dynamic> toMap({
+  Map<String, dynamic> toJson({
     @required bool all,
     bool metadata = false,
     bool image = false,
@@ -80,13 +90,14 @@ class Team extends Equatable {
     var visibleFor = List<String>();
 
     if (all || members) {
-      map["team_members"] = this.members;
-      visibleFor.addAll(this.members.map((x) => x.id));
+      map["team_members"] =
+          this.teamMembers?.map((tm) => tm.toJson())?.toList();
+      visibleFor.addAll(this.teamMembers?.map((x) => x.id));
     }
 
     if (all || owners) {
-      map["team_owners"] = this.owners;
-      visibleFor.addAll(this.owners.map((x) => x.id));
+      map["team_owners"] = this.teamOwners?.map((to) => to.toJson())?.toList();
+      visibleFor.addAll(this.teamOwners?.map((x) => x.id));
     }
 
     if (visibleFor.isNotEmpty) {
@@ -107,7 +118,7 @@ class Team extends Equatable {
     }
 
     var mapList = members.cast<Map<String, dynamic>>();
-    return mapList.map((y) => TeamMember.fromMap(y)).toList();
+    return mapList.map((y) => TeamMember.fromJson(y, null)).toList();
   }
 
   @override

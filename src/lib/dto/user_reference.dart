@@ -25,17 +25,17 @@ class UserReference extends Equatable {
     );
   }
 
-  factory UserReference.fromMap(Map<String, dynamic> map) {
+  factory UserReference.fromJson(Map<String, dynamic> map, String id) {
     return map == null
         ? null
         : UserReference._(
-            id: map["id"],
+            id: id ?? map["id"],
             name: map["name"],
             imageUrl: map["image_url"],
           );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "name": name,

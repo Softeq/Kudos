@@ -12,7 +12,8 @@ class TeamsDatabaseService {
         .where("visible_for", arrayContains: userId)
         .where("is_active", isEqualTo: true)
         .getDocuments()
-        .then((value) => value.documents.map((e) => Team.fromDocument(e)));
+        .then((value) =>
+            value.documents.map((d) => Team.fromJson(d.data, d.documentID)));
   }
 
   Future<Team> getTeam(String teamId) {
@@ -20,15 +21,15 @@ class TeamsDatabaseService {
         .collection(_teamsCollection)
         .document(teamId)
         .get()
-        .then((value) => Team.fromDocument(value));
+        .then((value) => Team.fromJson(value.data, value.documentID));
   }
 
   Future<Team> createTeam(Team team) {
     return _database
         .collection(_teamsCollection)
-        .add(team.toMap(all: true))
+        .add(team.toJson(all: true))
         .then((value) => value.get())
-        .then((value) => Team.fromDocument(value));
+        .then((value) => Team.fromJson(value.data, value.documentID));
   }
 
   Future<Team> updateTeam(
@@ -41,7 +42,7 @@ class TeamsDatabaseService {
     WriteBatch batch,
   }) {
     final docRef = _database.collection(_teamsCollection).document(team.id);
-    final map = team.toMap(
+    final map = team.toJson(
       all: false,
       metadata: metadata,
       image: image,
@@ -53,7 +54,7 @@ class TeamsDatabaseService {
       return docRef
           .setData(map, merge: true)
           .then((value) => docRef.get())
-          .then((value) => Team.fromDocument(value));
+          .then((value) => Team.fromJson(value.data, value.documentID));
     } else {
       batch.setData(docRef, map, merge: true);
       return null;

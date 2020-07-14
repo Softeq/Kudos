@@ -17,8 +17,8 @@ class AchievementsDatabaseService {
         .where(field, isEqualTo: value)
         .where("is_active", isEqualTo: true)
         .getDocuments()
-        .then(
-            (value) => value.documents.map((x) => Achievement.fromDocument(x)));
+        .then((value) => value.documents
+            .map((d) => Achievement.fromJson(d.data, d.documentID)));
   }
 
   Future<Iterable<Achievement>> getTeamsAchievements() {
@@ -27,8 +27,8 @@ class AchievementsDatabaseService {
         .where("user", isNull: true)
         .where("is_active", isEqualTo: true)
         .getDocuments()
-        .then(
-            (value) => value.documents.map((x) => Achievement.fromDocument(x)));
+        .then((value) => value.documents
+            .map((d) => Achievement.fromJson(d.data, d.documentID)));
   }
 
   Future<Iterable<Achievement>> getTeamAchievements(String teamId) {
@@ -44,7 +44,7 @@ class AchievementsDatabaseService {
         .collection(_achievementsCollection)
         .document(achivementId)
         .get()
-        .then((value) => Achievement.fromDocument(value));
+        .then((value) => Achievement.fromJson(value.data, value.documentID));
   }
 
   Future<Iterable<AchievementHolder>> getAchievementHolders(
@@ -54,7 +54,7 @@ class AchievementsDatabaseService {
             "$_achievementsCollection/$achivementId/$_achievementHoldersCollection")
         .getDocuments()
         .then((value) =>
-            value.documents.map((x) => AchievementHolder.fromDocument(x)));
+            value.documents.map((d) => AchievementHolder.fromJson(d.data)));
   }
 
   Future<void> createAchievementHolder(
@@ -83,9 +83,9 @@ class AchievementsDatabaseService {
         .document();
 
     if (batch == null) {
-      return docRef.setData(userAchievement.toMap());
+      return docRef.setData(userAchievement.toJson());
     } else {
-      batch.setData(docRef, userAchievement.toMap());
+      batch.setData(docRef, userAchievement.toJson());
       return null;
     }
   }
@@ -93,9 +93,9 @@ class AchievementsDatabaseService {
   Future<Achievement> createAchievement(Achievement achievement) {
     return _database
         .collection(_achievementsCollection)
-        .add(achievement.toMap(all: true))
+        .add(achievement.toJson(all: true))
         .then((value) => value.get())
-        .then((value) => Achievement.fromDocument(value));
+        .then((value) => Achievement.fromJson(value.data, value.documentID));
   }
 
   Future<Iterable<UserAchievement>> getReceivedAchievements(
@@ -104,8 +104,8 @@ class AchievementsDatabaseService {
         .collection(
             "$_usersCollection/$userId/$_achievementReferencesCollection")
         .getDocuments()
-        .then((value) =>
-            value.documents.map((x) => UserAchievement.fromDocument(x)));
+        .then((value) => value.documents
+            .map((d) => UserAchievement.fromJson(d.data, d.documentID)));
   }
 
   Future<Achievement> updateAchievement(
@@ -118,7 +118,7 @@ class AchievementsDatabaseService {
   }) {
     final docRef =
         _database.collection(_achievementsCollection).document(achievement.id);
-    final map = achievement.toMap(
+    final map = achievement.toJson(
       all: false,
       metadata: metadata,
       image: image,
@@ -129,7 +129,7 @@ class AchievementsDatabaseService {
       return docRef
           .setData(map, merge: true)
           .then((value) => docRef.get())
-          .then((value) => Achievement.fromDocument(value));
+          .then((value) => Achievement.fromJson(value.data, value.documentID));
     } else {
       batch.setData(docRef, map, merge: true);
       return null;

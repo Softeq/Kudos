@@ -29,9 +29,7 @@ class AchievementModel {
     this.members,
   });
 
-  factory AchievementModel.empty() {
-    return AchievementModel._();
-  }
+  factory AchievementModel.empty() => AchievementModel._();
 
   factory AchievementModel.fromAchievement(Achievement achievement) {
     return AchievementModel._(
@@ -42,11 +40,11 @@ class AchievementModel {
       imageName: achievement.imageName,
       admins: achievement.owners,
       members: achievement.members,
-      owner: achievement.teamReference != null
+      owner: achievement.team != null
           ? AchievementOwnerModel.fromTeam(
-              TeamModel.fromTeamReference(achievement.teamReference))
+              TeamModel.fromTeamReference(achievement.team))
           : AchievementOwnerModel.fromUser(
-              UserModel.fromUserReference(achievement.userReference)),
+              UserModel.fromUserReference(achievement.user)),
     );
   }
 
@@ -68,6 +66,8 @@ class AchievementModel {
     owner = achievement.owner;
   }
 
-  bool canBeModifiedByUser(String userId) => admins?.contains(userId) ?? false;
-  bool canBeSentByUser(String userId) => members?.contains(userId) ?? false;
+  bool canBeModifiedByUser(String userId) =>
+      owner.id == userId || (admins?.contains(userId) ?? false);
+  bool canBeSentByUser(String userId) =>
+      owner.id == userId || (members?.contains(userId) ?? false);
 }

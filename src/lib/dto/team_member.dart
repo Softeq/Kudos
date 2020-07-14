@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/models/user_model.dart';
@@ -21,21 +20,16 @@ class TeamMember extends Equatable {
     );
   }
 
-  factory TeamMember.fromDocument(DocumentSnapshot x) {
-    return TeamMember._(
-      x.documentID,
-      x.data["name"],
-    );
+  factory TeamMember.fromJson(Map<String, dynamic> map, String id) {
+    return map == null
+        ? null
+        : TeamMember._(
+            id ?? map["id"],
+            map["name"],
+          );
   }
 
-  factory TeamMember.fromMap(Map<String, dynamic> map) {
-    return TeamMember._(
-      map["id"],
-      map["name"],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "name": name,

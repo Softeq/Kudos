@@ -14,8 +14,9 @@ class UsersDatabaseService {
     return _database.collection(_usersCollection).snapshots().transform(
         StreamTransformer<QuerySnapshot, List<User>>.fromHandlers(
             handleData: (query, sink) {
-      final users =
-          query.documents.map<User>((x) => User.fromDocument(x)).toList();
+      final users = query.documents
+          .map<User>((d) => User.fromJson(d.data, d.documentID))
+          .toList();
       sink.add(users);
     }));
   }

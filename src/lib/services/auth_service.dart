@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/models/errors/auth_error.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/services/base_auth_service.dart';
@@ -20,7 +19,11 @@ class AuthService extends BaseAuthService {
     _firebaseAuth.onAuthStateChanged.listen((FirebaseUser firebaseUser) {
       _currentUser = firebaseUser == null
           ? null
-          : UserModel.fromUser(User.fromFirebase(firebaseUser));
+          : UserModel.createNew(
+              firebaseUser.displayName,
+              firebaseUser.email,
+              firebaseUser.photoUrl,
+            );
       userChangedHandler(_currentUser);
     });
   }

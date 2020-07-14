@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kudosapp/dto/related_achievement.dart';
 import 'package:kudosapp/dto/user_reference.dart';
@@ -28,19 +27,21 @@ class UserAchievement {
     );
   }
 
-  factory UserAchievement.fromDocument(DocumentSnapshot x) {
-    return UserAchievement._(
-      sender: UserReference.fromMap(x.data["sender"]),
-      achievement: RelatedAchievement.fromMap(x.data["achievement"]),
-      comment: x.data["comment"],
-      date: x.data["date"].toDate(),
-    );
+  factory UserAchievement.fromJson(Map<String, dynamic> map, String id) {
+    return map == null
+        ? null
+        : UserAchievement._(
+            sender: UserReference.fromJson(map["sender"], null),
+            achievement: RelatedAchievement.fromJson(map["achievement"], null),
+            comment: map["comment"],
+            date: map["date"].toDate(),
+          );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      "sender": sender.toMap(),
-      "achievement": achievement.toMap(),
+      "sender": sender.toJson(),
+      "achievement": achievement.toJson(),
       "comment": comment,
       "date": date,
     };

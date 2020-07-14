@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kudosapp/models/user_model.dart';
 
 /// Users collection
@@ -16,19 +14,21 @@ class User extends Equatable {
   User._({
     @required this.id,
     @required this.name,
-    this.email,
+    @required this.email,
     @required this.imageUrl,
     @required this.receivedAchievementsCount,
   });
 
-  factory User.fromDocument(DocumentSnapshot x) {
-    return User._(
-      id: x.documentID,
-      name: x.data["name"],
-      email: x.data["email"],
-      imageUrl: x.data["image_url"],
-      receivedAchievementsCount: x.data["received_achievements_count"],
-    );
+  factory User.fromJson(Map<String, dynamic> map, String id) {
+    return map == null
+        ? null
+        : User._(
+            id: id ?? map["id"],
+            name: map["name"],
+            email: map["email"],
+            imageUrl: map["image_url"],
+            receivedAchievementsCount: map["received_achievements_count"],
+          );
   }
 
   factory User.fromModel(UserModel model) {
@@ -41,19 +41,7 @@ class User extends Equatable {
     );
   }
 
-  factory User.fromFirebase(FirebaseUser x) {
-    final uid = x.email.split("@").first;
-
-    return User._(
-      id: uid,
-      name: x.displayName,
-      email: x.email,
-      imageUrl: x.photoUrl,
-      receivedAchievementsCount: 0,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "name": name,
