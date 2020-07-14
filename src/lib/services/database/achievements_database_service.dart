@@ -110,10 +110,10 @@ class AchievementsDatabaseService {
 
   Future<Achievement> updateAchievement(
     Achievement achievement, {
-    bool metadata,
-    bool image,
-    bool owner,
-    bool isActive,
+    bool metadata = false,
+    bool image = false,
+    bool owner = false,
+    bool isActive = false,
     WriteBatch batch,
   }) {
     final docRef =

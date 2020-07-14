@@ -37,19 +37,22 @@ class AchievementsService {
 
   Future<AchievementModel> updateAchievement(
       AchievementModel achievementModel) async {
+    bool uploadImage = false;
     if (achievementModel.imageFile != null) {
       var imageData =
           await _imageService.uploadImage(achievementModel.imageFile);
       achievementModel.imageName = imageData.name;
       achievementModel.imageUrl = imageData.url;
-    } else {
-      achievementModel.imageName = null;
-      achievementModel.imageUrl = null;
+      uploadImage = true;
     }
+    // else {
+    //   achievementModel.imageName = null;
+    //   achievementModel.imageUrl = null;
+    // }
 
     return _achievementsDatabaseService
         .updateAchievement(Achievement.fromModel(achievementModel),
-            metadata: true, image: true)
+            metadata: true, image: uploadImage)
         .then((a) => AchievementModel.fromAchievement(a));
   }
 

@@ -59,11 +59,11 @@ class Team extends Equatable {
 
   Map<String, dynamic> toMap({
     @required bool all,
-    bool metadata,
-    bool image,
-    bool members,
-    bool owners,
-    bool isActive,
+    bool metadata = false,
+    bool image = false,
+    bool members = false,
+    bool owners = false,
+    bool isActive = false,
   }) {
     final map = new Map<String, Object>();
 

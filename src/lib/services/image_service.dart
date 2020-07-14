@@ -38,13 +38,15 @@ class ImageService {
     return ImageData(imageUrl, fileName);
   }
 
-  Future<File> pickImage (BuildContext context) async
-  {
+  Future<File> pickImage(BuildContext context) async {
     var file = await FilePicker.getFile(type: FileType.image);
     var isValid = file == null || await _fileService.isFileSizeValid(file);
 
     if (!isValid) {
-      _dialogService.showOkDialog(context: context, content: localizer().fileSizeTooBig);
+      _dialogService.showOkDialog(
+          context: context,
+          title: localizer().error,
+          content: localizer().fileSizeTooBig);
     }
 
     return isValid ? file : null;

@@ -31,14 +31,15 @@ class KudosApp extends StatelessWidget {
           ],
           supportedLocales: S.delegate.supportedLocales,
           title: S().appName,
+          color: KudosTheme.mainGradientStartColor,
           theme: ThemeData(
             accentColor: KudosTheme.accentColor,
             highlightColor: KudosTheme.highlightColor,
             splashColor: KudosTheme.splashColor,
             textSelectionColor: KudosTheme.accentColor.withAlpha(50),
             buttonTheme: ButtonThemeData(
-              highlightColor: Colors.transparent,
-              splashColor:  KudosTheme.buttonSplashColor),
+                highlightColor: Colors.transparent,
+                splashColor: KudosTheme.buttonSplashColor),
             floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: KudosTheme.accentColor,
               foregroundColor: Colors.white,

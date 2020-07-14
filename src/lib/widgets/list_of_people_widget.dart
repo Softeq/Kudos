@@ -36,7 +36,7 @@ class ListOfPeopleWidget extends StatelessWidget {
 
   String getReceivedAchievementsString(int count) {
     if (count == null || count == 0) {
-      return localizer().receivedNoAchievements;
+      return localizer().profileAchievementsEmptyPlaceholder;
     } else {
       return sprintf(localizer().receivedAchievements, [count]);
     }

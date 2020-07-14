@@ -92,10 +92,10 @@ class Achievement extends Equatable {
 
   Map<String, dynamic> toMap({
     @required bool all,
-    bool metadata,
-    bool image,
-    bool owner,
-    bool isActive,
+    bool metadata = false,
+    bool image = false,
+    bool owner = false,
+    bool isActive = false,
   }) {
     final map = new Map<String, Object>();
 

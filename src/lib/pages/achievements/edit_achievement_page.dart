@@ -206,7 +206,7 @@ class _EditAchievementPage extends StatelessWidget {
       builder: (context) {
         return Dialog(
           child: _TextInputWidget(
-            title: localizer().achievementName,
+            title: localizer().name,
             initialValue: viewModel.name,
             height: 180.0,
             maxLines: 1,

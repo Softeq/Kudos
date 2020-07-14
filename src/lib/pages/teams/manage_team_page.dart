@@ -143,12 +143,22 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
       );
     }
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Column(
-        children: children,
-      ),
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      return CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildUsersList(
@@ -193,13 +203,14 @@ class _ManageTeamPageState extends State<_ManageTeamPage> {
           ],
         ),
         SizedBox(height: usersExpanded ? 10.0 : 0.0),
-        usersExpanded
-            ? FancyListWidget<UserModel>(
-                users,
-                (user) => user.name,
-                localizer().addPeople,
-              )
-            : Container(),
+        Visibility(
+          child: FancyListWidget<UserModel>(
+            users,
+            (user) => user.name,
+            localizer().addPeople,
+          ),
+          visible: usersExpanded,
+        ),
       ],
     );
   }

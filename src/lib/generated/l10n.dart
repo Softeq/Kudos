@@ -43,10 +43,10 @@ class S {
     );
   }
 
-  /// `Sign-In via Google`
+  /// `Sign in via Google`
   String get signIn {
     return Intl.message(
-      'Sign-In via Google',
+      'Sign in via Google',
       name: 'signIn',
       desc: '',
       args: [],
@@ -73,16 +73,6 @@ class S {
     );
   }
 
-  /// `Profile`
-  String get profile {
-    return Intl.message(
-      'Profile',
-      name: 'profile',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `OK`
   String get ok {
     return Intl.message(
@@ -104,10 +94,10 @@ class S {
   }
 
   /// `Name`
-  String get achievementName {
+  String get name {
     return Intl.message(
       'Name',
-      name: 'achievementName',
+      name: 'name',
       desc: '',
       args: [],
     );
@@ -193,20 +183,20 @@ class S {
     );
   }
 
-  /// `Enter name`
+  /// `Add a name`
   String get nameIsNullErrorMessage {
     return Intl.message(
-      'Enter name',
+      'Add a name',
       name: 'nameIsNullErrorMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Something went wrong...`
+  /// `Something went wrong`
   String get generalErrorMessage {
     return Intl.message(
-      'Something went wrong...',
+      'Something went wrong',
       name: 'generalErrorMessage',
       desc: '',
       args: [],
@@ -233,31 +223,11 @@ class S {
     );
   }
 
-  /// `The award has been successfully sent!`
-  String get sentSuccessfully {
-    return Intl.message(
-      'The award has been successfully sent!',
-      name: 'sentSuccessfully',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Global Progress`
   String get achievementStatisticsTitle {
     return Intl.message(
       'Global Progress',
       name: 'achievementStatisticsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `How many people have already received this award`
-  String get achievementStatisticsTooltip {
-    return Intl.message(
-      'How many people have already received this award',
-      name: 'achievementStatisticsTooltip',
       desc: '',
       args: [],
     );
@@ -313,16 +283,6 @@ class S {
     );
   }
 
-  /// `Added people`
-  String get addedPeople {
-    return Intl.message(
-      'Added people',
-      name: 'addedPeople',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Create team`
   String get createTeam {
     return Intl.message(
@@ -338,16 +298,6 @@ class S {
     return Intl.message(
       'Edit team',
       name: 'editTeam',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Name`
-  String get name {
-    return Intl.message(
-      'Name',
-      name: 'name',
       desc: '',
       args: [],
     );
@@ -383,10 +333,10 @@ class S {
     );
   }
 
-  /// `This user is not yet part of any team`
+  /// `This user is not part of any team yet`
   String get userTeamsEmptyPlaceholder {
     return Intl.message(
-      'This user is not yet part of any team',
+      'This user is not part of any team yet',
       name: 'userTeamsEmptyPlaceholder',
       desc: '',
       args: [],
@@ -463,10 +413,10 @@ class S {
     );
   }
 
-  /// `Do you really want to delete this team? All the team achievements will be removed as well`
+  /// `Do you really want to delete this team? All team's achievements will be removed as well`
   String get deleteTeamWarning {
     return Intl.message(
-      'Do you really want to delete this team? All the team achievements will be removed as well',
+      'Do you really want to delete this team? All team\'s achievements will be removed as well',
       name: 'deleteTeamWarning',
       desc: '',
       args: [],
@@ -513,10 +463,10 @@ class S {
     );
   }
 
-  /// `Image size is too big. Please select another file`
+  /// `Image size should be less than 0.5Mb`
   String get fileSizeTooBig {
     return Intl.message(
-      'Image size is too big. Please select another file',
+      'Image size should be less than 0.5Mb',
       name: 'fileSizeTooBig',
       desc: '',
       args: [],
@@ -533,10 +483,10 @@ class S {
     );
   }
 
-  /// `Do you want to trasfer this achievement to another user or another team?`
+  /// `Do you want to transfer this achievement to another user or another team?`
   String get transferAchievementDescription {
     return Intl.message(
-      'Do you want to trasfer this achievement to another user or another team?',
+      'Do you want to transfer this achievement to another user or another team?',
       name: 'transferAchievementDescription',
       desc: '',
       args: [],
@@ -593,20 +543,10 @@ class S {
     );
   }
 
-  /// `Choose team`
-  String get chooseTeam {
-    return Intl.message(
-      'Choose team',
-      name: 'chooseTeam',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `My achievements`
+  /// `My Achievements`
   String get myAchievements {
     return Intl.message(
-      'My achievements',
+      'My Achievements',
       name: 'myAchievements',
       desc: '',
       args: [],
@@ -713,26 +653,6 @@ class S {
     );
   }
 
-  /// `Something went wrong`
-  String get generalError {
-    return Intl.message(
-      'Something went wrong',
-      name: 'generalError',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hasn't received any achievements yet`
-  String get receivedNoAchievements {
-    return Intl.message(
-      'Hasn\'t received any achievements yet',
-      name: 'receivedNoAchievements',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Received achievements: %i`
   String get receivedAchievements {
     return Intl.message(
@@ -803,10 +723,10 @@ class S {
     );
   }
 
-  /// `Please select at least one user`
+  /// `Select at least one user`
   String get user_picker_empty_message {
     return Intl.message(
-      'Please select at least one user',
+      'Select at least one user',
       name: 'user_picker_empty_message',
       desc: '',
       args: [],
