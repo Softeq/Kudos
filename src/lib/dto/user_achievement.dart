@@ -27,14 +27,14 @@ class UserAchievement {
     );
   }
 
-  factory UserAchievement.fromJson(Map<String, dynamic> map, String id) {
-    return map == null
+  factory UserAchievement.fromJson(Map<String, dynamic> json, String id) {
+    return json == null
         ? null
         : UserAchievement._(
-            sender: UserReference.fromJson(map["sender"], null),
-            achievement: RelatedAchievement.fromJson(map["achievement"], null),
-            comment: map["comment"],
-            date: map["date"].toDate(),
+            sender: UserReference.fromJson(json["sender"], null),
+            achievement: RelatedAchievement.fromJson(json["achievement"], null),
+            comment: json["comment"],
+            date: json["date"].toDate(),
           );
   }
 

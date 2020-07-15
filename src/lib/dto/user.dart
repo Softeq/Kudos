@@ -19,15 +19,15 @@ class User extends Equatable {
     @required this.receivedAchievementsCount,
   });
 
-  factory User.fromJson(Map<String, dynamic> map, String id) {
-    return map == null
+  factory User.fromJson(Map<String, dynamic> json, String id) {
+    return json == null
         ? null
         : User._(
-            id: id ?? map["id"],
-            name: map["name"],
-            email: map["email"],
-            imageUrl: map["image_url"],
-            receivedAchievementsCount: map["received_achievements_count"],
+            id: id ?? json["id"],
+            name: json["name"],
+            email: json["email"],
+            imageUrl: json["image_url"],
+            receivedAchievementsCount: json["received_achievements_count"],
           );
   }
 

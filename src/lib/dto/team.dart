@@ -50,20 +50,20 @@ class Team extends Equatable {
   }
 
   factory Team.fromJson(
-    Map<String, dynamic> map,
+    Map<String, dynamic> json,
     String id,
   ) {
-    return map == null
+    return json == null
         ? null
         : Team._(
-            id: id ?? map["id"],
-            name: map["name"],
-            imageUrl: map["image_url"],
-            imageName: map["image_name"],
-            description: map["description"],
-            teamOwners: getMembers(map["team_owners"]),
-            teamMembers: getMembers(map["team_members"]),
-            isActive: map["is_active"],
+            id: id ?? json["id"],
+            name: json["name"],
+            imageUrl: json["image_url"],
+            imageName: json["image_name"],
+            description: json["description"],
+            teamOwners: getMembers(json["team_owners"]),
+            teamMembers: getMembers(json["team_members"]),
+            isActive: json["is_active"],
           );
   }
 

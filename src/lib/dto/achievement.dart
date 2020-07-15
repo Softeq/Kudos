@@ -32,23 +32,24 @@ class Achievement extends Equatable {
     @required this.owners,
   });
 
-  factory Achievement.fromJson(Map<String, dynamic> map, String id) {
-    return map == null
+  factory Achievement.fromJson(Map<String, dynamic> json, String id) {
+    return json == null
         ? null
         : Achievement._(
-            id: id ?? map["id"],
-            name: map["name"],
-            description: map["description"],
-            imageUrl: map["image_url"],
-            imageName: map["image_name"],
-            team: TeamReference.fromJson(map["team"], null),
-            user: UserReference.fromJson(map["user"], null),
-            owners:
-                map["owners"] == null ? null : Set<String>.from(map["owners"]),
-            members: map["members"] == null
+            id: id ?? json["id"],
+            name: json["name"],
+            description: json["description"],
+            imageUrl: json["image_url"],
+            imageName: json["image_name"],
+            team: TeamReference.fromJson(json["team"], null),
+            user: UserReference.fromJson(json["user"], null),
+            owners: json["owners"] == null
                 ? null
-                : Set<String>.from(map["members"]),
-            isActive: map["is_active"],
+                : Set<String>.from(json["owners"]),
+            members: json["members"] == null
+                ? null
+                : Set<String>.from(json["members"]),
+            isActive: json["is_active"],
           );
   }
 

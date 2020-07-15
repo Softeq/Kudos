@@ -21,16 +21,16 @@ class AchievementHolder extends Equatable {
     );
   }
 
-  factory AchievementHolder.fromJson(Map<String, dynamic> map) {
-    return map == null
+  factory AchievementHolder.fromJson(Map<String, dynamic> json) {
+    return json == null
         ? null
         : AchievementHolder._(
-            date: map["date"].toDate(),
-            recipient: UserReference.fromJson(map["recipient"], null),
+            date: json["date"].toDate(),
+            recipient: UserReference.fromJson(json["recipient"], null),
           );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "date": date,
       "recipient": recipient.toJson(),

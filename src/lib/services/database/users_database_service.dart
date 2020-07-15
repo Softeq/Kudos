@@ -26,7 +26,7 @@ class UsersDatabaseService {
     return _database
         .collection(_usersCollection)
         .document(userId)
-        .setData(userRegistration.toMap(), merge: true)
+        .setData(userRegistration.toJson(), merge: true)
         .whenComplete(() => {
               if (pushToken != null)
                 {

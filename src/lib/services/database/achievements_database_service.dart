@@ -64,7 +64,7 @@ class AchievementsDatabaseService {
         .collection("$_achievementsCollection/$achievementId/holders")
         .document();
 
-    final holderMap = achievementHolder.toMap();
+    final holderMap = achievementHolder.toJson();
 
     if (batch == null) {
       return docRef.setData(holderMap);

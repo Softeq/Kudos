@@ -20,12 +20,12 @@ class TeamMember extends Equatable {
     );
   }
 
-  factory TeamMember.fromJson(Map<String, dynamic> map, String id) {
-    return map == null
+  factory TeamMember.fromJson(Map<String, dynamic> json, String id) {
+    return json == null
         ? null
         : TeamMember._(
-            id ?? map["id"],
-            map["name"],
+            id ?? json["id"],
+            json["name"],
           );
   }
 

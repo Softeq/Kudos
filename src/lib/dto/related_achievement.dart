@@ -25,13 +25,13 @@ class RelatedAchievement extends Equatable {
     );
   }
 
-  factory RelatedAchievement.fromJson(Map<String, dynamic> map, String id) {
-    return map == null
+  factory RelatedAchievement.fromJson(Map<String, dynamic> json, String id) {
+    return json == null
         ? null
         : RelatedAchievement._(
-            id: id ?? map["id"],
-            name: map["name"],
-            imageUrl: map["image_url"],
+            id: id ?? json["id"],
+            name: json["name"],
+            imageUrl: json["image_url"],
           );
   }
 
