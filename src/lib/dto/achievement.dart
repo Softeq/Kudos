@@ -95,32 +95,32 @@ class Achievement extends Equatable {
   }
 
   Map<String, dynamic> toJson({
-    @required bool all,
-    bool metadata = false,
-    bool image = false,
-    bool owner = false,
-    bool isActive = false,
+    bool addAll,
+    bool addMetadata = false,
+    bool addImage = false,
+    bool addOwner = false,
+    bool addIsActive = false,
   }) {
     final map = new Map<String, Object>();
 
-    if (all || metadata) {
+    if (addAll || addMetadata) {
       map.putIfAbsent("name", () => this.name);
       map.putIfAbsent("description", () => this.description);
     }
 
-    if (all || image) {
+    if (addAll || addImage) {
       map.putIfAbsent("image_url", () => this.imageUrl);
       map.putIfAbsent("image_name", () => this.imageName);
     }
 
-    if (all || owner) {
+    if (addAll || addOwner) {
       map.putIfAbsent("team", () => team == null ? null : team.toJson());
       map.putIfAbsent("user", () => user == null ? null : user.toJson());
       map.putIfAbsent("members", () => this.members?.toList());
       map.putIfAbsent("owners", () => this.owners?.toList());
     }
 
-    if (all || isActive) {
+    if (addAll || addIsActive) {
       map.putIfAbsent("is_active", () => this.isActive);
     }
 

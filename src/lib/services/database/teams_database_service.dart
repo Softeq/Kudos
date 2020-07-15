@@ -27,28 +27,27 @@ class TeamsDatabaseService {
   Future<Team> createTeam(Team team) {
     return _database
         .collection(_teamsCollection)
-        .add(team.toJson(all: true))
+        .add(team.toJson(addAll: true))
         .then((value) => value.get())
         .then((value) => Team.fromJson(value.data, value.documentID));
   }
 
   Future<Team> updateTeam(
     Team team, {
-    bool metadata = false,
-    bool image = false,
-    bool members = false,
-    bool owners = false,
-    bool isActive = false,
+    bool updateMetadata = false,
+    bool updateImage = false,
+    bool updateMembers = false,
+    bool updateOwners = false,
+    bool updateIsActive = false,
     WriteBatch batch,
   }) {
     final docRef = _database.collection(_teamsCollection).document(team.id);
     final map = team.toJson(
-      all: false,
-      metadata: metadata,
-      image: image,
-      members: members,
-      owners: owners,
-      isActive: isActive,
+      addMetadata: updateMetadata,
+      addImage: updateImage,
+      addMembers: updateMembers,
+      addOwners: updateOwners,
+      addIsActive: updateIsActive,
     );
     if (batch == null) {
       return docRef

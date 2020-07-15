@@ -35,17 +35,17 @@ class TeamsService {
   }
 
   Future<TeamModel> editTeam(TeamModel teamModel) async {
-    bool uploadImage = false;
+    bool updateImage = false;
     if (teamModel.imageFile != null) {
       var imageData = await _imageService.uploadImage(teamModel.imageFile);
       teamModel.imageUrl = imageData.url;
       teamModel.imageName = imageData.name;
-      uploadImage = true;
+      updateImage = true;
     }
 
     return _teamsDatabaseService
         .updateTeam(Team.fromModel(teamModel),
-            metadata: true, image: uploadImage)
+            updateMetadata: true, updateImage: updateImage)
         .then((t) => TeamModel.fromTeam(t));
   }
 
@@ -55,7 +55,7 @@ class TeamsService {
         Team.fromModel(teamModel, newOwners: newOwners, newMembers: newMembers);
 
     return _teamsDatabaseService
-        .updateTeam(team, owners: true, members: true)
+        .updateTeam(team, updateOwners: true, updateMembers: true)
         .then((t) => TeamModel.fromTeam(t));
   }
 
@@ -69,13 +69,13 @@ class TeamsService {
 
     _databaseService.batchUpdate(
         (batch) => _teamsDatabaseService.updateTeam(team,
-            isActive: true, batch: batch), (batch) {
+            updateIsActive: true, batch: batch), (batch) {
       if (achievements != null) {
         for (var achievementModel in achievements) {
           var achievement =
               Achievement.fromModel(achievementModel, isActive: false);
           _achievementsDatabaseService.updateAchievement(achievement,
-              isActive: true, batch: batch);
+              updateIsActive: true, batch: batch);
         }
       }
     });

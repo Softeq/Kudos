@@ -93,7 +93,7 @@ class AchievementsDatabaseService {
   Future<Achievement> createAchievement(Achievement achievement) {
     return _database
         .collection(_achievementsCollection)
-        .add(achievement.toJson(all: true))
+        .add(achievement.toJson(addAll: true))
         .then((value) => value.get())
         .then((value) => Achievement.fromJson(value.data, value.documentID));
   }
@@ -110,20 +110,19 @@ class AchievementsDatabaseService {
 
   Future<Achievement> updateAchievement(
     Achievement achievement, {
-    bool metadata = false,
-    bool image = false,
-    bool owner = false,
-    bool isActive = false,
+    bool updateMetadata = false,
+    bool updateImage = false,
+    bool updateOwner = false,
+    bool updateIsActive = false,
     WriteBatch batch,
   }) {
     final docRef =
         _database.collection(_achievementsCollection).document(achievement.id);
     final map = achievement.toJson(
-      all: false,
-      metadata: metadata,
-      image: image,
-      owner: owner,
-      isActive: isActive,
+      addMetadata: updateMetadata,
+      addImage: updateImage,
+      addOwner: updateOwner,
+      addIsActive: updateIsActive,
     );
     if (batch == null) {
       return docRef

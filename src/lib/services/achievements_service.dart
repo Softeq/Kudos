@@ -37,18 +37,18 @@ class AchievementsService {
 
   Future<AchievementModel> updateAchievement(
       AchievementModel achievementModel) async {
-    bool uploadImage = false;
+    bool updateImage = false;
     if (achievementModel.imageFile != null) {
       var imageData =
           await _imageService.uploadImage(achievementModel.imageFile);
       achievementModel.imageName = imageData.name;
       achievementModel.imageUrl = imageData.url;
-      uploadImage = true;
+      updateImage = true;
     }
 
     return _achievementsDatabaseService
         .updateAchievement(Achievement.fromModel(achievementModel),
-            metadata: true, image: uploadImage)
+            updateMetadata: true, updateImage: updateImage)
         .then((a) => AchievementModel.fromAchievement(a));
   }
 
@@ -73,7 +73,7 @@ class AchievementsService {
         Achievement.fromModel(achievementModel, newOwner: newOwner);
 
     return _achievementsDatabaseService
-        .updateAchievement(achievement, owner: true)
+        .updateAchievement(achievement, updateOwner: true)
         .then((a) => AchievementModel.fromAchievement(a));
   }
 
@@ -88,7 +88,7 @@ class AchievementsService {
       var achievement =
           Achievement.fromModel(achievementModel, isActive: false);
       return _achievementsDatabaseService.updateAchievement(achievement,
-          isActive: true);
+          updateIsActive: true);
     }
   }
 

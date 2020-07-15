@@ -68,34 +68,34 @@ class Team extends Equatable {
   }
 
   Map<String, dynamic> toJson({
-    @required bool all,
-    bool metadata = false,
-    bool image = false,
-    bool members = false,
-    bool owners = false,
-    bool isActive = false,
+    bool addAll = false,
+    bool addMetadata = false,
+    bool addImage = false,
+    bool addMembers = false,
+    bool addOwners = false,
+    bool addIsActive = false,
   }) {
     final map = new Map<String, Object>();
 
-    if (all || metadata) {
+    if (addAll || addMetadata) {
       map["name"] = this.name;
       map["description"] = this.description;
     }
 
-    if (all || image) {
+    if (addAll || addImage) {
       map["image_url"] = this.imageUrl;
       map["image_name"] = this.imageName;
     }
 
     var visibleFor = List<String>();
 
-    if (all || members) {
+    if (addAll || addMembers) {
       map["team_members"] =
           this.teamMembers?.map((tm) => tm.toJson())?.toList();
       visibleFor.addAll(this.teamMembers?.map((x) => x.id));
     }
 
-    if (all || owners) {
+    if (addAll || addOwners) {
       map["team_owners"] = this.teamOwners?.map((to) => to.toJson())?.toList();
       visibleFor.addAll(this.teamOwners?.map((x) => x.id));
     }
@@ -105,7 +105,7 @@ class Team extends Equatable {
       map["visible_for"] = visibleFor;
     }
 
-    if (all || isActive) {
+    if (addAll || addIsActive) {
       map.putIfAbsent("is_active", () => this.isActive);
     }
 
