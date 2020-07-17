@@ -48,7 +48,11 @@ class ProfilePage extends StatelessWidget {
       BuildContext context, ProfileViewModel viewModel) sync* {
     yield SliverGradientAppBar(
       title: viewModel.userName,
-      imageWidget: _buildAppBarImage(context, viewModel.imageUrl),
+      imageWidget: _buildAppBarImage(
+        context,
+        viewModel.imageUrl,
+        viewModel.userName,
+      ),
       heroTag: viewModel.imageUrl,
     );
 
@@ -85,12 +89,17 @@ class ProfilePage extends StatelessWidget {
     }
   }
 
-  Widget _buildAppBarImage(BuildContext context, String imageUrl) {
+  Widget _buildAppBarImage(
+    BuildContext context,
+    String imageUrl,
+    String userName,
+  ) {
     return Center(
       child: RoundedImageWidget.square(
         imageUrl: imageUrl,
         size: MediaQuery.of(context).size.width,
         borderRadius: 0,
+        title: userName,
       ),
     );
   }

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_registration.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -11,15 +14,12 @@ class PeopleService {
   final _usersDatabaseService = locator<UsersDatabaseService>();
   final _cachedUsers = List<UserModel>();
 
-  PeopleService() {
-    _usersDatabaseService.getUsersStream().listen((users) {
-      users.sort((x, y) => x.name.compareTo(y.name));
-      _cachedUsers.clear();
-      _cachedUsers.addAll(users.map((u) => UserModel.fromUser(u)));
-    });
-  }
+  StreamSubscription _streamSubscription;
 
-  Future<int> getUsersCount() => Future.value(_cachedUsers.length);
+  Future<int> getUsersCount() async {
+    final users = await _getAllUsers();
+    return users.length;
+  }
 
   Future<List<UserModel>> getAllUsers() => _getAllUsers();
 
@@ -32,6 +32,9 @@ class PeopleService {
   }
 
   Future<void> unsubscribeFromNotifications() {
+    _streamSubscription?.cancel();
+    _streamSubscription = null;
+
     return _pushNotificationsService.unsubscribeFromNotifications();
   }
 
@@ -61,7 +64,25 @@ class PeopleService {
     return user;
   }
 
-  Future<List<UserModel>> _getAllUsers() => Future.value(_cachedUsers);
+  Future<List<UserModel>> _getAllUsers() async {
+    if (_authService.currentUser != null && _streamSubscription == null) {
+      _streamSubscription =
+          _usersDatabaseService.getUsersStream().listen(_updateUserCache);
+    }
+
+    if (_cachedUsers.isEmpty && _authService.currentUser != null) {
+      final users = await _usersDatabaseService.getUsers();
+      _updateUserCache(users);
+    }
+
+    return _cachedUsers;
+  }
+
+  void _updateUserCache(List<User> users) {
+    users.sort((x, y) => x.name.compareTo(y.name));
+    _cachedUsers.clear();
+    _cachedUsers.addAll(users.map((u) => UserModel.fromUser(u)));
+  }
 }
 
 class _UserFilter {
