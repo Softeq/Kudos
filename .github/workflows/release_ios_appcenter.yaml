@@ -26,9 +26,6 @@ jobs:
       with:
         java-version: ${{ env.java_version }}
 
-    - name: Install gpg
-      run: brew install gnupg
-
     - name: Cache flutter
       uses: actions/cache@v1
       with:
@@ -59,13 +56,15 @@ jobs:
 
     - name: Decrypt
       run: |
-        cd ../certificates/ios/decrypt.sh
+        cd ../certificates/ios/
+        zsh decrypt.sh
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
 
     - name: Import
       run: |
-        cd ../certificates/ios/import.sh
+        cd ../certificates/ios/
+        zsh import.sh
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
 
