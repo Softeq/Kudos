@@ -29,7 +29,8 @@ jobs:
         path: /Users/runner/hostedtoolcache/flutter
         key: ${{ runner.os }}-flutter-${{ env.flutter_version }}
 
-    - uses: subosito/flutter-action@v1
+    - name: Use flutter
+      uses: subosito/flutter-action@v1
       with:
         flutter-version: ${{ env.flutter_version }}
 
@@ -64,9 +65,18 @@ jobs:
         path: /Users/runner/hostedtoolcache/flutter
         key: ${{ runner.os }}-flutter-${{ env.flutter_version }}
 
-    - uses: subosito/flutter-action@v1
+    - name: Use flutter
+      uses: subosito/flutter-action@v1
       with:
         flutter-version: ${{ env.flutter_version }}
+
+    - name: Cache Pods dependencies
+      uses: actions/cache@v1
+      with:
+        path: ios/Pods
+        key: ${{ runner.OS }}-pods-${{ hashFiles('**/ios/Podfile.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-pods-
 
     - name: Install app dependencies
       run: flutter pub get
