@@ -426,7 +426,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.softeq.kudosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos App - Development";
+				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos - Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -561,7 +561,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.softeq.kudosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos App - Development";
+				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos - Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -588,7 +588,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.softeq.kudosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos App - Development";
+				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos - Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
