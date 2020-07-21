@@ -57,7 +57,7 @@ jobs:
       env:
         KEYSTORE: ${{ secrets.android_key }}
 
-    - name: Build Android app
+    - name: Build app
       run: flutter build apk
 
     - name: Cache NPM dependencies (App Center)
@@ -72,7 +72,7 @@ jobs:
       run: |
         npm install appcenter-cli@${{ env.appcenter_cli_version}}
         npx appcenter distribute release \
-          --token "${{ secrets.app_center_android }}" \
+          --token "${{ secrets.app_center }}" \
           --app "softeqdevelopment/Kudos.Android" \
           --group "Dev Team" \
           --file "build/app/outputs/apk/release/app-release.apk" \

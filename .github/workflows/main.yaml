@@ -89,7 +89,7 @@ jobs:
       run:
         working-directory: src
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
 
