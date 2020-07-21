@@ -1,0 +1,92 @@
+name: Release iOS
+
+on:
+  push:
+    branches:
+      # - 'releases/**'
+      - 'feature/ios-release'
+  #   tags:
+  #     - release_**
+
+env:
+  flutter_version: "1.17.5"
+  java_version: "12.x"
+  appcenter_cli_version: "2.6.3"
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: src
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-java@v1
+      with:
+        java-version: ${{ env.java_version }}
+
+    - name: Install gpg
+      run: brew install gnupg
+
+    - name: Cache flutter
+      uses: actions/cache@v1
+      with:
+        path: /Users/runner/hostedtoolcache/flutter
+        key: ${{ runner.os }}-flutter-${{ env.flutter_version }}
+
+    - name: Use flutter
+      uses: subosito/flutter-action@v1
+      with:
+        flutter-version: ${{ env.flutter_version }}
+
+    - name: Cache Pods dependencies
+      uses: actions/cache@v1
+      with:
+        path: ios/Pods
+        key: ${{ runner.OS }}-pods-${{ hashFiles('**/ios/Podfile.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-pods-
+
+    - name: Install app dependencies
+      run: flutter pub get
+
+    - name: Add GoogleService-Info.plist
+      run: |
+        echo "$FIREBASE_CONFIG" > ios/Runner/GoogleService-Info.plist
+      env:
+        FIREBASE_CONFIG: ${{ secrets.ios_google_services }}
+
+    - name: Decrypt
+      run: |
+        cd ../certificates/ios/decrypt.sh
+      env:
+        IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
+
+    - name: Import
+      run: |
+        cd ../certificates/ios/import.sh
+      env:
+        IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
+
+    - name: Build app
+      run: flutter build ios
+
+    - name: Cache NPM dependencies (App Center)
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-npm-
+
+    - name: Deploy to App Center
+      run: |
+        npm install appcenter-cli@${{ env.appcenter_cli_version}}
+        npx appcenter distribute release \
+          --token "${{ secrets.app_center }}" \
+          --app "softeqdevelopment/Kudos.iOS" \
+          --group "Dev Team" \
+          --file "build/ios/iphoneos/Runner.app" \
+          --release-notes "New release" \
+          --debug
