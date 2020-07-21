@@ -67,7 +67,8 @@ class AchievementModel {
   }
 
   bool canBeModifiedByUser(String userId) =>
-      owner.id == userId || (admins?.contains(userId) ?? false);
+      _ownedByUser(userId) || (admins?.contains(userId) ?? false);
   bool canBeSentByUser(String userId) =>
-      owner.id == userId || (members?.contains(userId) ?? false);
+      _ownedByUser(userId) || (members?.contains(userId) ?? false);
+  bool _ownedByUser(String userId) => (owner?.id == userId) ?? false;
 }

@@ -127,15 +127,17 @@ class ManageTeamViewModel extends BaseViewModel {
         context: context,
         title: localizer().warning,
         content: localizer().deleteTeamWarning)) {
-      isBusy = true;
+      try {
+        isBusy = true;
 
-      await _teamsService.deleteTeam(_team, achievements);
-
-      isBusy = false;
-      _eventBus.fire(TeamDeletedMessage(_team.id));
-      _eventBus.fire(AchievementDeletedMessage.multiple(
-          achievements.map((x) => x.id).toSet()));
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+        await _teamsService.deleteTeam(_team, achievements);
+        _eventBus.fire(TeamDeletedMessage(_team.id));
+        _eventBus.fire(AchievementDeletedMessage.multiple(
+            achievements.map((x) => x.id).toSet()));
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } finally {
+        isBusy = false;
+      }
     }
   }
 

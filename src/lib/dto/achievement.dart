@@ -96,7 +96,7 @@ class Achievement extends Equatable {
   }
 
   Map<String, dynamic> toJson({
-    bool addAll,
+    bool addAll = false,
     bool addMetadata = false,
     bool addImage = false,
     bool addOwner = false,

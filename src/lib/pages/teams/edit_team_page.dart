@@ -60,14 +60,7 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                     SizedBox(height: 20.0),
                     GestureDetector(
                       onTap: () => viewModel.pickFile(context),
-                      child: RoundedImageWidget.square(
-                        imageUrl: viewModel.imageUrl,
-                        title: viewModel.name,
-                        size: 112.0,
-                        borderRadius: 8,
-                        file: viewModel.imageFile,
-                        addHeroAnimation: true,
-                      ),
+                      child: _EditableRoundRectImage(viewModel, 112.0, 8.0),
                     ),
                     SizedBox(height: 36.0),
                     Align(
@@ -80,7 +73,9 @@ class _EditTeamPageState extends State<_EditTeamPage> {
                     TextFormField(
                       controller: _nameController,
                       validator: (x) {
-                        return x.isEmpty ? localizer().requiredField : null;
+                        return x.trim().isEmpty
+                            ? localizer().requiredField
+                            : null;
                       },
                       style: KudosTheme.descriptionTextStyle,
                       cursorColor: KudosTheme.accentColor,
@@ -152,5 +147,50 @@ class _EditTeamPageState extends State<_EditTeamPage> {
     _nameController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+}
+
+class _EditableRoundRectImage extends StatelessWidget {
+  final EditTeamViewModel _viewModel;
+  final double _size;
+  final double _borderRadius;
+
+  _EditableRoundRectImage(this._viewModel, this._size, this._borderRadius);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: _viewModel,
+      child: Consumer<EditTeamViewModel>(
+        builder: (context, viewModel, child) {
+          Widget child;
+
+          if (viewModel.isImageLoading) {
+            child = Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            child = RoundedImageWidget.square(
+              imageUrl: viewModel.imageUrl,
+              size: _size,
+              borderRadius: _borderRadius,
+              file: viewModel.imageFile,
+              placeholderColor: KudosTheme.contentColor,
+              addHeroAnimation: true,
+            );
+          }
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            child: Container(
+              width: _size,
+              height: _size,
+              color: KudosTheme.contentColor,
+              child: child,
+            ),
+          );
+        },
+      ),
+    );
   }
 }

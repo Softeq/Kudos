@@ -130,11 +130,16 @@ class AchievementDetailsViewModel extends BaseViewModel {
       title: sprintf(localizer().transferAchievementToUserTitle, [user.name]),
       content: localizer().transferAchievementToUserWarning,
     )) {
-      var updatedAchievement = await _achievementsService.transferAchievement(
-          achievement, AchievementOwnerModel.fromUser(user));
-
-      Navigator.popUntil(context, ModalRoute.withName('/'));
-      _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
+      try {
+        isBusy = true;
+        var updatedAchievement = await _achievementsService.transferAchievement(
+            achievement, AchievementOwnerModel.fromUser(user));
+        _eventBus
+            .fire(AchievementTransferredMessage.single(updatedAchievement));
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } finally {
+        isBusy = false;
+      }
     }
   }
 
@@ -144,11 +149,16 @@ class AchievementDetailsViewModel extends BaseViewModel {
       title: sprintf(localizer().transferAchievementToTeamTitle, [team.name]),
       content: localizer().transferAchievementToTeamWarning,
     )) {
-      var updatedAchievement = await _achievementsService.transferAchievement(
-          achievement, AchievementOwnerModel.fromTeam(team));
-
-      Navigator.popUntil(context, ModalRoute.withName('/'));
-      _eventBus.fire(AchievementTransferredMessage.single(updatedAchievement));
+      try {
+        isBusy = true;
+        var updatedAchievement = await _achievementsService.transferAchievement(
+            achievement, AchievementOwnerModel.fromTeam(team));
+        _eventBus
+            .fire(AchievementTransferredMessage.single(updatedAchievement));
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } finally {
+        isBusy = false;
+      }
     }
   }
 
@@ -157,16 +167,18 @@ class AchievementDetailsViewModel extends BaseViewModel {
         context: context,
         title: localizer().warning,
         content: localizer().deleteAchievementWarning)) {
-      isBusy = true;
+      try {
+        isBusy = true;
 
-      await _achievementsService.deleteAchievement(
-        achievement,
-        holdersCount: achievementHolders.length,
-      );
-
-      isBusy = false;
-      _eventBus.fire(AchievementDeletedMessage.single(achievement.id));
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+        await _achievementsService.deleteAchievement(
+          achievement,
+          holdersCount: achievementHolders.length,
+        );
+        _eventBus.fire(AchievementDeletedMessage.single(achievement.id));
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } finally {
+        isBusy = false;
+      }
     }
   }
 

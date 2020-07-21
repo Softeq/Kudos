@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/models/achievement_model.dart';
@@ -13,6 +12,7 @@ import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_horizontal_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_item_widget.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:provider/provider.dart';
@@ -333,6 +333,7 @@ class _AchievementHoldersWidget extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: Wrap(
             children: _buildListItems(context, _achievementHolders),
+            runSpacing: 10,
             spacing: 10),
       );
     }
@@ -356,10 +357,10 @@ class _AchievementHoldersWidget extends StatelessWidget {
     return Tooltip(
       message: user.name,
       child: GestureDetector(
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          backgroundImage: CachedNetworkImageProvider(user.imageUrl),
-          radius: 30,
+        child: RoundedImageWidget.circular(
+          size: 60,
+          imageUrl: user.imageUrl,
+          title: user.name,
         ),
         onTap: () => Navigator.of(context).push(ProfileRoute(user)),
       ),
