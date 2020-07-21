@@ -10,7 +10,8 @@ env:
   java_version: "12.x"
 
 jobs:
-  test:
+  tests:
+    name: Tests
     defaults:
       run:
         working-directory: src
@@ -37,13 +38,12 @@ jobs:
       - name: Install app dependencies
         run: flutter pub get
 
-      - name: Test
-        run: |
-          flutter test
+      - name: Running tests
+        run: flutter test
 
   build_android:
     name: Build Android
-    needs: [test]
+    needs: [tests]
     defaults:
       run:
         working-directory: src
@@ -81,7 +81,7 @@ jobs:
 
   build_ios:
     name: Build iOS
-    needs: [test]
+    needs: [tests]
     defaults:
       run:
         working-directory: src
