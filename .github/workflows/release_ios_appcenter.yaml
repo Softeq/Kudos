@@ -69,7 +69,7 @@ jobs:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
 
     - name: Build app
-      run: flutter build ios
+      run: flutter build ios --release --codesign -v
 
     - name: Cache NPM dependencies (App Center)
       uses: actions/cache@v1
