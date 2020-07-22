@@ -102,7 +102,7 @@ jobs:
           -configuration Release \
           archive \
           -archivePath "$XC_ARCHIVE_PATH"
-          "OTHER_CODE_SIGN_FLAGS=--keychain '$KEYCHAIN'"
+          "OTHER_CODE_SIGN_FLAGS=--keychain '/Users/runner/Library/Keychains/build.keychain-db'"
 
     - name: Export for distribution
       run: |
