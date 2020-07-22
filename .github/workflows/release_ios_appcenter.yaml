@@ -20,7 +20,6 @@ jobs:
         working-directory: src
     runs-on: macos-latest
     env:
-      KEYCHAIN: ~/Library/Keychains/build.keychain
       XC_ARCHIVE_PATH: build/ios/ci/Runner.xcarchive
       XC_EXPORT_PATH: build/ios/ci/RunnerExport
     steps:
@@ -59,7 +58,7 @@ jobs:
         FIREBASE_CONFIG: ${{ secrets.ios_google_services }}
 
     - name: Build app
-      run: flutter build ios --release --no-codesign -v
+      run: flutter build ios --release --no-codesign
 
     - name: Decrypt
       run: |
@@ -80,17 +79,18 @@ jobs:
         echo "Install dev certificate..."
         echo "Configure keychain"
         security create-keychain -p "" "$KEYCHAIN"
-        security list-keychains -s "$KEYCHAIN"
-        security default-keychain -s "$KEYCHAIN"
-        security unlock-keychain -p "" "$KEYCHAIN"
-        security set-keychain-settings
+        security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | sed s/\"//g)
         security list-keychains
+        security default-keychain -s "$KEYCHAIN"
+        security set-keychain-settings "$KEYCHAIN"
+        security unlock-keychain -p "" "$KEYCHAIN"
         echo "Import..."
-        security import dev.p12 -t agg -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -A
-        security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+        security import dev.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T "/usr/bin/codesign"
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN
         echo "Done."
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
+        KEYCHAIN: build.keychain
 
     - name: Archive
       run: |
@@ -102,7 +102,6 @@ jobs:
           -configuration Release \
           archive \
           -archivePath "$XC_ARCHIVE_PATH"
-          "OTHER_CODE_SIGN_FLAGS=--keychain '$KEYCHAIN'"
 
     - name: Export for distribution
       run: |
