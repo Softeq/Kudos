@@ -51,7 +51,7 @@ jobs:
     defaults:
       run:
         working-directory: src
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v2
@@ -63,7 +63,7 @@ jobs:
     - name: Cache flutter
       uses: actions/cache@v1
       with:
-        path: /Users/runner/hostedtoolcache/flutter
+        path: /opt/hostedtoolcache/flutter
         key: ${{ runner.os }}-flutter-${{ env.flutter_version }}
 
     - name: Use flutter
