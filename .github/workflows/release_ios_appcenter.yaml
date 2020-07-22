@@ -106,10 +106,11 @@ jobs:
 
     - name: Export for distribution
       run: |
+        cd ios
         xcodebuild \
           -exportArchive \
           -archivePath "$XC_ARCHIVE_PATH" \
-          -exportOptionsPlist ios/exportOptions.plist \
+          -exportOptionsPlist exportOptions.plist \
           -exportPath "$XC_EXPORT_PATH"
 
     - name: Cache NPM dependencies (App Center)
