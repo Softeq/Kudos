@@ -79,16 +79,16 @@ jobs:
         ls ~/Library/MobileDevice/Provisioning\ Profiles
         echo "Done."
 
-        echo "Configure keychain"
+        echo "Configure keychain & import"
         security create-keychain -p "" "$KEYCHAIN"
         security list-keychains -d user -s login.keychain "$KEYCHAIN"
-        security set-keychain-settings -lut 1000 "$KEYCHAIN"
-        security unlock-keychain -p "" "$KEYCHAIN"
-        security list-keychains
-
-        echo "Import certificate..."
+        security set-keychain-settings -lut 2000 "$KEYCHAIN"
         security import dev.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T /usr/bin/codesign -T /usr/bin/security
         security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN
+        security default-keychain -d user -s "$KEYCHAIN"
+        security unlock-keychain -p "" "$KEYCHAIN"
+        security list-keychains
+        security find-identity -v -p codesigning
         echo "Done."
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
@@ -103,7 +103,6 @@ jobs:
           -configuration Release \
           archive \
           -archivePath "$XC_ARCHIVE_PATH"
-          "OTHER_CODE_SIGN_FLAGS=--keychain '/Users/runner/Library/Keychains/build.keychain-db'"
 
     - name: Export for distribution
       run: |
