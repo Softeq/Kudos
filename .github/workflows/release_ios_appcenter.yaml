@@ -3,10 +3,9 @@ name: Release iOS
 on:
   push:
     branches:
-      # - 'releases/**'
-      - 'feature/ios-release'
-  #   tags:
-  #     - release_**
+      - 'releases/**'
+    tags:
+      - release_**
 
 env:
   flutter_version: "1.17.5"
