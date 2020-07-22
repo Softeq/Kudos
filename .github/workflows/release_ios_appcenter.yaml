@@ -20,7 +20,8 @@ jobs:
         working-directory: src
     runs-on: macos-latest
     env:
-      XC_ARCHIVE_PATH: build/ios/ci/Runner.xcarchive
+      KEYCHAIN: build.keychain
+      XC_ARCHIVE_PATH: ../build/ios/ci/Runner.xcarchive
       XC_EXPORT_PATH: build/ios/ci/RunnerExport
     steps:
     - uses: actions/checkout@v2
@@ -90,7 +91,6 @@ jobs:
         echo "Done."
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
-        KEYCHAIN: build.keychain
 
     - name: Archive
       run: |
@@ -102,6 +102,7 @@ jobs:
           -configuration Release \
           archive \
           -archivePath "$XC_ARCHIVE_PATH"
+          "OTHER_CODE_SIGN_FLAGS=--keychain '$KEYCHAIN'"
 
     - name: Export for distribution
       run: |
