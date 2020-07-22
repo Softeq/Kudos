@@ -47,7 +47,6 @@ jobs:
 
   build_android:
     name: Build Android
-    needs: [tests]
     defaults:
       run:
         working-directory: src
