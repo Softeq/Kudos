@@ -19,6 +19,10 @@ jobs:
       run:
         working-directory: src
     runs-on: macos-latest
+    env:
+      KEYCHAIN: ~/Library/Keychains/build.keychain
+      XC_ARCHIVE_PATH: build/ios/ci/Runner.xcarchive
+      XC_EXPORT_PATH: build/ios/ci/RunnerExport
     steps:
     - uses: actions/checkout@v2
 
@@ -54,6 +58,9 @@ jobs:
       env:
         FIREBASE_CONFIG: ${{ secrets.ios_google_services }}
 
+    - name: Build app
+      run: flutter build ios --release --no-codesign -v
+
     - name: Decrypt
       run: |
         cd ../certificates/ios/
@@ -61,15 +68,49 @@ jobs:
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
 
-    - name: Import
+    - name: Configure Keychain & Code Signing
       run: |
         cd ../certificates/ios/
-        zsh import.sh
+        echo "Install profiles..."
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./dev.mobileprovision)`
+        cp dev.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+        ls ~/Library/MobileDevice/Provisioning\ Profiles
+        echo "Done."
+        echo "Install dev certificate..."
+        echo "Configure keychain"
+        security create-keychain -p "" "$KEYCHAIN"
+        security list-keychains -s "$KEYCHAIN"
+        security default-keychain -s "$KEYCHAIN"
+        security unlock-keychain -p "" "$KEYCHAIN"
+        security set-keychain-settings
+        security list-keychains
+        echo "Import..."
+        security import dev.p12 -t agg -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -A
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+        echo "Done."
       env:
         IOS_PASSPHRASE: ${{ secrets.ios_passphrase }}
 
-    - name: Build app
-      run: flutter build ios --release --codesign -v
+    - name: Archive
+      run: |
+        cd ios
+        xcodebuild \
+          -workspace Runner.xcworkspace \
+          -scheme Runner \
+          -sdk iphoneos \
+          -configuration Release \
+          archive \
+          -archivePath "$XC_ARCHIVE_PATH"
+          "OTHER_CODE_SIGN_FLAGS=--keychain '$KEYCHAIN'"
+
+    - name: Export for distribution
+      run: |
+        xcodebuild \
+          -exportArchive \
+          -archivePath "$XC_ARCHIVE_PATH" \
+          -exportOptionsPlist exportOptions.plist \
+          -exportPath "$XC_EXPORT_PATH"
 
     - name: Cache NPM dependencies (App Center)
       uses: actions/cache@v1
@@ -86,6 +127,6 @@ jobs:
           --token "${{ secrets.app_center }}" \
           --app "softeqdevelopment/Kudos.iOS" \
           --group "Dev Team" \
-          --file "build/ios/iphoneos/Runner.app" \
+          --file "$XC_EXPORT_PATH/Runner.ipa" \
           --release-notes "New release" \
           --debug
