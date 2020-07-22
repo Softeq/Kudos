@@ -46,6 +46,7 @@ jobs:
         run: flutter test
 
   build_android:
+    if: ${{ false }} # disabled
     name: Build Android
     defaults:
       run:
