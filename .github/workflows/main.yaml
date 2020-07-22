@@ -14,6 +14,7 @@ env:
 
 jobs:
   tests:
+    if: ${{ false }} # disabled
     name: Tests
     defaults:
       run:
@@ -83,6 +84,7 @@ jobs:
       run: flutter build apk --debug
 
   build_ios:
+    if: ${{ false }} # disabled
     name: Build iOS
     needs: [tests]
     defaults:
