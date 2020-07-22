@@ -71,22 +71,23 @@ jobs:
     - name: Configure Keychain & Code Signing
       run: |
         cd ../certificates/ios/
+
         echo "Install profiles..."
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./dev.mobileprovision)`
         cp dev.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
         ls ~/Library/MobileDevice/Provisioning\ Profiles
         echo "Done."
-        echo "Install dev certificate..."
+
         echo "Configure keychain"
         security create-keychain -p "" "$KEYCHAIN"
-        security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | sed s/\"//g)
-        security list-keychains
-        security default-keychain -s "$KEYCHAIN"
-        security set-keychain-settings "$KEYCHAIN"
+        security list-keychains -d user -s login.keychain "$KEYCHAIN"
+        security set-keychain-settings -lut 1000 "$KEYCHAIN"
         security unlock-keychain -p "" "$KEYCHAIN"
-        echo "Import..."
-        security import dev.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T "/usr/bin/codesign"
+        security list-keychains
+
+        echo "Import certificate..."
+        security import dev.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T /usr/bin/codesign -T /usr/bin/security
         security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN
         echo "Done."
       env:
