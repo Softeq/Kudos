@@ -107,7 +107,7 @@ jobs:
         xcodebuild \
           -exportArchive \
           -archivePath "$XC_ARCHIVE_PATH" \
-          -exportOptionsPlist ios/exportOptions.plist \
+          -exportOptionsPlist ios/ExportOptions.plist \
           -exportPath "$XC_EXPORT_PATH"
 
     - name: Cache NPM dependencies (App Center)
