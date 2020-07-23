@@ -114,7 +114,7 @@ jobs:
         FIREBASE_CONFIG: ${{ secrets.android_google_services }}
 
     - name: Build Android app
-      run: flutter build apk --debug
+      run: flutter build apk
 
   build_ios:
     if: ${{ false }} # disabled
