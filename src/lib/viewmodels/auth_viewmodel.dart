@@ -14,13 +14,11 @@ class AuthViewModel extends BaseViewModel {
   final _authService = locator<BaseAuthService>();
   final _peopleService = locator<PeopleService>();
 
-  UserModel currentUser;
   AuthViewModelState _authState = AuthViewModelState.unknown;
 
   AuthViewModel() {
     _authService.silentInit((user) {
-      currentUser = user;
-      authState = currentUser == null
+      authState = user == null
           ? AuthViewModelState.loggedOut
           : AuthViewModelState.loggedIn;
     });

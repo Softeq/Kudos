@@ -31,7 +31,7 @@ class AuthService extends BaseAuthService {
   @override
   Future<void> signIn() async {
     try {
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         throw new AuthError('User skip the authorization', null);
       }
@@ -40,9 +40,8 @@ class AuthService extends BaseAuthService {
         throw new AuthError('Available only for @softeq.com members!', null);
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
