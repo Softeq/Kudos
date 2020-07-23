@@ -36,6 +36,9 @@ jobs:
       with:
         flutter-version: ${{ env.flutter_version }}
 
+    - name: Add local.properties
+      run: echo "ndk.dir=${ANDROID_HOME}/ndk-bundle" > android/local.properties
+
     - name: Install app dependencies
       run: flutter pub get
 
