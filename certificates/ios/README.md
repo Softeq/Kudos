@@ -1,5 +1,12 @@
 # iOS Code Signing
 
+## New provision profile
+
+- Update profile in Xcode configuration
+- Make release archive locally
+- Copy `ExportOptions.plist` from archive to `ios/`
+- Next steps below
+
 ## Add/Update
 
 - Export certificate to `.p12` with password PASS[*]
