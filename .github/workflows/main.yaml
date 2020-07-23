@@ -113,6 +113,18 @@ jobs:
       env:
         FIREBASE_CONFIG: ${{ secrets.android_google_services }}
 
+    - name: Add key.properties
+      run: |
+        echo "$KEY_PROPS" > android/key.properties
+      env:
+        KEY_PROPS: ${{ secrets.android_key_properties }}
+
+    - name: Add key
+      run: |
+        echo "$KEYSTORE" | base64 --decode > android/key.jks
+      env:
+        KEYSTORE: ${{ secrets.android_key }}
+
     - name: Build Android app
       run: flutter build apk
 
