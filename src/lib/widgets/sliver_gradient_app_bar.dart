@@ -1,16 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:kudosapp/kudos_theme.dart';
+import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 
 class SliverGradientAppBar extends SliverAppBar {
   SliverGradientAppBar({
+    BuildContext context,
     String title,
-    Widget imageWidget,
+    String imageUrl,
+    bool useTitleForPlaceholder = false,
     List<Widget> actions,
     double elevation,
     String heroTag,
   }) : super(
           backgroundColor: Colors.transparent,
-          expandedHeight: 350.0,
+          expandedHeight: KudosTheme.expandedSliverAppBarHeight,
           floating: false,
           pinned: true,
           elevation: elevation,
@@ -24,7 +29,8 @@ class SliverGradientAppBar extends SliverAppBar {
                       style: KudosTheme.appBarTitleTextStyle,
                     ),
                   ),
-                  imageWidget)
+                  _buildAppBarImage(
+                      context, imageUrl, useTitleForPlaceholder ? title : null))
               : _buildAnimatedFlexibleSpace(
                   Material(
                     type: MaterialType.transparency,
@@ -33,26 +39,30 @@ class SliverGradientAppBar extends SliverAppBar {
                       style: KudosTheme.appBarTitleTextStyle,
                     ),
                   ),
-                  imageWidget,
+                  _buildAppBarImage(
+                      context, imageUrl, useTitleForPlaceholder ? title : null),
                   heroTag),
         );
 
   SliverGradientAppBar.withTitleWidget({
+    BuildContext context,
     Widget titleWidget,
-    Widget imageWidget,
+    String imageUrl,
     List<Widget> actions,
     double elevation,
     String heroTag,
   }) : super(
           backgroundColor: Colors.transparent,
-          expandedHeight: 350.0,
+          expandedHeight: KudosTheme.expandedSliverAppBarHeight,
           floating: false,
           pinned: true,
           elevation: elevation,
           actions: actions,
           flexibleSpace: heroTag == null
-              ? _buildFlexibleSpace(titleWidget, imageWidget)
-              : _buildAnimatedFlexibleSpace(titleWidget, imageWidget, heroTag),
+              ? _buildFlexibleSpace(
+                  titleWidget, _buildAppBarImage(context, imageUrl, null))
+              : _buildAnimatedFlexibleSpace(titleWidget,
+                  _buildAppBarImage(context, imageUrl, null), heroTag),
         );
 
   static Widget _buildAnimatedFlexibleSpace(
@@ -123,5 +133,21 @@ class SliverGradientAppBar extends SliverAppBar {
       );
     }
     return Stack(children: children);
+  }
+
+  static Widget _buildAppBarImage(
+      BuildContext context, String imageUrl, String title) {
+    var size = max(
+        MediaQuery.of(context).size.width,
+        KudosTheme.expandedSliverAppBarHeight +
+            MediaQuery.of(context).padding.top);
+    return Center(
+      child: RoundedImageWidget.square(
+        imageUrl: imageUrl,
+        size: size,
+        borderRadius: 0,
+        title: title,
+      ),
+    );
   }
 }

@@ -13,6 +13,8 @@ class KudosTheme {
   static final Color mainGradientEndColor = Color.fromARGB(255, 57, 38, 179);
   static final Color destructiveButtonColor = Color.fromARGB(255, 255, 59, 48);
 
+  static final double expandedSliverAppBarHeight = 350.0;
+
   static final LinearGradient mainGradient = LinearGradient(
     colors: <Color>[
       KudosTheme.mainGradientStartColor,

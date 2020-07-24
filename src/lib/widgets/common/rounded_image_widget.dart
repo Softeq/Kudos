@@ -157,12 +157,15 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
               height: widget._size,
               color: _coloredPlaceholder.color,
               child: Center(
-                child: Text(
-                  _coloredPlaceholder.abbreviation,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: KudosTheme.textColor,
-                    fontSize: widget._size / 3.0,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    _coloredPlaceholder.abbreviation,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: KudosTheme.textColor,
+                      fontSize: widget._size / 3.0,
+                    ),
                   ),
                 ),
               ),

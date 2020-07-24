@@ -8,7 +8,6 @@ import 'package:kudosapp/services/snack_bar_notifier_service.dart';
 import 'package:kudosapp/viewmodels/profile_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/profile_achievement_list_widget.dart';
 import 'package:kudosapp/widgets/common/fancy_list_widget.dart';
-import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/section_header_widget.dart';
 import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -66,12 +65,10 @@ class ProfilePage extends StatelessWidget {
   Iterable<Widget> _buildSlivers(
       BuildContext context, ProfileViewModel viewModel) sync* {
     yield SliverGradientAppBar(
+      context: context,
       title: viewModel.userName,
-      imageWidget: _buildAppBarImage(
-        context,
-        viewModel.imageUrl,
-        viewModel.userName,
-      ),
+      imageUrl: viewModel.imageUrl,
+      useTitleForPlaceholder: true,
       heroTag: viewModel.imageUrl,
     );
 
@@ -106,17 +103,5 @@ class ProfilePage extends StatelessWidget {
         ProfileAchievementsListWidget(viewModel.user.id, true, false),
       );
     }
-  }
-
-  Widget _buildAppBarImage(
-      BuildContext context, String imageUrl, String userName) {
-    return Center(
-      child: RoundedImageWidget.square(
-        imageUrl: imageUrl,
-        size: MediaQuery.of(context).size.width,
-        borderRadius: 0,
-        title: userName,
-      ),
-    );
   }
 }

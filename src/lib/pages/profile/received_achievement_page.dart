@@ -7,7 +7,6 @@ import 'package:kudosapp/pages/achievements/achievement_details_page.dart';
 import 'package:kudosapp/pages/profile_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/profile/received_achievement_viewmodel.dart';
-import 'package:kudosapp/widgets/common/rounded_image_widget.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:kudosapp/widgets/sliver_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -64,12 +63,10 @@ class ReceivedAchievementPage extends StatelessWidget {
   Widget _buildAppBar(
       BuildContext context, ReceivedAchievementViewModel viewModel) {
     return SliverGradientAppBar(
+        context: context,
         heroTag: viewModel.achievementCollection.imageUrl,
         title: viewModel.relatedAchievement.name,
-        imageWidget: _buildAppBarImage(
-          context,
-          viewModel.achievementCollection.imageUrl,
-        ),
+        imageUrl: viewModel.achievementCollection.imageUrl,
         actions: [
           IconButton(
             icon: Icon(Icons.info_outline),
@@ -80,16 +77,6 @@ class ReceivedAchievementPage extends StatelessWidget {
             },
           )
         ]);
-  }
-
-  Widget _buildAppBarImage(BuildContext context, String imageUrl) {
-    return Center(
-      child: RoundedImageWidget.square(
-        imageUrl: imageUrl,
-        size: MediaQuery.of(context).size.width,
-        borderRadius: 0,
-      ),
-    );
   }
 
   Widget _buildBody(
