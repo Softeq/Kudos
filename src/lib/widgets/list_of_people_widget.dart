@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/user_model.dart';
 import 'package:kudosapp/service_locator.dart';
-import 'package:kudosapp/widgets/common/scroll_behaviors.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -24,13 +23,10 @@ class ListOfPeopleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: DisableGlowingOverscrollBehavior(),
-      child: ListView.builder(
-        padding: padding,
-        itemCount: users.length,
-        itemBuilder: (context, index) => _buildItem(context, index),
-      ),
+    return ListView.builder(
+      padding: padding,
+      itemCount: users.length,
+      itemBuilder: (context, index) => _buildItem(context, index),
     );
   }
 
