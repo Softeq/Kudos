@@ -17,36 +17,37 @@ class KudosApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AuthViewModel()),
+    return GetMaterialApp(
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      child: Consumer<AuthViewModel>(
-        builder: (context, viewModel, child) => GetMaterialApp(
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          title: S().appName,
-          color: KudosTheme.mainGradientStartColor,
-          theme: ThemeData(
-            accentColor: KudosTheme.accentColor,
-            highlightColor: KudosTheme.highlightColor,
-            splashColor: KudosTheme.splashColor,
-            textSelectionColor: KudosTheme.accentColor.withAlpha(50),
-            buttonTheme: ButtonThemeData(
-                highlightColor: Colors.transparent,
-                splashColor: KudosTheme.buttonSplashColor),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-              backgroundColor: KudosTheme.accentColor,
-              foregroundColor: Colors.white,
-              splashColor: KudosTheme.buttonSplashColor,
-            ),
-          ),
-          home: _buildHome(viewModel),
+      supportedLocales: S.delegate.supportedLocales,
+      title: S().appName,
+      color: KudosTheme.mainGradientStartColor,
+      theme: ThemeData(
+        accentColor: KudosTheme.accentColor,
+        highlightColor: KudosTheme.highlightColor,
+        splashColor: KudosTheme.splashColor,
+        textSelectionColor: KudosTheme.accentColor.withAlpha(50),
+        buttonTheme: ButtonThemeData(
+          highlightColor: Colors.transparent,
+          splashColor: KudosTheme.buttonSplashColor,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: KudosTheme.accentColor,
+          foregroundColor: Colors.white,
+          splashColor: KudosTheme.buttonSplashColor,
+        ),
+      ),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ],
+        child: Consumer<AuthViewModel>(
+          builder: (context, viewModel, child) => _buildHome(viewModel),
         ),
       ),
     );
