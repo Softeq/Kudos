@@ -15,13 +15,15 @@ class MyProfileViewModel extends BaseViewModel {
   UserModel get user => _authService.currentUser;
 
   void signOut(BuildContext context) async {
-    if (await _dialogService.showTwoButtonsDialog(
-        context: context,
-        title: localizer().signOutConfirmationTitle,
-        content: localizer().signOutConfirmationMessage,
-        firstButtonTitle: localizer().signOutConfirmButton,
-        secondButtonTitle: localizer().signOutCancelButton,
-        firstButtonColor: KudosTheme.destructiveButtonColor)) {
+    var signOutConfirmed = await _dialogService.showTwoButtonsDialog(
+      context: context,
+      title: localizer().signOutConfirmationTitle,
+      content: localizer().signOutConfirmationMessage,
+      firstButtonTitle: localizer().signOutConfirmButton,
+      secondButtonTitle: localizer().signOutCancelButton,
+      firstButtonColor: KudosTheme.destructiveButtonColor,
+    );
+    if (signOutConfirmed) {
       await _peopleService.unsubscribeFromNotifications();
       await _authService.signOut();
     }

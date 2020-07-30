@@ -74,7 +74,10 @@ class ProfileViewModel extends BaseViewModel with Disposable {
       isBusy = true;
 
       var userAchievement = UserAchievementModel.createNew(
-          _authService.currentUser, achievement, comment);
+        _authService.currentUser,
+        achievement,
+        comment,
+      );
 
       await _achievementsService.sendAchievement(user, userAchievement);
 

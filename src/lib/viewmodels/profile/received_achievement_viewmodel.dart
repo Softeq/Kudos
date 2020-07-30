@@ -6,7 +6,7 @@ class ReceivedAchievementViewModel extends BaseViewModel {
   final UserAchievementCollection achievementCollection;
 
   AchievementModel get relatedAchievement =>
-      achievementCollection.userAchievements[0].achievement;
+      achievementCollection.relatedAchievement;
 
   ReceivedAchievementViewModel(this.achievementCollection);
 }

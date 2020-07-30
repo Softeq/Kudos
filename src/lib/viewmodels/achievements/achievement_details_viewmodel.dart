@@ -106,10 +106,15 @@ class AchievementDetailsViewModel extends BaseViewModel {
       isBusy = true;
 
       var userAchievement = UserAchievementModel.createNew(
-          _authService.currentUser, achievement, comment);
+        _authService.currentUser,
+        achievement,
+        comment,
+      );
 
       await _achievementsService.sendAchievement(
-          selectedUsers.first, userAchievement);
+        selectedUsers.first,
+        userAchievement,
+      );
 
       _eventBus
           .fire(AchievementSentMessage(selectedUsers.first, userAchievement));
@@ -173,7 +178,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
       try {
         isBusy = true;
         var updatedAchievement = await _achievementsService.transferAchievement(
-            achievement, AchievementOwnerModel.fromUser(user));
+          achievement,
+          AchievementOwnerModel.fromUser(user),
+        );
         _eventBus
             .fire(AchievementTransferredMessage.single(updatedAchievement));
         Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -195,7 +202,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
       try {
         isBusy = true;
         var updatedAchievement = await _achievementsService.transferAchievement(
-            achievement, AchievementOwnerModel.fromTeam(team));
+          achievement,
+          AchievementOwnerModel.fromTeam(team),
+        );
         _eventBus
             .fire(AchievementTransferredMessage.single(updatedAchievement));
         Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -206,10 +215,12 @@ class AchievementDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> deleteAchievement(BuildContext context) async {
-    if (await _dialogsService.showDeleteCancelDialog(
-        context: context,
-        title: localizer().warning,
-        content: localizer().deleteAchievementWarning)) {
+    var deletionConfirmed = await _dialogsService.showDeleteCancelDialog(
+      context: context,
+      title: localizer().warning,
+      content: localizer().deleteAchievementWarning,
+    );
+    if (deletionConfirmed) {
       try {
         isBusy = true;
 
@@ -230,7 +241,9 @@ class AchievementDetailsViewModel extends BaseViewModel {
       case AchievementOwnerType.user:
         Navigator.of(context)
             .push(ProfileRoute(achievement.owner.user))
-            .whenComplete(() => notifyListeners());
+            .whenComplete(
+              () => notifyListeners(),
+            );
         break;
       case AchievementOwnerType.team:
         Navigator.of(context)
@@ -257,8 +270,11 @@ class AchievementDetailsViewModel extends BaseViewModel {
       }
       var teamHolders = achievementHolders.items
           .where((x) => achievement.owner.team.members.containsKey(x.id));
-      _teamUsersStatistics = StatisticsModel(achievement.owner.name,
-          achievement.owner.team.members.length, teamHolders.length);
+      _teamUsersStatistics = StatisticsModel(
+        achievement.owner.name,
+        achievement.owner.team.members.length,
+        teamHolders.length,
+      );
     } else {
       _teamUsersStatistics = null;
     }

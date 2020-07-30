@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/user_achievement_model.dart';
 
 @immutable
@@ -10,6 +11,8 @@ class UserAchievementCollection implements Comparable {
 
   int get count => userAchievements.length;
 
+  AchievementModel get relatedAchievement => userAchievements[0].achievement;
+
   UserAchievementCollection._(
     this.userAchievements,
     this.name,
@@ -18,7 +21,8 @@ class UserAchievementCollection implements Comparable {
   );
 
   factory UserAchievementCollection.single(
-      UserAchievementModel userAchievement) {
+    UserAchievementModel userAchievement,
+  ) {
     final userAchievements = new List<UserAchievementModel>();
     userAchievements.add(userAchievement);
     return UserAchievementCollection._(
@@ -30,7 +34,8 @@ class UserAchievementCollection implements Comparable {
   }
 
   UserAchievementCollection addAchievement(
-      UserAchievementModel userAchievement) {
+    UserAchievementModel userAchievement,
+  ) {
     userAchievements.add(userAchievement);
     userAchievements.sort((x, y) => y.date.compareTo(x.date));
     var latestDate = userAchievements.first.date;

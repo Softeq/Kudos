@@ -96,17 +96,20 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       itemCount: achievementCollections.length,
       itemBuilder: (context, index) {
         final achievementCollection = achievementCollections[index];
-        final relatedAchievement =
-            achievementCollection.userAchievements[0].achievement;
+        final relatedAchievement = achievementCollection.relatedAchievement;
 
         return SimpleListItem(
           title: relatedAchievement.name,
-          description:
-              sprintf(localizer().from, [achievementCollection.senders]),
+          description: sprintf(
+            localizer().from,
+            [achievementCollection.senders],
+          ),
           imageUrl: achievementCollection.imageUrl,
           imageCounter: achievementCollection.count,
-          onTap: () =>
-              viewModel.openAchievementDetails(context, achievementCollection),
+          onTap: () => viewModel.openAchievementDetails(
+            context,
+            achievementCollection,
+          ),
           imageShape: ImageShape.circle(60),
           addHeroAnimation: true,
         );
@@ -167,7 +170,9 @@ class ProfileAchievementsListWidget extends StatelessWidget {
               bottom: 5.0,
               right: 2.0,
               child: CounterWidget(
-                  count: achievementCollection.count, height: width / 3.0),
+                count: achievementCollection.count,
+                height: width / 3.0,
+              ),
             ),
           );
         }
@@ -176,8 +181,10 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           child: Stack(
             children: children,
           ),
-          onTap: () =>
-              viewModel.openAchievementDetails(context, achievementCollection),
+          onTap: () => viewModel.openAchievementDetails(
+            context,
+            achievementCollection,
+          ),
         );
       },
     );

@@ -58,7 +58,7 @@ class ProfileAchievementsViewModel extends BaseViewModel {
         ReceivedAchievementRoute(achievementCollection),
       );
     } else {
-      final achievement = achievementCollection.userAchievements[0].achievement;
+      final achievement = achievementCollection.relatedAchievement;
       Navigator.of(context).push(AchievementDetailsRoute(achievement));
     }
   }

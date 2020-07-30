@@ -50,8 +50,10 @@ class TeamMemberPickerViewModel extends BaseViewModel {
 
   void onUserClicked(UserModel user) {
     if (!_teamMembers.containsKey(user.id)) {
-      _teamMembers[user.id] =
-          TeamMemberModel.fromUserModel(user, UserAccessLevel.member);
+      _teamMembers[user.id] = TeamMemberModel.fromUserModel(
+        user,
+        UserAccessLevel.member,
+      );
     } else if (_teamMembers[user.id].accessLevel == UserAccessLevel.member) {
       _teamMembers[user.id].accessLevel = UserAccessLevel.admin;
     } else {
@@ -62,21 +64,23 @@ class TeamMemberPickerViewModel extends BaseViewModel {
 
   UserState getUserState(UserModel user) {
     if (!_teamMembers.containsKey(user.id)) {
-      return UserState.None; // not a member
+      return UserState.None;
     } else if (_teamMembers[user.id].accessLevel == UserAccessLevel.member) {
-      return UserState.Member; // member
+      return UserState.Member;
     } else {
-      return UserState.Admin; // admin
+      return UserState.Admin;
     }
   }
 
   void saveChanges(BuildContext context) async {
-    if (!_teamMembers.values
-        .any((tm) => tm.accessLevel == UserAccessLevel.admin)) {
+    var adminSelected = _teamMembers.values
+        .any((tm) => tm.accessLevel == UserAccessLevel.admin);
+    if (!adminSelected) {
       _dialogService.showOkDialog(
-          context: context,
-          title: localizer().error,
-          content: localizer().teamMemberPickerEmptyMessage);
+        context: context,
+        title: localizer().error,
+        content: localizer().teamMemberPickerEmptyMessage,
+      );
       return;
     }
 
@@ -84,7 +88,9 @@ class TeamMemberPickerViewModel extends BaseViewModel {
       isBusy = true;
 
       await _teamsService.updateTeamMembers(
-          _team, _teamMembers.values.toList());
+        _team,
+        _teamMembers.values.toList(),
+      );
 
       _team.members.clear();
       _team.members.addEntries(_teamMembers.entries);

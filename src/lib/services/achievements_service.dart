@@ -35,7 +35,8 @@ class AchievementsService {
   }
 
   Future<AchievementModel> createAchievement(
-      AchievementModel achievement) async {
+    AchievementModel achievement,
+  ) async {
     var imageData = await _imageService.uploadImage(achievement.imageFile);
     achievement.imageName = imageData.name;
     achievement.imageUrl = imageData.url;
@@ -46,7 +47,8 @@ class AchievementsService {
   }
 
   Future<AchievementModel> updateAchievement(
-      AchievementModel achievementModel) async {
+    AchievementModel achievementModel,
+  ) async {
     bool updateImage = false;
     if (achievementModel.imageFile != null) {
       var imageData =
@@ -57,36 +59,51 @@ class AchievementsService {
     }
 
     return _achievementsDatabaseService
-        .updateAchievement(Achievement.fromModel(achievementModel),
-            updateMetadata: true, updateImage: updateImage)
+        .updateAchievement(
+          Achievement.fromModel(achievementModel),
+          updateMetadata: true,
+          updateImage: updateImage,
+        )
         .then((a) => AchievementModel.fromAchievement(a));
   }
 
   Future<void> sendAchievement(
-      UserModel recipient, UserAchievementModel userAcheivementModel) {
+    UserModel recipient,
+    UserAchievementModel userAcheivementModel,
+  ) {
     final userAchievement = UserAchievement.fromModel(userAcheivementModel);
 
     return _databaseService.batchUpdate(
       [
         // add an achievement to user's achievements
-        (batch) => _achievementsDatabaseService
-            .createUserAchievement(recipient.id, userAchievement, batch: batch),
+        (batch) => _achievementsDatabaseService.createUserAchievement(
+              recipient.id,
+              userAchievement,
+              batch: batch,
+            ),
         // add a user to achievements
         (batch) => _achievementsDatabaseService.createAchievementHolder(
-            userAcheivementModel.achievement.id,
-            AchievementHolder.fromModel(recipient),
-            batch: batch),
+              userAcheivementModel.achievement.id,
+              AchievementHolder.fromModel(recipient),
+              batch: batch,
+            ),
         // increment received_achievements_count
-        (batch) => _usersDatabaseService
-            .incrementRecievedAchievementsCount(recipient.id, batch: batch),
+        (batch) => _usersDatabaseService.incrementRecievedAchievementsCount(
+              recipient.id,
+              batch: batch,
+            ),
       ],
     );
   }
 
   Future<AchievementModel> transferAchievement(
-      AchievementModel achievementModel, AchievementOwnerModel newOwner) async {
-    var achievement =
-        Achievement.fromModel(achievementModel, newOwner: newOwner);
+    AchievementModel achievementModel,
+    AchievementOwnerModel newOwner,
+  ) async {
+    var achievement = Achievement.fromModel(
+      achievementModel,
+      newOwner: newOwner,
+    );
 
     return _achievementsDatabaseService
         .updateAchievement(achievement, updateOwner: true)
@@ -101,10 +118,14 @@ class AchievementsService {
       return _achievementsDatabaseService
           .deleteAchievement(achievementModel.id);
     } else {
-      var achievement =
-          Achievement.fromModel(achievementModel, isActive: false);
-      return _achievementsDatabaseService.updateAchievement(achievement,
-          updateIsActive: true);
+      var achievement = Achievement.fromModel(
+        achievementModel,
+        isActive: false,
+      );
+      return _achievementsDatabaseService.updateAchievement(
+        achievement,
+        updateIsActive: true,
+      );
     }
   }
 

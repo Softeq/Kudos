@@ -18,7 +18,10 @@ class UserAchievementModel {
   });
 
   factory UserAchievementModel.createNew(
-      UserModel sender, AchievementModel achievement, String comment) {
+    UserModel sender,
+    AchievementModel achievement,
+    String comment,
+  ) {
     return UserAchievementModel._(
       sender: sender,
       achievement: achievement,
@@ -28,11 +31,13 @@ class UserAchievementModel {
   }
 
   factory UserAchievementModel.fromUserAchievement(
-      UserAchievement userAchievement) {
+    UserAchievement userAchievement,
+  ) {
     return UserAchievementModel._(
       sender: UserModel.fromUserReference(userAchievement.sender),
-      achievement:
-          AchievementModel.fromRelatedAchievement(userAchievement.achievement),
+      achievement: AchievementModel.fromRelatedAchievement(
+        userAchievement.achievement,
+      ),
       comment: userAchievement.comment,
       date: userAchievement.date,
     );
