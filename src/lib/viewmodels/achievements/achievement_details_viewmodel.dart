@@ -241,9 +241,7 @@ class AchievementDetailsViewModel extends BaseViewModel {
       case AchievementOwnerType.user:
         Navigator.of(context)
             .push(ProfileRoute(achievement.owner.user))
-            .whenComplete(
-              () => notifyListeners(),
-            );
+            .whenComplete(() => notifyListeners());
         break;
       case AchievementOwnerType.team:
         Navigator.of(context)
