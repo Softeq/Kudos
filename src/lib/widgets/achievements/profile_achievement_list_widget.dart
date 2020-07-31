@@ -29,7 +29,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
       child: Consumer<ProfileAchievementsViewModel>(
         builder: (context, viewModel, child) {
           if (!viewModel.isBusy && viewModel.hasAchievements) {
-            return _buildView(viewModel);
+            return _buildAdaptiveCollection(viewModel);
           }
           return _buildAdaptiveChild(viewModel);
         },
@@ -64,8 +64,12 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildError(Object error) {
-    return _buildMessage(Text(sprintf(localizer().detailedError, [error]),
-        style: KudosTheme.errorTextStyle));
+    return _buildMessage(
+      Text(
+        sprintf(localizer().detailedError, [error]),
+        style: KudosTheme.errorTextStyle,
+      ),
+    );
   }
 
   Widget _buildEmpty() {
@@ -86,64 +90,38 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildList(
-    List<UserAchievementCollection> achievementCollections,
-    ProfileAchievementsViewModel viewModel,
-  ) {
-    return ListView.builder(
-      padding: EdgeInsets.only(
-          top: TopDecorator.height, bottom: BottomDecorator.height),
-      itemCount: achievementCollections.length,
-      itemBuilder: (context, index) {
-        final achievementCollection = achievementCollections[index];
-        final relatedAchievement = achievementCollection.relatedAchievement;
-
-        return SimpleListItem(
-          title: relatedAchievement.name,
-          description: sprintf(
-            localizer().from,
-            [achievementCollection.senders],
-          ),
-          imageUrl: achievementCollection.imageUrl,
-          imageCounter: achievementCollection.count,
-          onTap: () => viewModel.openAchievementDetails(
-            context,
-            achievementCollection,
-          ),
-          imageShape: ImageShape.circle(60),
-          addHeroAnimation: true,
-        );
-      },
-    );
+  Widget _buildAdaptiveCollection(ProfileAchievementsViewModel viewModel) {
+    final userAcihevements = viewModel.getAchievements();
+    final tapHandler = viewModel.openAchievementDetails;
+    final buildCollection = _buildSliver ? _buildSliverGrid : _buildList;
+    return buildCollection(userAcihevements, tapHandler);
   }
 
-  Widget _buildView(ProfileAchievementsViewModel viewModel) {
-    final userAcihevements = viewModel.getAchievements();
-    if (_buildSliver) {
-      return SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 10,
+  Widget _buildSliverGrid(
+    List<UserAchievementCollection> userAchievements,
+    Function(BuildContext, UserAchievementCollection) tapHandler,
+  ) {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 10,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => _buildGridItem(
+          context,
+          userAchievements[index],
+          tapHandler,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => _buildGridItem(
-            context,
-            userAcihevements[index],
-            viewModel,
-          ),
-          childCount: userAcihevements.length,
-        ),
-      );
-    }
-
-    return _buildList(userAcihevements, viewModel);
+        childCount: userAchievements.length,
+      ),
+    );
   }
 
   Widget _buildGridItem(
     BuildContext context,
     UserAchievementCollection achievementCollection,
-    ProfileAchievementsViewModel viewModel,
+    Function(BuildContext, UserAchievementCollection) tapHandler,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -181,10 +159,37 @@ class ProfileAchievementsListWidget extends StatelessWidget {
           child: Stack(
             children: children,
           ),
-          onTap: () => viewModel.openAchievementDetails(
-            context,
-            achievementCollection,
+          onTap: () => tapHandler(context, achievementCollection),
+        );
+      },
+    );
+  }
+
+  Widget _buildList(
+    List<UserAchievementCollection> userAchievements,
+    Function(BuildContext, UserAchievementCollection) tapHandler,
+  ) {
+    return ListView.builder(
+      padding: EdgeInsets.only(
+        top: TopDecorator.height,
+        bottom: BottomDecorator.height,
+      ),
+      itemCount: userAchievements.length,
+      itemBuilder: (context, index) {
+        final achievementCollection = userAchievements[index];
+        final relatedAchievement = achievementCollection.relatedAchievement;
+
+        return SimpleListItem(
+          title: relatedAchievement.name,
+          description: sprintf(
+            localizer().from,
+            [achievementCollection.senders],
           ),
+          imageUrl: achievementCollection.imageUrl,
+          imageCounter: achievementCollection.count,
+          onTap: () => tapHandler(context, achievementCollection),
+          imageShape: ImageShape.circle(60),
+          addHeroAnimation: true,
         );
       },
     );
