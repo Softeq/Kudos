@@ -30,20 +30,22 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProfileViewModel>(builder: (context, viewModel, child) {
-      return Scaffold(
-        key: _scaffoldKey,
-        body: CustomScrollView(
-          slivers: _buildSlivers(context, viewModel).toList(),
-        ),
-        floatingActionButton: viewModel.showSendButton
-            ? FloatingActionButton(
-                child: KudosTheme.sendIcon,
-                onPressed: () => _sendTapped(context, viewModel),
-              )
-            : null,
-      );
-    });
+    return Consumer<ProfileViewModel>(
+      builder: (context, viewModel, child) {
+        return Scaffold(
+          key: _scaffoldKey,
+          body: CustomScrollView(
+            slivers: _buildSlivers(context, viewModel).toList(),
+          ),
+          floatingActionButton: viewModel.showSendButton
+              ? FloatingActionButton(
+                  child: KudosTheme.sendIcon,
+                  onPressed: () => _sendTapped(context, viewModel),
+                )
+              : null,
+        );
+      },
+    );
   }
 
   void _sendTapped(BuildContext context, ProfileViewModel viewModel) async {
@@ -51,7 +53,9 @@ class ProfilePage extends StatelessWidget {
       await viewModel.sendAchievement(context);
     } catch (error) {
       _snackBarNotifier.showGeneralErrorMessage(
-          _scaffoldKey.currentContext, _scaffoldKey.currentState);
+        _scaffoldKey.currentContext,
+        _scaffoldKey.currentState,
+      );
     }
   }
 
@@ -63,7 +67,9 @@ class ProfilePage extends StatelessWidget {
   }
 
   Iterable<Widget> _buildSlivers(
-      BuildContext context, ProfileViewModel viewModel) sync* {
+    BuildContext context,
+    ProfileViewModel viewModel,
+  ) sync* {
     yield SliverGradientAppBar(
       context: context,
       title: viewModel.userName,

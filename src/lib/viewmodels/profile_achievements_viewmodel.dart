@@ -52,7 +52,9 @@ class ProfileAchievementsViewModel extends BaseViewModel {
       _achievementsMap.values.toList();
 
   void openAchievementDetails(
-      BuildContext context, UserAchievementCollection achievementCollection) {
+    BuildContext context,
+    UserAchievementCollection achievementCollection,
+  ) {
     if (isMyProfile) {
       Navigator.of(context).push(
         ReceivedAchievementRoute(achievementCollection),

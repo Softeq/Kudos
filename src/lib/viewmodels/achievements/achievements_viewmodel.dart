@@ -37,8 +37,10 @@ class AchievementsViewModel extends BaseViewModel {
     _initialize();
   }
 
-  static int _sortFunc(GrouppedListItem<AchievementModel> x,
-      GrouppedListItem<AchievementModel> y) {
+  static int _sortFunc(
+    GrouppedListItem<AchievementModel> x,
+    GrouppedListItem<AchievementModel> y,
+  ) {
     if (x.sortIndex == y.sortIndex) {
       return x.groupName.compareTo(y.groupName);
     } else {
@@ -80,7 +82,9 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   void onAchievementClicked(
-      BuildContext context, AchievementModel achievement) {
+    BuildContext context,
+    AchievementModel achievement,
+  ) {
     switch (_selectionAction) {
       case SelectionAction.OpenDetails:
         Navigator.of(context)
@@ -132,15 +136,18 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   GrouppedListItem<AchievementModel> _createGrouppedItemFromAchievement(
-      AchievementModel achievement) {
-    int sortIndex =
+    AchievementModel achievement,
+  ) {
+    final sortIndex =
         (achievement.owner.id == _authService.currentUser.id) ? 1 : 0;
-    final myAchievementsText = localizer().myAchievements;
-    String groupName =
-        sortIndex > 0 ? myAchievementsText : achievement.owner.name;
+    final groupName =
+        sortIndex > 0 ? localizer().myAchievements : achievement.owner.name;
 
     return GrouppedListItem<AchievementModel>(
-        groupName, sortIndex, achievement);
+      groupName,
+      sortIndex,
+      achievement,
+    );
   }
 
   @override
