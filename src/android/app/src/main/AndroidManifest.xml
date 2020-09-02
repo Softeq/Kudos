@@ -10,7 +10,6 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
-        android:requestLegacyExternalStorage="true"
         android:label="Kudos">
         <activity
             android:name=".MainActivity"
