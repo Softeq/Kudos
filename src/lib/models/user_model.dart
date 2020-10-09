@@ -23,7 +23,7 @@ class UserModel {
       id: id,
       name: name,
       email: email,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl ?? "",
       receivedAchievementsCount: 0,
     );
   }
