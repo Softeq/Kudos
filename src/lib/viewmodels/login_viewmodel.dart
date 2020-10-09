@@ -17,12 +17,18 @@ class LoginViewModel extends BaseViewModel with Disposable {
       await _authViewModel.signIn();
       _analyticsService.logSignIn();
     } on AuthError catch (error) {
-      final internalMessage = (error.internalError as AuthError)?.message;
-      onAuthError('${error.message}: $internalMessage');
+      onAuthError(_formatErrorMessage(error));
     } finally {
       if (!isDisposed) {
         isBusy = false;
       }
     }
+  }
+
+  String _formatErrorMessage(AuthError error) {
+    final internalMessage = (error.internalError as AuthError)?.message;
+    final formatedInternalMessage =
+        internalMessage == null ? '' : ': $internalMessage';
+    return error.message + formatedInternalMessage;
   }
 }

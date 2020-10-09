@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/service_locator.dart';
 
 class SnackBarNotifierService {
-
-  void showErrorMessage(BuildContext context, ScaffoldState scaffoldState, String message) {
+  void showErrorMessage(
+    BuildContext context,
+    ScaffoldState scaffoldState,
+    String message,
+  ) {
     scaffoldState.showSnackBar(SnackBar(
-      content: Text(message,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          )),
-      duration: Duration(seconds: 3),
+      content: Text(
+        message,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       backgroundColor: Theme.of(context).errorColor,
     ));
   }
 
-  void showSuccessMessage(BuildContext context, ScaffoldState scaffoldState, String message) {
+  void showSuccessMessage(
+    BuildContext context,
+    ScaffoldState scaffoldState,
+    String message,
+  ) {
     scaffoldState.showSnackBar(SnackBar(
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -40,7 +48,10 @@ class SnackBarNotifierService {
     ));
   }
 
-  void showGeneralErrorMessage(BuildContext context, ScaffoldState scaffoldState) {
+  void showGeneralErrorMessage(
+    BuildContext context,
+    ScaffoldState scaffoldState,
+  ) {
     showErrorMessage(context, scaffoldState, localizer().generalErrorMessage);
   }
 }

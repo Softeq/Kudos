@@ -48,22 +48,8 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.center,
                 child: viewModel.isBusy
                     ? CircularProgressIndicator()
-                    : RaisedButton(
-                        elevation: 5.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        color: KudosTheme.accentColor,
-                        child: Text(
-                          localizer().signIn,
-                          style: KudosTheme.raisedButtonTextStyle,
-                        ),
-                        onPressed: () async =>
-                            await viewModel.signIn(_onAuthError),
-                      ),
-              )
+                    : _buildSignInButton(viewModel),
+              ),
             ],
           );
         },
@@ -71,8 +57,30 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  Widget _buildSignInButton(LoginViewModel viewModel) {
+    return RaisedButton(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 20,
+      ),
+      color: KudosTheme.accentColor,
+      child: Text(
+        localizer().signIn,
+        style: KudosTheme.raisedButtonTextStyle,
+      ),
+      onPressed: () async => await viewModel.signIn(_onAuthError),
+    );
+  }
+
   void _onAuthError(String message) {
     _snackBarNotifier.showErrorMessage(
-        _scaffoldKey.currentContext, _scaffoldKey.currentState, message);
+      _scaffoldKey.currentContext,
+      _scaffoldKey.currentState,
+      message,
+    );
   }
 }
