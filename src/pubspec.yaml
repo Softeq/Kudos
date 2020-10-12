@@ -1,7 +1,7 @@
 name: kudosapp
 description: A new Flutter application.
 
-version: 0.0.2+5
+version: 0.0.2+6
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
