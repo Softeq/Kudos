@@ -26,12 +26,18 @@ class GrouppedListWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => _items[index],
-      itemCount: _items.length,
-      padding: EdgeInsets.only(
-        top: TopDecorator.height,
-        bottom: BottomDecorator.height,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanDown: (_) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: ListView.builder(
+        itemBuilder: (context, index) => _items[index],
+        itemCount: _items.length,
+        padding: EdgeInsets.only(
+          top: TopDecorator.height,
+          bottom: BottomDecorator.height,
+        ),
       ),
     );
   }

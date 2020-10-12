@@ -24,10 +24,16 @@ class ListOfPeopleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: padding,
-      itemCount: users.length,
-      itemBuilder: (context, index) => _buildItem(context, index),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanDown: (_) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: ListView.builder(
+        padding: padding,
+        itemCount: users.length,
+        itemBuilder: (context, index) => _buildItem(context, index),
+      ),
     );
   }
 
