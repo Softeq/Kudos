@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import admin = require('firebase-admin');
+import notifications = require('./services/user_notifications');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -114,26 +115,8 @@ export const createAchievementReferences = functions.firestore.document('/users/
     }
 
     const userId: string = context.params.userId;
-
-    const qs = await db.collection(`/users/${userId}/push_tokens`).get();
-    if (qs.docs.length === 0) {
-        return;
-    }
-
-    const tokens: Array<string> = new Array<string>();
-
-    qs.docs.forEach(x => {
-        const token: string = x.data().token;
-        tokens.push(token);
-    });
-
-    if (tokens.length === 0) {
-        return;
-    }
-
     const achievementName = documentData.achievement.name;
     const senderName = documentData.sender.name;
-
     const payload = {
         notification: {
             title: 'Congratulations!',
@@ -142,28 +125,7 @@ export const createAchievementReferences = functions.firestore.document('/users/
         }
     };
 
-    const response = await admin.messaging().sendToDevice(tokens, payload);
-
-    const invalidTokens: Array<number> = new Array<number>();
-
-    for (let index = 0; index < response.results.length; index++) {
-        const x = response.results[index];
-        if (x.error && x.error.code === 'messaging/registration-token-not-registered') {
-            invalidTokens.push(index);
-        }
-    }
-
-    if (invalidTokens.length === 0) {
-        return;
-    }
-
-    const batch = db.batch();
-
-    invalidTokens.forEach(x => {
-        batch.delete(qs.docs[x].ref);
-    });
-
-    await batch.commit();
+    await notifications.sendToUser(userId, payload);
 });
 
 /**
@@ -204,7 +166,7 @@ export const cleanupStorage = functions.pubsub
 /**
  * Automatically add users to the system
  * request sample:
- * 
+ *
  * curl --location --request POST '[url]' \
  * --header 'Content-Type: application/json' \
  * --data-raw '{
