@@ -2,9 +2,13 @@ name: Cloud Functions
 
 on:
   push:
+    branches:
+    - 'master'
     paths:
     - 'src/cloud_functions/**/*.ts'
   pull_request:
+    branches:
+    - 'master'
     paths:
     - 'src/cloud_functions/**/*.ts'
 
