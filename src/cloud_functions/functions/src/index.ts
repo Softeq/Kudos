@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import admin = require('firebase-admin');
+import * as _ from "lodash";
 import notifications = require('./services/user_notifications');
-import utils = require('./utils');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -38,9 +38,11 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
     const oldAccessLevel: number = oldData.access_level;
     const newAccessLevel: number = newData.access_level;
 
+    const isMapsEqual = (a: any, b: any) : boolean => _.isEqual(_.sortBy(a, 'id'), _.sortBy(b, 'id'));
+
     if ((oldName !== newName)
         || (oldAccessLevel !== newAccessLevel)
-        || (!utils.mapArraysEquals(oldMembers, newMembers))) {
+        || (!isMapsEqual(oldMembers, newMembers))) {
         const data = {
             team: {
                 id: teamId,
