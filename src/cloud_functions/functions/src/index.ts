@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import admin = require('firebase-admin');
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import notifications = require('./services/user_notifications');
 
 admin.initializeApp();
