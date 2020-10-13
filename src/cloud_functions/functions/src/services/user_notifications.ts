@@ -1,4 +1,4 @@
-import admin = require('firebase-admin');
+import * as admin from 'firebase-admin';
 
 const db = admin.firestore();
 const fcm = admin.messaging();

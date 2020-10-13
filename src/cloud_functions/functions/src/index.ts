@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
-import admin = require('firebase-admin');
-import * as _ from 'lodash';
-import notifications = require('./services/user_notifications');
+import * as admin from 'firebase-admin';
+import * as notifications from './services/user_notifications';
+import { isEqual, sortBy } from 'lodash';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -38,7 +38,7 @@ export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdat
     const oldAccessLevel: number = oldData.access_level;
     const newAccessLevel: number = newData.access_level;
 
-    const isMapsEqual = (a: any, b: any) : boolean => _.isEqual(_.sortBy(a, 'id'), _.sortBy(b, 'id'));
+    const isMapsEqual = (a: any, b: any) : boolean => isEqual(sortBy(a, 'id'), sortBy(b, 'id'));
 
     if ((oldName !== newName)
         || (oldAccessLevel !== newAccessLevel)
