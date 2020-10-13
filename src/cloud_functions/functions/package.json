@@ -14,9 +14,9 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@types/lodash": "^4.14.162",
     "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0"
+    "firebase-functions": "^3.11.0",
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "tslint": "^6.1.3",
