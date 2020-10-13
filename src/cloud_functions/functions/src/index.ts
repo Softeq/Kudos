@@ -5,6 +5,9 @@ import notifications = require('./services/user_notifications');
 admin.initializeApp();
 const db = admin.firestore();
 
+// test commit
+
+
 /**
  * Trigger updates information about Team in achievements collection
  * when Team name changes
