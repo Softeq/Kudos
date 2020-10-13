@@ -1,0 +1,39 @@
+name: Cloud Functions
+
+on:
+  push:
+    branches:
+    - 'master'
+    paths:
+    - 'src/cloud_functions/**/*.ts'
+  pull_request:
+    branches:
+    - 'master'
+    paths:
+    - 'src/cloud_functions/**/*.ts'
+
+jobs:
+
+  build_functions:
+    name: Build Cloud Functions
+    defaults:
+      run:
+        working-directory: src/cloud_functions/functions
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Cache NPM dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-npm-
+
+    - name: Install NPM dependencies
+      run: npm install
+
+    - name: Build Functions
+      run: npm run build
+
