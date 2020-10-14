@@ -167,7 +167,7 @@ export const createAchievementReferences = functions.firestore
  * Runs every day at 00.00 Minsk time
  */
 export const cleanupStorage = functions.pubsub
-    .schedule('every 24 hours')
+    .schedule('0 0 * * *') // every day at midnight
     .timeZone('Europe/Minsk')
     .onRun(async _ => {
         const imageNames: Array<string> = new Array<string>();
