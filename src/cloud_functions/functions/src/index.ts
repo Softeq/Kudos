@@ -1,10 +1,11 @@
+import { isEqual, sortBy } from 'lodash';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+
+admin.initializeApp(); // must be before any usage
+
 import * as notifications from './services/user_notifications';
 import { User } from './models/user';
-import { isEqual, sortBy } from 'lodash';
-
-admin.initializeApp();
 
 const db = admin.firestore();
 const storage = admin.storage();
