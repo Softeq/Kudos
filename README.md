@@ -13,3 +13,17 @@ This is a serverless application that uses Firestore Cloud Database and Firebase
 [Firebase Console](https://console.firebase.google.com/u/1/project/softeq-kudos/database/firestore/data~2Fachievements)
 
 [Database Info](https://drive.google.com/file/d/1iQ3rSGrP_Ao4A70c5C-CIkl1kNlS6i3s/view?usp=sharing)
+
+## About
+
+This project is maintained by [Softeq Development Corp.](https://www.softeq.com/)
+We specialize in .NET core applications.
+
+ - [Facebook](https://web.facebook.com/Softeq.by/)
+ - [Instagram](https://www.instagram.com/softeq/)
+ - [Twitter](https://twitter.com/Softeq)
+ - [Vk](https://vk.com/club21079655)
+
+## Contributing
+
+We welcome any contributions.
