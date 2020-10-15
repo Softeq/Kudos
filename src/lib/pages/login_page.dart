@@ -37,6 +37,7 @@ class LoginPage extends StatelessWidget {
               Text(
                 localizer().notSignedIn,
                 style: KudosTheme.screenStateTitleTextStyle,
+                textAlign: TextAlign.center,
               ),
               Image(
                 image: AssetImage('assets/icons/prize.png'),

@@ -424,6 +424,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				GOOGLE_CLIENT_URL = "com.googleusercontent.apps.236308904782-jogkf683n2981f8e393qdphemb2f41hd";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -557,6 +558,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				GOOGLE_CLIENT_URL = "com.googleusercontent.apps.236308904782-jogkf683n2981f8e393qdphemb2f41hd";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -577,13 +579,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Runner/RunnerRelease.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = F6ZW6BSRS2;
+				DEVELOPMENT_TEAM = G9F4DYVN78;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				GOOGLE_CLIENT_URL = "com.googleusercontent.apps.236308904782-4uil9nt2e6hdkhr2nklv9ca6sftbu465";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -591,9 +595,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.softeq.kudosapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softeq.kudos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Softeq Kudos - Development";
+				PROVISIONING_PROFILE_SPECIFIER = "Kudos Enterprise - In House";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

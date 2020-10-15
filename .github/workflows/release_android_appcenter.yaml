@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'releases/**'
+      - 'releases-android/**'
     tags:
       - release_**
 
@@ -66,8 +67,8 @@ jobs:
     - name: Cache NPM dependencies (App Center)
       uses: actions/cache@v1
       with:
-        path: node_modules
-        key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+        path: src/node_modules
+        key: ${{ runner.OS }}-npm-${{ hashFiles('src/package-lock.json') }}
         restore-keys: |
           ${{ runner.OS }}-npm-
 

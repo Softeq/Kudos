@@ -7,20 +7,20 @@
 	<key>destination</key>
 	<string>export</string>
 	<key>method</key>
-	<string>development</string>
+	<string>enterprise</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.softeq.kudosapp</key>
-		<string>Softeq Kudos - Development</string>
+		<key>com.softeq.kudos</key>
+		<string>Kudos Enterprise - In House</string>
 	</dict>
 	<key>signingCertificate</key>
-	<string>Apple Development</string>
+	<string>9BE0CC33FEF7EFF55A5FC631260CEC798BECB837</string>
 	<key>signingStyle</key>
 	<string>manual</string>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
-	<string>F6ZW6BSRS2</string>
+	<string>G9F4DYVN78</string>
 	<key>thinning</key>
 	<string>&lt;none&gt;</string>
 </dict>

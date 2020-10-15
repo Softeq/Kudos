@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'releases/**'
+      - 'releases-ios/**'
     tags:
       - release_**
 
@@ -43,7 +44,7 @@ jobs:
     - name: Cache Pods dependencies
       uses: actions/cache@v1
       with:
-        path: ios/Pods
+        path: src/ios/Pods
         key: ${{ runner.OS }}-pods-${{ hashFiles('**/ios/Podfile.lock') }}
         restore-keys: |
           ${{ runner.OS }}-pods-
@@ -73,20 +74,25 @@ jobs:
 
         echo "Install profiles..."
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./dev.mobileprovision)`
-        cp dev.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+        UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./prod.mobileprovision)`
+        cp prod.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
         ls ~/Library/MobileDevice/Provisioning\ Profiles
         echo "Done."
 
         echo "Configure keychain & import"
         security create-keychain -p "" "$KEYCHAIN"
-        security list-keychains -d user -s login.keychain "$KEYCHAIN"
-        security set-keychain-settings -lut 2000 "$KEYCHAIN"
-        security import dev.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T /usr/bin/codesign -T /usr/bin/security
-        security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN
-        security default-keychain -d user -s "$KEYCHAIN"
+        security set-keychain-settings "$KEYCHAIN"
         security unlock-keychain -p "" "$KEYCHAIN"
-        security list-keychains
+        security import prod.p12 -k "$KEYCHAIN" -P "$IOS_PASSPHRASE" -T /usr/bin/codesign -T /usr/bin/security
+
+        curl https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer --output AppleWWDRCA.cer
+        security import AppleWWDRCA.cer -k "$KEYCHAIN" -P "" -t cert -A
+        rm AppleWWDRCA.cer
+
+        security set-key-partition-list -S apple-tool:,apple: -k "" "$KEYCHAIN"
+        security default-keychain -d user -s "$KEYCHAIN"
+        security list-keychains -d user -s login.keychain "$KEYCHAIN"
+        security find-identity
         security find-identity -v -p codesigning
         echo "Done."
       env:
@@ -99,6 +105,7 @@ jobs:
           -scheme Runner \
           -sdk iphoneos \
           -configuration Release \
+          OTHER_CODE_SIGN_FLAGS="--keychain=$KEYCHAIN" \
           archive \
           -archivePath "$XC_ARCHIVE_PATH"
 
@@ -113,8 +120,8 @@ jobs:
     - name: Cache NPM dependencies (App Center)
       uses: actions/cache@v1
       with:
-        path: node_modules
-        key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+        path: src/node_modules
+        key: ${{ runner.OS }}-npm-${{ hashFiles('src/package-lock.json') }}
         restore-keys: |
           ${{ runner.OS }}-npm-
 
