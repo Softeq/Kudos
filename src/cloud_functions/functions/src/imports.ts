@@ -1,13 +1,10 @@
-import * as functions from 'firebase-functions'
+export * as functions from 'firebase-functions'
+
 import * as admin from 'firebase-admin'
 
-const db = admin.firestore()
-const storage = admin.storage()
-const log = console.log
+export const db = admin.firestore()
+export const storage = admin.storage()
 
-export {
-    functions,
-    db,
-    storage,
-    log
-}
+export const log = console.log
+
+export { sendPushToUser } from './services/user_notifications'

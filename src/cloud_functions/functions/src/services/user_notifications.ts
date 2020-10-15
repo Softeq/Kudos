@@ -4,7 +4,7 @@ const db = admin.firestore();
 const fcm = admin.messaging();
 const log = console.log;
 
-export const sendToUser = async (userId: string, payload: admin.messaging.MessagingPayload) => {
+export const sendPushToUser = async (userId: string, payload: admin.messaging.MessagingPayload) => {
 
     // get user's push tokens
     const pushTokensSnapshot = await db.collection(`/users/${userId}/push_tokens`).get();
