@@ -1,9 +1,4 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-
-const db = admin.firestore();
-const storage = admin.storage();
-const log = console.log;
+import { functions, db, storage, log } from '../imports'
 
 /**
  * Cleans up unused images from storage

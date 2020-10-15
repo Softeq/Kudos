@@ -1,9 +1,5 @@
 import { User } from '../models/user';
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-
-const db = admin.firestore();
-const log = console.log;
+import { functions, db, log } from '../imports'
 
 /**
  * Automatically add users to the system

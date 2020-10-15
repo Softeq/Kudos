@@ -1,8 +1,4 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-
-const db = admin.firestore();
-const log = console.log;
+import { functions, db, log } from '../../imports'
 
 /**
  * Trigger updates information about User in achievements/holders sub-collection

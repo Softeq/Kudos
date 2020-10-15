@@ -1,7 +1,5 @@
-import * as functions from 'firebase-functions';
-import * as notifications from '../../services/user_notifications';
-
-const log = console.log;
+import { functions, log } from '../../imports'
+import { sendToUser } from '../../services/user_notifications'
 
 /**
  * Trigger sends push notification to User when he gets a new achievement
@@ -29,7 +27,7 @@ export const createAchievementReferences = functions.firestore
             }
         };
 
-        await notifications.sendToUser(userId, payload);
+        await sendToUser(userId, payload);
 
         log('Successfully finished');
     });
