@@ -20,6 +20,7 @@ abstract class SearchableListViewModel<T> extends BaseViewModel {
     if (_query == value) return;
 
     _query = value;
+    filterByName(query);
     notifyListeners();
   }
 

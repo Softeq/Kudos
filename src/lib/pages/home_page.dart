@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
         padding: EdgeInsets.all(4.0),
         child: _getIcon(tabItem.iconAssetName),
       ),
-      title: Text(tabItem.title),
+      label: tabItem.title,
     );
   }
 }

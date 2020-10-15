@@ -108,7 +108,7 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
   }
 
   void _loadImageFromMemory() {
-    if (_url != null) {
+    if (_url?.isNotEmpty ?? false) {
       var fileInfo = DefaultCacheManager().getFileFromMemory(_url);
       if (fileInfo?.file != null) {
         if (!_isDisposed) {
@@ -119,7 +119,7 @@ class _RoundedImageWidgetState extends State<RoundedImageWidget> {
   }
 
   Future<void> _loadImage() async {
-    if (_url != null) {
+    if (_url?.isNotEmpty ?? false) {
       var newFile = await DefaultCacheManager().getSingleFile(_url);
       if (newFile != null) {
         if (!_isDisposed) {

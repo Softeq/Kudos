@@ -40,7 +40,7 @@ class _EditTeamPageState extends State<EditTeamPage> {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Form(
                 key: _formKey,
-                autovalidate: false,
+                autovalidateMode: AutovalidateMode.disabled,
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 20.0),

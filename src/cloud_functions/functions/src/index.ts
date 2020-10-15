@@ -1,210 +1,220 @@
+import { isEqual, sortBy } from 'lodash';
 import * as functions from 'firebase-functions';
-import admin = require('firebase-admin');
+import * as admin from 'firebase-admin';
 
-admin.initializeApp();
+admin.initializeApp(); // must be before any usage
+
+import * as notifications from './services/user_notifications';
+import { User } from './models/user';
+
 const db = admin.firestore();
+const storage = admin.storage();
+const log = console.log;
 
 /**
  * Trigger updates information about Team in achievements collection
- * when Team name changes
+ * when team name, access level, team members changes
  */
-export const updateTeam = functions.firestore.document('teams/{teamId}').onUpdate(async (snapshot, context) => {
-    const oldData = snapshot.before.data();
-    const newData = snapshot.after.data();
+export const updateTeam = functions.firestore
+    .document('teams/{teamId}')
+    .onUpdate(async (snapshot, context) => {
+        const oldData = snapshot.before.data();
+        const newData = snapshot.after.data();
 
-    if (!oldData || !newData) {
-        return;
-    }
+        if (!oldData || !newData) {
+            log('Old or New data is null!');
+            return;
+        }
 
-    const teamId: string = context.params.teamId;
-    const qs = await db.collection('achievements').where('team.id', "==", teamId).get();
-    if (qs.docs.length === 0) {
-        return;
-    }
+        const oldName: string = oldData.name;
+        const newName: string = newData.name;
 
-    const batch = db.batch();
+        const oldAccessLevel: number = oldData.access_level;
+        const newAccessLevel: number = newData.access_level;
 
-    //update team name in achievements collection
-    const oldName: string = oldData.name;
-    const newName: string = newData.name;
+        const oldMembers: Array<any> = oldData.members;
+        const newMembers: Array<any> = newData.members;
 
-    //update team members for achievements
-    const oldMembers: Array<any> = oldData.members;
-    const newMembers: Array<any> = newData.members;
+        const isMapsEqual = (a: any, b: any) : boolean => isEqual(sortBy(a, 'id'), sortBy(b, 'id'));
 
-    //update achievement access level
-    const oldAccessLevel: number = oldData.access_level;
-    const newAccessLevel: number = newData.access_level;
+        if (oldName === newName
+            && oldAccessLevel === newAccessLevel
+            && isMapsEqual(oldMembers, newMembers)) {
+                log('The data hasn\'t been modified!');
+                return;
+            }
 
-    if ((oldName !== newName)
-        || (oldAccessLevel !== newAccessLevel)
-        || (!mapArraysEquals(oldMembers, newMembers))) {
-        const data = {
+        const teamId: string = context.params.teamId;
+        const qs = await db.collection('achievements').where('team.id', "==", teamId).get();
+        const teamAchievements = qs.docs;
+
+        if (teamAchievements.length === 0) {
+            log(`The team (${teamId}) doesn't have any achievements!`);
+            return;
+        }
+
+        log('Start updating');
+
+        const newAchievementData = {
             team: {
                 id: teamId,
                 name: newName,
             },
-            team_members: newMembers,
             access_level: newAccessLevel,
+            team_members: newMembers
         };
 
-        qs.docs.forEach((x) => {
-            batch.set(x.ref, data, { merge: true });
-        });
-    }
-    //end update achievement access level
+        const batch = db.batch();
 
-    await batch.commit();
-});
+        teamAchievements.forEach(x => {
+            batch.set(x.ref, newAchievementData, { merge: true });
+        });
+
+        await batch.commit();
+
+        log(`Successfully updated ${teamAchievements.length} records.`);
+    });
 
 /**
  * Trigger updates information about Achievement in achievement_references collection
  * when Achievement image_url or name changes
  */
-export const updateAchievement = functions.firestore.document('achievements/{achievementId}').onUpdate(async (snapshot, context) => {
-    const oldData = snapshot.before.data();
-    const newData = snapshot.after.data();
+export const updateAchievement = functions.firestore
+    .document('achievements/{achievementId}')
+    .onUpdate(async (snapshot, context) => {
+        const oldData = snapshot.before.data();
+        const newData = snapshot.after.data();
 
-    if (!oldData || !newData) {
-        return;
-    }
+        if (!oldData || !newData) {
+            log('Old or New data is null!');
+            return;
+        }
 
-    const oldUrl: string = oldData.image_url;
-    const newUrl: string = newData.image_url;
+        const oldUrl: string = oldData.image_url;
+        const newUrl: string = newData.image_url;
 
-    const oldName: string = oldData.name;
-    const newName: string = newData.name;
+        const oldName: string = oldData.name;
+        const newName: string = newData.name;
 
-    if (oldUrl === newUrl && oldName === newName) {
-        return;
-    }
+        if (oldUrl === newUrl && oldName === newName) {
+            log('The data hasn\'t been modified!');
+            return;
+        }
 
-    const achievementId: string = context.params.achievementId;
+        const achievementId: string = context.params.achievementId;
+        const qs = await db.collectionGroup('achievement_references')
+            .where('achievement.id', "==", achievementId).get();
+        const achievementReferences = qs.docs;
 
-    const qs = await db.collectionGroup('achievement_references').where('achievement.id', "==", achievementId).get();
-    if (qs.docs.length === 0) {
-        return;
-    }
+        if (achievementReferences.length === 0) {
+            log('No assigned achievements found!');
+            return;
+        }
 
-    const data = {
-        achievement: {
-            id: achievementId,
-            name: newName,
-            image_url: newUrl,
-        },
-    };
+        log('Start updating');
 
-    const batch = db.batch();
+        const newAchievementData = {
+            achievement: {
+                id: achievementId,
+                name: newName,
+                image_url: newUrl,
+            },
+        };
 
-    qs.docs.forEach((x) => {
-        batch.set(x.ref, data, { merge: true });
+        const batch = db.batch();
+
+        achievementReferences.forEach(x => {
+            batch.set(x.ref, newAchievementData, { merge: true });
+        });
+
+        await batch.commit();
+
+        log(`Successfully updated ${achievementReferences.length} records.`);
     });
-
-    await batch.commit();
-});
 
 /**
  * Trigger sends push notification to User when he gets a new achievement
  */
-export const createAchievementReferences = functions.firestore.document('/users/{userId}/achievement_references/{referenceId}').onCreate(async (snapshot, context) => {
-    const documentData = snapshot.data();
+export const createAchievementReferences = functions.firestore
+    .document('/users/{userId}/achievement_references/{referenceId}')
+    .onCreate(async (snapshot, context) => {
+        const documentData = snapshot.data();
 
-    if (!documentData) {
-        return;
-    }
-
-    const userId: string = context.params.userId;
-
-    const qs = await db.collection(`/users/${userId}/push_tokens`).get();
-    if (qs.docs.length === 0) {
-        return;
-    }
-
-    const tokens: Array<string> = new Array<string>();
-
-    qs.docs.forEach(x => {
-        const token: string = x.data().token;
-        tokens.push(token);
-    });
-
-    if (tokens.length === 0) {
-        return;
-    }
-
-    const achievementName = documentData.achievement.name;
-    const senderName = documentData.sender.name;
-
-    const payload = {
-        notification: {
-            title: 'Congratulations!',
-            body: `You received ${achievementName} from ${senderName}`,
-            sound: "default",
+        if (!documentData) {
+            log('Document data is null!');
+            return;
         }
-    };
 
-    const response = await admin.messaging().sendToDevice(tokens, payload);
+        log('Start handling');
 
-    const invalidTokens: Array<number> = new Array<number>();
+        const userId: string = context.params.userId;
+        const achievementName = documentData.achievement.name;
+        const senderName = documentData.sender.name;
+        const payload = {
+            notification: {
+                title: 'Congratulations!',
+                body: `You received ${achievementName} from ${senderName}`,
+                sound: "default",
+            }
+        };
 
-    for (let index = 0; index < response.results.length; index++) {
-        const x = response.results[index];
-        if (x.error && x.error.code === 'messaging/registration-token-not-registered') {
-            invalidTokens.push(index);
-        }
-    }
+        await notifications.sendToUser(userId, payload);
 
-    if (invalidTokens.length === 0) {
-        return;
-    }
-
-    const batch = db.batch();
-
-    invalidTokens.forEach(x => {
-        batch.delete(qs.docs[x].ref);
+        log('Successfully finished');
     });
-
-    await batch.commit();
-});
 
 /**
  * Cleans up unused images from storage
  * Runs every day at 00.00 Minsk time
  */
 export const cleanupStorage = functions.pubsub
-    .schedule('every 24 hours')
+    .schedule('0 0 * * *') // every day at midnight
     .timeZone('Europe/Minsk')
-    .onRun(async (context) => {
-    const images: Array<string> = new Array<string>();
+    .onRun(async _ => {
+        const imageNames: Array<string> = new Array<string>();
 
-    const achievements = await db.collection('achievements').get();
-    achievements.docs.forEach(x => {
-        const image_name: string = x.data().image_name;
-        if (image_name) {
-            images.push(`kudos/${image_name}`);
-        }
-    });
+        log('Get images from achievements');
 
-    const teams = await db.collection('teams').get();
-    teams.docs.forEach(x => {
-        const image_name: string = x.data().image_name;
-        if (image_name) {
-            images.push(`kudos/${image_name}`);
-        }
-    });
+        const achievements = await db.collection('achievements').get();
+        achievements.docs.forEach(x => {
+            const image_name: string = x.data().image_name;
+            if (image_name) {
+                imageNames.push(`kudos/${image_name}`);
+            }
+        });
 
-    const storage = admin.storage();
-    const filesResponse = await storage.bucket().getFiles({ directory: 'kudos' });
-    filesResponse[0].forEach(async x => {
-        if (!images.some(y => y === x.name)) {
-            await x.delete();
-        }
+        log('Get images from teams');
+
+        const teams = await db.collection('teams').get();
+        teams.docs.forEach(x => {
+            const image_name: string = x.data().image_name;
+            if (image_name) {
+                imageNames.push(`kudos/${image_name}`);
+            }
+        });
+
+        log(`Found ${imageNames.length} images in database`);
+
+        const filesResponse = await storage.bucket().getFiles({ directory: 'kudos' });
+        const files = filesResponse[0];
+
+        log(`Found ${files.length} images in storage`);
+
+        log('Delete unused images from storage');
+
+        const tasksForDelete = files
+            .filter(file => !imageNames.some(imageName => imageName === file.name))
+            .map(file => file.delete());
+
+        await Promise.all(tasksForDelete);
+
+        log(`Successfully deleted ${tasksForDelete.length} images`);
     });
-});
 
 /**
  * Automatically add users to the system
  * request sample:
- * 
+ *
  * curl --location --request POST '[url]' \
  * --header 'Content-Type: application/json' \
  * --data-raw '{
@@ -224,19 +234,23 @@ export const addUsers = functions.https.onRequest(async (request, response) => {
     const json = JSON.parse(JSON.stringify(request.body));
     const users: Array<User> = json.users;
 
+    log(`Start importing ${users.length} users`);
+
     const batch = db.batch();
 
-    users.forEach(x => {
-        const userId = x.email.split('@')[0];
-        const ref = db.collection('users').doc(userId);
-        const data = {
-            email: x.email,
-            name: x.name
+    users.forEach(user => {
+        const userId = user.email.split('@')[0];
+        const userDocumentRef = db.collection('users').doc(userId);
+        const newUserData = {
+            email: user.email,
+            name: user.name
         };
-        batch.set(ref, data, { merge: true });
+        batch.set(userDocumentRef, newUserData, { merge: true });
     });
 
     await batch.commit();
+
+    log(`Successfully imported`);
 
     response.status(200).send();
 });
@@ -244,131 +258,99 @@ export const addUsers = functions.https.onRequest(async (request, response) => {
 /**
  * Trigger add added user to the Softeq team
  */
-export const createUser = functions.firestore.document('/users/{userId}').onCreate(async (snapshot, context) => {
-    const documentData = snapshot.data();
+export const createUser = functions.firestore
+    .document('/users/{userId}')
+    .onCreate(async (snapshot, context) => {
+        const documentData = snapshot.data();
 
-    if (!documentData) {
-        return;
-    }
+        if (!documentData) {
+            log('Document data is null!');
+            return;
+        }
 
-    const userId: string = context.params.userId;
-    const softeqTeam = await db.collection('teams').doc('1OXbbvRAI9QL7Vv8aD8B').get();
-    const softeqTeamData = softeqTeam.data();
+        const userId: string = context.params.userId;
 
-    if (!softeqTeamData) {
-        return;
-    }
+        const softeqTeamId = '1OXbbvRAI9QL7Vv8aD8B';
+        const softeqTeam = await db.collection('teams').doc(softeqTeamId).get();
+        const softeqTeamData = softeqTeam.data();
 
-    const members: Array<any> = softeqTeamData.team_members;
-    members.push({
-        id: userId,
-        name: documentData.name
+        if (!softeqTeamData) {
+            log('Softeq team data is null!');
+            return;
+        }
+
+        log('Start updating Softeq team');
+
+        const newTeamMember = {
+            id: userId,
+            name: documentData.name
+        };
+
+        const teamMembers = [...softeqTeamData.team_members, newTeamMember];
+        const visibleFor = [...softeqTeamData.visible_for, userId];
+
+        const newTeamData = {
+            team_members: teamMembers,
+            visible_for: visibleFor
+        };
+
+        await softeqTeam.ref.set(newTeamData, { merge: true });
+
+        log('Successfully updated');
     });
-
-    const visibleFor: Array<any> = softeqTeamData.visible_for;
-    visibleFor.push(userId);
-
-    await softeqTeam.ref.set({ team_members: members, visible_for: visibleFor }, { merge: true });
-});
 
 /**
- * Trigger updates information about User in achievements/holders subcollection
+ * Trigger updates information about User in achievements/holders sub-collection
  * when User image_url or name changes
  */
-export const updateUser = functions.firestore.document('users/{userId}').onUpdate(async (snapshot, context) => {
-    const oldData = snapshot.before.data();
-    const newData = snapshot.after.data();
+export const updateUser = functions.firestore
+    .document('users/{userId}')
+    .onUpdate(async (snapshot, context) => {
+        const oldData = snapshot.before.data();
+        const newData = snapshot.after.data();
 
-    if (!oldData || !newData) {
-        return;
-    }
+        if (!oldData || !newData) {
+            log('Old or New data is null!');
+            return;
+        }
 
-    const oldUrl: string = oldData.image_url;
-    const newUrl: string = newData.image_url;
+        const oldUrl: string = oldData.image_url;
+        const newUrl: string = newData.image_url;
 
-    const oldName: string = oldData.name;
-    const newName: string = newData.name;
+        const oldName: string = oldData.name;
+        const newName: string = newData.name;
 
-    if (oldUrl === newUrl && oldName === newName) {
-        return;
-    }
+        if (oldUrl === newUrl && oldName === newName) {
+            log('The data hasn\'t been modified!');
+            return;
+        }
 
-    const userId: string = context.params.userId;
+        const userId: string = context.params.userId;
+        const qs = await db.collectionGroup('holders').where('recipient.id', '==', userId).get();
+        const holders = qs.docs;
 
-    const qs = await db.collectionGroup('holders').where('recipient.id', '==', userId).get();
-    if (qs.docs.length === 0) {
-        return;
-    }
+        if (holders.length === 0) {
+            log('Holders group is empty!');
+            return;
+        }
 
-    const data = {
-        recipient: {
-            id: userId,
-            name: newName,
-            image_url: newUrl,
-        },
-    };
+        log('Start updating');
 
-    const batch = db.batch();
+        const newHolderData = {
+            recipient: {
+                id: userId,
+                name: newName,
+                image_url: newUrl,
+            },
+        };
 
-    qs.docs.forEach(x => {
-        batch.set(x.ref, data, { merge: true });
+        const batch = db.batch();
+
+        holders.forEach(x => {
+            batch.set(x.ref, newHolderData, { merge: true });
+        });
+
+        await batch.commit();
+
+        log(`Successfully updated ${holders.length} records.`);
     });
-
-    await batch.commit();
-});
-
-function mapArraysEquals(array1: Array<Map<string, any>>, array2: Array<Map<string, any>>): boolean {
-    if (array1.length !== array2.length) {
-        return false;
-    }
-
-    const sortedArray1 = array1.sort(mapComparer);
-    const sortedArray2 = array2.sort(mapComparer);
-
-    for (let i = 0; i < sortedArray1.length; i++) {
-        if (!mapEquals(sortedArray1[i], sortedArray2[i]))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function mapEquals(map1: Map<string, any>, map2: Map<string, any>): boolean {
-    if (map1.size !== map2.size)
-    {
-        return false;
-    }
-
-    for (const key in map1.keys) {
-        if (!map2.has(key) || map1.get(key) !== map2.get(key))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function mapComparer(map1: Map<string, any>, map2: Map<string, any>) {
-    if (map1.get("id") > map2.get("id")) {
-        return 1;
-    }
-
-    if (map1.get("id") < map2.get("id")) {
-        return -1;
-    }
-
-    return 0;
-}
-
-class User {
-    name: string;
-    email: string;
-
-    constructor(name: string, email: string) {
-        this.name = name;
-        this.email = email;
-    }
-}

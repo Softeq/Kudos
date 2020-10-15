@@ -55,31 +55,7 @@ class _TeamsContentWidget extends StatelessWidget {
                     Stack(
                       children: <Widget>[
                         Positioned.fill(
-                          child: StreamBuilder(
-                            stream: viewModel.dataStream,
-                            builder: (
-                              BuildContext context,
-                              AsyncSnapshot<
-                                      Iterable<GrouppedListItem<TeamModel>>>
-                                  snapshot,
-                            ) {
-                              if (viewModel.isBusy || snapshot.data == null) {
-                                return _buildLoading();
-                              }
-                              if (snapshot.data?.isEmpty ?? true) {
-                                return _buildEmpty(viewModel.isDataListEmpty);
-                              } else {
-                                return GrouppedListWidget<TeamModel>(
-                                  snapshot.data,
-                                  (team) => _buildListItem(
-                                    context,
-                                    viewModel,
-                                    team,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                          child: _buildList(context, viewModel),
                         ),
                         Positioned.directional(
                           textDirection: TextDirection.ltr,
@@ -113,6 +89,32 @@ class _TeamsContentWidget extends StatelessWidget {
         hintText: localizer().enterName,
         iconSize: 82,
       ),
+    );
+  }
+
+  Widget _buildList(BuildContext context, TeamsViewModel viewModel) {
+    return StreamBuilder(
+      stream: viewModel.dataStream,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<Iterable<GrouppedListItem<TeamModel>>> snapshot,
+      ) {
+        if (viewModel.isBusy || snapshot.data == null) {
+          return _buildLoading();
+        }
+        if (snapshot.data?.isEmpty ?? true) {
+          return _buildEmpty(viewModel.isDataListEmpty);
+        } else {
+          return GrouppedListWidget<TeamModel>(
+            snapshot.data,
+            (team) => _buildListItem(
+              context,
+              viewModel,
+              team,
+            ),
+          );
+        }
+      },
     );
   }
 

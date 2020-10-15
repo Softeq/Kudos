@@ -23,10 +23,13 @@
 
 # Flutter repo-specific
 /bin/cache/
+/bin/internal/bootstrap.bat
+/bin/internal/bootstrap.sh
 /bin/mingit/
 /dev/benchmarks/mega_gallery/
 /dev/bots/.recipe_deps
 /dev/bots/android_tools/
+/dev/devicelab/ABresults*.json
 /dev/docs/doc/
 /dev/docs/flutter.docs.zip
 /dev/docs/lib/
@@ -35,6 +38,7 @@
 /dev/integration_tests/**/Pods
 /packages/flutter/coverage/
 version
+analysis_benchmark.json
 
 # packages file containing multi-root paths
 .packages.generated
@@ -44,6 +48,7 @@ version
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+**/generated_plugin_registrant.dart
 .packages
 .pub-cache/
 .pub/
@@ -61,7 +66,6 @@ unlinked_spec.ds
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-**/android/**/google-services.json
 **/android/key.properties
 *.jks
 
@@ -82,6 +86,7 @@ unlinked_spec.ds
 **/ios/**/profile
 **/ios/**/xcuserdata
 **/ios/.generated/
+**/ios/Flutter/.last_build_id
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
@@ -92,7 +97,6 @@ unlinked_spec.ds
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
-**/ios/**/GoogleService-Info.plist
 
 # macOS
 **/macos/Flutter/GeneratedPluginRegistrant.swift
@@ -117,3 +121,9 @@ app.*.symbols
 # NPM
 **/node_modules
 **/package-lock.json
+
+# Custom
+## Android
+**/android/**/google-services.json
+## iOS
+**/ios/**/GoogleService-Info.plist

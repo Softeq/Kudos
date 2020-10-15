@@ -53,7 +53,7 @@ class AchievementHorizontalWidget extends StatelessWidget {
                 imageUrl: _imageUrl,
                 size: imageRadius * 2,
                 addHeroAnimation: true,
-              ), 
+              ),
             ),
           ],
         );
