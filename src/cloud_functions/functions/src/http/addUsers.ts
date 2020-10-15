@@ -24,6 +24,11 @@ export const addUsers = functions.https.onRequest(async (request, response) => {
     const json = JSON.parse(JSON.stringify(request.body));
     const users: Array<User> = json.users;
 
+    if (!users) {
+        response.status(400).send('Incorrect body. Property `users` is null!');
+        return;
+    }
+
     log(`Start importing ${users.length} users`);
 
     const batch = db.batch();
