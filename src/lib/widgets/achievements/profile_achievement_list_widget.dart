@@ -73,8 +73,12 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildEmpty() {
-    return _buildMessage(Text(localizer().profileAchievementsEmptyPlaceholder,
-        style: KudosTheme.sectionEmptyTextStyle));
+    return _buildMessage(
+      Text(
+        localizer().profileAchievementsEmptyPlaceholder,
+        style: KudosTheme.sectionEmptyTextStyle,
+      ),
+    );
   }
 
   Widget _buildMessage(Text text) {

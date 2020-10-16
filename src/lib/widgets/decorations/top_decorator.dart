@@ -10,11 +10,12 @@ class TopDecorator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        child: CustomPaint(
-          painter: _TopPainter(),
-        ),
-        height: height,
-        width: width);
+      child: CustomPaint(
+        painter: _TopPainter(),
+      ),
+      height: height,
+      width: width,
+    );
   }
 
   static Widget buildLayoutWithDecorator(Widget layout) {

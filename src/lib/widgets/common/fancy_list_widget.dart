@@ -20,9 +20,12 @@ class FancyListWidget<T> extends StatelessWidget {
       child: Consumer<ListNotifier<T>>(builder: (context, teamMembers, child) {
         if (teamMembers.isEmpty) {
           return Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(_emptyPlaceholder,
-                  style: KudosTheme.sectionEmptyTextStyle));
+            padding: EdgeInsets.only(left: 16),
+            child: Text(
+              _emptyPlaceholder,
+              style: KudosTheme.sectionEmptyTextStyle,
+            ),
+          );
         } else {
           var memberWidgets =
               teamMembers.items.map((x) => _buildMember(x)).toList();

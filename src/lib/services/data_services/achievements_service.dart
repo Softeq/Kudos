@@ -116,6 +116,7 @@ class AchievementsService
               userAchievement,
               batch: batch,
             ),
+        // TODO YP: move to cloud functions:
         // add a user to achievements
         (batch) => _achievementsDatabaseService.createAchievementHolder(
               userAcheivementModel.achievement.id,
@@ -141,8 +142,11 @@ class AchievementsService
     );
 
     return _achievementsDatabaseService
-        .updateAchievement(achievement,
-            updateAccessLevel: true, updateOwner: true)
+        .updateAchievement(
+          achievement,
+          updateAccessLevel: true,
+          updateOwner: true,
+        )
         .then((a) => AchievementModel.fromAchievement(a));
   }
 

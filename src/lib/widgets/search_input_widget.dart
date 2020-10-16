@@ -45,10 +45,12 @@ class SearchInputWidget<T extends SearchableListViewModel>
               cursorColor: KudosTheme.accentColor,
               onChanged: (value) => _viewModel.query = value,
               decoration: InputDecoration(
-                enabledBorder:
-                    UnderlineInputBorder(borderSide: BorderSide.none),
-                focusedBorder:
-                    UnderlineInputBorder(borderSide: BorderSide.none),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
                 hintText: _hintText,
                 hintStyle: KudosTheme.searchHintStyle,
               ),

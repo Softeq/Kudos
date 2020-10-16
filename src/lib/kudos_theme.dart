@@ -27,9 +27,10 @@ class KudosTheme {
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     boxShadow: [
       BoxShadow(
-          color: Colors.black.withAlpha(50),
-          blurRadius: 4.0,
-          offset: Offset(0, 2))
+        color: Colors.black.withAlpha(50),
+        blurRadius: 4.0,
+        offset: Offset(0, 2),
+      )
     ],
   );
 

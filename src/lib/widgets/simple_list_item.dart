@@ -85,9 +85,7 @@ class SimpleListItem extends StatelessWidget {
         ? Container(
             margin: EdgeInsets.only(
               top: 8.0,
-              left: imageShape == null
-                  ? 0
-                  : (imageShape.size + _imagePadding * 2),
+              left: _getLeftInset(),
             ),
             child: contentWidget,
           )
@@ -98,11 +96,15 @@ class SimpleListItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(
         top: 8.0,
-        left: imageShape == null ? 0 : (imageShape.size + _imagePadding * 2),
+        left: _getLeftInset(),
       ),
       height: 0.5,
       color: KudosTheme.accentColor,
     );
+  }
+
+  double _getLeftInset() {
+    return imageShape == null ? 0 : (imageShape.size + _imagePadding * 2);
   }
 
   Widget _buildSelectorWidget() {

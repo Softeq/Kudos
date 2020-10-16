@@ -8,7 +8,10 @@ class AchievementListItemWidget extends StatelessWidget {
   final Icon _selectorIcon;
 
   AchievementListItemWidget(
-      this._achievement, this._onAchievementClicked, this._selectorIcon);
+    this._achievement,
+    this._onAchievementClicked,
+    this._selectorIcon,
+  );
 
   @override
   Widget build(BuildContext context) {

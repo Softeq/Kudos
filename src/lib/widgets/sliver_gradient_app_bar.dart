@@ -30,7 +30,10 @@ class SliverGradientAppBar extends SliverAppBar {
                     ),
                   ),
                   _buildAppBarImage(
-                      context, imageUrl, useTitleForPlaceholder ? title : null))
+                    context,
+                    imageUrl,
+                    useTitleForPlaceholder ? title : null,
+                  ))
               : _buildAnimatedFlexibleSpace(
                   Material(
                     type: MaterialType.transparency,
@@ -40,7 +43,10 @@ class SliverGradientAppBar extends SliverAppBar {
                     ),
                   ),
                   _buildAppBarImage(
-                      context, imageUrl, useTitleForPlaceholder ? title : null),
+                    context,
+                    imageUrl,
+                    useTitleForPlaceholder ? title : null,
+                  ),
                   heroTag),
         );
 
@@ -60,20 +66,29 @@ class SliverGradientAppBar extends SliverAppBar {
           actions: actions,
           flexibleSpace: heroTag == null
               ? _buildFlexibleSpace(
-                  titleWidget, _buildAppBarImage(context, imageUrl, null))
-              : _buildAnimatedFlexibleSpace(titleWidget,
-                  _buildAppBarImage(context, imageUrl, null), heroTag),
+                  titleWidget,
+                  _buildAppBarImage(context, imageUrl, null),
+                )
+              : _buildAnimatedFlexibleSpace(
+                  titleWidget,
+                  _buildAppBarImage(context, imageUrl, null),
+                  heroTag,
+                ),
         );
 
   static Widget _buildAnimatedFlexibleSpace(
-      Widget titleWidget, Widget imageWidget, String heroTag) {
+    Widget titleWidget,
+    Widget imageWidget,
+    String heroTag,
+  ) {
     return Hero(
       tag: heroTag,
       child: Container(
         decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
         child: FlexibleSpaceBar.createSettings(
-            currentExtent: 0,
-            child: _buildHeaderBackground(imageWidget, titleWidget)),
+          currentExtent: 0,
+          child: _buildHeaderBackground(imageWidget, titleWidget),
+        ),
       ),
     );
   }
@@ -128,7 +143,10 @@ class SliverGradientAppBar extends SliverAppBar {
       children.add(
         Padding(
           padding: EdgeInsets.only(bottom: 8),
-          child: Align(alignment: Alignment.bottomCenter, child: titleWidget),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: titleWidget,
+          ),
         ),
       );
     }
@@ -136,11 +154,15 @@ class SliverGradientAppBar extends SliverAppBar {
   }
 
   static Widget _buildAppBarImage(
-      BuildContext context, String imageUrl, String title) {
+    BuildContext context,
+    String imageUrl,
+    String title,
+  ) {
     var size = max(
-        MediaQuery.of(context).size.width,
-        KudosTheme.expandedSliverAppBarHeight +
-            MediaQuery.of(context).padding.top);
+      MediaQuery.of(context).size.width,
+      KudosTheme.expandedSliverAppBarHeight +
+          MediaQuery.of(context).padding.top,
+    );
     return Center(
       child: RoundedImageWidget.square(
         imageUrl: imageUrl,
