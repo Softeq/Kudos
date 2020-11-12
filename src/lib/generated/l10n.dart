@@ -934,6 +934,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Update is Required`
+  String get updateRequired {
+    return Intl.message(
+      'Update is Required',
+      name: 'updateRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please update your app to the latest version to continue.`
+  String get updateRequiredMessage {
+    return Intl.message(
+      'Please update your app to the latest version to continue.',
+      name: 'updateRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
