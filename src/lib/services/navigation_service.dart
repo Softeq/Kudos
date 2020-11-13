@@ -8,29 +8,30 @@ import 'package:provider/provider.dart';
 class NavigationService {
   final _pageMapperService = locator<PageMapperService>();
 
+  final navigatorKey = GlobalKey<NavigatorState>();
+
   Future<TResult> navigateTo<TViewModel extends BaseViewModel, TResult>(
-    BuildContext context,
     TViewModel viewModel, {
     bool fullscreenDialog,
   }) {
-    var page = _pageMapperService.getPage<TViewModel>();
-    var wrappedPage = ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: page,
-    );
-    var pageName = _pageMapperService.getPageName<TViewModel>();
-
-    var route = _getMaterialPageRoute<TResult>(
-      wrappedPage,
-      pageName,
+    final route = _getRoute<TViewModel, TResult>(
+      viewModel,
       fullscreenDialog: fullscreenDialog,
     );
-
-    return Navigator.of(context).push(route);
+    return navigatorKey.currentState.push(route);
   }
 
-  void pop<T>(BuildContext context, [T result]) =>
-      Navigator.of(context).pop(result);
+  void pop<T>([T result]) {
+    navigatorKey.currentState.pop(result);
+  }
+
+  void replace<TViewModel extends BaseViewModel, TResult>(
+    TViewModel viewModel,
+  ) {
+    navigatorKey.currentState.popUntil(ModalRoute.withName('/'));
+    final route = _getRoute<TViewModel, void>(viewModel);
+    navigatorKey.currentState.pushReplacement(route);
+  }
 
   Widget getTab<TViewModel extends BaseViewModel>(
     TViewModel Function() createViewModel,
@@ -41,6 +42,25 @@ class NavigationService {
       child: tab,
     );
     return wrappedTab;
+  }
+
+  MaterialPageRoute<TResult>
+      _getRoute<TViewModel extends BaseViewModel, TResult>(
+    TViewModel viewModel, {
+    bool fullscreenDialog,
+  }) {
+    final page = _pageMapperService.getPage<TViewModel>();
+    final wrappedPage = ChangeNotifierProvider(
+      create: (context) => viewModel,
+      child: page,
+    );
+    final pageName = _pageMapperService.getPageName<TViewModel>();
+    final route = _getMaterialPageRoute<TResult>(
+      wrappedPage,
+      pageName,
+      fullscreenDialog: fullscreenDialog,
+    );
+    return route;
   }
 
   MaterialPageRoute<T> _getMaterialPageRoute<T>(

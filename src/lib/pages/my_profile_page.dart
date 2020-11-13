@@ -12,34 +12,24 @@ class MyProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MyProfileViewModel>(
       builder: (context, viewModel, child) {
-        return SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(height: 4.0),
-              _buildTopBar(context, viewModel),
-              SizedBox(height: 4.0),
-              Expanded(
-                child: TopDecorator.buildLayoutWithDecorator(
-                  Stack(
-                    alignment: Alignment.topLeft,
-                    children: <Widget>[
-                      Positioned.fill(
-                        top: -.5,
-                        child: Container(
-                          color: KudosTheme.contentColor,
-                          child: ProfileAchievementsListWidget(
-                            viewModel.user.id,
-                            false,
-                          ),
-                        ),
-                      ),
-                    ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(height: 4.0),
+            _buildTopBar(context, viewModel),
+            SizedBox(height: 4.0),
+            Expanded(
+              child: TopDecorator.buildLayoutWithDecorator(
+                Container(
+                  color: KudosTheme.contentColor,
+                  child: ProfileAchievementsListWidget(
+                    viewModel.user.id,
+                    false,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

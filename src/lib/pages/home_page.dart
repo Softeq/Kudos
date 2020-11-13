@@ -16,28 +16,31 @@ class HomePage extends StatelessWidget {
           decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            body: LayoutBuilder(
-              builder: (context, constraints) {
-                var stack = Stack(
-                  children: <Widget>[
-                    Positioned.fill(
-                      child: PageView(
-                        physics: NeverScrollableScrollPhysics(),
-                        controller: _pageController,
-                        children: viewModel.tabs.map((t) => t.body).toList(),
-                        onPageChanged: (page) =>
-                            viewModel.selectedTabIndex = page,
+            body: SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final stack = Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: PageView(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: _pageController,
+                          children: viewModel.tabs.map((t) => t.body).toList(),
+                          onPageChanged: (page) =>
+                              viewModel.selectedTabIndex = page,
+                        ),
+                        top: 1,
                       ),
-                    ),
-                    Positioned.directional(
-                      textDirection: TextDirection.ltr,
-                      child: BottomDecorator(constraints.maxWidth),
-                      bottom: 0,
-                    ),
-                  ],
-                );
-                return stack;
-              },
+                      Positioned.directional(
+                        textDirection: TextDirection.ltr,
+                        child: BottomDecorator(constraints.maxWidth),
+                        bottom: 0,
+                      ),
+                    ],
+                  );
+                  return stack;
+                },
+              ),
             ),
             bottomNavigationBar: _buildNavigationBar(context, viewModel),
           ),

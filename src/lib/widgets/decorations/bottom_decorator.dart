@@ -9,12 +9,12 @@ class BottomDecorator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: CustomPaint(
-        painter: _BottomPainter(),
+    return CustomPaint(
+      painter: _BottomPainter(),
+      child: SizedBox(
+        height: height,
+        width: width,
       ),
-      height: height,
-      width: width,
     );
   }
 }

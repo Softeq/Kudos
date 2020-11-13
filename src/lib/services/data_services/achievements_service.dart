@@ -110,8 +110,9 @@ class AchievementsService
     UserModel recipient,
     UserAchievementModel userAchievementModel,
   ) {
-    if (userAchievementModel.achievement.accessLevel == AccessLevel.private &&
-        userAchievementModel.achievement.teamMembers[recipient.id] == null) {
+    final achievement = cachedData[userAchievementModel.achievement.id];
+    if (achievement.accessLevel == AccessLevel.private &&
+        achievement.teamMembers[recipient.id] == null) {
       throw WrongUserError();
     }
 

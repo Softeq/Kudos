@@ -51,10 +51,9 @@ class TeamDetailsViewModel extends BaseViewModel {
 
   Iterable<TeamMemberModel> get members => _team.members.values;
 
-  bool get canEdit =>
-      _team.members == null
-          ? false
-          : _team.canBeModifiedByUser(_authService.currentUser.id);
+  bool get canEdit => _team.members == null
+      ? false
+      : _team.canBeModifiedByUser(_authService.currentUser.id);
 
   TeamDetailsViewModel(this._team) {
     _initialize();
@@ -89,46 +88,45 @@ class TeamDetailsViewModel extends BaseViewModel {
     }
   }
 
-  void editMembers(BuildContext context) async {
+  void editMembers() async {
     if (!canEdit) {
       return;
     }
 
     await _navigationService
         .navigateTo(
-      context,
-      TeamMemberPickerViewModel(_team),
-      fullscreenDialog: true,
-    )
+          TeamMemberPickerViewModel(_team),
+          fullscreenDialog: true,
+        )
         .whenComplete(notifyListeners);
 
     notifyListeners();
   }
 
-  void editTeam(BuildContext context) {
+  void editTeam() {
     _navigationService
-        .navigateTo(context, EditTeamViewModel(_team))
+        .navigateTo(
+          EditTeamViewModel(_team),
+        )
         .whenComplete(notifyListeners);
   }
 
-  void openTeamMemberDetails(BuildContext context, TeamMemberModel teamMember) {
+  void openTeamMemberDetails(TeamMemberModel teamMember) {
     _navigationService.navigateTo(
-      context,
       UserDetailsViewModel(teamMember.user),
     );
   }
 
-  void openAchievementDetails(BuildContext context,
-      AchievementModel achievement,) {
+  void openAchievementDetails(
+    AchievementModel achievement,
+  ) {
     _navigationService.navigateTo(
-      context,
       AchievementDetailsViewModel(achievement),
     );
   }
 
-  void createAchievement(BuildContext context) {
+  void createAchievement() {
     _navigationService.navigateTo(
-      context,
       EditAchievementViewModel.createTeamAchievement(_team),
     );
   }
@@ -163,7 +161,7 @@ class TeamDetailsViewModel extends BaseViewModel {
     }
 
     final index = achievements.indexWhere(
-          (x) => x.id == event.achievement.id,
+      (x) => x.id == event.achievement.id,
     );
     if (index != -1) {
       achievements.removeAt(index);

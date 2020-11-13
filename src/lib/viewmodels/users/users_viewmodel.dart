@@ -36,13 +36,12 @@ class UsersViewModel extends SearchableListViewModel<UserModel> {
     switch (_selectionAction) {
       case SelectionAction.OpenDetails:
         await _navigationService.navigateTo(
-          context,
           UserDetailsViewModel(user),
         );
         updatePeopleList();
         break;
       case SelectionAction.Pop:
-        _navigationService.pop(context, user);
+        _navigationService.pop(user);
         break;
     }
     clearFocus(context);

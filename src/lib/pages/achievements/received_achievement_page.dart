@@ -76,7 +76,7 @@ class ReceivedAchievementPage extends StatelessWidget {
         return _buildUserAchievementView(
           context,
           viewModel.achievementCollection.userAchievements[index],
-          (ua) => viewModel.onUserAchievementClicked(context, ua),
+          (ua) => viewModel.onUserAchievementClicked(ua),
         );
       },
     );

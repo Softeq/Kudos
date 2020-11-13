@@ -16,12 +16,16 @@ class AchievementsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GradientAppBar(
-        title: localizer().achievements,
-        elevation: 0,
+    return Container(
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: GradientAppBar(
+          title: localizer().achievements,
+          elevation: 0,
+        ),
+        body: _content,
       ),
-      body: _content,
     );
   }
 }
@@ -33,18 +37,13 @@ class AchievementsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: <Widget>[
-          _buildTopBar(context),
-          Expanded(
-            child: Container(
-              color: KudosTheme.contentColor,
-              child: _content,
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        _buildTopBar(context),
+        Expanded(
+          child: _content,
+        ),
+      ],
     );
   }
 
@@ -67,69 +66,70 @@ class _AchievementsContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TopDecorator.buildLayoutWithDecorator(
-      Consumer<AchievementsViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isBusy) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: Consumer<AchievementsViewModel>(
-                    builder: (context, viewModel, child) {
-                      if (viewModel.achievements.isEmpty) {
-                        return Center(
-                          child: FractionallySizedBox(
-                            widthFactor: 0.7,
-                            child: Text(
-                              localizer().createYourOwnAchievements,
-                              textAlign: TextAlign.center,
+      Container(
+        color: KudosTheme.contentColor,
+        child: Consumer<AchievementsViewModel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.isBusy) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Consumer<AchievementsViewModel>(
+                      builder: (context, viewModel, child) {
+                        if (viewModel.achievements.isEmpty) {
+                          return Center(
+                            child: FractionallySizedBox(
+                              widthFactor: 0.7,
+                              child: Text(
+                                localizer().createYourOwnAchievements,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
+                          );
+                        }
+
+                        return GrouppedListWidget<AchievementModel>(
+                          viewModel.achievements,
+                          (a) => _buildListItem(
+                            viewModel,
+                            a,
                           ),
                         );
-                      }
-
-                      return GrouppedListWidget<AchievementModel>(
-                        viewModel.achievements,
-                        (a) => _buildListItem(
-                          context,
-                          viewModel,
-                          a,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Positioned.directional(
-                  textDirection: TextDirection.ltr,
-                  end: 16.0,
-                  bottom: 32.0,
-                  child: Visibility(
-                    visible: viewModel.showAddButton,
-                    child: FloatingActionButton(
-                      onPressed: () => viewModel.createAchievement(context),
-                      child: KudosTheme.addIcon,
+                      },
                     ),
                   ),
-                )
-              ],
-            );
-          }
-        },
+                  Positioned.directional(
+                    textDirection: TextDirection.ltr,
+                    end: 16.0,
+                    bottom: 32.0,
+                    child: Visibility(
+                      visible: viewModel.showAddButton,
+                      child: FloatingActionButton(
+                        onPressed: () => viewModel.createAchievement(),
+                        child: KudosTheme.addIcon,
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget _buildListItem(
-    BuildContext context,
     AchievementsViewModel viewModel,
     AchievementModel item,
   ) {
     return AchievementListItemWidget(
       item,
-      (achievement) => viewModel.onAchievementClicked(context, achievement),
+      (achievement) => viewModel.onAchievementClicked(achievement),
       viewModel.selectorIcon,
     );
   }

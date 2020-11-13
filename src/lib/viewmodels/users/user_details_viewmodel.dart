@@ -56,7 +56,6 @@ class UserDetailsViewModel extends BaseViewModel with Disposable {
   Future<void> sendAchievement(BuildContext context) async {
     // Select achievement
     var achievement = await _navigationService.navigateTo(
-      context,
       AchievementsViewModel(
         SelectionAction.Pop,
         false,
@@ -102,7 +101,6 @@ class UserDetailsViewModel extends BaseViewModel with Disposable {
       );
     } else {
       _navigationService.navigateTo(
-        context,
         TeamDetailsViewModel(team),
       );
     }

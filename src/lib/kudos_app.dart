@@ -6,9 +6,10 @@ import 'package:kudosapp/generated/l10n.dart';
 import 'package:kudosapp/kudos_theme.dart';
 import 'package:kudosapp/pages/home_page.dart';
 import 'package:kudosapp/pages/login_page.dart';
-import 'package:kudosapp/pages/mandatory_update_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/analytics_service.dart';
+import 'package:kudosapp/services/database/mandatory_update_database_service.dart';
+import 'package:kudosapp/services/navigation_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 import 'package:kudosapp/viewmodels/home_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -62,20 +63,20 @@ class KudosApp extends StatelessWidget {
       navigatorObservers: [
         _analyticsService.observer,
       ],
+      navigatorKey: locator<NavigationService>().navigatorKey,
     );
   }
 
   Widget _buildHome(BuildContext context, AuthViewModel viewModel) {
     switch (viewModel.authState) {
       case AuthViewModelState.loggedIn:
+        locator<MandatoryUpdateDatabaseService>().refreshSubscriptions();
         return ChangeNotifierProvider(
           create: (context) => HomeViewModel(context),
           child: HomePage(),
         );
       case AuthViewModelState.loggedOut:
         return LoginPage();
-      case AuthViewModelState.needUpdate:
-        return MandatoryUpdatePage();
       case AuthViewModelState.unknown:
       default:
         return _buildLoading();
