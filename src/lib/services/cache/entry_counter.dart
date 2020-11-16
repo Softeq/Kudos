@@ -8,11 +8,7 @@ class EntryCounter {
   bool get hasEntries => _addedEntriesCount > 0;
 
   factory EntryCounter.from(int count) {
-    final entries = List<bool>();
-    for (var i = 0; i < count; i++) {
-      entries.add(false);
-    }
-    return EntryCounter._(entries);
+    return EntryCounter._(List.filled(count, false));
   }
 
   void addEntry(int index) {
