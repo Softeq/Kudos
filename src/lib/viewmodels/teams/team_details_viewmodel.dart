@@ -107,7 +107,7 @@ class TeamDetailsViewModel extends BaseViewModel {
 
   void editTeam(BuildContext context) {
     _navigationService
-        .navigateTo(EditTeamViewModel(_team))
+        .navigateTo(context, EditTeamViewModel(_team))
         .whenComplete(notifyListeners);
   }
 
