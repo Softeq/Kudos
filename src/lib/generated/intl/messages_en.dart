@@ -105,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "transferAchievementToTeamWarning" : MessageLookupByLibrary.simpleMessage("You might not have access to this achievement after the operation is complete"),
     "transferAchievementToUserTitle" : MessageLookupByLibrary.simpleMessage("Transfer to %s?"),
     "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("You will not have access to this achievement after the operation is complete"),
+    "update" : MessageLookupByLibrary.simpleMessage("Update"),
     "updateRequired" : MessageLookupByLibrary.simpleMessage("Update is Required"),
     "updateRequiredMessage" : MessageLookupByLibrary.simpleMessage("Please update your app to the latest version to continue."),
     "user" : MessageLookupByLibrary.simpleMessage("User"),

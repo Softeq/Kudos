@@ -90,5 +90,6 @@
     "cannotBeSentTitle": "Oops, the Kudos cannot be sent",
     "cannotBeSentMessage": "Kudos of the private team can be granted only to its members.\n\nPlease add someone to the team and try again.",
     "updateRequired": "Update is Required",
-    "updateRequiredMessage": "Please update your app to the latest version to continue."
+    "updateRequiredMessage": "Please update your app to the latest version to continue.",
+    "update": "Update"
 }

@@ -104,6 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "transferAchievementToTeamWarning" : MessageLookupByLibrary.simpleMessage("Вы можете потерять доступ к этой награде после завершения данной операции"),
     "transferAchievementToUserTitle" : MessageLookupByLibrary.simpleMessage("Сменить владельца на %s?"),
     "transferAchievementToUserWarning" : MessageLookupByLibrary.simpleMessage("Вы потеряете доступ к этой награде после завершения данной операции"),
+    "update" : MessageLookupByLibrary.simpleMessage("Обновить"),
     "updateRequired" : MessageLookupByLibrary.simpleMessage("Требуется Обновление"),
     "updateRequiredMessage" : MessageLookupByLibrary.simpleMessage("Пожалуйста обновите свое приложение до последней версии."),
     "user" : MessageLookupByLibrary.simpleMessage("Пользователь"),

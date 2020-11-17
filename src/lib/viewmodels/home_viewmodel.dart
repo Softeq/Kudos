@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kudosapp/models/selection_action.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/analytics_service.dart';
+import 'package:kudosapp/services/database/mandatory_update_database_service.dart';
 import 'package:kudosapp/services/navigation_service.dart';
 import 'package:kudosapp/services/page_mapper_service.dart';
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
@@ -28,10 +29,13 @@ class HomeViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _pageMapperService = locator<PageMapperService>();
   final _navigationService = locator<NavigationService>();
+  final _mandatoryUpdateDatabaseService =
+      locator<MandatoryUpdateDatabaseService>();
 
   final List<TabItem> tabs = [];
 
   int _selectedTabIndex = 0;
+
   int get selectedTabIndex => _selectedTabIndex;
 
   set selectedTabIndex(int value) {
@@ -49,6 +53,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void _initialize(BuildContext context) {
+    _mandatoryUpdateDatabaseService.refreshSubscriptions();
+
     tabs.add(
       TabItem(
         title: localizer().profileTabName,

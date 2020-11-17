@@ -8,7 +8,6 @@ import 'package:kudosapp/pages/home_page.dart';
 import 'package:kudosapp/pages/login_page.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/services/analytics_service.dart';
-import 'package:kudosapp/services/database/mandatory_update_database_service.dart';
 import 'package:kudosapp/services/navigation_service.dart';
 import 'package:kudosapp/viewmodels/auth_viewmodel.dart';
 import 'package:kudosapp/viewmodels/home_viewmodel.dart';
@@ -70,7 +69,6 @@ class KudosApp extends StatelessWidget {
   Widget _buildHome(BuildContext context, AuthViewModel viewModel) {
     switch (viewModel.authState) {
       case AuthViewModelState.loggedIn:
-        locator<MandatoryUpdateDatabaseService>().refreshSubscriptions();
         return ChangeNotifierProvider(
           create: (context) => HomeViewModel(context),
           child: HomePage(),
