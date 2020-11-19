@@ -59,6 +59,6 @@ class AuthService extends BaseAuthService {
   }
 
   bool _validateEmail(String email) {
-    return true;
+    return email.endsWith("@softeq.com");
   }
 }
