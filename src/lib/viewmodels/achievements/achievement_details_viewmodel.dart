@@ -105,7 +105,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
 
     final selectedUser = await _navigationService.navigateTo(
-      context,
       UsersViewModel(
         SelectionAction.Pop,
         selectorIcon: KudosTheme.sendSelectorIcon,
@@ -146,9 +145,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  void editAchievement(BuildContext context) {
+  void editAchievement() {
     _navigationService.navigateTo(
-      context,
       EditAchievementViewModel.editAchievement(achievement),
     );
   }
@@ -171,7 +169,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
                   ? {achievement.owner.id}
                   : null;
           var user = await _navigationService.navigateTo(
-            context,
             UsersViewModel(
               SelectionAction.Pop,
               excludedUserIds: excludedUserIds,
@@ -189,7 +186,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
                   ? {achievement.owner.id}
                   : null;
           var team = await _navigationService.navigateTo(
-            context,
             TeamsViewModel(
               SelectionAction.Pop,
               false,
@@ -292,7 +288,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
       case AchievementOwnerType.user:
         _navigationService
             .navigateTo(
-              context,
               UserDetailsViewModel(achievement.owner.user),
             )
             .whenComplete(() => notifyListeners());
@@ -300,7 +295,6 @@ class AchievementDetailsViewModel extends BaseViewModel {
       case AchievementOwnerType.team:
         _navigationService
             .navigateTo(
-              context,
               TeamDetailsViewModel(achievement.owner.team),
             )
             .whenComplete(() => notifyListeners());
@@ -308,9 +302,8 @@ class AchievementDetailsViewModel extends BaseViewModel {
     }
   }
 
-  void onHolderClicked(BuildContext context, UserModel user) {
+  void onHolderClicked(UserModel user) {
     _navigationService.navigateTo(
-      context,
       UserDetailsViewModel(user),
     );
   }

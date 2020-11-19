@@ -39,7 +39,7 @@ class _AchievementDetailsPageState extends State<AchievementDetailsPage> {
                             viewModel.transferAchievement(context)),
                     IconButton(
                       icon: KudosTheme.editIcon,
-                      onPressed: () => viewModel.editAchievement(context),
+                      onPressed: () => viewModel.editAchievement(),
                     ),
                     IconButton(
                         icon: KudosTheme.deleteIcon,
@@ -99,7 +99,7 @@ class _AchievementDetailsPageState extends State<AchievementDetailsPage> {
               builder: (context, notifier, child) {
                 return _UsersListWidget(
                   viewModel.achievementHolders,
-                  (user) => viewModel.onHolderClicked(context, user),
+                  (user) => viewModel.onHolderClicked(user),
                 );
               },
             ),

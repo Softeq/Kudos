@@ -18,9 +18,13 @@ class TeamsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GradientAppBar(title: localizer().teams, elevation: 0),
-      body: _content,
+    return Container(
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: GradientAppBar(title: localizer().teams, elevation: 0),
+        body: _content,
+      ),
     );
   }
 }
@@ -30,12 +34,7 @@ class TeamsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: KudosTheme.contentColor,
-        child: _content,
-      ),
-    );
+    return _content;
   }
 }
 
@@ -44,15 +43,16 @@ class _TeamsContentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TeamsViewModel>(
       builder: (context, viewModel, child) {
-        return SafeArea(
-          child: Container(
-            color: KudosTheme.contentColor,
-            child: Column(
-              children: <Widget>[
-                _buildSearchBar(viewModel),
-                Expanded(
-                  child: TopDecorator.buildLayoutWithDecorator(
-                    Stack(
+        return Container(
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              _buildSearchBar(viewModel),
+              Expanded(
+                child: TopDecorator.buildLayoutWithDecorator(
+                  Container(
+                    color: KudosTheme.contentColor,
+                    child: Stack(
                       children: <Widget>[
                         Positioned.fill(
                           child: _buildList(context, viewModel),
@@ -64,7 +64,7 @@ class _TeamsContentWidget extends StatelessWidget {
                           child: Visibility(
                             visible: viewModel.showAddButton,
                             child: FloatingActionButton(
-                              onPressed: () => viewModel.createTeam(context),
+                              onPressed: () => viewModel.createTeam(),
                               child: KudosTheme.addIcon,
                             ),
                           ),
@@ -73,8 +73,8 @@ class _TeamsContentWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -82,13 +82,10 @@ class _TeamsContentWidget extends StatelessWidget {
   }
 
   Widget _buildSearchBar<T>(SearchableListViewModel<T> viewModel) {
-    return Container(
-      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
-      child: SearchInputWidget(
-        viewModel,
-        hintText: localizer().enterName,
-        iconSize: 82,
-      ),
+    return SearchInputWidget(
+      viewModel,
+      hintText: localizer().enterName,
+      iconSize: 82,
     );
   }
 

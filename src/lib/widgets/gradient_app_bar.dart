@@ -10,6 +10,7 @@ class GradientAppBar extends AppBar {
           ),
           elevation: elevation,
           actions: actions,
+          backgroundColor: Colors.transparent,
           flexibleSpace: _buildGradientBackground(),
         );
 

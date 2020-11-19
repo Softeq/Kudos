@@ -78,7 +78,6 @@ class ProfileAchievementsViewModel extends BaseViewModel {
 
     if (isMyProfile) {
       _navigationService.navigateTo(
-        context,
         ReceivedAchievementViewModel(achievementCollection),
       );
     } else if (achievement == null) {
@@ -90,7 +89,6 @@ class ProfileAchievementsViewModel extends BaseViewModel {
     } else {
       final achievement = achievementCollection.relatedAchievement;
       _navigationService.navigateTo(
-        context,
         AchievementDetailsViewModel(achievement),
       );
     }

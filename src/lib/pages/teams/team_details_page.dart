@@ -29,7 +29,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                 ? <Widget>[
                     IconButton(
                       icon: KudosTheme.editIcon,
-                      onPressed: () => viewModel.editTeam(context),
+                      onPressed: () => viewModel.editTeam(),
                     ),
                     IconButton(
                       icon: KudosTheme.deleteIcon,
@@ -43,7 +43,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
           body: _buildBody(viewModel),
           floatingActionButton: viewModel.canEdit
               ? FloatingActionButton(
-                  onPressed: () => viewModel.createAchievement(context),
+                  onPressed: () => viewModel.createAchievement(),
                   child: KudosTheme.addIcon,
                 )
               : null,
@@ -125,7 +125,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
             final data = viewModel.achievements[index];
             return AchievementListItemWidget(
               data,
-              (a) => viewModel.openAchievementDetails(context, a),
+              (a) => viewModel.openAchievementDetails(a),
               null,
             );
           },
@@ -175,7 +175,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                     icon: KudosTheme.editIcon,
                     color: KudosTheme.accentColor,
                     disabledColor: Colors.transparent,
-                    onPressed: () => viewModel.editMembers(context),
+                    onPressed: () => viewModel.editMembers(),
                   ),
                 ),
               ),
@@ -185,7 +185,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
         SizedBox(height: 10.0),
         _TeamMembersListWidget(
           viewModel.members,
-          (tm) => viewModel.openTeamMemberDetails(context, tm),
+          (tm) => viewModel.openTeamMemberDetails(tm),
         ),
       ],
     );

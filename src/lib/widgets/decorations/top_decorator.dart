@@ -9,12 +9,12 @@ class TopDecorator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: CustomPaint(
-        painter: _TopPainter(),
+    return CustomPaint(
+      painter: _TopPainter(),
+      child: SizedBox(
+        height: height,
+        width: width,
       ),
-      height: height,
-      width: width,
     );
   }
 
@@ -23,7 +23,10 @@ class TopDecorator extends StatelessWidget {
       builder: (context, constraints) {
         return Stack(
           children: <Widget>[
-            Positioned.fill(child: layout),
+            Positioned.fill(
+              child: layout,
+              top: 1,
+            ),
             Positioned.directional(
               textDirection: TextDirection.ltr,
               top: 0,

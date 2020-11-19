@@ -97,27 +97,24 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   void onAchievementClicked(
-    BuildContext context,
     AchievementModel achievement,
   ) {
     switch (_selectionAction) {
       case SelectionAction.OpenDetails:
         _navigationService
             .navigateTo(
-              context,
               AchievementDetailsViewModel(achievement),
             )
             .whenComplete(notifyListeners);
         break;
       case SelectionAction.Pop:
-        _navigationService.pop(context, achievement);
+        _navigationService.pop(achievement);
         break;
     }
   }
 
-  void createAchievement(BuildContext context) {
+  void createAchievement() {
     _navigationService.navigateTo(
-      context,
       EditAchievementViewModel.createUserAchievement(_authService.currentUser),
     );
   }

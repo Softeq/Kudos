@@ -103,7 +103,13 @@ class AchievementModel {
           _isTeamMember(userId) ||
           accessLevel == AccessLevel.public);
 
-  bool canBeSentToUser(String senderId, String userId) =>
-      canBeSentByUser(senderId) &&
-      teamMembers.values.any((x) => x.user.id == userId);
+  bool canBeSentToUser(String senderId, String userId) {
+    var result = canBeSentByUser(senderId);
+
+    if (accessLevel == AccessLevel.private) {
+      result = result && teamMembers.values.any((x) => x.user.id == userId);
+    }
+
+    return result;
+  }
 }

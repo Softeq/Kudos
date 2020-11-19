@@ -4,6 +4,7 @@ import 'package:kudosapp/pages/achievements/achievements_page.dart';
 import 'package:kudosapp/pages/achievements/edit_achievement_page.dart';
 import 'package:kudosapp/pages/achievements/received_achievement_page.dart';
 import 'package:kudosapp/pages/login_page.dart';
+import 'package:kudosapp/pages/mandatory_update_page.dart';
 import 'package:kudosapp/pages/my_profile_page.dart';
 import 'package:kudosapp/pages/users/user_details_page.dart';
 import 'package:kudosapp/pages/teams/team_member_picker_page.dart';
@@ -15,6 +16,7 @@ import 'package:kudosapp/viewmodels/achievements/achievement_details_viewmodel.d
 import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/viewmodels/achievements/edit_achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/login_viewmodel.dart';
+import 'package:kudosapp/viewmodels/mandatory_update_viewmodel.dart';
 import 'package:kudosapp/viewmodels/my_profile_viewmodel.dart';
 import 'package:kudosapp/viewmodels/users/received_achievement_viewmodel.dart';
 import 'package:kudosapp/viewmodels/users/user_details_viewmodel.dart';
@@ -32,6 +34,9 @@ class PageMapperService {
 
       case MyProfileViewModel:
         return MyProfilePage();
+
+      case MandatoryUpdateViewModel:
+        return MandatoryUpdatePage();
 
       case AchievementsViewModel:
         return AchievementsPage();
@@ -66,6 +71,9 @@ class PageMapperService {
 
       case MyProfileViewModel:
         return "My Profile";
+
+      case MandatoryUpdateViewModel:
+        return "Mandatory Update";
 
       case AchievementsViewModel:
         return "Achievements List";

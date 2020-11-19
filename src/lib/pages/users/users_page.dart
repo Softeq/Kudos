@@ -17,24 +17,21 @@ class UsersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GradientAppBar(title: localizer().people, elevation: 0),
-      body: _content,
+    return Container(
+      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: GradientAppBar(title: localizer().people, elevation: 0),
+        body: _content,
+      ),
     );
   }
 }
 
 class UsersTab extends StatelessWidget {
-  final Widget _content = new _UsersContentWidget();
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: KudosTheme.contentColor,
-        child: _content,
-      ),
-    );
+    return _UsersContentWidget();
   }
 }
 
@@ -48,30 +45,33 @@ class _UsersContentWidget extends StatelessWidget {
             _buildSearchBar(viewModel),
             Expanded(
               child: TopDecorator.buildLayoutWithDecorator(
-                Stack(
-                  children: <Widget>[
-                    Positioned.fill(
-                      child: StreamBuilder(
-                        stream: viewModel.dataStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.isEmpty) {
-                              return _buildEmpty();
+                Container(
+                  color: KudosTheme.contentColor,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: StreamBuilder(
+                          stream: viewModel.dataStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data.isEmpty) {
+                                return _buildEmpty();
+                              }
+                              return _buildList(
+                                context,
+                                viewModel,
+                                snapshot.data,
+                              );
                             }
-                            return _buildList(
-                              context,
-                              viewModel,
-                              snapshot.data,
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return _buildError(snapshot.error);
-                          }
-                          return _buildLoading();
-                        },
+                            if (snapshot.hasError) {
+                              return _buildError(snapshot.error);
+                            }
+                            return _buildLoading();
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -82,13 +82,10 @@ class _UsersContentWidget extends StatelessWidget {
   }
 
   Widget _buildSearchBar<T>(SearchableListViewModel<T> viewModel) {
-    return Container(
-      decoration: BoxDecoration(gradient: KudosTheme.mainGradient),
-      child: SearchInputWidget(
-        viewModel,
-        hintText: localizer().enterName,
-        iconSize: 82,
-      ),
+    return SearchInputWidget(
+      viewModel,
+      hintText: localizer().enterName,
+      iconSize: 82,
     );
   }
 

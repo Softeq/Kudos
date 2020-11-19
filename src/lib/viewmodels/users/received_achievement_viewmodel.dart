@@ -40,10 +40,8 @@ class ReceivedAchievementViewModel extends BaseViewModel {
     _eventBus.fire(AchievementViewedMessage(achievement));
   }
 
-  void onUserAchievementClicked(BuildContext context,
-      UserAchievementModel userAchievementModel,) {
+  void onUserAchievementClicked(UserAchievementModel userAchievementModel) {
     _navigationService.navigateTo(
-      context,
       UserDetailsViewModel(userAchievementModel.sender),
     );
   }
@@ -62,7 +60,6 @@ class ReceivedAchievementViewModel extends BaseViewModel {
     }
 
     _navigationService.navigateTo(
-      context,
       AchievementDetailsViewModel(relatedAchievement),
     );
   }

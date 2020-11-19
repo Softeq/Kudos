@@ -82,9 +82,8 @@ class TeamsViewModel
     }
   }
 
-  void createTeam(BuildContext context) {
+  void createTeam() {
     _navigationService.navigateTo(
-      context,
       EditTeamViewModel(),
     );
   }
@@ -93,12 +92,11 @@ class TeamsViewModel
     switch (_selectionAction) {
       case SelectionAction.OpenDetails:
         await _navigationService.navigateTo(
-          context,
           TeamDetailsViewModel(team),
         );
         break;
       case SelectionAction.Pop:
-        _navigationService.pop(context, team);
+        _navigationService.pop(team);
         break;
     }
     clearFocus(context);
