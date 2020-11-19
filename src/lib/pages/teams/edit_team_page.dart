@@ -110,7 +110,7 @@ class _EditTeamPageState extends State<EditTeamPage> {
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
                           children: <Widget>[
-                            _buildDropdown(viewModel),
+                            _buildAccessLevel(viewModel),
                             SizedBox(width: 18),
                             Expanded(
                               child: Text(
@@ -154,21 +154,25 @@ class _EditTeamPageState extends State<EditTeamPage> {
     );
   }
 
-  Widget _buildDropdown(EditTeamViewModel viewModel) {
-    return DropdownButton<AccessLevel>(
-      value: viewModel.accessLevel,
-      items: AccessLevelUtils.getVisibleAccessLevels()
-          .map<DropdownMenuItem<AccessLevel>>(
-        (AccessLevel value) {
-          return DropdownMenuItem<AccessLevel>(
-            value: value,
-            child: Text(AccessLevelUtils.getString(value)),
-          );
-        },
-      ).toList(),
-      onChanged: (AccessLevel value) => viewModel.accessLevel = value,
-      style: KudosTheme.descriptionTextStyle,
-    );
+  Widget _buildAccessLevel(EditTeamViewModel viewModel) {
+    if (viewModel.accessLevel == AccessLevel.official) {
+      return Container();
+    } else {
+      return DropdownButton<AccessLevel>(
+        value: viewModel.accessLevel,
+        items: AccessLevelUtils.getVisibleAccessLevels()
+            .map<DropdownMenuItem<AccessLevel>>(
+          (AccessLevel value) {
+            return DropdownMenuItem<AccessLevel>(
+              value: value,
+              child: Text(AccessLevelUtils.getString(value)),
+            );
+          },
+        ).toList(),
+        onChanged: (AccessLevel value) => viewModel.accessLevel = value,
+        style: KudosTheme.descriptionTextStyle,
+      );
+    }
   }
 
   @override
