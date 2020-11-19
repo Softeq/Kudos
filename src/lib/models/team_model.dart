@@ -1,4 +1,3 @@
-import 'dart:core';
 import 'dart:io';
 
 import 'package:kudosapp/dto/team.dart';
@@ -68,6 +67,8 @@ class TeamModel {
     accessLevel = team.accessLevel;
     isActive = team.isActive;
   }
+
+  bool get isOfficialTeam => accessLevel == AccessLevel.official;
 
   bool isTeamAdmin(String userId) =>
       isTeamMember(userId) &&

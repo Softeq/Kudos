@@ -4,7 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_owner_model.dart';
-import 'package:kudosapp/models/groupped_list_item.dart';
+import 'package:kudosapp/models/grouped_list_item.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
@@ -30,7 +30,7 @@ class AchievementsViewModel extends BaseViewModel {
 
   final SelectionAction _selectionAction;
   final achievements =
-      SortedList<GrouppedListItem<AchievementModel>>(_sortFunc);
+      SortedList<GroupedListItem<AchievementModel>>(_sortFunc);
   final bool Function(AchievementModel) _achievementFilter;
 
   final Icon selectorIcon;
@@ -46,8 +46,8 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   static int _sortFunc(
-    GrouppedListItem<AchievementModel> x,
-    GrouppedListItem<AchievementModel> y,
+    GroupedListItem<AchievementModel> x,
+    GroupedListItem<AchievementModel> y,
   ) {
     if (x.sortIndex == y.sortIndex) {
       return x.groupName.compareTo(y.groupName);
@@ -149,7 +149,7 @@ class AchievementsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  GrouppedListItem<AchievementModel> _createGrouppedItemFromAchievement(
+  GroupedListItem<AchievementModel> _createGrouppedItemFromAchievement(
     AchievementModel achievement,
   ) {
     final sortIndex =
@@ -157,7 +157,7 @@ class AchievementsViewModel extends BaseViewModel {
     final groupName =
         sortIndex > 0 ? localizer().myAchievements : achievement.owner.name;
 
-    return GrouppedListItem<AchievementModel>(
+    return GroupedListItem<AchievementModel>(
       groupName,
       sortIndex,
       achievement,
