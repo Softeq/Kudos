@@ -81,6 +81,7 @@ class TeamModel {
   bool canBeViewedByUser(String userId) =>
       isActive &&
       (isTeamMember(userId) ||
-          this.accessLevel == AccessLevel.public ||
-          this.accessLevel == AccessLevel.protected);
+          accessLevel == AccessLevel.official ||
+          accessLevel == AccessLevel.public ||
+          accessLevel == AccessLevel.protected);
 }

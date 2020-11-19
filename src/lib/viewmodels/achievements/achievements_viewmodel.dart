@@ -29,8 +29,7 @@ class AchievementsViewModel extends BaseViewModel {
   StreamSubscription _achievementTransferredSubscription;
 
   final SelectionAction _selectionAction;
-  final achievements =
-      SortedList<GroupedListItem<AchievementModel>>(_sortFunc);
+  final achievements = SortedList<GroupedListItem<AchievementModel>>(_sortFunc);
   final bool Function(AchievementModel) _achievementFilter;
 
   final Icon selectorIcon;
@@ -52,7 +51,7 @@ class AchievementsViewModel extends BaseViewModel {
     if (x.sortIndex == y.sortIndex) {
       return x.groupName.compareTo(y.groupName);
     } else {
-      return y.sortIndex.compareTo(x.sortIndex);
+      return x.sortIndex.compareTo(y.sortIndex);
     }
   }
 
@@ -66,7 +65,7 @@ class AchievementsViewModel extends BaseViewModel {
       achievements.addAll(loadedAchievements
           .where(
               _achievementFilter == null ? _defaultFilter : _achievementFilter)
-          .map((a) => _createGrouppedItemFromAchievement(a)));
+          .map((a) => _createGroupedItemFromAchievement(a)));
       notifyListeners();
 
       _achievementUpdatedSubscription?.cancel();
@@ -126,7 +125,7 @@ class AchievementsViewModel extends BaseViewModel {
     }
 
     achievements.removeWhere((x) => x.item.id == event.achievement.id);
-    achievements.add(_createGrouppedItemFromAchievement(event.achievement));
+    achievements.add(_createGroupedItemFromAchievement(event.achievement));
     notifyListeners();
   }
 
@@ -142,20 +141,20 @@ class AchievementsViewModel extends BaseViewModel {
     if (event.achievements.first.owner.type == AchievementOwnerType.team ||
         event.achievements.first.owner.id == _authService.currentUser.id) {
       for (var achievement in event.achievements) {
-        achievements.add(_createGrouppedItemFromAchievement(achievement));
+        achievements.add(_createGroupedItemFromAchievement(achievement));
       }
     }
 
     notifyListeners();
   }
 
-  GroupedListItem<AchievementModel> _createGrouppedItemFromAchievement(
+  GroupedListItem<AchievementModel> _createGroupedItemFromAchievement(
     AchievementModel achievement,
   ) {
     final sortIndex =
-        (achievement.owner.id == _authService.currentUser.id) ? 1 : 0;
+        (achievement.owner.id == _authService.currentUser.id) ? 0 : 1;
     final groupName =
-        sortIndex > 0 ? localizer().myAchievements : achievement.owner.name;
+        sortIndex == 0 ? localizer().myAchievements : achievement.owner.name;
 
     return GroupedListItem<AchievementModel>(
       groupName,

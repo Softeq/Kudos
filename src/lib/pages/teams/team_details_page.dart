@@ -156,38 +156,41 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
     BuildContext context,
     TeamDetailsViewModel viewModel,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              localizer().members,
-              style: KudosTheme.sectionTitleTextStyle,
-            ),
-            Expanded(
-              child: Visibility(
-                visible: viewModel.canEdit,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: KudosTheme.editIcon,
-                    color: KudosTheme.accentColor,
-                    disabledColor: Colors.transparent,
-                    onPressed: () => viewModel.editMembers(),
+    return Visibility(
+      visible: viewModel.isMembersVisible,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                localizer().members,
+                style: KudosTheme.sectionTitleTextStyle,
+              ),
+              Expanded(
+                child: Visibility(
+                  visible: viewModel.canEdit,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: KudosTheme.editIcon,
+                      color: KudosTheme.accentColor,
+                      disabledColor: Colors.transparent,
+                      onPressed: () => viewModel.editMembers(),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.0),
-        _TeamMembersListWidget(
-          viewModel.members,
-          (tm) => viewModel.openTeamMemberDetails(tm),
-        ),
-      ],
+            ],
+          ),
+          SizedBox(height: 10.0),
+          _TeamMembersListWidget(
+            viewModel.members,
+            (tm) => viewModel.openTeamMemberDetails(tm),
+          ),
+        ],
+      ),
     );
   }
 }

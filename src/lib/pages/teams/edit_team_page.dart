@@ -157,7 +157,7 @@ class _EditTeamPageState extends State<EditTeamPage> {
   Widget _buildDropdown(EditTeamViewModel viewModel) {
     return DropdownButton<AccessLevel>(
       value: viewModel.accessLevel,
-      items: AccessLevelUtils.getAllAccessLevels()
+      items: AccessLevelUtils.getVisibleAccessLevels()
           .map<DropdownMenuItem<AccessLevel>>(
         (AccessLevel value) {
           return DropdownMenuItem<AccessLevel>(

@@ -91,6 +91,7 @@ class AchievementModel {
 
   bool canBeViewedByUser(String userId) =>
       _isTeamMember(userId) ||
+      accessLevel == AccessLevel.official ||
       accessLevel == AccessLevel.public ||
       accessLevel == AccessLevel.protected;
 
@@ -101,7 +102,8 @@ class AchievementModel {
       isActive &&
       (_isAchievementOwner(userId) ||
           _isTeamMember(userId) ||
-          accessLevel == AccessLevel.public);
+          accessLevel == AccessLevel.public ||
+          accessLevel == AccessLevel.official);
 
   bool canBeSentToUser(String senderId, String userId) {
     var result = canBeSentByUser(senderId);

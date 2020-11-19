@@ -51,9 +51,18 @@ class TeamDetailsViewModel extends BaseViewModel {
 
   Iterable<TeamMemberModel> get members => _team.members.values;
 
-  bool get canEdit => _team.members == null
-      ? false
-      : _team.canBeModifiedByUser(_authService.currentUser.id);
+  bool get canEdit =>
+      _team.members == null
+          ? false
+          : _team.canBeModifiedByUser(_authService.currentUser.id);
+
+  bool get isMembersVisible {
+    if (_team.accessLevel == AccessLevel.official) {
+      return canEdit;
+    } else {
+      return true;
+    }
+  }
 
   TeamDetailsViewModel(this._team) {
     _initialize();
@@ -95,9 +104,9 @@ class TeamDetailsViewModel extends BaseViewModel {
 
     await _navigationService
         .navigateTo(
-          TeamMemberPickerViewModel(_team),
-          fullscreenDialog: true,
-        )
+      TeamMemberPickerViewModel(_team),
+      fullscreenDialog: true,
+    )
         .whenComplete(notifyListeners);
 
     notifyListeners();
@@ -106,8 +115,8 @@ class TeamDetailsViewModel extends BaseViewModel {
   void editTeam() {
     _navigationService
         .navigateTo(
-          EditTeamViewModel(_team),
-        )
+      EditTeamViewModel(_team),
+    )
         .whenComplete(notifyListeners);
   }
 
@@ -117,9 +126,7 @@ class TeamDetailsViewModel extends BaseViewModel {
     );
   }
 
-  void openAchievementDetails(
-    AchievementModel achievement,
-  ) {
+  void openAchievementDetails(AchievementModel achievement,) {
     _navigationService.navigateTo(
       AchievementDetailsViewModel(achievement),
     );
@@ -161,7 +168,7 @@ class TeamDetailsViewModel extends BaseViewModel {
     }
 
     final index = achievements.indexWhere(
-      (x) => x.id == event.achievement.id,
+          (x) => x.id == event.achievement.id,
     );
     if (index != -1) {
       achievements.removeAt(index);
