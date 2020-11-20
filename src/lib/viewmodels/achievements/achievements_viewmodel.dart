@@ -4,7 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kudosapp/models/achievement_model.dart';
 import 'package:kudosapp/models/achievement_owner_model.dart';
-import 'package:kudosapp/models/groupped_list_item.dart';
+import 'package:kudosapp/models/grouped_list_item.dart';
 import 'package:kudosapp/models/messages/achievement_deleted_message.dart';
 import 'package:kudosapp/models/messages/achievement_transferred_message.dart';
 import 'package:kudosapp/models/messages/achievement_updated_message.dart';
@@ -29,8 +29,7 @@ class AchievementsViewModel extends BaseViewModel {
   StreamSubscription _achievementTransferredSubscription;
 
   final SelectionAction _selectionAction;
-  final achievements =
-      SortedList<GrouppedListItem<AchievementModel>>(_sortFunc);
+  final achievements = SortedList<GroupedListItem<AchievementModel>>(_sortFunc);
   final bool Function(AchievementModel) _achievementFilter;
 
   final Icon selectorIcon;
@@ -46,13 +45,13 @@ class AchievementsViewModel extends BaseViewModel {
   }
 
   static int _sortFunc(
-    GrouppedListItem<AchievementModel> x,
-    GrouppedListItem<AchievementModel> y,
+    GroupedListItem<AchievementModel> x,
+    GroupedListItem<AchievementModel> y,
   ) {
     if (x.sortIndex == y.sortIndex) {
       return x.groupName.compareTo(y.groupName);
     } else {
-      return y.sortIndex.compareTo(x.sortIndex);
+      return x.sortIndex.compareTo(y.sortIndex);
     }
   }
 
@@ -66,7 +65,7 @@ class AchievementsViewModel extends BaseViewModel {
       achievements.addAll(loadedAchievements
           .where(
               _achievementFilter == null ? _defaultFilter : _achievementFilter)
-          .map((a) => _createGrouppedItemFromAchievement(a)));
+          .map((a) => _createGroupedItemFromAchievement(a)));
       notifyListeners();
 
       _achievementUpdatedSubscription?.cancel();
@@ -126,7 +125,7 @@ class AchievementsViewModel extends BaseViewModel {
     }
 
     achievements.removeWhere((x) => x.item.id == event.achievement.id);
-    achievements.add(_createGrouppedItemFromAchievement(event.achievement));
+    achievements.add(_createGroupedItemFromAchievement(event.achievement));
     notifyListeners();
   }
 
@@ -142,22 +141,22 @@ class AchievementsViewModel extends BaseViewModel {
     if (event.achievements.first.owner.type == AchievementOwnerType.team ||
         event.achievements.first.owner.id == _authService.currentUser.id) {
       for (var achievement in event.achievements) {
-        achievements.add(_createGrouppedItemFromAchievement(achievement));
+        achievements.add(_createGroupedItemFromAchievement(achievement));
       }
     }
 
     notifyListeners();
   }
 
-  GrouppedListItem<AchievementModel> _createGrouppedItemFromAchievement(
+  GroupedListItem<AchievementModel> _createGroupedItemFromAchievement(
     AchievementModel achievement,
   ) {
     final sortIndex =
-        (achievement.owner.id == _authService.currentUser.id) ? 1 : 0;
+        (achievement.owner.id == _authService.currentUser.id) ? 0 : 1;
     final groupName =
-        sortIndex > 0 ? localizer().myAchievements : achievement.owner.name;
+        sortIndex == 0 ? localizer().myAchievements : achievement.owner.name;
 
-    return GrouppedListItem<AchievementModel>(
+    return GroupedListItem<AchievementModel>(
       groupName,
       sortIndex,
       achievement,

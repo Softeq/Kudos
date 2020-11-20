@@ -6,7 +6,7 @@ import 'package:kudosapp/viewmodels/achievements/achievements_viewmodel.dart';
 import 'package:kudosapp/widgets/achievements/achievement_list_item_widget.dart';
 import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
-import 'package:kudosapp/widgets/groupped_list_widget.dart';
+import 'package:kudosapp/widgets/grouped_list_widget.dart';
 import 'package:provider/provider.dart';
 
 class AchievementsPage extends StatelessWidget {
@@ -92,7 +92,7 @@ class _AchievementsContentPage extends StatelessWidget {
                           );
                         }
 
-                        return GrouppedListWidget<AchievementModel>(
+                        return GroupedListWidget<AchievementModel>(
                           viewModel.achievements,
                           (a) => _buildListItem(
                             viewModel,

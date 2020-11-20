@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kudosapp/helpers/access_level_utils.dart';
 import 'package:kudosapp/kudos_theme.dart';
-import 'package:kudosapp/models/groupped_list_item.dart';
+import 'package:kudosapp/models/grouped_list_item.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
 import 'package:kudosapp/viewmodels/searchable_list_viewmodel.dart';
 import 'package:kudosapp/viewmodels/teams/teams_viewmodel.dart';
 import 'package:kudosapp/widgets/decorations/top_decorator.dart';
 import 'package:kudosapp/widgets/gradient_app_bar.dart';
-import 'package:kudosapp/widgets/groupped_list_widget.dart';
+import 'package:kudosapp/widgets/grouped_list_widget.dart';
 import 'package:kudosapp/widgets/search_input_widget.dart';
 import 'package:kudosapp/widgets/simple_list_item.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +94,7 @@ class _TeamsContentWidget extends StatelessWidget {
       stream: viewModel.dataStream,
       builder: (
         BuildContext context,
-        AsyncSnapshot<Iterable<GrouppedListItem<TeamModel>>> snapshot,
+        AsyncSnapshot<Iterable<GroupedListItem<TeamModel>>> snapshot,
       ) {
         if (viewModel.isBusy || snapshot.data == null) {
           return _buildLoading();
@@ -102,7 +102,7 @@ class _TeamsContentWidget extends StatelessWidget {
         if (snapshot.data?.isEmpty ?? true) {
           return _buildEmpty(viewModel.isDataListEmpty);
         } else {
-          return GrouppedListWidget<TeamModel>(
+          return GroupedListWidget<TeamModel>(
             snapshot.data,
             (team) => _buildListItem(
               context,
@@ -143,7 +143,7 @@ class _TeamsContentWidget extends StatelessWidget {
   ) {
     return SimpleListItem(
       title: team.name,
-      description: AccessLevelUtils.getString(team.accessLevel),
+      description: team.accessLevel.title,
       onTap: () => viewModel.onTeamClicked(context, team),
       selectorIcon: viewModel.selectorIcon,
       imageShape: ImageShape.square(56, 4),

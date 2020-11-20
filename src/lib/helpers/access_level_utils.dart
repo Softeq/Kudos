@@ -3,25 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:kudosapp/models/access_level.dart';
 import 'package:kudosapp/service_locator.dart';
 
-class AccessLevelUtils {
-  static List<AccessLevel> getAllAccessLevels() => [
-        AccessLevel.public,
-        AccessLevel.protected,
-        AccessLevel.private,
-      ];
-
-  static AccessLevel fromString(String str) {
-    if (str == localizer().accessLevelPublic)
-      return AccessLevel.public;
-    else if (str == localizer().accessLevelPrivate)
-      return AccessLevel.private;
-    else if (str == localizer().accessLevelProtected)
-      return AccessLevel.protected;
-    return null;
-  }
-
-  static String getString(AccessLevel accessLevel) {
-    switch (accessLevel) {
+extension AccessLevelLocalizer on AccessLevel {
+  String get title {
+    switch (this) {
+      case AccessLevel.official:
+        return localizer().official;
       case AccessLevel.public:
         return localizer().accessLevelPublic;
       case AccessLevel.private:
@@ -33,8 +19,10 @@ class AccessLevelUtils {
     }
   }
 
-  static String getDescription(AccessLevel accessLevel) {
-    switch (accessLevel) {
+  String get description {
+    switch (this) {
+      case AccessLevel.official:
+        return localizer().official;
       case AccessLevel.public:
         return localizer().accessLevelPublicDescription;
       case AccessLevel.private:
@@ -45,9 +33,13 @@ class AccessLevelUtils {
         return null;
     }
   }
+}
 
-  static IconData getIcon(AccessLevel accessLevel) {
-    switch (accessLevel) {
+extension AccessLevelIcon on AccessLevel {
+  IconData get icon {
+    switch (this) {
+      case AccessLevel.official:
+        return Icons.public;
       case AccessLevel.public:
         return Icons.lock_open;
       case AccessLevel.private:

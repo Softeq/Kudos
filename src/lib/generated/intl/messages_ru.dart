@@ -69,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nameIsNullErrorMessage" : MessageLookupByLibrary.simpleMessage("Добавьте название"),
     "noComment" : MessageLookupByLibrary.simpleMessage("Нет комментария"),
     "notSignedIn" : MessageLookupByLibrary.simpleMessage("Войдите, чтобы увидеть свои награды"),
+    "official" : MessageLookupByLibrary.simpleMessage("Официальные"),
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "otherTeams" : MessageLookupByLibrary.simpleMessage("Другие Команды"),
     "people" : MessageLookupByLibrary.simpleMessage("Люди"),

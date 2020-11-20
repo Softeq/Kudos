@@ -964,6 +964,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Official`
+  String get official {
+    return Intl.message(
+      'Official',
+      name: 'official',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

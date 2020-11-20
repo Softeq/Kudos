@@ -1,4 +1,3 @@
-import 'dart:core';
 import 'dart:io';
 
 import 'package:kudosapp/dto/team.dart';
@@ -69,6 +68,8 @@ class TeamModel {
     isActive = team.isActive;
   }
 
+  bool get isOfficialTeam => accessLevel == AccessLevel.official;
+
   bool isTeamAdmin(String userId) =>
       isTeamMember(userId) &&
       members[userId].accessLevel == UserAccessLevel.admin;
@@ -78,8 +79,5 @@ class TeamModel {
   bool canBeModifiedByUser(String userId) => isActive && isTeamAdmin(userId);
 
   bool canBeViewedByUser(String userId) =>
-      isActive &&
-      (isTeamMember(userId) ||
-          this.accessLevel == AccessLevel.public ||
-          this.accessLevel == AccessLevel.protected);
+      isActive && (isTeamMember(userId) || accessLevel.canBeViewed);
 }

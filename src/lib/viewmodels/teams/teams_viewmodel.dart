@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:kudosapp/models/groupped_list_item.dart';
+import 'package:kudosapp/models/grouped_list_item.dart';
 import 'package:kudosapp/models/messages/team_deleted_message.dart';
 import 'package:kudosapp/models/messages/team_updated_message.dart';
 import 'package:kudosapp/models/selection_action.dart';
@@ -16,7 +16,7 @@ import 'package:kudosapp/viewmodels/teams/edit_team_viewmodel.dart';
 import 'package:kudosapp/viewmodels/teams/team_details_viewmodel.dart';
 
 class TeamsViewModel
-    extends SearchableListViewModel<GrouppedListItem<TeamModel>> {
+    extends SearchableListViewModel<GroupedListItem<TeamModel>> {
   final _eventBus = locator<EventBus>();
   final _teamsService = locator<TeamsService>();
   final _authService = locator<BaseAuthService>();
@@ -42,43 +42,11 @@ class TeamsViewModel
   }
 
   static int _sortFunc(
-      GrouppedListItem<TeamModel> x, GrouppedListItem<TeamModel> y) {
+      GroupedListItem<TeamModel> x, GroupedListItem<TeamModel> y) {
     if (x.sortIndex == y.sortIndex) {
       return x.item.name.toLowerCase().compareTo(y.item.name.toLowerCase());
     } else {
-      return y.sortIndex.compareTo(x.sortIndex);
-    }
-  }
-
-  void _initialize() async {
-    try {
-      isBusy = true;
-
-      await _loadTeamsList();
-
-      _teamUpdatedSubscription?.cancel();
-      _teamUpdatedSubscription =
-          _eventBus.on<TeamUpdatedMessage>().listen(_onTeamUpdated);
-
-      _teamDeletedSubscription?.cancel();
-      _teamDeletedSubscription =
-          _eventBus.on<TeamDeletedMessage>().listen(_onTeamDeleted);
-    } finally {
-      filterByName("");
-      isBusy = false;
-    }
-  }
-
-  Future<void> _loadTeamsList() async {
-    var teams = await _teamsService.getTeams();
-    dataList.clear();
-    if (_excludedTeamIds != null) {
-      var localTeams = teams
-          .where((team) => !_excludedTeamIds.contains(team.id))
-          .map((tm) => _createGrouppedItemFromTeam(tm));
-      dataList.addAll(localTeams);
-    } else {
-      dataList.addAll(teams.map((tm) => _createGrouppedItemFromTeam(tm)));
+      return x.sortIndex.compareTo(y.sortIndex);
     }
   }
 
@@ -102,17 +70,71 @@ class TeamsViewModel
     clearFocus(context);
   }
 
-  GrouppedListItem<TeamModel> _createGrouppedItemFromTeam(TeamModel team) {
-    int sortIndex = team.isTeamAdmin(_authService.currentUser.id) ||
-            team.isTeamMember(_authService.currentUser.id)
-        ? 1
-        : 0;
+  @override
+  bool filter(GroupedListItem<TeamModel> item, String query) {
+    return item.item.name.toLowerCase().contains(query.toLowerCase());
+  }
 
-    final myTeamsText = localizer().myTeams;
-    final otherTeamsText = localizer().otherTeams;
-    String groupName = sortIndex > 0 ? myTeamsText : otherTeamsText;
+  @override
+  void dispose() {
+    _teamUpdatedSubscription?.cancel();
+    _teamDeletedSubscription?.cancel();
+    super.dispose();
+  }
 
-    return GrouppedListItem<TeamModel>(groupName, sortIndex, team);
+  void _initialize() async {
+    try {
+      isBusy = true;
+
+      await _loadTeamsList();
+
+      _teamUpdatedSubscription?.cancel();
+      _teamUpdatedSubscription =
+          _eventBus.on<TeamUpdatedMessage>().listen(_onTeamUpdated);
+
+      _teamDeletedSubscription?.cancel();
+      _teamDeletedSubscription =
+          _eventBus.on<TeamDeletedMessage>().listen(_onTeamDeleted);
+    } finally {
+      filterByName("");
+      isBusy = false;
+    }
+  }
+
+  Future<void> _loadTeamsList() async {
+    final teams = await _teamsService.getTeams();
+    dataList.clear();
+    dataList.addAll(
+      teams.where(_isTeamVisible).map(_createGroupedItemFromTeam),
+    );
+  }
+
+  GroupedListItem<TeamModel> _createGroupedItemFromTeam(TeamModel team) {
+    final userId = _authService.currentUser.id;
+
+    _teamType teamType;
+    if (team.isOfficialTeam) {
+      teamType = _teamType.official;
+    } else if (team.isTeamAdmin(userId) || team.isTeamMember(userId)) {
+      teamType = _teamType.myTeam;
+    } else {
+      teamType = _teamType.other;
+    }
+
+    String groupName;
+    switch (teamType) {
+      case _teamType.official:
+        groupName = localizer().official;
+        break;
+      case _teamType.myTeam:
+        groupName = localizer().myTeams;
+        break;
+      case _teamType.other:
+        groupName = localizer().otherTeams;
+        break;
+    }
+
+    return GroupedListItem<TeamModel>(groupName, teamType.index, team);
   }
 
   void _onTeamUpdated(TeamUpdatedMessage event) {
@@ -124,15 +146,13 @@ class TeamsViewModel
     notifyListeners();
   }
 
-  @override
-  bool filter(GrouppedListItem<TeamModel> item, String query) {
-    return item.item.name.toLowerCase().contains(query.toLowerCase());
-  }
-
-  @override
-  void dispose() {
-    _teamUpdatedSubscription?.cancel();
-    _teamDeletedSubscription?.cancel();
-    super.dispose();
+  bool _isTeamVisible(TeamModel team) {
+    if (_excludedTeamIds == null) {
+      return true;
+    } else {
+      return !_excludedTeamIds.contains(team.id);
+    }
   }
 }
+
+enum _teamType { official, myTeam, other }

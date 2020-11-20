@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class GrouppedListItem<T> {
+class GroupedListItem<T> {
   final String groupName;
   final int sortIndex;
   final T item;
 
-  GrouppedListItem(this.groupName, this.sortIndex, this.item);
+  GroupedListItem(this.groupName, this.sortIndex, this.item);
 }
