@@ -114,9 +114,7 @@ class _EditTeamPageState extends State<EditTeamPage> {
                             SizedBox(width: 18),
                             Expanded(
                               child: Text(
-                                AccessLevelUtils.getDescription(
-                                  viewModel.accessLevel,
-                                ),
+                                viewModel.accessLevel.description,
                                 textAlign: TextAlign.end,
                                 maxLines: 5,
                                 style: KudosTheme.sectionHintTextStyle,
@@ -160,12 +158,12 @@ class _EditTeamPageState extends State<EditTeamPage> {
     } else {
       return DropdownButton<AccessLevel>(
         value: viewModel.accessLevel,
-        items: AccessLevelUtils.getVisibleAccessLevels()
+        items: AccessLevelExt.getVisibleAccessLevels()
             .map<DropdownMenuItem<AccessLevel>>(
           (AccessLevel value) {
             return DropdownMenuItem<AccessLevel>(
               value: value,
-              child: Text(AccessLevelUtils.getString(value)),
+              child: Text(value.title),
             );
           },
         ).toList(),

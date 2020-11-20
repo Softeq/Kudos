@@ -143,7 +143,7 @@ class _TeamsContentWidget extends StatelessWidget {
   ) {
     return SimpleListItem(
       title: team.name,
-      description: AccessLevelUtils.getString(team.accessLevel),
+      description: team.accessLevel.title,
       onTap: () => viewModel.onTeamClicked(context, team),
       selectorIcon: viewModel.selectorIcon,
       imageShape: ImageShape.square(56, 4),

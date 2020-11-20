@@ -88,7 +88,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Icon(
-              AccessLevelUtils.getIcon(viewModel.accessLevel),
+              viewModel.accessLevel.icon,
               color: KudosTheme.mainGradientEndColor,
               size: 20.0,
             ),
@@ -96,7 +96,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
               width: 6.0,
             ),
             Text(
-              AccessLevelUtils.getString(viewModel.accessLevel),
+              viewModel.accessLevel.title,
               style: KudosTheme.descriptionTextStyle,
             ),
           ],
