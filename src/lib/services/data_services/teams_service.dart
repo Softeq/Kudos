@@ -1,4 +1,5 @@
 import 'package:kudosapp/dto/team.dart';
+import 'package:kudosapp/models/access_level.dart';
 import 'package:kudosapp/models/team_member_model.dart';
 import 'package:kudosapp/models/team_model.dart';
 import 'package:kudosapp/service_locator.dart';
@@ -28,8 +29,22 @@ class TeamsService extends CachedDataService<Team, TeamModel> {
   }
 
   Future<List<TeamModel>> getUserTeams(String userId) async {
-    var userTeams = await _teamsDatabaseService.getUserTeams(userId);
-    return userTeams.map((t) => TeamModel.fromTeam(t)).toList();
+    final privateUserTeams = await _teamsDatabaseService.getUserTeams(userId);
+
+    final privateUserTeamModels =
+        privateUserTeams.map((t) => TeamModel.fromTeam(t)).toList();
+
+    final cachedTeams = await getTeams();
+
+    final result = cachedTeams
+        .where((x) =>
+            x.members.containsKey(userId) &&
+            x.accessLevel != AccessLevel.private)
+        .toList();
+
+    result.addAll(privateUserTeamModels);
+
+    return result;
   }
 
   Future<TeamModel> getTeam(String teamId) async {
