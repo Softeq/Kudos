@@ -14,7 +14,6 @@ import 'package:uuid/uuid.dart';
 
 class ImageService {
   static const kudosFolder = "kudos";
-  static const maxImageSize = 200.0;
 
   final _fileService = locator<FileService>();
   final _dialogService = locator<DialogService>();
@@ -29,37 +28,39 @@ class ImageService {
     final fileName = "${Uuid().v4()}$fileExtension";
     final storageReference =
         FirebaseStorage.instance.ref().child(kudosFolder).child(fileName);
-    final storageUploadTask = storageReference.putFile(file);
-    final storageTaskSnapshot = await storageUploadTask.onComplete;
 
-    if (storageTaskSnapshot.error != null) {
+    TaskSnapshot taskSnapshot;
+
+    try {
+      taskSnapshot = await storageReference.putFile(file);
+    } catch (exception) {
       throw UploadFileError();
     }
 
-    final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+    final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
     return ImageData(imageUrl, fileName);
   }
 
   Future<File> pickImage(BuildContext context) async {
     final imagePicker = ImagePicker();
-    var pickedFile = await imagePicker.getImage(
+
+    final pickedFile = await imagePicker.getImage(
       source: ImageSource.gallery,
-      maxWidth: maxImageSize,
-      maxHeight: maxImageSize,
     );
+
     final file = pickedFile == null ? null : File(pickedFile.path);
+    final isValid = file == null || await _fileService.isFileSizeValid(file);
 
-    var isValid = file == null || await _fileService.isFileSizeValid(file);
-
-    if (!isValid) {
+    if (isValid) {
+      return file;
+    } else {
       _analyticsService.logImageSizeTooLarge();
       _dialogService.showOkDialog(
           context: context,
           title: localizer().error,
           content: localizer().fileSizeTooBig);
+      return null;
     }
-
-    return isValid ? file : null;
   }
 }

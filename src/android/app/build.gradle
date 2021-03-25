@@ -67,6 +67,8 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    buildToolsVersion '30.0.2'
+    ndkVersion '21.3.6528147'
 }
 
 flutter {

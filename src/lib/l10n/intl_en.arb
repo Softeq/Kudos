@@ -42,7 +42,7 @@
     "createYourOwnAchievements": "Create your own rewards and give them to your colleagues!",
     "createYourOwnTeams": "Create your teams and invite your colleagues to join them!",
     "enterName": "Enter name",
-    "fileSizeTooBig" : "Image size should be less than 0.5Mb",
+    "fileSizeTooBig" : "Image size should be less than 1Mb",
     "transferAchievementTitle" : "Transfer achievement",
     "transferAchievementDescription": "Do you want to transfer this achievement to another user or another team?",
     "transferAchievementToUserTitle": "Transfer to %s?",

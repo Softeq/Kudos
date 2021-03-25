@@ -42,7 +42,7 @@
     "createYourOwnAchievements": "Создавайте свои собственные награды и дарите их своим коллегам!",
     "createYourOwnTeams": "Создавайте свои команды и приглашайте в них своих коллег!",
     "enterName": "Введите имя",
-    "fileSizeTooBig" : "Размер изображения должен быть меньше 0.5Mb",
+    "fileSizeTooBig" : "Размер изображения должен быть меньше 1Mb",
     "transferAchievementTitle": "Сменить владельца",
     "transferAchievementDescription": "Вы хотите сменить владельца текущей награды на другого пользователя или другую команду?",
     "transferAchievementToUserTitle": "Сменить владельца на %s?",
