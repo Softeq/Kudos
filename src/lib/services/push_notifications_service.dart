@@ -2,21 +2,28 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotificationsService {
   Future<String> subscribeForNotifications() async {
-    final firebaseMessaging = FirebaseMessaging();
-    final request = firebaseMessaging.requestNotificationPermissions();
-    if (request != null) {
-      final result = await request;
-      if (!result) {
-        return null;
-      }
+    final firebaseMessaging = FirebaseMessaging.instance;
+
+    final request = await firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (request.authorizationStatus != AuthorizationStatus.authorized) {
+      return null;
     }
-    firebaseMessaging.configure();
+
     final token = await firebaseMessaging.getToken();
     return token;
   }
 
   Future<void> unsubscribeFromNotifications() async {
-    final firebaseMessaging = FirebaseMessaging();
-    await firebaseMessaging.deleteInstanceID();
+    final firebaseMessaging = FirebaseMessaging.instance;
+    await firebaseMessaging.deleteToken();
   }
 }
