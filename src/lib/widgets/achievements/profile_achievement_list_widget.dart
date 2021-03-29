@@ -44,6 +44,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         child: _buildChild(viewModel),
       );
     }
+
     return _buildChild(viewModel);
   }
 
@@ -51,9 +52,11 @@ class ProfileAchievementsListWidget extends StatelessWidget {
     if (viewModel.isBusy) {
       return _buildLoading();
     }
+
     if (!viewModel.hasAchievements) {
       return _buildEmpty();
     }
+
     return _buildError(localizer().generalErrorMessage);
   }
 
@@ -95,15 +98,17 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   }
 
   Widget _buildAdaptiveCollection(ProfileAchievementsViewModel viewModel) {
-    final userAcihevements = viewModel.getAchievements();
+    final userAchievements = viewModel.getAchievements();
     final tapHandler = viewModel.openAchievementDetails;
+    final reorderHandler = viewModel.saveOrdering;
     final buildCollection = _buildSliver ? _buildSliverGrid : _buildList;
-    return buildCollection(userAcihevements, tapHandler);
+    return buildCollection(userAchievements, tapHandler, reorderHandler);
   }
 
   Widget _buildSliverGrid(
     List<UserAchievementCollection> userAchievements,
     Function(BuildContext, UserAchievementCollection) tapHandler,
+    Function(int, int) reorderHandler,
   ) {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -173,8 +178,12 @@ class ProfileAchievementsListWidget extends StatelessWidget {
   Widget _buildList(
     List<UserAchievementCollection> userAchievements,
     Function(BuildContext, UserAchievementCollection) tapHandler,
+    Function(int, int) reorderHandler,
   ) {
-    return ListView.builder(
+    return ReorderableListView.builder(
+      onReorder: (i, j) {
+        reorderHandler(i, j);
+      },
       padding: EdgeInsets.only(
         top: TopDecorator.height,
         bottom: BottomDecorator.height,
@@ -185,6 +194,7 @@ class ProfileAchievementsListWidget extends StatelessWidget {
         final relatedAchievement = achievementCollection.relatedAchievement;
 
         return SimpleListItem(
+          key: Key(relatedAchievement.id),
           title: relatedAchievement.name,
           description: sprintf(
             localizer().from,

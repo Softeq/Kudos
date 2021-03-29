@@ -134,7 +134,7 @@ class AchievementsService
               batch: batch,
             ),
         // increment received_achievements_count
-        (batch) => _usersDatabaseService.incrementRecievedAchievementsCount(
+        (batch) => _usersDatabaseService.incrementReceivedAchievementsCount(
               recipient.id,
               batch: batch,
             ),

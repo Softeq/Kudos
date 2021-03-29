@@ -8,6 +8,7 @@ class UserModel {
   String imageUrl;
   String email;
   int receivedAchievementsCount;
+  List<String> achievementsOrdering;
 
   UserModel._({
     this.id,
@@ -15,6 +16,7 @@ class UserModel {
     this.imageUrl,
     this.email,
     this.receivedAchievementsCount,
+    this.achievementsOrdering,
   });
 
   factory UserModel.createNew(String name, String email, String imageUrl) {
@@ -61,6 +63,7 @@ class UserModel {
       imageUrl: user.imageUrl,
       email: user.email,
       receivedAchievementsCount: user.receivedAchievementsCount,
+      achievementsOrdering: user.achievementsOrdering,
     );
   }
 

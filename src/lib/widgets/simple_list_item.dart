@@ -36,6 +36,7 @@ class SimpleListItem extends StatelessWidget {
   final bool addHeroAnimation;
 
   SimpleListItem({
+    Key key,
     this.onTap,
     this.title,
     this.description,
@@ -46,7 +47,7 @@ class SimpleListItem extends StatelessWidget {
     this.contentWidget,
     this.useTextPlaceholder = false,
     this.addHeroAnimation,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

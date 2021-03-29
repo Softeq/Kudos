@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kudosapp/dto/user.dart';
 import 'package:kudosapp/dto/user_registration.dart';
-import 'package:kudosapp/services/cache/item_change.dart';
 import 'package:kudosapp/helpers/firestore_helpers.dart';
+import 'package:kudosapp/models/user_model.dart';
+import 'package:kudosapp/services/cache/item_change.dart';
 
 class UsersDatabaseService {
   static const _usersCollection = "users";
@@ -59,7 +60,7 @@ class UsersDatabaseService {
     }
   }
 
-  Future<void> incrementRecievedAchievementsCount(String userId,
+  Future<void> incrementReceivedAchievementsCount(String userId,
       {WriteBatch batch}) async {
     var docRef = _database.collection(_usersCollection).doc(userId);
 
@@ -75,5 +76,11 @@ class UsersDatabaseService {
         "received_achievements_count": FieldValue.increment(1),
       });
     }
+  }
+
+  Future<void> updateOrdering(UserModel userModel) {
+    return _database.collection(_usersCollection).doc(userModel.id).set(
+        {"achievements_ordering": userModel.achievementsOrdering},
+        SetOptions(merge: true));
   }
 }

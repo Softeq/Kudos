@@ -64,8 +64,14 @@ class UsersService extends CachedDataService<User, UserModel> {
     return users;
   }
 
+  Future<void> updateOrdering(UserModel userModel) {
+    return _usersDatabaseService.updateOrdering(userModel);
+  }
+
   @override
-  UserModel convert(User item) => UserModel.fromUser(item);
+  UserModel convert(User item) {
+    return UserModel.fromUser(item);
+  }
 
   @override
   Future<Iterable<User>> getDataFromInputStream(int index) =>

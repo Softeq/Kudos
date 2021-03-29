@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kudosapp/models/user_model.dart';
 
 /// Users collection
 @immutable
@@ -10,6 +9,7 @@ class User extends Equatable {
   final String email;
   final String imageUrl;
   final int receivedAchievementsCount;
+  final List<String> achievementsOrdering;
 
   User._({
     @required this.id,
@@ -17,9 +17,18 @@ class User extends Equatable {
     @required this.email,
     @required this.imageUrl,
     @required this.receivedAchievementsCount,
+    @required this.achievementsOrdering,
   });
 
   factory User.fromJson(Map<String, dynamic> json, String id) {
+    List<String> getOrdering(List<dynamic> items) {
+      if (items == null) {
+        return null;
+      }
+
+      return items.map((x) => x as String).toList();
+    }
+
     return json == null
         ? null
         : User._(
@@ -28,27 +37,8 @@ class User extends Equatable {
             email: json["email"],
             imageUrl: json["image_url"],
             receivedAchievementsCount: json["received_achievements_count"],
+            achievementsOrdering: getOrdering(json["achievements_ordering"]),
           );
-  }
-
-  factory User.fromModel(UserModel model) {
-    return User._(
-      id: model.id,
-      name: model.name,
-      email: model.email,
-      imageUrl: model.imageUrl,
-      receivedAchievementsCount: model.receivedAchievementsCount,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "email": email,
-      "image_url": imageUrl,
-      "received_achievements_count": receivedAchievementsCount,
-    };
   }
 
   @override
