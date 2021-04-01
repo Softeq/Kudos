@@ -568,7 +568,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				GOOGLE_CLIENT_URL = "com.googleusercontent.apps.392348268394-ssp8u0ueooqu0lbaj96t88cjnou5pbud";
+				GOOGLE_CLIENT_URL = "com.googleusercontent.apps.236308904782-4uil9nt2e6hdkhr2nklv9ca6sftbu465";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
                       Positioned.directional(
                         textDirection: TextDirection.ltr,
                         child: BottomDecorator(constraints.maxWidth),
-                        bottom: 0,
+                        bottom: 0.0,
                       ),
                     ],
                   );

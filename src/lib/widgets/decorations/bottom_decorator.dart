@@ -9,11 +9,11 @@ class BottomDecorator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _BottomPainter(),
-      child: SizedBox(
-        height: height,
-        width: width,
+    return SizedBox(
+      height: height,
+      width: width,
+      child: CustomPaint(
+        painter: _BottomPainter(),
       ),
     );
   }
@@ -99,6 +99,12 @@ class _BottomPainter extends CustomPainter {
           size.height,
         ),
       );
+
+    canvas.drawLine(
+      Offset(0.0, size.height),
+      Offset(size.width, size.height),
+      paint,
+    );
 
     canvas.drawPath(
       path,
