@@ -1,7 +1,7 @@
 import { db } from '../imports'
 import axios from 'axios'
 
-export const trySendNotificationToHaloChannel = async (achievementId: string, userId: string, senderId: string, message: string) => {
+export const trySendSlackNotification = async (achievementId: string, userId: string, senderId: string, message: string) => {
     const achievement = await db.collection("achievements").doc(achievementId).get();
     const achievementData = achievement.data();
 
@@ -9,38 +9,43 @@ export const trySendNotificationToHaloChannel = async (achievementId: string, us
         return;
     }
 
-    const haloTeamId = "RFWwHqQY70WRwfgXYRMn";
     const teamId: string = achievementData.team?.id;
 
-    if (haloTeamId != teamId) {
+    if (!teamId) {
         return;
     }
 
-    const url = "https://hooks.slack.com/services/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";
+    const team = await db.collection("teams").doc(teamId).get();
+    const teamData = team.data();
+
+    if (!teamData) {
+        return;
+    }
+
+    const slackChannel: string = teamData.slack_channel;
+    const webhook_url: string = teamData.webhook_url;
+
+    if (!slackChannel || !webhook_url) {
+        return;
+    }
 
     const data = {
+        channel: `#${slackChannel}`,
         blocks: [
             {
                 type: "section",
                 text: {
                     type: "mrkdwn",
-                    text: `@${userId} has received\n*${achievementData.name}*`
+                    text: `@${userId} has received *${achievementData.name}*\n\n${message}\n\nfrom @${senderId}`
                 },
                 accessory: {
                     type: "image",
                     image_url: achievementData.image_url,
                     alt_text: "kudos thumbnail"
                 }
-            },
-            {
-                type: "section",
-                text: {
-                    type: "mrkdwn",
-                    text: `${message}\n\nfrom @${senderId}`
-                }
             }
         ]
     };
 
-    await axios.post(url, data);
+    await axios.post(webhook_url, data);
 };
