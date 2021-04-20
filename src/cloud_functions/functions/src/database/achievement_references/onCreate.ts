@@ -1,4 +1,4 @@
-import { functions, log, sendPushToUser } from '../../imports'
+import { functions, log, sendPushToUser, trySendSlackNotification } from '../../imports'
 
 /**
  * Trigger sends push notification to User when he gets a new achievement
@@ -27,6 +27,12 @@ export const createAchievementReferences = functions.firestore
         };
 
         await sendPushToUser(userId, payload);
+
+        const achievementId: string = documentData.achievement.id;
+        const senderId: string = documentData.sender.id;
+        const comment: string = documentData.comment;
+
+        await trySendSlackNotification(achievementId, userId, senderId, comment);
 
         log('Successfully finished');
     });

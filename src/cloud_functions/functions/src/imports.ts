@@ -8,3 +8,5 @@ export const storage = admin.storage()
 export const log = console.log
 
 export { sendPushToUser } from './services/user_notifications'
+
+export { trySendSlackNotification } from './services/slack_notifications'
